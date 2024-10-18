@@ -1,0 +1,64 @@
+[package]
+authors = ["Zondax AG <info@zondax.ch>"]
+name = "rslib"
+version = "0.1.0"
+readme = "README.md"
+resolver = "2"
+edition = "2021"
+
+[lib]
+name = "rslib"
+crate-type = ["staticlib"]
+
+[dependencies]
+rand = { version = "0.7.3", default-features = false }
+nom = { version = "7.1.3", default-features = false }
+arrayvec = { version = "0.7.4", default-features = false }
+arrayref = { version = "0.3.7", default-features = false }
+no-std-compat = "0.4.1"
+educe = "0.5.9"
+blake2b_simd = { version = "1.0.2", default-features = false }
+# blake2b_simd = { path = "../blake2_simd/blake2b", default-features = false }
+aes = { version = "0.8.4", default-features = false }
+zeroize = { version = "1.7.0", default-features = false, features = ["derive"] }
+decaf377 = { version = "0.10.1", default-features = false, features = [
+    "u32_backend",
+] }
+decaf377-rdsa = { version = "0.11", default-features = false, features = [
+    "u32_backend",
+] }
+poseidon377 = { version = "1.1.0", default-features = false }
+f4jumble = { version = "0.1.0", default-features = false }
+bech32 = { version = "0.11.0", default-features = false }
+chacha20poly1305 = { version = "0.10.1", default-features = false }
+
+[dev-dependencies]
+hex-literal = "0.4.1"
+hex = "0.4.2"
+no-std-compat = { version = "0.4.1", features = ["std"] }
+blake2b_simd = { version = "1.0.2", default-features = false }
+chacha20poly1305 = { version = "0.10.1" }
+getrandom = { version = "0.1.14", default-features = false }
+# blake2b_simd = { path = "../blake2_simd/blake2b", default-features = false }
+
+[target.thumbv6m-none-eabi.dev-dependencies]
+panic-halt = "0.2.0"
+
+[profile.release]
+lto = false
+codegen-units = 1
+debug = true
+opt-level = "z"
+
+[profile.dev]
+panic = "abort"
+
+[features]
+clippy = []
+
+[patch.crates-io]
+# decaf377 = { path = "../decaf377" }
+# decaf377-rdsa = { path = "../decaf377-rdsa" }
+# decaf377 = { path = "../decaf377" }
+# decaf377-rdsa = { path = "../decaf377-rdsa" }
+# blake2b_simd = { path = "../blake2_simd/blake2b" }
