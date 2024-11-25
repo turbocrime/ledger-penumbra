@@ -15,15 +15,15 @@
  ******************************************************************************* */
 
 import Zemu, { ButtonKind, zondaxMainmenuNavigation, isTouchDevice } from '@zondax/zemu'
-import { ACCOUNT_ID, PEN_PATH, defaultOptions, models, txBlobExample } from './common'
-import { PenumbraApp } from '@zondax/ledger-penumbra'
+import { ACCOUNT_ID, PENUMBRA_PATH, defaultOptions, models, txBlobExample } from './common'
+import { PenumbraApp, AddressIndex } from '@zondax/ledger-penumbra'
 
 jest.setTimeout(60000)
 
 const EXPECTED_FVK =
-  '3cd58bbb8725bfe4566504b04d7a31b67bb67fd5d09a28364ac7ac2c2fd8710e4fb0d8c51486fc24938ca96564842a84201d266c92b72761e4e99a16b3405103'
+  '92c3e768d3ecf0f2c4d93d879dbc16226fe8540443a8216d6b093d8684865a063a35ee29cccf93149dfa565ea693aa5cd36dc5cf8adff15081038d31e796580b'
 const EXPECTED_ADDRESS =
-  'e0783360338067fc2ba548f460b3f06f33d3e756ebefa8a8c08c5e12a1e667df228df0720fb9bd963894183bc447e1c7ef591fa9625d4a66b7703eec2ec1ef543454673bb61a4f2a3d861114d6891d69'
+  'fc48056bc3fa38105dec3bbf85360034324a68f5f9ad7b1b5b6796f97d8279ae15308df6d619d93aab071c2ea360d09dd0f3fa4d3a8a49b9f9b208ee42e491efff1162c3525990477dfc81a681b7d7c1'
 
 const RANDOMIZER = '770187941264c925f8ba8776'
 
@@ -48,7 +48,7 @@ describe('Standard', function () {
     }
   })
 
-  test.concurrent.each(models)('get app version', async function (m) {
+  test.concurrent.each(models)('$name get app version', async function (m) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
@@ -69,18 +69,23 @@ describe('Standard', function () {
     }
   })
 
-  test.concurrent.each(models)('getFvk', async function (m) {
+  test.concurrent.each(models)('$name getFvk', async function (m) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
       const app = new PenumbraApp(sim.getTransport())
 
+      const addressIndex: AddressIndex = {
+        account: ACCOUNT_ID,
+        randomizer: undefined,
+      }
+
       //Define HDPATH
-      const resp = await app.getFVK(PEN_PATH, ACCOUNT_ID)
+      const resp = await app.getFVK(PENUMBRA_PATH, addressIndex)
 
       console.log(resp)
 
-      const fvk = resp.fvk !== undefined ? resp.fvk.toString('hex') : ''
+      const fvk = Buffer.concat([resp.ak, resp.nk]).toString('hex')
 
       expect(fvk).toEqual(EXPECTED_FVK)
     } finally {
@@ -88,14 +93,19 @@ describe('Standard', function () {
     }
   })
 
-  test.concurrent.each(models)('getAddress', async function (m) {
+  test.concurrent.each(models)('$name getAddress', async function (m) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
       const app = new PenumbraApp(sim.getTransport())
 
+      const addressIndex: AddressIndex = {
+        account: ACCOUNT_ID,
+        randomizer: undefined,
+      }
+
       //Define HDPATH
-      const resp = await app.getAddress(PEN_PATH, ACCOUNT_ID)
+      const resp = await app.getAddress(PENUMBRA_PATH, addressIndex)
 
       console.log(resp)
 
@@ -107,14 +117,19 @@ describe('Standard', function () {
     }
   })
 
-  test.concurrent.each(models)('getAddressRandomized', async function (m) {
+  test.concurrent.each(models)('$name getAddressRandomized', async function (m) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
       const app = new PenumbraApp(sim.getTransport())
 
+      const addressIndex: AddressIndex = {
+        account: ACCOUNT_ID,
+        randomizer: Buffer.from(RANDOMIZER, 'hex'),
+      }
+
       //Define HDPATH
-      const resp = await app.getAddress(PEN_PATH, ACCOUNT_ID, RANDOMIZER)
+      const resp = await app.getAddress(PENUMBRA_PATH, addressIndex)
 
       console.log(resp)
 
@@ -126,7 +141,7 @@ describe('Standard', function () {
     }
   })
 
-  test.concurrent.each(models)('showAddress', async function (m) {
+  test.concurrent.each(models)('$name showAddress', async function (m) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({
@@ -138,8 +153,13 @@ describe('Standard', function () {
 
       const app = new PenumbraApp(sim.getTransport())
 
+      const addressIndex: AddressIndex = {
+        account: 1,
+        randomizer: undefined,
+      }
+
       //Define HDPATH
-      const resp = app.showAddress(PEN_PATH, ACCOUNT_ID)
+      const resp = app.showAddress(PENUMBRA_PATH, addressIndex)
       // Wait until we are not in the main menu
       await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
       await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-show_address`)
@@ -168,8 +188,13 @@ describe('Standard', function () {
 
       const app = new PenumbraApp(sim.getTransport())
 
+      const addressIndex: AddressIndex = {
+        account: ACCOUNT_ID,
+        randomizer: Buffer.from(RANDOMIZER, 'hex'),
+      }
+
       //Define HDPATH
-      const resp = app.showAddress(PEN_PATH, ACCOUNT_ID, RANDOMIZER)
+      const resp = app.showAddress(PENUMBRA_PATH, addressIndex)
       // Wait until we are not in the main menu
       await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
       await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-show_address_randomized`)
@@ -177,7 +202,6 @@ describe('Standard', function () {
       const resp2 = await resp
 
       console.log(resp2)
-
     } finally {
       await sim.close()
     }
@@ -200,7 +224,6 @@ describe('Standard', function () {
   //     // await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
   //     // await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-sign`)
 
-      
   //     const signatureResponse = await signatureRequest
   //     console.log(signatureResponse)
 

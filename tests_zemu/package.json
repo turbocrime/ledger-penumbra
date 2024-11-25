@@ -20,7 +20,7 @@
     "try": "node try.mjs"
   },
   "dependencies": {
-    "@zondax/ledger-penumbra": "^0.1.0",
+    "@zondax/ledger-penumbra": "v0.1.1",
     "@zondax/zemu": "^0.50.3"
   },
   "devDependencies": {

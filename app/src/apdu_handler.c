@@ -43,11 +43,24 @@ void extractHDPath(uint32_t rx, uint32_t offset) {
     memcpy(hdPath, G_io_apdu_buffer + offset, sizeof(uint32_t) * HDPATH_LEN_DEFAULT);
 
     // #{TODO} --> testnet necessary?
-    const bool mainnet = hdPath[0] == HDPATH_0_DEFAULT && hdPath[1] == HDPATH_1_DEFAULT;
+    const bool mainnet = hdPath[0] == HDPATH_0_DEFAULT && hdPath[1] == HDPATH_1_DEFAULT && hdPath[2] == HDPATH_2_DEFAULT;
 
     if (!mainnet) {
         THROW(APDU_CODE_DATA_INVALID);
     }
+}
+
+void extractAddressIndex(uint32_t rx, uint32_t offset, address_index_t *address_index) {
+    if (address_index == NULL) {
+        THROW(APDU_CODE_DATA_INVALID);
+    }
+
+    // check for account data
+    if (rx < offset || (rx - offset) < sizeof(address_index_t)) {
+        THROW(APDU_CODE_WRONG_LENGTH);
+    }
+
+    memcpy(address_index, &G_io_apdu_buffer[offset], sizeof(address_index_t));
 }
 
 __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
@@ -104,30 +117,10 @@ __Z_INLINE void handleGetAddr(volatile uint32_t *flags, volatile uint32_t *tx, u
     const uint8_t requireConfirmation = G_io_apdu_buffer[OFFSET_P1];
 
     // go to the account + randomizer data
-    uint32_t account_offset = OFFSET_DATA + sizeof(uint32_t) * HDPATH_LEN_DEFAULT;
-    uint32_t rand_offset = account_offset + sizeof(uint32_t);
+    address_index_t address_index = {0};
+    extractAddressIndex(rx, OFFSET_DATA + sizeof(uint32_t) * HDPATH_LEN_DEFAULT, &address_index);
 
-    uint32_t account = 0;
-
-    // check for account data
-    if (rx < account_offset || (rx - account_offset) < sizeof(uint32_t)) {
-        THROW(APDU_CODE_WRONG_LENGTH);
-    }
-
-    U32_BE(&G_io_apdu_buffer[account_offset], account);
-
-    uint8_t *randomizer = NULL;
-    uint8_t rand_data[ADDR_RANDOMIZER_LEN] = {0};
-
-    // check if we received the randomizer, if so check also we received
-    // the expected amount of bytes for it.
-    if (rx > rand_offset && (rx - rand_offset) >= ADDR_RANDOMIZER_LEN) {
-        memcpy(rand_data, &G_io_apdu_buffer[rand_offset], ADDR_RANDOMIZER_LEN);
-        randomizer = &rand_data[0];
-    }
-
-    // TODO: I have to send 0 instead of account to get the same result as penumbra repo
-    zxerr_t zxerr = app_fill_address(0, randomizer);
+    zxerr_t zxerr = app_fill_address(address_index);
 
     if (zxerr != zxerr_ok) {
         *tx = 0;
@@ -219,6 +212,7 @@ __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile 
 void handleTest(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) { THROW(APDU_CODE_OK); }
 #endif
 
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2) || defined(TARGET_STAX) || defined(TARGET_FLEX)
 void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleApdu\n");
     volatile uint16_t sw = 0;
@@ -289,3 +283,52 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     }
     END_TRY;
 }
+#elif defined(TARGET_NANOS)
+void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+    zemu_log("handleApdu\n");
+    volatile uint16_t sw = 0;
+
+    BEGIN_TRY {
+        TRY {
+            if (G_io_apdu_buffer[OFFSET_CLA] != CLA) {
+                zemu_log("CLA not supported\n");
+                THROW(APDU_CODE_CLA_NOT_SUPPORTED);
+            }
+
+            if (rx < APDU_MIN_LENGTH) {
+                THROW(APDU_CODE_WRONG_LENGTH);
+            }
+            if (G_io_apdu_buffer[OFFSET_INS] == INS_GET_VERSION) {
+                handle_getversion(flags, tx);
+            }
+#if defined(APP_TESTING)
+            else if (G_io_apdu_buffer[OFFSET_INS] == INS_TEST) {
+                handleTest(flags, tx, rx);
+                THROW(APDU_CODE_OK);
+            }
+#endif
+            else {
+                zemu_log("ins_not_supported**\n");
+                THROW(APDU_CODE_INS_NOT_SUPPORTED);
+            }
+        }
+        CATCH(EXCEPTION_IO_RESET) { THROW(EXCEPTION_IO_RESET); }
+        CATCH_OTHER(e) {
+            switch (e & 0xF000) {
+                case 0x6000:
+                case APDU_CODE_OK:
+                    sw = e;
+                    break;
+                default:
+                    sw = 0x6800 | (e & 0x7FF);
+                    break;
+            }
+            G_io_apdu_buffer[*tx] = sw >> 8;
+            G_io_apdu_buffer[*tx + 1] = sw & 0xFF;
+            *tx += 2;
+        }
+        FINALLY {}
+    }
+    END_TRY;
+}
+#endif

@@ -28,6 +28,7 @@
 #include "zxmacros.h"
 
 bool is_randomized = false;
+uint32_t address_idx_account = 0;
 
 #define BECH32_PREFIX "penumbra"
 
@@ -52,12 +53,8 @@ bool is_randomized = false;
 
 zxerr_t addr_getNumItems(uint8_t *num_items) {
     zemu_log_stack("addr_getNumItems");
-    // address and is_randomized flag
-    *num_items = 2;
-    // in expert mode we show the path
-    if (app_mode_expert()) {
-        *num_items = 3;
-    }
+    // address, account and is_randomized flag
+    *num_items = 3;
     return zxerr_ok;
 }
 
@@ -77,23 +74,27 @@ zxerr_t addr_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *
             if (ret < 0) return zxerr_unknown;
 
             pageString(outVal, outValLen, encoded_addr, pageIdx, pageCount);
-
             return zxerr_ok;
+
         case 1: {
-            snprintf(outKey, outKeyLen, "Randomized");
-            const char *buffer = is_randomized ? "Yes" : "No";
+            snprintf(outKey, outKeyLen, "Account");
+            char buffer[100] = {0};
+            ZEMU_LOGF(50, "[Account****] %d\n", address_idx_account)
+
+            const char *err = NULL;
+            err = uint32_to_str(buffer, sizeof(buffer), address_idx_account);
+
+            if (err != NULL) {
+                return zxerr_unknown;
+            }
+
             pageString(outVal, outValLen, buffer, pageIdx, pageCount);
 
             return zxerr_ok;
         }
         case 2: {
-            if (!app_mode_expert()) {
-                return zxerr_no_data;
-            }
-
-            snprintf(outKey, outKeyLen, "Your Path");
-            char buffer[300];
-            bip32_to_str(buffer, sizeof(buffer), hdPath, HDPATH_LEN_DEFAULT);
+            snprintf(outKey, outKeyLen, "Randomized");
+            const char *buffer = is_randomized ? "Yes" : "No";
             pageString(outVal, outValLen, buffer, pageIdx, pageCount);
 
             return zxerr_ok;

@@ -19,16 +19,14 @@
 extern "C" {
 #endif
 
-// #{TODO} ---> Replace CLA, Token symbol, HDPATH, etc etc
 #define CLA 0x80
 
 // according to penumbra docs:
-// m/44'/6532'/x'
+// m/44'/6532'/0'
 #define HDPATH_LEN_DEFAULT 3
 #define HDPATH_0_DEFAULT (0x80000000u | 0x2c)    // 44
 #define HDPATH_1_DEFAULT (0x80000000u | 0x1984)  // 6532
-
-#define HDPATH_2_DEFAULT (0x80000000u | 0u)
+#define HDPATH_2_DEFAULT (0x80000000u | 0u)      // 0
 
 #define SECP256K1_PK_LEN 65u
 

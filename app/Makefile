@@ -52,14 +52,14 @@ DEFINES += PRODUCTION_BUILD=$(PRODUCTION_BUILD)
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.app_testing
 
 ifndef COIN
-COIN=PEN
+COIN=UM
 endif
 
 include $(CURDIR)/Makefile.version
 
 $(info COIN  = [$(COIN)])
 
-ifeq ($(COIN), PEN)
+ifeq ($(COIN), UM)
 # Main app configuration
 DEFINES += APP_STANDARD
 APPNAME = "Penumbra"
@@ -160,7 +160,7 @@ dep/%.d: %.c Makefile
 
 .PHONY: listvariants
 listvariants:
-	@echo VARIANTS COIN PEN
+	@echo VARIANTS COIN UM
 
 .PHONY: version
 version:

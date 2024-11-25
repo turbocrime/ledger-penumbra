@@ -97,6 +97,12 @@ typedef struct {
     address_t address;
 } keys_t;
 
+typedef struct {
+    uint32_t account;
+    uint8_t has_randomizer;
+    uint8_t randomizer[ADDR_RANDOMIZER_LEN];
+} __attribute__((packed)) address_index_t;
+
 #ifdef __cplusplus
 }
 #endif
