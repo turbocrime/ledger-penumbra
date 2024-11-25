@@ -1,71 +1,77 @@
-use crate::{utils::varint, FromBytes, ParserError};
+/*******************************************************************************
+*   (c) 2024 Zondax GmbH
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+********************************************************************************/
 
-use core::ptr::addr_of_mut;
-use std::mem::MaybeUninit;
+use crate::ParserError;
+use decaf377::{Fq, Fr};
+use crate::constants::AMOUNT_LEN_BYTES;
 
-// The quantity of a particular Asset. Represented as a 128-bit unsigned integer,
-// split over two fields, `lo` and `hi`, representing the low- and high-order bytes
-// of the 128-bit value, respectively. Clients must assemble these bits in their
-// implementation into a `uint128` or comparable data structure, in order to model
-// the Amount accurately.
-// message Amount {
-//   uint64 lo = 1;
-//   uint64 hi = 2;
-// }
-
-#[cfg_attr(test, derive(Debug))]
-#[derive(Copy, PartialEq, Eq, Clone)]
+#[derive(Clone, Debug)]
 pub struct Amount {
-    pub lo: u64,
-    pub hi: u64,
+    pub inner: u128,
 }
 
 impl Amount {
-    pub fn new(lo: u64, hi: u64) -> Self {
-        Self { lo, hi }
+    pub const LEN: usize = AMOUNT_LEN_BYTES;
+
+    pub fn to_le_bytes(&self) -> [u8; Self::LEN] {
+        self.inner.to_le_bytes()
     }
 }
 
-impl<'b> FromBytes<'b> for Amount {
-    fn from_bytes_into(
-        input: &'b [u8],
-        out: &mut MaybeUninit<Self>,
-    ) -> Result<&'b [u8], nom::Err<ParserError>> {
-        let out = out.as_mut_ptr();
-        let (rem, lo) = varint(input)?;
-        let (rem, hi) = varint(rem)?;
+impl TryFrom<AmountC> for Amount {
+    type Error = ParserError;
 
-        unsafe {
-            addr_of_mut!((*out).lo).write(lo);
-            addr_of_mut!((*out).hi).write(hi);
-        }
+    fn try_from(amount: AmountC) -> Result<Self, Self::Error> {
+        let lo = amount.lo as u128;
+        let hi = amount.hi as u128;
+        // `hi` and `lo` represent the high/low order bytes respectively.
+        //
+        // We want to decode `hi` and `lo` into a single `u128` of the form:
+        //
+        //            hi: u64                          lo: u64
+        // ┌───┬───┬───┬───┬───┬───┬───┬───┐ ┌───┬───┬───┬───┬───┬───┬───┬───┐
+        // │   │   │   │   │   │   │   │   │ │   │   │   │   │   │   │   │   │
+        // └───┴───┴───┴───┴───┴───┴───┴───┘ └───┴───┴───┴───┴───┴───┴───┴───┘
+        //   15  14  13  12  11  10  9   8     7   6   5   4   3   2   1   0
+        //
+        // To achieve this, we shift `hi` 8 bytes to the left:
+        let shifted = hi << 64;
+        // and then add the lower order bytes:
+        let inner = shifted + lo;
 
-        Ok(rem)
+        Ok(Amount { inner })
+    }    
+}
+
+impl Into<Fq> for Amount {
+    fn into(self) -> Fq {
+        Fq::from(self.inner)
     }
 }
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::std::vec::Vec;
-    use crate::utils::encode_varint;
 
-    #[test]
-    fn test_amount_from_bytes() {
-        // Example encoded data for Amount, adjust as per your actual encoded data
-        let lo = 123456789; // Example low-order value
-        let hi = 987654321; // Example high-order value
-
-        let encoded_lo = encode_varint(lo);
-        let encoded_hi = encode_varint(hi);
-        let mut encoded_data = Vec::new();
-        encoded_data.extend(encoded_lo);
-        encoded_data.extend(encoded_hi);
-
-        let (rem, amount) = Amount::from_bytes(&encoded_data).unwrap();
-
-        assert!(rem.is_empty());
-
-        assert_eq!(amount.lo, lo);
-        assert_eq!(amount.hi, hi);
+impl Into<Fr> for Amount {
+    fn into(self) -> Fr {
+        Fr::from(self.inner)
     }
+}
+
+#[repr(C)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+pub struct AmountC {
+    pub lo: u64,
+    pub hi: u64,
 }

@@ -32,6 +32,7 @@ extern "C" {
 
 #define PK_LEN_25519 32u
 #define SK_LEN_25519 64u
+#define EFFECT_HASH_LEN 64u
 
 #define COIN_AMOUNT_DECIMAL_PLACES 6
 #define COIN_TICKER "PEN"

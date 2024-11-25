@@ -82,6 +82,8 @@ const char *tx_parse() {
 
 void tx_parse_reset() { MEMZERO(&tx_obj, sizeof(tx_obj)); }
 
+parser_tx_t *tx_get_txObject() { return &tx_obj; }
+
 zxerr_t tx_getNumItems(uint8_t *num_items) {
     parser_error_t err = parser_getNumItems(&ctx_parsed_tx, num_items);
 

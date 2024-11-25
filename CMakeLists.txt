@@ -141,6 +141,11 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/nanopb_tiny/pb_common.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/nanopb_tiny/pb_decode.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parser_interface.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parser_pb_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/spend_plan.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/output_plan.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/delegate_plan.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/undelegate_plan.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})
@@ -153,6 +158,7 @@ target_include_directories(app_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/nanopb_tiny
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/protobuf
         ${CMAKE_CURRENT_SOURCE_DIR}/app/rust/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan
         )
 
 ##############################################################
@@ -233,6 +239,7 @@ target_include_directories(unittests PRIVATE
         ${CONAN_INCLUDE_DIRS_JSONCPP}
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/rust/include
         )
 
     target_link_libraries(unittests PRIVATE

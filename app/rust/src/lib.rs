@@ -24,12 +24,12 @@ extern crate no_std_compat as std;
 extern crate hex_literal;
 
 use poseidon377 as _;
+use educe as _;
+use arrayref as _;
 
-// pub(crate) mod addr;
 pub(crate) mod address;
 mod bolos;
 pub mod constants;
-pub mod effect_hash;
 pub mod ffi;
 pub(crate) mod keys;
 pub mod network;
@@ -37,7 +37,6 @@ pub mod parser;
 mod utils;
 pub mod wallet_id;
 
-pub use effect_hash::EffectHash;
 pub use parser::{FromBytes, ParserError, ViewError};
 pub(crate) use utils::prf::{expand_fq, expand_fr};
 
@@ -71,7 +70,7 @@ pub fn is_expert_mode() -> bool {
     unsafe { app_mode_expert() > 0 }
 }
 
-#[cfg(any(test, fuzzing))]
+#[cfg(any(test, feature = "fuzzing"))]
 pub fn is_expert_mode() -> bool {
     true
 }

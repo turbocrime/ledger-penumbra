@@ -20,6 +20,8 @@
 #include "crypto_helper.h"
 #include "cx.h"
 #include "keys_def.h"
+#include "parser_interface.h"
+#include "zxformat.h"
 #include "zxmacros.h"
 
 uint32_t hdPath[HDPATH_LEN_DEFAULT];
@@ -70,6 +72,7 @@ __Z_INLINE zxerr_t computeSpendKey(keys_t *keys) {
     error = zxerr_ok;
 
 catch_cx_error:
+    MEMZERO(&keys, sizeof(keys));
     MEMZERO(privateKeyData, sizeof(privateKeyData));
 
     return error;
@@ -129,35 +132,41 @@ catch_zx_error:
     return error;
 }
 
-// zxerr_t crypto_sign(uint8_t *signature, uint16_t signatureMaxlen, const uint8_t *message, uint16_t messageLen) {
-//     if (signature == NULL || message == NULL || signatureMaxlen < ED25519_SIGNATURE_SIZE || messageLen == 0) {
-//         return zxerr_invalid_crypto_settings;
-//     }
-//
-//     cx_ecfp_private_key_t cx_privateKey;
-//     uint8_t privateKeyData[SK_LEN_25519] = {0};
-//
-//     zxerr_t error = zxerr_unknown;
-//     // Generate keys
-//     CATCH_CXERROR(os_derive_bip32_with_seed_no_throw(HDW_NORMAL, CX_CURVE_Ed25519, hdPath, HDPATH_LEN_DEFAULT,
-//                                                       privateKeyData, NULL, NULL, 0));
-//
-//     CATCH_CXERROR(cx_ecfp_init_private_key_no_throw(CX_CURVE_Ed25519, privateKeyData, SCALAR_LEN_ED25519,
-//     &cx_privateKey));
-//
-//     // Sign
-//     CATCH_CXERROR(
-//         cx_eddsa_sign_no_throw(&cx_privateKey, CX_SHA512, message, messageLen, signature, signatureMaxlen));
-//
-//     error = zxerr_ok;
-//
-// catch_cx_error:
-//     MEMZERO(&cx_privateKey, sizeof(cx_privateKey));
-//     MEMZERO(privateKeyData, sizeof(privateKeyData));
-//
-//     if (error != zxerr_ok) {
-//         MEMZERO(signature, signatureMaxlen);
-//     }
-//
-//     return error;
-// }
+zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureMaxlen) {
+    if (signature == NULL || tx_obj == NULL || signatureMaxlen < EFFECT_HASH_LEN) {
+        return zxerr_invalid_crypto_settings;
+    }
+
+    keys_t keys = {0};
+    zxerr_t error = zxerr_invalid_crypto_settings;
+
+
+    // compute parameters hash
+    CATCH_ZX_ERROR(compute_parameters_hash(&tx_obj->parameters_plan.data_bytes, &tx_obj->plan.parameters_hash));
+
+    // compute spend key
+    CATCH_ZX_ERROR(computeSpendKey(&keys));
+
+    // compute action hashes
+    for (uint16_t i = 0; i < tx_obj->plan.actions.qty; i++) {
+        CATCH_ZX_ERROR(compute_action_hash(&tx_obj->actions_plan[i], &keys.skb, &tx_obj->plan.memo.key,
+                                           &tx_obj->plan.actions.hashes[i]));
+    }
+
+    // compute effect hash
+    CATCH_ZX_ERROR(compute_effect_hash(&tx_obj->plan, tx_obj->effect_hash, sizeof(tx_obj->effect_hash)));
+
+    MEMCPY(signature, tx_obj->effect_hash, EFFECT_HASH_LEN);
+
+    return zxerr_ok;
+
+catch_zx_error:
+    MEMZERO(&keys, sizeof(keys));
+    MEMZERO(signature, signatureMaxlen);
+
+    if (error != zxerr_ok) {
+        MEMZERO(signature, signatureMaxlen);
+    }
+
+    return error;
+}

@@ -25,6 +25,7 @@ extern "C" {
 
 #include "coin.h"
 #include "keys_def.h"
+#include "parser_txdef.h"
 #include "zxerror.h"
 
 extern uint32_t hdPath[HDPATH_LEN_DEFAULT];
@@ -34,7 +35,7 @@ zxerr_t crypto_fillKeys(uint8_t *output, uint16_t len, uint16_t *cmdResponseLen)
 zxerr_t crypto_fillAddress(uint8_t *buffer, uint16_t bufferLen, uint16_t *addrResponseLen, uint32_t account,
                            uint8_t *randomizer);
 
-zxerr_t crypto_sign(uint8_t *signature, uint16_t signatureMaxlen, const uint8_t *message, uint16_t messageLen);
+zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureMaxlen);
 
 zxerr_t crypto_extractSpendingKeyBytes(uint8_t *key_bytes, uint32_t key_bytes_len);
 

@@ -55,6 +55,7 @@ panic = "abort"
 
 [features]
 clippy = []
+derive-debug = []
 
 [patch.crates-io]
 # decaf377 = { path = "../decaf377" }

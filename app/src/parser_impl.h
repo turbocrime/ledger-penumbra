@@ -26,12 +26,6 @@
 extern "C" {
 #endif
 
-typedef struct {
-    Bytes_t *bytes;
-    uint16_t expected_size;
-    bool check_size;
-} decode_memo_field_arg_t;
-
 parser_error_t _read(parser_context_t *c, parser_tx_t *v);
 
 #ifdef __cplusplus

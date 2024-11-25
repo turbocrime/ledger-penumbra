@@ -15,7 +15,7 @@
  ******************************************************************************* */
 
 import Zemu, { ButtonKind, zondaxMainmenuNavigation, isTouchDevice } from '@zondax/zemu'
-import { ACCOUNT_ID, PENUMBRA_PATH, defaultOptions, models, txBlobExample } from './common'
+import { ACCOUNT_ID, PENUMBRA_PATH, defaultOptions, models } from './common'
 import { PenumbraApp, AddressIndex } from '@zondax/ledger-penumbra'
 
 jest.setTimeout(60000)
@@ -206,32 +206,4 @@ describe('Standard', function () {
       await sim.close()
     }
   })
-
-  // TODO: WIP
-  // test.concurrent.each(models)('sign', async function (m) {
-  //   const sim = new Zemu(m.path)
-  //   try {
-  //     await sim.start({ ...defaultOptions, model: m.name })
-  //     const app = new PenumbraApp(sim.getTransport())
-
-  //     const messageToSign = Buffer.from(txBlobExample, 'hex')
-  //     console.log("messageToSignLength!!!!!", messageToSign.length)
-  //     console.log("messageToSign!!!!!", messageToSign)
-  //     // do not wait here... we need to navigate
-  //     const signatureRequest = app.sign(PEN_PATH, ACCOUNT_ID, messageToSign)
-
-  //     // Wait until we are not in the main menu
-  //     // await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
-  //     // await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-sign`)
-
-  //     const signatureResponse = await signatureRequest
-  //     console.log(signatureResponse)
-
-  //     // Now verify the signature
-  //     // const valid = ed25519.verify(signatureResponse.signature, messageToSign, pubKey)
-  //     // expect(valid).toEqual(true)
-  //   } finally {
-  //     await sim.close()
-  //   }
-  // })
 })

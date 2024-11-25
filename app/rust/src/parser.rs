@@ -20,34 +20,27 @@ use core::mem::MaybeUninit;
 // actions:
 // https://rustdoc.penumbra.zone/main/penumbra_transaction/plan/enum.ActionPlan.html
 mod address;
-mod amount;
-mod asset_id;
 mod clue_plan;
-mod curve_fields;
 mod error;
-mod fee;
 mod note;
-mod object_list;
+mod note_payload;
 mod plans;
-mod position;
-mod precision;
-mod tx_parameters;
-mod value;
 mod bytes;
-
-pub use address::Address;
-pub use amount::Amount;
-pub use asset_id::AssetId;
-pub use clue_plan::CluePlan;
-pub use curve_fields::{Fq, Fr};
+mod parameters;
+pub mod action;
+pub mod amount;
+pub mod balance;
+pub mod commitment;
+pub mod detection;
+pub mod id;
+pub mod memo;
+pub mod memo_plain_text;
+pub mod nullifier;
+pub mod rseed;
+pub mod symmetric;
+pub mod value;
+pub mod effect_hash;
 pub use error::ParserError;
-pub use fee::Fee;
-pub use note::Note;
-pub use object_list::ObjectList;
-pub use position::{Position, Tree};
-pub use precision::Precision;
-pub use tx_parameters::TransactionParameters;
-pub use value::Value;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(test, derive(Debug))]

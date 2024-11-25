@@ -17,73 +17,21 @@
 #include "parser_impl.h"
 
 #include "parser_interface.h"
+#include "parser_pb_utils.h"
 #include "pb_common.h"
 #include "pb_decode.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
+#include "spend_plan.h"
+#include "output_plan.h"
+#include "delegate_plan.h"
+#include "undelegate_plan.h"
 #include "zxformat.h"
 
-static bool decode_field(pb_istream_t *stream, const pb_field_t *field, void **arg);
 static bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg);
 static bool decode_detection_data(pb_istream_t *stream, const pb_field_t *field, void **arg);
-static void setup_decode_field(pb_callback_t *callback, decode_memo_field_arg_t *arg, Bytes_t *bytes, uint16_t expected_size,
-                               bool check_size);
-static parser_error_t extract_data_from_tag(Bytes_t *in, Bytes_t *out, uint32_t tag);
 
 static uint16_t actions_qty = 0;
 static uint16_t detection_data_qty = 0;
-
-void print_buffer(Bytes_t *buffer, const char *title) {
-#if defined(LEDGER_SPECIFIC)
-    ZEMU_LOGF(50, "%s\n", title);
-    char print[1000] = {0};
-    array_to_hexstr(print, sizeof(print), buffer->ptr, buffer->len);
-    ZEMU_LOGF(1000, "%s\n", print);
-#else
-    printf("%s %d: ", title, buffer->len);
-    for (uint16_t i = 0; i < buffer->len; i++) {
-        printf("%02x", buffer->ptr[i]);
-    }
-    printf("\n");
-#endif
-}
-
-void print_string(const char *str) {
-#if defined(LEDGER_SPECIFIC)
-    ZEMU_LOGF(100, "%s\n", str);
-#else
-    printf("%s\n", str);
-#endif
-}
-
-bool decode_field(pb_istream_t *stream, const pb_field_t *field, void **arg) {
-    if (stream->bytes_left == 0 || arg == NULL) return false;
-
-    decode_memo_field_arg_t *decode_arg = (decode_memo_field_arg_t *)*arg;
-    if (decode_arg == NULL || decode_arg->bytes == NULL) {
-        return false;
-    }
-
-    if (decode_arg->check_size && stream->bytes_left != decode_arg->expected_size) {
-        return false;
-    }
-
-    const uint8_t *first_byte = stream->state;
-    uint16_t data_size = stream->bytes_left;
-
-    decode_arg->bytes->ptr = first_byte;
-    decode_arg->bytes->len = data_size;
-
-    return true;
-}
-
-void setup_decode_field(pb_callback_t *callback, decode_memo_field_arg_t *arg, Bytes_t *bytes, uint16_t expected_size,
-                        bool check_size) {
-    arg->bytes = bytes;
-    arg->expected_size = expected_size;
-    arg->check_size = check_size;
-    callback->funcs.decode = &decode_field;
-    callback->arg = arg;
-}
 
 bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
     penumbra_core_transaction_v1_ActionPlan action = penumbra_core_transaction_v1_ActionPlan_init_default;
@@ -97,10 +45,9 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
         return false;
     }
 
-    const uint8_t *first_byte = stream->state;
-    uint16_t data_size = stream->bytes_left;
-    decode_arg[actions_qty].action.ptr = first_byte + 2;
-    decode_arg[actions_qty].action.len = data_size - 2;
+    bytes_t action_data = {.ptr = stream->state + 3, .len = stream->bytes_left - 3};
+
+    decode_arg[actions_qty].action_data = action_data;
 
     if (!pb_decode(stream, penumbra_core_transaction_v1_ActionPlan_fields, &action)) {
         return false;
@@ -108,28 +55,18 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
     decode_arg[actions_qty].action_type = action.which_action;
     switch (action.which_action) {
         case penumbra_core_transaction_v1_ActionPlan_spend_tag:
-            print_string("Spend action detected \n");
+            CHECK_ERROR(decode_spend_plan(&action_data, &decode_arg[actions_qty].action.spend));
             break;
         case penumbra_core_transaction_v1_ActionPlan_output_tag:
-            print_string("Output action detected\n");
+            CHECK_ERROR(decode_output_plan(&action_data, &decode_arg[actions_qty].action.output));
             break;
-        case penumbra_core_transaction_v1_ActionPlan_swap_tag:
-            print_string("Swap action detected\n");
+        case penumbra_core_transaction_v1_ActionPlan_delegate_tag:
+            CHECK_ERROR(decode_delegate_plan(&action_data, &decode_arg[actions_qty].action.delegate));
             break;
-        case penumbra_core_transaction_v1_ActionPlan_swap_claim_tag:
-            print_string("SwapClaim action detected\n");
-            break;
-        case penumbra_core_transaction_v1_ActionPlan_validator_definition_tag:
-            print_string("Delegate action detected\n");
-            break;
-        case penumbra_core_transaction_v1_ActionPlan_ibc_relay_action_tag:
-            print_string("Undelegate action detected\n");
-            break;
-        case penumbra_core_transaction_v1_ActionPlan_proposal_submit_tag:
-            print_string("UndelegateClaim action detected\n");
+        case penumbra_core_transaction_v1_ActionPlan_undelegate_tag:
+            CHECK_ERROR(decode_undelegate_plan(&action_data, &decode_arg[actions_qty].action.undelegate));
             break;
         default:
-            print_string("Unknown action detected\n");
             return false;
     }
     actions_qty++;
@@ -145,14 +82,15 @@ bool decode_detection_data(pb_istream_t *stream, const pb_field_t *field, void *
     }
 
     penumbra_core_transaction_v1_CluePlan cluePlan = penumbra_core_transaction_v1_CluePlan_init_default;
-    decode_memo_field_arg_t rseed_arg, address_inner_arg, address_alt_bech32m_arg;
+    fixed_size_field_t rseed_arg, address_inner_arg;
+    variable_size_field_t address_alt_bech32m_arg;
     clue_plan_t *clue_plan_arg = (clue_plan_t *)*arg;
 
-    setup_decode_field(&cluePlan.rseed, &rseed_arg, &clue_plan_arg[detection_data_qty].rseed, RSEED_SIZE, true);
-    setup_decode_field(&cluePlan.address.inner, &address_inner_arg, &clue_plan_arg[detection_data_qty].address.inner,
-                       MEMO_ADDRESS_INNER_SIZE, true);
-    setup_decode_field(&cluePlan.address.alt_bech32m, &address_alt_bech32m_arg,
-                       &clue_plan_arg[detection_data_qty].address.alt_bech32m, 0, false);
+    setup_decode_fixed_field(&cluePlan.rseed, &rseed_arg, &clue_plan_arg[detection_data_qty].rseed, RSEED_SIZE);
+    setup_decode_fixed_field(&cluePlan.address.inner, &address_inner_arg, &clue_plan_arg[detection_data_qty].address.inner,
+                             MEMO_ADDRESS_INNER_SIZE);
+    setup_decode_variable_field(&cluePlan.address.alt_bech32m, &address_alt_bech32m_arg,
+                                &clue_plan_arg[detection_data_qty].address.alt_bech32m);
 
     if (!pb_decode(stream, penumbra_core_transaction_v1_CluePlan_fields, &cluePlan)) {
         return false;
@@ -164,130 +102,34 @@ bool decode_detection_data(pb_istream_t *stream, const pb_field_t *field, void *
     return true;
 }
 
-parser_error_t extract_data_from_tag(Bytes_t *in, Bytes_t *out, uint32_t tag) {
-    const uint8_t *start = NULL;
-    const uint8_t *end = NULL;
-    bool eof = false;
-
-    pb_istream_t scan_stream = pb_istream_from_buffer(in->ptr, in->len);
-    pb_wire_type_t wire_type;
-    uint32_t tag_internal;
-    while (pb_decode_tag(&scan_stream, &wire_type, &tag_internal, &eof) && !eof) {
-        if (tag_internal == tag) {
-            start = scan_stream.state;
-            if (!pb_skip_field(&scan_stream, wire_type)) {
-                return parser_unexpected_error;
-            }
-            end = scan_stream.state;
-            break;
-        } else {
-            if (!pb_skip_field(&scan_stream, wire_type)) {
-                return parser_unexpected_error;
-            }
-        }
-    }
-
-    if (!start || !end) {
-        return parser_unexpected_error;
-    }
-
-    out->ptr = start + 1;
-    out->len = end - start - 1;
-
-    return parser_ok;
-}
-
-// parser_error_t extract_data_array_from_tag(Bytes_t *in, Bytes_t out[], uint32_t tag) {
-//     const uint8_t *start = NULL;
-//     const uint8_t *end = NULL;
-//     bool eof = false;
-
-//     pb_istream_t scan_stream = pb_istream_from_buffer(in->ptr, in->len);
-//     pb_wire_type_t wire_type;
-//     uint32_t tag_internal;
-//     size_t out_index = 0;
-
-//     while (pb_decode_tag(&scan_stream, &wire_type, &tag_internal, &eof) && !eof) {
-//         if (tag_internal == tag) {
-//             start = scan_stream.state;
-//             if (!pb_skip_field(&scan_stream, wire_type)) {
-//                 return parser_unexpected_error;
-//             }
-//             end = scan_stream.state;
-
-//             if (!start || !end) {
-//                 return parser_unexpected_error;
-//             }
-
-//             out[out_index].ptr = start + 1;
-//             out[out_index].len = end - start - 1;
-//             out_index++;
-//         } else {
-//             if (!pb_skip_field(&scan_stream, wire_type)) {
-//                 return parser_unexpected_error;
-//             }
-//         }
-//     }
-
-//     return parser_ok;
-// }
-
-// parser_error_t compute_detection_data(Bytes_t *detection_data, parser_tx_t *v) {
-//     uint16_t detection_data_bytes = DETECTION_DATA_SIZE;
-//     uint16_t clue_plans = detection_data->len / detection_data_bytes;
-
-//     if (clue_plans > 1) {
-//         if ((detection_data->ptr[0] + 1 == clue_plans) || (clue_plans * detection_data_bytes + 1 == detection_data->len))
-//         {
-//             for (uint16_t i = 0; i < clue_plans; i++) {
-//                 v->plan.detection_data.clue_plans[i].ptr = detection_data->ptr + (i * detection_data_bytes + 1);
-//                 v->plan.detection_data.clue_plans[i].len = DETECTION_DATA_SIZE;
-//             }
-//         } else {
-//             return parser_unexpected_error;
-//         }
-//     } else {
-//         v->plan.detection_data.clue_plans[0].ptr = detection_data->ptr;
-//         v->plan.detection_data.clue_plans[0].len = detection_data->len;
-//     }
-
-//     return parser_ok;
-// }
-
-// parser_error_t compute_actions(Bytes_t actions[], parser_tx_t *v) {
-//     for (uint16_t i = 0; i < ACTIONS_QTY; i++) {
-//         if (actions[i].len > 2) {
-//             v->plan.actions[i].action_type = actions[i].ptr[1] >> 3;
-//             // TODO: check if we have to parser each action
-//             v->plan.actions[i].action.ptr = actions[i].ptr + 2;
-//             v->plan.actions[i].action.len = actions[i].len - 2;
-//         }
-//     }
-
-//     return parser_ok;
-// }
-
 parser_error_t _read(parser_context_t *c, parser_tx_t *v) {
-    Bytes_t data;
+    bytes_t data = {0};
     data.ptr = c->buffer;
     data.len = c->bufferLen;
     actions_qty = 0;
     detection_data_qty = 0;
 
     penumbra_core_transaction_v1_TransactionPlan request = penumbra_core_transaction_v1_TransactionPlan_init_default;
-    decode_memo_field_arg_t memo_key_arg, memo_text_arg, memo_return_address_inner_arg, memo_return_address_alt_bech32m_arg;
+    fixed_size_field_t memo_key_arg, memo_return_address_inner_arg;
+    variable_size_field_t memo_text_arg, memo_return_address_alt_bech32m_arg;
 
     // memo callbacks
-    setup_decode_field(&request.memo.key, &memo_key_arg, &v->plan.memo.key, MEMO_KEY_SIZE, true);
-    setup_decode_field(&request.memo.plaintext.text, &memo_text_arg, &v->plan.memo.plaintext.text, 0, false);
-    setup_decode_field(&request.memo.plaintext.return_address.inner, &memo_return_address_inner_arg,
-                       &v->plan.memo.plaintext.return_address.inner, MEMO_ADDRESS_INNER_SIZE, true);
-    setup_decode_field(&request.memo.plaintext.return_address.alt_bech32m, &memo_return_address_alt_bech32m_arg,
-                       &v->plan.memo.plaintext.return_address.alt_bech32m, 0, false);
+    setup_decode_fixed_field(&request.memo.key, &memo_key_arg, &v->plan.memo.key, MEMO_KEY_SIZE);
+    setup_decode_variable_field(&request.memo.plaintext.text, &memo_text_arg, &v->plan.memo.plaintext.text);
+    setup_decode_fixed_field(&request.memo.plaintext.return_address.inner, &memo_return_address_inner_arg,
+                             &v->plan.memo.plaintext.return_address.inner, MEMO_ADDRESS_INNER_SIZE);
+    setup_decode_variable_field(&request.memo.plaintext.return_address.alt_bech32m, &memo_return_address_alt_bech32m_arg,
+                                &v->plan.memo.plaintext.return_address.alt_bech32m);
 
     // actions callbacks
     request.actions.funcs.decode = &decode_action;
-    request.actions.arg = &v->plan.actions;
+    request.actions.arg = &v->actions_plan;
+
+    // parameters callbacks
+    fixed_size_field_t parameter_asset_id_arg;
+    variable_size_field_t parameter_chain_id_arg;
+    setup_decode_variable_field(&request.transaction_parameters.chain_id, &parameter_chain_id_arg, &v->parameters_plan.chain_id);
+    setup_decode_fixed_field(&request.transaction_parameters.fee.asset_id.inner, &parameter_asset_id_arg, &v->parameters_plan.fee.asset_id.inner, ASSET_ID_LEN);
 
     // detection data callbacks
     request.detection_data.clue_plans.funcs.decode = &decode_detection_data;
@@ -308,32 +150,23 @@ parser_error_t _read(parser_context_t *c, parser_tx_t *v) {
     }
 
     // get transaction parameters
-    extract_data_from_tag(&data, &v->plan.transaction_parameters.parameters,
+    extract_data_from_tag(&data, &v->parameters_plan.data_bytes,
                           penumbra_core_transaction_v1_TransactionPlan_transaction_parameters_tag);
-    print_buffer(&v->plan.transaction_parameters.parameters, "real transaction parameters");
+    v->plan.actions.qty = actions_qty;
 
-    // print detection data
-    for (uint16_t i = 0; i < DETECTION_DATA_QTY; i++) {
-        print_buffer(&v->plan.detection_data.clue_plans[i].address.inner, "real detection data address inner");
-        print_buffer(&v->plan.detection_data.clue_plans[i].address.alt_bech32m, "real detection data address alt bech32m");
-        print_buffer(&v->plan.detection_data.clue_plans[i].rseed, "real detection data rseed");
-        // printf("precision bits: %lu\n", v->plan.detection_data.clue_plans[i].precision_bits);
+    // copy parameters
+    v->parameters_plan.expiry_height = request.transaction_parameters.expiry_height;
+    v->parameters_plan.has_fee = request.transaction_parameters.has_fee;
+    if (v->parameters_plan.has_fee) {
+        v->parameters_plan.fee.has_amount = request.transaction_parameters.fee.has_amount;
+        if (v->parameters_plan.fee.has_amount) {
+            v->parameters_plan.fee.amount.lo = request.transaction_parameters.fee.amount.lo;
+            v->parameters_plan.fee.amount.hi = request.transaction_parameters.fee.amount.hi;
+        }
+        v->parameters_plan.fee.has_asset_id = request.transaction_parameters.fee.has_asset_id;
     }
 
-    // print actions
-    for (uint16_t i = 0; i < ACTIONS_QTY; i++) {
-        print_buffer(&v->plan.actions[i].action, "real actions");
-    }
-
-    // print memo
-    print_buffer(&v->plan.memo.key, "real memo key");
-    print_buffer(&v->plan.memo.plaintext.text, "real memo plaintext text");
-    print_buffer(&v->plan.memo.plaintext.return_address.inner, "real memo return address inner");
-    print_buffer(&v->plan.memo.plaintext.return_address.alt_bech32m, "real memo return address alt bech32m");
-
-    compute_transaction_plan(&v->plan);
-
-    return parser_unexpected_error;
+    return parser_ok;
 }
 
 const char *parser_getErrorDescription(parser_error_t err) {

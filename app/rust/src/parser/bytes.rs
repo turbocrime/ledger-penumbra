@@ -14,6 +14,8 @@
 *  limitations under the License.
 ********************************************************************************/
 
+use crate::ParserError;
+
 #[cfg(any(feature = "derive-debug", test))]
 use core::fmt;
 
@@ -35,11 +37,11 @@ impl fmt::Debug for BytesC {
 }
 
 impl BytesC {
-    pub fn get_bytes(&self) -> Option<&[u8]> {
+    pub fn get_bytes(&self) -> Result<&[u8], ParserError> {
         if self.ptr.is_null() || self.len == 0 {
-            None
+            Err(ParserError::UnexpectedData)
         } else {
-            unsafe { Some(std::slice::from_raw_parts(self.ptr, self.len as usize)) }
+            unsafe { Ok(std::slice::from_raw_parts(self.ptr, self.len as usize)) }
         }
     }
 }

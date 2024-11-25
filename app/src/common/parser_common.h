@@ -22,6 +22,7 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
+#include "keys_def.h"
 #include "parser_txdef.h"
 
 #define CHECK_ERROR(__CALL)                   \
@@ -65,6 +66,9 @@ typedef enum {
     parser_detection_data_overflow,
     parser_actions_overflow,
     parser_spend_plan_error,
+    parser_output_plan_error,
+    parser_delegate_plan_error,
+    parser_undelegate_plan_error,
 } parser_error_t;
 
 typedef struct {
@@ -72,6 +76,7 @@ typedef struct {
     uint16_t bufferLen;
     uint16_t offset;
     parser_tx_t *tx_obj;
+    spend_key_bytes_t *sk_bytes;
 } parser_context_t;
 
 #ifdef __cplusplus

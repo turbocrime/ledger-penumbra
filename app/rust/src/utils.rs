@@ -2,7 +2,6 @@ mod apdu_unwrap;
 mod big_int;
 pub mod prf;
 use crate::ParserError;
-pub use apdu_unwrap::*;
 // pub use big_int::BigInt;
 #[cfg(test)]
 use std::vec::Vec;

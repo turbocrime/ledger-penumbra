@@ -28,24 +28,72 @@ bool decode_fixed_field(pb_istream_t *stream, const pb_field_t *field, void **ar
         return false;
     }
 
-    if (decode_arg->check_size && stream->bytes_left != decode_arg->expected_size) {
+    if (stream->bytes_left != decode_arg->expected_size) {
         return false;
     }
 
-    const uint8_t *first_byte = stream->state;
-    uint16_t data_size = stream->bytes_left;
-
-    decode_arg->bytes->ptr = first_byte;
-    decode_arg->bytes->len = data_size;
+    decode_arg->bytes->ptr = stream->state;
+    decode_arg->bytes->len = stream->bytes_left;
 
     return true;
 }
 
-void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, Bytes_t *bytes, uint16_t expected_size,
-                              bool check_size) {
+bool decode_variable_field(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+    if (stream->bytes_left == 0 || arg == NULL) return false;
+
+    variable_size_field_t *decode_arg = (variable_size_field_t *)*arg;
+    if (decode_arg == NULL || decode_arg->bytes == NULL) {
+        return false;
+    }
+
+    decode_arg->bytes->ptr = stream->state;
+    decode_arg->bytes->len = stream->bytes_left;
+
+    return true;
+}
+
+void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, bytes_t *bytes, uint16_t expected_size) {
     arg->bytes = bytes;
     arg->expected_size = expected_size;
-    arg->check_size = check_size;
     callback->funcs.decode = &decode_fixed_field;
     callback->arg = arg;
+}
+
+void setup_decode_variable_field(pb_callback_t *callback, variable_size_field_t *arg, bytes_t *bytes) {
+    arg->bytes = bytes;
+    callback->funcs.decode = &decode_variable_field;
+    callback->arg = arg;
+}
+
+parser_error_t extract_data_from_tag(bytes_t *in, bytes_t *out, uint32_t tag) {
+    const uint8_t *start = NULL;
+    const uint8_t *end = NULL;
+    bool eof = false;
+
+    pb_istream_t scan_stream = pb_istream_from_buffer(in->ptr, in->len);
+    pb_wire_type_t wire_type;
+    uint32_t tag_internal;
+    while (pb_decode_tag(&scan_stream, &wire_type, &tag_internal, &eof) && !eof) {
+        if (tag_internal == tag) {
+            start = scan_stream.state;
+            if (!pb_skip_field(&scan_stream, wire_type)) {
+                return parser_unexpected_error;
+            }
+            end = scan_stream.state;
+            break;
+        } else {
+            if (!pb_skip_field(&scan_stream, wire_type)) {
+                return parser_unexpected_error;
+            }
+        }
+    }
+
+    if (!start || !end) {
+        return parser_unexpected_error;
+    }
+
+    out->ptr = start + 1;
+    out->len = end - start - 1;
+
+    return parser_ok;
 }

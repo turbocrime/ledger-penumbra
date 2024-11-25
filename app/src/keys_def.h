@@ -22,11 +22,6 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
-typedef struct {
-    uint8_t *ptr;
-    uint16_t len;
-} bytes_t;
-
 #define KEY_LEN 32
 #define DIVERSIFIER_KEY_LEN 16
 #define OUTGOING_VIEWING_KEY_LEN KEY_LEN

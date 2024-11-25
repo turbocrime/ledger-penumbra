@@ -18,37 +18,59 @@
 #include <string.h>
 
 #include "keys_def.h"
+#include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "rslib.h"
 #include "zxformat.h"
 
-void print_buffer_interface(Bytes_t *buffer, const char *title) {
-#if defined(LEDGER_SPECIFIC)
-    ZEMU_LOGF(50, "%s\n", title);
-    char print[700] = {0};
-    array_to_hexstr(print, sizeof(print), buffer->ptr, buffer->len);
-    ZEMU_LOGF(700, "%s\n", print);
-#else
-    printf("%s: ", title);
-    for (uint16_t i = 0; i < buffer->len; i++) {
-        printf("%02x", buffer->ptr[i]);
+zxerr_t compute_effect_hash(transaction_plan_t *plan, uint8_t *effect_hash, uint16_t effect_hash_len) {
+    if (plan == NULL || effect_hash == NULL) return zxerr_unknown;
+
+    if (rs_compute_effect_hash(plan, effect_hash, effect_hash_len) != parser_ok) {
+        return zxerr_unknown;
     }
-    printf("\n");
-#endif
+
+    return zxerr_ok;
 }
 
-parser_error_t compute_transaction_plan(transaction_plan_t *plan) {
-    if (plan == NULL) return parser_unexpected_error;
+zxerr_t compute_parameters_hash(bytes_t *parameters_bytes, hash_t *output) {
+    if (parameters_bytes == NULL || output == NULL) return zxerr_unknown;
 
-    uint8_t output[300] = {0};
-    if (rs_compute_transaction_plan(plan, output, sizeof(output)) != parser_ok) {
-        return parser_unexpected_error;
+    if (rs_parameter_hash(parameters_bytes, (uint8_t *)output, 64) != parser_ok) {
+        return zxerr_unknown;
     }
 
-    // TODO: only for testing
-    Bytes_t output_bytes;
-    output_bytes.ptr = output;
-    output_bytes.len = 300;
-    print_buffer_interface(&output_bytes, "output_bytes");
+    return zxerr_ok;
+}
 
-    return parser_ok;
+zxerr_t compute_action_hash(action_t *action, spend_key_bytes_t *sk_bytes, bytes_t *memo_key, hash_t *output) {
+    if (action == NULL || output == NULL) return zxerr_unknown;
+
+    switch (action->action_type) {
+        case penumbra_core_transaction_v1_ActionPlan_spend_tag:
+            if (sk_bytes == NULL) {
+                return zxerr_unknown;
+            }
+            if (rs_spend_action_hash(sk_bytes, &action->action.spend, (uint8_t *)output, 64) != parser_ok) {
+                return zxerr_encoding_failed;
+            }
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_output_tag:
+            if (sk_bytes == NULL) {
+                return zxerr_unknown;
+            }
+            if (rs_output_action_hash(sk_bytes, &action->action.output, memo_key, (uint8_t *)output, 64) != parser_ok) {
+                return zxerr_encoding_failed;
+            }
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_delegate_tag:
+        case penumbra_core_transaction_v1_ActionPlan_undelegate_tag:
+            if (rs_generic_action_hash(&action->action_data, action->action_type, (uint8_t *)output, 64) != parser_ok) {
+                return zxerr_encoding_failed;
+            }
+            break;
+        default:
+            return zxerr_unknown;
+    }
+
+    return zxerr_ok;
 }

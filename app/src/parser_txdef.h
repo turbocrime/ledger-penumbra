@@ -33,11 +33,12 @@ extern "C" {
 
 #define ASSET_ID_LEN 32
 #define RSEED_LEN 32
+#define CHAIN_ID_LEN 32
 
 typedef struct {
     const uint8_t *ptr;
     uint16_t len;
-} Bytes_t;
+} bytes_t;
 
 typedef struct {
     uint64_t lo;
@@ -45,7 +46,7 @@ typedef struct {
 } amount_t;
 
 typedef struct {
-    Bytes_t inner;
+    bytes_t inner;
 } asset_id_t;
 
 typedef struct {
@@ -54,45 +55,87 @@ typedef struct {
 } value_t;
 
 typedef struct {
-    Bytes_t inner;
+    bytes_t inner;
     // Field bellow is a sort of optional
     // and is a shortcut for the case address is already
     // bech32m encoded
-    Bytes_t alt_bech32m;
+    bytes_t alt_bech32m;
 } address_plan_t;
 
 typedef struct {
     value_t value;
-    Bytes_t rseed;
+    bytes_t rseed;
     address_plan_t address;
 } note_t;
 
 typedef struct {
+    bytes_t ik;
+} identity_key_t;
+
+typedef struct {
+    uint64_t index;
+    uint64_t start_height;
+} epoch_t;
+
+typedef struct {
+    bool has_amount;
+    amount_t amount;
+    bool has_asset_id;
+    asset_id_t asset_id;
+} fee_t;
+
+typedef struct {
     note_t note;
     uint64_t position;
-    Bytes_t randomizer;
-    Bytes_t value_blinding;
-    Bytes_t proof_blinding_r;
-    Bytes_t proof_blinding_s;
+    bytes_t randomizer;
+    bytes_t value_blinding;
+    bytes_t proof_blinding_r;
+    bytes_t proof_blinding_s;
 } spend_plan_t;
 
 typedef struct {
-    Bytes_t parameters;
-} transaction_parameters_t;
+    value_t value;
+    address_plan_t dest_address;
+    bytes_t rseed;
+    bytes_t value_blinding;
+    bytes_t proof_blinding_r;
+    bytes_t proof_blinding_s;
+} output_plan_t;
 
 typedef struct {
+    bool has_validator_identity;
+    identity_key_t validator_identity;
+    uint64_t epoch_index;
+    bool has_unbonded_amount;
+    amount_t unbonded_amount;
+    bool has_delegation_amount;
+    amount_t delegation_amount;
+} delegate_plan_t;
+
+typedef struct {
+    bool has_validator_identity;
+    identity_key_t validator_identity;
+    uint64_t start_epoch_index;
+    bool has_unbonded_amount;
+    amount_t unbonded_amount;
+    bool has_delegation_amount;
+    amount_t delegation_amount;
+    bool has_from_epoch;
+    epoch_t from_epoch;
+} undelegate_plan_t;
+typedef struct {
     address_plan_t return_address;
-    Bytes_t text;
+    bytes_t text;
 } memo_plain_text_t;
 
 typedef struct {
     memo_plain_text_t plaintext;
-    Bytes_t key;
+    bytes_t key;
 } memo_plan_t;
 
 typedef struct {
     address_plan_t address;
-    Bytes_t rseed;
+    bytes_t rseed;
     uint64_t precision_bits;
 } clue_plan_t;
 
@@ -102,18 +145,42 @@ typedef struct {
 
 typedef struct {
     uint8_t action_type;
-    Bytes_t action;
+    bytes_t action_data;
+    union {
+        spend_plan_t spend;
+        output_plan_t output;
+        delegate_plan_t delegate;
+        undelegate_plan_t undelegate;
+    } action;
 } action_t;
 
+typedef uint8_t hash_t[64];
 typedef struct {
-    action_t actions[ACTIONS_QTY];
-    transaction_parameters_t transaction_parameters;
+    uint8_t qty;
+    hash_t hashes[ACTIONS_QTY];
+} actions_hash_t;
+
+typedef struct {
+    uint64_t expiry_height;
+    bytes_t chain_id;
+    bool has_fee;
+    fee_t fee;
+    bytes_t data_bytes;
+} parameters_t;
+
+
+typedef struct {
+    actions_hash_t actions;
+    hash_t parameters_hash;
     memo_plan_t memo;
     detection_data_t detection_data;
 } transaction_plan_t;
 
 typedef struct {
     transaction_plan_t plan;
+    action_t actions_plan[ACTIONS_QTY];
+    parameters_t parameters_plan;
+    uint8_t effect_hash[64];
 } parser_tx_t;
 
 #ifdef __cplusplus

@@ -18,10 +18,15 @@ pub const INCOMING_VIEWING_KEY_LEN: usize = KEY_LEN; //
 /// The maximum detection precision, chosen so that the message bits fit in 3 bytes.
 pub const MAX_PRECISION: u8 = 24;
 pub const PAYLOAD_KEY_LEN_BYTES: usize = 32;
+pub const RSEED_LEN_BYTES: usize = 32;
+pub const ID_LEN_BYTES: usize = 32;
+pub const AMOUNT_LEN_BYTES: usize = 16;
 
 pub const DETECTION_DATA_QTY: usize = 16;
 pub const ACTION_DATA_QTY: usize = 16;
 pub const MAX_CLUE_SUBKEYS: usize = 10;
+
+pub const EFFECT_HASH_LEN: usize = 64;
 
 // Nonces:
 pub const NONCE_LEN: usize = 12;

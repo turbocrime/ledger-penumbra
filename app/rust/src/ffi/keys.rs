@@ -58,7 +58,7 @@ fn compute_address(keys: &mut Keys, addr_idx: AddressIndex) -> Result<(), Parser
     let address = ivk.payment_address(addr_idx).map(|(addr, _)| addr)?;
 
     // return the f4jumble encoded raw address
-    let raw = address.raw_bytes()?;
+    let raw = address.to_bytes()?;
 
     keys.address.copy_from_slice(&raw);
 

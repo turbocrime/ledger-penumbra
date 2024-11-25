@@ -20,3 +20,12 @@ rustflags = [
     "-C",
     "inline-threshold=0",
 ]
+
+
+[target.'cfg(target_os = "linux")']
+rustflags = [
+    "-C",
+    "link-arg=-Wl,--gc-sections",
+    "-C",
+    "link-arg=-Wl,--as-needed",
+]
