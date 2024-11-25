@@ -31,7 +31,6 @@ extern "C" {
         if (__err != parser_ok) return __err; \
     }
 
-
 // Convert bytes to uint32_t,
 // assume data is in BE format
 #define U32_BE(buffer, number)                                                                         \

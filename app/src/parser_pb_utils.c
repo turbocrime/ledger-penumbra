@@ -14,17 +14,14 @@
  *  limitations under the License.
  ********************************************************************************/
 
-#include "parser_impl.h"
-
-#include "parser_interface.h"
-#include "zxformat.h"
 #include "parser_pb_utils.h"
 
+#include "parser_impl.h"
+#include "parser_interface.h"
+#include "zxformat.h"
 
-bool decode_fixed_field(pb_istream_t *stream, const pb_field_t *field, void **arg)
-{
-    if (stream->bytes_left == 0 || arg == NULL)
-        return false;
+bool decode_fixed_field(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+    if (stream->bytes_left == 0 || arg == NULL) return false;
 
     fixed_size_field_t *decode_arg = (fixed_size_field_t *)*arg;
     if (decode_arg == NULL || decode_arg->bytes == NULL) {
@@ -44,11 +41,11 @@ bool decode_fixed_field(pb_istream_t *stream, const pb_field_t *field, void **ar
     return true;
 }
 
-void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, Bytes_t *bytes, uint16_t expected_size, bool check_size) {
+void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, Bytes_t *bytes, uint16_t expected_size,
+                              bool check_size) {
     arg->bytes = bytes;
     arg->expected_size = expected_size;
     arg->check_size = check_size;
     callback->funcs.decode = &decode_fixed_field;
     callback->arg = arg;
 }
-

@@ -19,19 +19,17 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-
 #include <zxmacros.h>
-#include <stdbool.h>
 
 #include "parser_common.h"
 #include "parser_txdef.h"
-#include "zxtypes.h"
-
 #include "pb_common.h"
 #include "pb_decode.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
+#include "zxtypes.h"
 
 typedef struct {
     Bytes_t *bytes;
@@ -44,11 +42,9 @@ typedef struct {
 // Fq, Fr types
 bool decode_fixed_field(pb_istream_t *stream, const pb_field_t *field, void **arg);
 
-void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, Bytes_t *bytes, uint16_t expected_size, bool check_size);
-
+void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, Bytes_t *bytes, uint16_t expected_size,
+                              bool check_size);
 
 #ifdef __cplusplus
 }
 #endif
-
-

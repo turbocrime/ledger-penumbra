@@ -8,7 +8,7 @@ zxerr_t crypto_extractSpendingKeyBytes(uint8_t *key_bytes, uint32_t key_bytes_le
 
 // Function to compute BLAKE2b hash with personalization
 zxerr_t blake2b_hash_with_personalization(const uint8_t *input, size_t input_len, uint8_t *output, size_t output_len,
-                                         const uint8_t *label, size_t label_len) {
+                                          const uint8_t *label, size_t label_len) {
     cx_blake2b_t hash_context;
 
     // unsigned char *salt = NULL;

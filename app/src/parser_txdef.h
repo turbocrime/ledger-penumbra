@@ -32,7 +32,7 @@ extern "C" {
 #define ACTIONS_QTY 16
 
 #define ASSET_ID_LEN 32
-#define RSEED_LEN    32
+#define RSEED_LEN 32
 
 typedef struct {
     const uint8_t *ptr;
@@ -75,7 +75,6 @@ typedef struct {
     Bytes_t proof_blinding_r;
     Bytes_t proof_blinding_s;
 } spend_plan_t;
-
 
 typedef struct {
     Bytes_t parameters;

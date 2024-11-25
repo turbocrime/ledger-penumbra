@@ -19,24 +19,20 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-
 #include <zxmacros.h>
-#include <stdbool.h>
 
 #include "parser_common.h"
 #include "parser_txdef.h"
-#include "zxtypes.h"
-
 #include "pb_common.h"
 #include "pb_decode.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
+#include "zxtypes.h"
 
-parser_error_t decode_spend_plan(const Bytes_t *input,  spend_plan_t *spend_plan);
-
+parser_error_t decode_spend_plan(const Bytes_t *input, spend_plan_t *spend_plan);
 
 #ifdef __cplusplus
 }
 #endif
-

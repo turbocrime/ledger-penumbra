@@ -65,7 +65,7 @@ const pb_extension_type_t gogoproto_enumdecl = {NULL, NULL, &gogoproto_enumdecl_
 typedef struct _gogoproto_enumvalue_customname_extmsg {
     pb_callback_t enumvalue_customname;
 } gogoproto_enumvalue_customname_extmsg;
-#define gogoproto_enumvalue_customname_extmsg_FIELDLIST(X, a) X(a, CALLBACK, REQUIRED, STRING, enumvalue_customname, 1234)
+#define gogoproto_enumvalue_customname_extmsg_FIELDLIST(X, a) X(a, CALLBACK, REQUIRED, STRING, enumvalue_customname, 66001)
 #define gogoproto_enumvalue_customname_extmsg_CALLBACK pb_default_field_callback
 #define gogoproto_enumvalue_customname_extmsg_DEFAULT NULL
 pb_byte_t gogoproto_enumvalue_customname_extmsg_default[] = {0x00};
@@ -499,7 +499,7 @@ const pb_extension_type_t gogoproto_populate = {NULL, NULL, &gogoproto_populate_
 typedef struct _gogoproto_stringer_extmsg {
     bool stringer;
 } gogoproto_stringer_extmsg;
-#define gogoproto_stringer_extmsg_FIELDLIST(X, a) X(a, STATIC, REQUIRED, BOOL, stringer, 1234)
+#define gogoproto_stringer_extmsg_FIELDLIST(X, a) X(a, STATIC, REQUIRED, BOOL, stringer, 67008)
 #define gogoproto_stringer_extmsg_CALLBACK NULL
 #define gogoproto_stringer_extmsg_DEFAULT NULL
 pb_byte_t gogoproto_stringer_extmsg_default[] = {0x00};
