@@ -21,6 +21,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdint.h>
+#include "constants.h"
 
 #define KEY_LEN 32
 #define DIVERSIFIER_KEY_LEN 16
@@ -31,9 +32,6 @@ extern "C" {
 #define INCOMING_VIEWING_KEY_LEN KEY_LEN     // Assuming modulo r size
 #define ADDR_MAX_ENC_LEN 150                 // The maximun length of the encoded address
 
-// raw address len before encoding
-#define ADDRESS_LEN_BYTES 80
-
 /// Number of bits in the address short form divided by the number of bits per Bech32m character
 #define ADDRESS_NUM_CHARS_SHORT_FORM 24
 
@@ -41,6 +39,9 @@ extern "C" {
 #define DIVERSIFIER_KEY_LEN 16
 
 #define ADDR_RANDOMIZER_LEN 12
+
+#define ADDRESS_NUM_CHARS_SHORT_FORM 24
+#define NUM_CHARS_TO_DISPLAY 33
 
 // raw keys in bytes
 

@@ -21,6 +21,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #define MEMO_KEY_SIZE 32
 #define MEMO_ADDRESS_INNER_SIZE 80

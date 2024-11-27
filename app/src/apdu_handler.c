@@ -55,6 +55,8 @@ void extractAddressIndex(uint32_t rx, uint32_t offset, address_index_t *address_
         THROW(APDU_CODE_DATA_INVALID);
     }
 
+    MEMZERO(address_index, sizeof(address_index_t));
+
     // check for account data
     if (rx < offset || (rx - offset) < sizeof(address_index_t)) {
         THROW(APDU_CODE_WRONG_LENGTH);
