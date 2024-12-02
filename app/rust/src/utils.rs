@@ -1,6 +1,8 @@
 mod apdu_unwrap;
 mod big_int;
 pub mod prf;
+pub mod protobuf;
+
 use crate::ParserError;
 // pub use big_int::BigInt;
 #[cfg(test)]

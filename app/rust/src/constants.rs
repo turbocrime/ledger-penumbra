@@ -40,3 +40,8 @@ pub const MEMO_CIPHERTEXT_LEN_BYTES: usize = 528;
 pub const MEMO_LEN_BYTES: usize = 512;
 // This is the largest text length we can support
 pub const MAX_TEXT_LEN: usize = MEMO_LEN_BYTES - ADDRESS_LEN;
+
+// Swap ciphertext byte length.
+pub const SWAP_CIPHERTEXT_BYTES: usize = 272;
+// Swap plaintext byte length.
+pub const SWAP_LEN_BYTES: usize = 256;

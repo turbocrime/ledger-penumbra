@@ -19,6 +19,7 @@ use crate::{ParserError, utils::prf};
 use crate::parser::bytes::BytesC;
 use crate::keys::ka;
 use crate::constants::RSEED_LEN_BYTES;
+#[derive(Clone, Debug)]
 pub struct Rseed(pub [u8; 32]);
 
 impl Rseed {

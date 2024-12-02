@@ -69,6 +69,8 @@ typedef enum {
     parser_output_plan_error,
     parser_delegate_plan_error,
     parser_undelegate_plan_error,
+    parser_ics20_withdrawal_plan_error,
+    parser_swap_plan_error,
 } parser_error_t;
 
 typedef struct {

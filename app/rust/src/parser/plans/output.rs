@@ -20,13 +20,13 @@ use crate::parser::note::Note;
 use crate::parser::{
     address::AddressC,
     bytes::BytesC,
+    commitment::Commitment,
+    effect_hash::{create_personalized_state, EffectHash},
     note_payload::NotePayload,
     rseed::Rseed,
+    symmetric::PayloadKey,
     symmetric::{OvkWrappedKey, WrappedMemoKey},
     value::{Sign, Value, ValueC},
-    commitment::Commitment,
-    symmetric::PayloadKey,
-    effect_hash::{create_personalized_state, EffectHash},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -93,7 +93,7 @@ impl OutputPlanC {
             esk,
             note.transmission_key(),
             &note.diversified_generator()?,
-        );
+        )?;
 
         Ok(Body {
             note_payload: note.payload()?,

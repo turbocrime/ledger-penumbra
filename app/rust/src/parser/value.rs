@@ -44,12 +44,14 @@ impl Value {
         let g_v = self.asset_id.value_generator();
         let amount_fr: Fr = Into::into(self.amount.clone());
 
-        match sign {
-            Sign::Required => {
-                commitment -= g_v * amount_fr;
-            }
-            Sign::Provided => {
-                commitment += g_v * amount_fr;
+        if amount_fr.ne(&Fr::ZERO) {
+            match sign {
+                Sign::Required => {
+                    commitment -= g_v * amount_fr;
+                }
+                Sign::Provided => {
+                    commitment += g_v * amount_fr;
+                }
             }
         }
 
@@ -71,7 +73,9 @@ impl Value {
 #[derive(Clone)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct ValueC {
+    pub has_amount: bool,
     pub amount: AmountC,
+    pub has_asset_id: bool,
     pub asset_id: IdC,
 }
 

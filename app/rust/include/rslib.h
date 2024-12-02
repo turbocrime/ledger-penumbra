@@ -32,6 +32,7 @@ parser_error_t rs_parameter_hash(bytes_t *data, uint8_t *output, size_t output_l
 parser_error_t rs_spend_action_hash(spend_key_bytes_t *sk, spend_plan_t *plan, uint8_t *output, size_t output_len);
 parser_error_t rs_output_action_hash(spend_key_bytes_t *sk, output_plan_t *plan, bytes_t *memo_key, uint8_t *output,
                                      size_t output_len);
+parser_error_t rs_swap_action_hash(spend_key_bytes_t *sk, swap_plan_t *plan, uint8_t *output, size_t output_len);                                     
 parser_error_t rs_generic_action_hash(bytes_t *data, uint8_t action_type, uint8_t *output, size_t output_len);
 
 #ifdef __cplusplus

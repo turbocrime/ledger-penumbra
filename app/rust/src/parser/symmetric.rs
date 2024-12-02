@@ -21,7 +21,7 @@ use chacha20poly1305::{ChaCha20Poly1305, Key, KeyInit};
 use crate::keys::ovk::Ovk;
 use decaf377::Fq;
 use crate::keys::ka;
-use crate::parser::commitment::Commitment;
+use crate::parser::commitment::{Commitment, StateCommitment};
 use rand::{CryptoRng, RngCore};
 
 pub const PAYLOAD_KEY_LEN_BYTES: usize = 32;
@@ -100,6 +100,38 @@ impl PayloadKey {
 
         Ok(())
     }
+
+    /// Use Blake2b-256 to derive an encryption key from the OVK and public fields for swaps.
+    pub fn derive_swap(ovk: &Ovk, cm: StateCommitment) -> Self {
+        let cm_bytes: [u8; 32] = cm.0.to_bytes();
+    
+        let mut kdf_params = blake2b_simd::Params::new();
+        kdf_params.personal(b"Penumbra_Payswap");
+        kdf_params.hash_length(32);
+        let mut kdf = kdf_params.to_state();
+        kdf.update(&ovk.to_bytes());
+        kdf.update(&cm_bytes);
+    
+        let key = kdf.finalize();
+        Self(*Key::from_slice(key.as_bytes()))
+    }
+
+    /// Encrypt a swap using the `PayloadKey`.
+    pub fn encrypt_swap(&self, plaintext: &mut [u8], text_len: usize) -> Result<(), ParserError> {
+        let cipher = ChaCha20Poly1305::new(&self.0);
+        let nonce_bytes = PayloadKind::Swap.nonce();
+        let nonce = Nonce::<ChaCha20Poly1305>::from_slice(&nonce_bytes);
+
+        let plaintext_len = plaintext.len();
+
+        let tag = cipher
+            .encrypt_in_place_detached(nonce, b"", &mut plaintext[..text_len])
+            .map_err(|_| ParserError::UnexpectedError)?;
+
+            plaintext[plaintext_len - 16..].copy_from_slice(&tag);
+
+        Ok(())
+    }
 }
 
 
@@ -109,10 +141,11 @@ pub struct OvkWrappedKey(pub [u8; OVK_WRAPPED_LEN_BYTES]);
 
 impl OvkWrappedKey {
     pub const PROTO_LEN: usize = OVK_WRAPPED_LEN_BYTES + 2;
+    pub const PROTO_PREFIX: [u8; 2] = [0x22, 0x30];
 
     pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
         let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..2].copy_from_slice(&[0x22, 0x30]);
+        proto[0..2].copy_from_slice(&Self::PROTO_PREFIX);
         proto[2..].copy_from_slice(&self.0);
         proto
     }
@@ -182,18 +215,20 @@ pub struct WrappedMemoKey(pub [u8; MEMOKEY_WRAPPED_LEN_BYTES]);
 
 impl WrappedMemoKey {
     pub const PROTO_LEN: usize = MEMOKEY_WRAPPED_LEN_BYTES + 2;
+    pub const PROTO_PREFIX: [u8; 2] = [0x1a, 0x30];
+
     /// Encrypt a memo key using the action-specific `PayloadKey`.
     pub fn encrypt(
         memo_key: &PayloadKey,
         esk: ka::Secret,
         transmission_key: &ka::Public,
         diversified_generator: &decaf377::Element,
-    ) -> Self {
+    ) -> Result<Self, ParserError> {
         // 1. Construct the per-action PayloadKey.
         let epk = esk.diversified_public(diversified_generator);
         let shared_secret = esk
             .key_agreement_with(transmission_key)
-            .expect("key agreement succeeded");
+            .map_err(|_| ParserError::UnexpectedError)?;
 
         let action_key = PayloadKey::derive(&shared_secret, &epk);
 
@@ -204,14 +239,14 @@ impl WrappedMemoKey {
         action_key.encrypt(&mut encryption_result, PayloadKind::MemoKey, 32).map_err(|_| ParserError::UnexpectedError).unwrap();
         let wrapped_memo_key_bytes: [u8; MEMOKEY_WRAPPED_LEN_BYTES] = encryption_result
             .try_into()
-            .expect("memo key must fit in wrapped memo key field");
+            .map_err(|_| ParserError::UnexpectedError)?;
 
-        WrappedMemoKey(wrapped_memo_key_bytes)
+        Ok(WrappedMemoKey(wrapped_memo_key_bytes))
     }
 
     pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
         let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..2].copy_from_slice(&[0x1a, 0x30]);
+        proto[0..2].copy_from_slice(&Self::PROTO_PREFIX);
         proto[2..].copy_from_slice(&self.0);
         proto
     }

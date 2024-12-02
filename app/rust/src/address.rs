@@ -25,7 +25,7 @@ pub mod address_view;
 
 use crate::constants::ADDRESS_LEN;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 // pub struct Address([u8; Address::LEN]);
 /// A valid payment address.
 pub struct Address {
@@ -104,6 +104,10 @@ impl Address {
 
     pub fn transmission_key(&self) -> &ka::Public {
         &self.pk_d
+    }
+
+    pub fn transmission_key_s(&self) -> &Fq {
+        &self.tsk
     }
 
     pub fn clue_key(&self) -> &ClueKey {

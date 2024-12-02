@@ -146,6 +146,8 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/output_plan.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/delegate_plan.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/undelegate_plan.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/ics20_withdrawal.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/swap.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})

@@ -30,6 +30,7 @@ use crate::parser::parameters::ParametersHash;
 
 pub mod output;
 pub mod spend;
+pub mod swap;
 
 #[repr(C)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
@@ -179,6 +180,35 @@ pub unsafe extern "C" fn rs_output_action_hash(
 #[no_mangle]
 /// Use to compute an address and write it back into output
 /// argument.
+pub unsafe extern "C" fn rs_swap_action_hash(
+    sk: &SpendKeyBytes,
+    plan: &swap::SwapPlanC,
+    output: *mut u8,
+    output_len: usize,
+) -> u32 {
+    crate::zlog("rs_swap_action_hash\x00");
+    let output = std::slice::from_raw_parts_mut(output, output_len);
+
+    if output.len() < 64 {
+        return ParserError::Ok as u32;
+    }
+
+    let fvk: crate::keys::FullViewingKey = sk.fvk().unwrap();
+
+    let body_hash_bytes = plan.effect_hash(&fvk);
+
+    if let Ok(body_hash_bytes) = body_hash_bytes {
+        let body_hash_array = body_hash_bytes.as_array();
+        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    }
+
+    ParserError::Ok as u32
+}
+
+#[no_mangle]
+/// Use to compute an address and write it back into output
+/// argument.
 pub unsafe extern "C" fn rs_generic_action_hash(
     data: &BytesC,
     action_type: u8,
@@ -201,6 +231,9 @@ pub unsafe extern "C" fn rs_generic_action_hash(
             }
             ActionPlan::Undelegate => {
                 effect_hash = EffectHash::from_proto_effecting_data("/penumbra.core.component.stake.v1.Undelegate", data_to_hash);
+            }
+            ActionPlan::Ics20Withdrawal => {
+                effect_hash = EffectHash::from_proto_effecting_data("/penumbra.core.component.ibc.v1.Ics20Withdrawal", data_to_hash);
             }
             _ => {
                 return ParserError::UnexpectedData as u32;
@@ -231,6 +264,9 @@ mod tests {
     use crate::parser::memo_plain_text::MemoPlaintextC;
     use crate::parser::value::ValueC;
     use crate::parser::action::ActionHash;
+    use crate::parser::trading_pair::TradingPairC;
+    use crate::parser::swap_plaintext::SwapPlaintextC;
+    use crate::parser::fee::FeeC;
     #[test]
     fn test_transaction_plan_hash() {
         let dummy_action_hashes = ActionsHashC {
@@ -328,7 +364,9 @@ mod tests {
         };
 
         let dummy_value = ValueC {
+            has_amount: true,
             amount: dummy_amount,
+            has_asset_id: true,
             asset_id: dummy_asset_id,
         };
 
@@ -399,7 +437,9 @@ mod tests {
         };
 
         let dummy_value = ValueC {
+            has_amount: true,
             amount: dummy_amount,
+            has_asset_id: true,
             asset_id: dummy_asset_id,
         };
 
@@ -443,6 +483,105 @@ mod tests {
         let expected_hash = "da23ad386bbe7f0f9fa6432796fe2afb08356c65363dc49d6f36dc5bd28a2d518a6e13e8365accc91022f38f66dbf31426ab3dc8dfd45749be7f428980a1ac33";
         if let Ok(output_action_hash_bytes) = output_action_hash {
             let computed_hash = hex::encode(output_action_hash_bytes.as_array());
+            assert_eq!(computed_hash, expected_hash);
+        } else {
+            panic!("output_action_hash is not Ok");
+        }
+    }
+
+    #[test]
+    fn test_swap_action_hash() {
+
+        // create trading pair dummy
+        let asset_1_id_bytes =
+            hex::decode("29ea9c2f3371f6a487e7e95c247041f4a356f983eb064e5d2b3bcf322ca96a10")
+                .unwrap();
+        let dummy_trading_pair = TradingPairC {
+            has_asset_1: true,
+            asset_1: BytesC::from_slice(&asset_1_id_bytes),
+            has_asset_2: true,
+            asset_2: BytesC::from_slice(&asset_1_id_bytes),
+        };
+
+        // Create dummy delta_1_i
+        let dummy_delta_1_i = AmountC {
+            lo: 271899605818601126,
+            hi: 0,
+        };
+
+        // Create dummy delta_2_i
+        let dummy_delta_2_i = AmountC {
+            lo: 372889361770024674,
+            hi: 0,
+        };
+
+        // Create dummy fee
+        let fee_amount = AmountC {
+            lo: 5,
+            hi: 0,
+        };
+        let dummy_fee = FeeC(ValueC {
+            has_amount: true,
+            amount: fee_amount,
+            has_asset_id: false,
+            asset_id: IdC {
+                inner: BytesC::default(),
+            },
+        });
+
+        // create dummy swap plaintext
+        let dummy_address_inner = hex::decode("111584d317e870e5881689c31a02ee002742c120a20dc4856e37058ad7fbfc7b4a59a8b92b8d3cbfc6640de587047933e1765a1e776b03840492d7824cfdd7c3d3b120d0f08b88a3d9dd06e0d8c5f8ba").unwrap();
+        let dummy_address = AddressC {
+            inner: BytesC::from_slice(&dummy_address_inner),
+            alt_bech32m: BytesC::default(),
+        };
+        let dummy_rseed_bytes =
+            hex::decode("492544b6e359dd4ef91cb283dd3a0714122c77908a911bf83b95030f75e1da27")
+                .unwrap();
+        let dummy_swap_plaintext = SwapPlaintextC {
+            has_trading_pair: true,
+            trading_pair: dummy_trading_pair,
+            has_delta_1_i: true,
+            delta_1_i: dummy_delta_1_i,
+            has_delta_2_i: true,
+            delta_2_i: dummy_delta_2_i,
+            has_claim_fee: true,
+            claim_fee: dummy_fee,
+            has_claim_address: true,
+            claim_address: dummy_address,
+            rseed: BytesC::from_slice(&dummy_rseed_bytes),
+        };
+
+
+        // create dummy swap action
+        let dummy_fee_blinding =
+            hex::decode("62b169de7af84fa05c08a5946cb62afbf57d249634c01064b6823274a9ec5a03")
+                .unwrap();
+        let dummy_proof_blinding_r_bytes =
+            hex::decode("26180d90520e02b2752c01284191750d4b382a755a75ef488eb5f5084e84e60c")
+                .unwrap();
+        let dummy_proof_blinding_s_bytes =
+            hex::decode("182dc91a3f1b20a1e1dafac53b83b3e12f0ef3e08fa5320668ccd6218e02c908")
+                .unwrap();
+        let dummy_action = swap::SwapPlanC {
+            has_swap_plaintext: true,
+            swap_plaintext: dummy_swap_plaintext,
+            fee_blinding: BytesC::from_slice(&dummy_fee_blinding),
+            proof_blinding_r: BytesC::from_slice(&dummy_proof_blinding_r_bytes),
+            proof_blinding_s: BytesC::from_slice(&dummy_proof_blinding_s_bytes),
+        };
+
+        let spend_key = SpendKeyBytes::from([
+            0xa1, 0xff, 0xba, 0x0c, 0x37, 0x93, 0x1f, 0x0a, 0x62, 0x61, 0x37, 0x52, 0x0d, 0xa6,
+            0x50, 0x63, 0x2d, 0x35, 0x85, 0x3b, 0xf5, 0x91, 0xb3, 0x6b, 0xb4, 0x28, 0x63, 0x0a,
+            0x4d, 0x87, 0xc4, 0xdc,
+        ]);
+        let fvk = spend_key.fvk().unwrap();
+
+        let swap_action_hash = dummy_action.effect_hash(&fvk);
+        let expected_hash = "b648fd6fb4b3801586a0d3c6881338a9da1aef1d5def434340b32b719ba7e890d65673ec5423e99668606d11f51bafd11e0158556f7c958809e9dd2b01921d7a";
+        if let Ok(swap_action_hash_bytes) = swap_action_hash {
+            let computed_hash = hex::encode(swap_action_hash_bytes.as_array());
             assert_eq!(computed_hash, expected_hash);
         } else {
             panic!("output_action_hash is not Ok");

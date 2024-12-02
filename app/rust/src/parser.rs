@@ -40,6 +40,12 @@ pub mod rseed;
 pub mod symmetric;
 pub mod value;
 pub mod effect_hash;
+pub mod swap_plaintext;
+pub mod trading_pair;
+pub mod fee;
+pub mod swap_payload;
+pub mod swap_ciphertext;
+
 pub use error::ParserError;
 
 #[derive(Clone, Copy, PartialEq, Eq)]

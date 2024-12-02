@@ -22,6 +22,7 @@ pub struct Nullifier(pub Fq);
 impl Nullifier {
     pub const LEN: usize = 32; 
     pub const PROTO_LEN: usize = Self::LEN + 4;
+    pub const PROTO_PREFIX: [u8; 4] = [0x32, 0x22, 0x0a, 0x20];
 
     /// Derive the [`Nullifier`] for a positioned note or swap given its [`merkle::Position`]
     /// and [`Commitment`].
@@ -42,7 +43,7 @@ impl Nullifier {
 
     pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
         let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x32, 0x22, 0x0a, 0x20]);
+        proto[0..4].copy_from_slice(&Self::PROTO_PREFIX);
         proto[4..].copy_from_slice(&self.0.to_bytes());
         proto
     }
