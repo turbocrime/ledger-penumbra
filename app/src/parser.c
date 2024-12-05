@@ -23,9 +23,13 @@
 
 #include "coin.h"
 #include "crypto.h"
+#include "parameters.h"
 #include "parser_common.h"
 #include "parser_impl.h"
+#include "plan/output_plan.h"
 #include "tx_metadata.h"
+
+static uint8_t action_idx = 0;
 
 parser_error_t parser_init_context(parser_context_t *ctx, const uint8_t *buffer, uint16_t bufferSize) {
     ctx->offset = 0;
@@ -64,10 +68,25 @@ parser_error_t parser_validate(parser_context_t *ctx) {
 }
 
 parser_error_t parser_getNumItems(const parser_context_t *ctx, uint8_t *num_items) {
-    // #{TODO} --> function to retrieve num Items
-    // *num_items = _getNumItems();
     UNUSED(ctx);
-    *num_items = 1;
+
+    uint8_t parameters_num_items = 0;
+    CHECK_ERROR(parameters_getNumItems(ctx, &parameters_num_items))
+    *num_items = parameters_num_items;
+
+    // Add actions number of items
+    for (uint8_t i = 0; i < ctx->tx_obj->plan.actions.qty; i++) {
+        uint8_t action_num_items = 0;
+        switch (ctx->tx_obj->actions_plan[i].action_type) {
+            case penumbra_core_transaction_v1_ActionPlan_output_tag:
+                CHECK_ERROR(output_getNumItems(ctx, &action_num_items));
+                break;
+            default:
+                return parser_unexpected_error;
+        }
+        *num_items += action_num_items;
+    }
+
     if (*num_items == 0) {
         return parser_unexpected_number_items;
     }
@@ -99,27 +118,35 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
     CHECK_ERROR(checkSanity(numItems, displayIdx))
     cleanOutput(outKey, outKeyLen, outVal, outValLen);
 
-    switch (displayIdx) {
-        case 0:
-            // Display Item 0
-            snprintf(outKey, outKeyLen, "Title #0");
-            snprintf(outVal, outValLen, "Value #0");
-            return parser_ok;
-        case 1:
-            // Display Item 1
-            snprintf(outKey, outKeyLen, "Title #1");
-            snprintf(outVal, outValLen, "Value #1");
-            return parser_ok;
-        case 10:
-            // Display Item 10
-            snprintf(outKey, outKeyLen, "Title #N");
-            snprintf(outVal, outValLen, "Value #N");
-            return parser_ok;
-        default:
-            break;
+    // Print parameters
+    uint8_t parameters_num_items = 0;
+    CHECK_ERROR(parameters_getNumItems(ctx, &parameters_num_items))
+    if (displayIdx < parameters_num_items) {
+        CHECK_ERROR(parameters_getItem(ctx, displayIdx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
     }
 
-    return parser_display_idx_out_of_range;
+    // TODO: print memo
+
+    // Print actions
+    if (displayIdx >= parameters_num_items) {
+        // Increment action_idx only if displayIdx change
+        if (displayIdx != action_idx) {
+            action_idx = displayIdx - parameters_num_items;
+        }
+        if (action_idx >= ctx->tx_obj->plan.actions.qty) {
+            return parser_unexpected_error;
+        }
+        switch (ctx->tx_obj->actions_plan[action_idx].action_type) {
+            case penumbra_core_transaction_v1_ActionPlan_output_tag:
+                CHECK_ERROR(output_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.output, 0, outKey, outKeyLen,
+                                           outVal, outValLen, pageIdx, pageCount))
+                break;
+            default:
+                return parser_unexpected_error;
+        }
+    }
+
+    return parser_ok;
 }
 
 parser_error_t parser_parseTxMetadata(const uint8_t *data, size_t dataLen, tx_metadata_t *metadata, uint8_t metadataLen) {

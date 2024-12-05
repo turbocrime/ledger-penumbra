@@ -68,7 +68,7 @@ parser_error_t printShortAddress(const uint8_t *address, uint16_t address_len, c
     if (err != parser_ok) {
         return err;
     }
-
+    
     // Calculate required length for short form
     uint16_t prefix_and_sep_len = sizeof(ADDR_BECH32_PREFIX); // prefix + separator
     uint16_t required_len = prefix_and_sep_len + SHORT_ADDRESS_VISIBLE_CHARS;

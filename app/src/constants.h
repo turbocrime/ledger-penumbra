@@ -28,7 +28,7 @@
 #define ADDRESS_LEN_BYTES 80
 // https://protocol.penumbra.zone/main/addresses_keys/addresses.html#short-address-form
 #define SHORT_ADDRESS_VISIBLE_CHARS 24
-#define ELLIPSIS "..."
+#define ELLIPSIS "…"
 
 // Common BECH32m constants
 #define CHECKSUM_LENGTH 8
@@ -72,3 +72,7 @@
     0x29, 0xea, 0x9c, 0x2f, 0x33, 0x71, 0xf6, 0xa4, 0x87, 0xe7, 0xe9, 0x5c, 0x24, 0x70, 0x41, 0xf4, \
     0xa3, 0x56, 0xf9, 0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10  \
 }
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an output action
+#define OUTPUT_DISPLAY_MAX_LEN \
+    (VALUE_DISPLAY_MAX_LEN + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS) + sizeof(ADDR_BECH32_PREFIX) + 6)  // = 202

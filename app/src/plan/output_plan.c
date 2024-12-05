@@ -13,6 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
+#include "output_plan.h"
 
 #include "parser_impl.h"
 #include "parser_interface.h"
@@ -21,6 +22,9 @@
 #include "pb_decode.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "zxformat.h"
+#include "known_assets.h"
+#include "note.h"
+#include "ui_utils.h"
 
 parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
     penumbra_core_component_shielded_pool_v1_OutputPlan output_plan =
@@ -51,6 +55,71 @@ parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
 
     output->value.amount.lo = output_plan.value.amount.lo;
     output->value.amount.hi = output_plan.value.amount.hi;
+
+    return parser_ok;
+}
+
+parser_error_t output_getNumItems(const parser_context_t *ctx, uint8_t *num_items) {
+    UNUSED(ctx);
+    // from spends we display only two items:
+    // - Output 100 USDC
+    // - To Main Account
+    *num_items = 1;
+    return parser_ok;
+}
+
+parser_error_t output_getItem(const parser_context_t *ctx, const output_plan_t *output,
+                             uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
+                             char *outVal, uint16_t outValLen, uint8_t pageIdx,
+                             uint8_t *pageCount) {
+
+    parser_error_t err = parser_no_data;
+    if (output == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
+        return err;
+    }
+
+
+    char bufferUI[OUTPUT_DISPLAY_MAX_LEN] = {0};
+    switch ( displayIdx ) {
+        case 0:
+            snprintf(outKey, outKeyLen, "Action");
+            CHECK_ERROR(output_printValue(ctx, output, bufferUI, sizeof(bufferUI)));
+            pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
+            break;
+        default:
+            return parser_no_data;
+    }
+    return parser_ok;
+
+}
+
+parser_error_t output_printValue(const parser_context_t *ctx, const output_plan_t *output, char *outVal, uint16_t outValLen) {
+    if (ctx == NULL || output == NULL || outVal == NULL) {
+        return parser_no_data;
+    }
+
+    if (outValLen < OUTPUT_DISPLAY_MAX_LEN) {
+        return parser_unexpected_buffer_end;
+    }
+
+    MEMZERO(outVal, outValLen);
+
+    // example: Output 100 USDC to penumbra1k0zzug62gpz60sejdvu9q7mq…
+    
+    // add action title
+    uint16_t written_local = snprintf(outVal, outValLen, "Output ");
+
+    // add value
+    CHECK_ERROR(printValue(ctx, &output->value, outVal + written_local, outValLen - written_local));
+    uint16_t written_value = strlen(outVal);
+
+    // add "to"
+    written_local = snprintf(outVal + written_value, outValLen - written_value, " to ");
+
+    // add address
+    char address[100] = {0};
+    memcpy(address, output->dest_address.inner.ptr, output->dest_address.inner.len);
+    CHECK_ERROR(printShortAddress((uint8_t *)address, output->dest_address.inner.len, outVal + written_local + written_value, outValLen - written_local - written_value));
 
     return parser_ok;
 }
