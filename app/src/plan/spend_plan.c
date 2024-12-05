@@ -21,6 +21,8 @@
 #include "pb_decode.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "zxformat.h"
+#include "known_assets.h"
+#include "note.h"
 
 parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     penumbra_core_component_shielded_pool_v1_SpendPlan spend_plan =
@@ -58,4 +60,40 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     output->position = spend_plan.position;
 
     return parser_ok;
+}
+
+parser_error_t spend_getNumItems(const parser_context_t *ctx, uint8_t *num_items) {
+    UNUSED(ctx);
+    // from spends we display only two items:
+    // - Spend 100 USDC
+    // - From Main Account
+    *num_items = 2;
+    return parser_ok;
+}
+
+parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *spend,
+                             uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
+                             char *outVal, uint16_t outValLen, uint8_t pageIdx,
+                             uint8_t *pageCount) {
+
+    parser_error_t err = parser_no_data;
+    if (spend == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
+        return err;
+    }
+
+
+    switch ( displayIdx ) {
+        case 0:
+            snprintf(outKey, outKeyLen, "Spend");
+            return printValue(ctx, &spend->note.value, outVal, outValLen);
+            break;
+        case 1:
+            snprintf(outKey, outKeyLen, "From");
+            snprintf(outVal, outValLen, "Main Account");
+            break;
+        default:
+            return parser_no_data;
+    }
+    return parser_ok;
+
 }

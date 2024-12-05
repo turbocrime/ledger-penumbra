@@ -14,28 +14,31 @@
  *  limitations under the License.
  ********************************************************************************/
 #pragma once
-
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <zxmacros.h>
-
 #include "parser_common.h"
-#include "parser_txdef.h"
-#include "pb_common.h"
-#include "pb_decode.h"
-#include "zxtypes.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-parser_error_t decode_spend_plan(const bytes_t *input, spend_plan_t *spend_plan);
+parser_error_t metadata_parse(const uint8_t *data, size_t dataLen, tx_metadata_t *metadata, uint8_t metadataLen);
 
-parser_error_t spend_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
+parser_error_t metadata_toAssetId(const tx_metadata_t *metadata, uint8_t *assetId, uint16_t assetIdLen);
 
-parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *spend, const address_index_t *addr_index, uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
-                              char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
+/**
+ * @brief Retrieves denomination string for a given asset from metadata array
+ * @param metadata Array of transaction metadata entries
+ * @param metadataLen Length of the metadata array
+ * @param asset Target asset ID to search for
+ * @param denom Buffer to store the denomination string
+ * @param len Length of the denomination buffer
+ * @return Length of denomination copied, 0 if not found or error
+ */
+uint8_t metadata_getDenom(const tx_metadata_t *metadata,
+                         uint8_t metadataLen,
+                         const asset_id_t *asset,
+                         char *denom,
+                         uint8_t len);
+
 
 #ifdef __cplusplus
 }

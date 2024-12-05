@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2018 - 2023 Zondax AG
+ *   (c) 2018 - 2023 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,29 +13,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
+
 #pragma once
 
-#include <stdbool.h>
-#include <stddef.h>
 #include <stdint.h>
-#include <zxmacros.h>
-
 #include "parser_common.h"
-#include "parser_txdef.h"
-#include "pb_common.h"
-#include "pb_decode.h"
-#include "zxtypes.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-parser_error_t decode_spend_plan(const bytes_t *input, spend_plan_t *spend_plan);
-
-parser_error_t spend_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
-
-parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *spend, const address_index_t *addr_index, uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
-                              char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
+parser_error_t printValue(const parser_context_t *ctx, const value_t *value,
+                          char *outVal, uint16_t outValLen);
 
 #ifdef __cplusplus
 }

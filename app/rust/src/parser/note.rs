@@ -1,5 +1,5 @@
 /*******************************************************************************
-*   (c) 2024 Zondax GmbH
+a   (c) 2024 Zondax GmbH
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ use crate::keys::ovk::Ovk;
 use crate::parser::{
     address::AddressC,
     bytes::BytesC,
+    commitment::{Commitment, StateCommitment},
+    note_payload::NotePayload,
     rseed::Rseed,
+    symmetric::PayloadKey,
     symmetric::{OutgoingCipherKey, OvkWrappedKey, PayloadKind, OVK_WRAPPED_LEN_BYTES},
     value::{Value, ValueC},
-    symmetric::PayloadKey,
-    note_payload::NotePayload,
-    commitment::{Commitment, StateCommitment}
 };
 use crate::ParserError;
 use decaf377::{Element, Encoding, Fq, Fr};
@@ -212,7 +212,7 @@ impl From<&Note> for [u8; NOTE_LEN_BYTES] {
         let mut bytes = [0u8; NOTE_LEN_BYTES];
         bytes[0..80].copy_from_slice(&note.address.to_bytes().unwrap());
         bytes[80..96].copy_from_slice(&note.value.amount.to_le_bytes());
-        bytes[96..128].copy_from_slice(&note.value.asset_id.to_bytes().unwrap());
+        bytes[96..128].copy_from_slice(&note.value.asset_id.to_bytes());
         bytes[128..160].copy_from_slice(&note.rseed.to_bytes().unwrap());
         bytes
     }

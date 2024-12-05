@@ -148,6 +148,9 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/undelegate_plan.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/ics20_withdrawal.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/swap.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui/note.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/known_assets.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui_utils.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})
@@ -161,6 +164,7 @@ target_include_directories(app_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/protobuf
         ${CMAKE_CURRENT_SOURCE_DIR}/app/rust/include
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui
         )
 
 ##############################################################

@@ -65,6 +65,7 @@ pub enum ParserError {
     InvalidPrecision,
     PrecisionTooLarge,
     ClueCreationFailed,
+    InvalidAssetId,
 }
 
 impl From<ErrorKind> for ParserError {

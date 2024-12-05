@@ -219,6 +219,8 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "actions overflow";
         case parser_detection_data_overflow:
             return "detection data overflow";
+        case parser_invalid_metadata:
+            return "invalid metadata";
 
         default:
             return "Unrecognized error code";

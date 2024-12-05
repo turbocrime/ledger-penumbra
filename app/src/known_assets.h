@@ -14,28 +14,11 @@
  *  limitations under the License.
  ********************************************************************************/
 #pragma once
-
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <zxmacros.h>
-
-#include "parser_common.h"
-#include "parser_txdef.h"
-#include "pb_common.h"
-#include "pb_decode.h"
-#include "zxtypes.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-parser_error_t decode_spend_plan(const bytes_t *input, spend_plan_t *spend_plan);
-
-parser_error_t spend_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
-
-parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *spend, const address_index_t *addr_index, uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
-                              char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
+const asset_info_t *asset_info_from_table(const uint8_t asset_id[ASSET_ID_LEN]);
 
 #ifdef __cplusplus
 }

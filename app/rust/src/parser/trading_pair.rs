@@ -38,8 +38,12 @@ impl TryFrom<TradingPairC> for TradingPair {
     type Error = ParserError;
 
     fn try_from(value: TradingPairC) -> Result<Self, Self::Error> {
-        let id_1 = IdC { inner: value.asset_1 };
-        let id_2 = IdC { inner: value.asset_2 };
+        let id_1 = IdC {
+            inner: value.asset_1,
+        };
+        let id_2 = IdC {
+            inner: value.asset_2,
+        };
 
         Ok(Self {
             asset_1: Id::try_from(id_1)?,
@@ -63,8 +67,8 @@ impl TradingPair {
 
     pub fn to_bytes(&self) -> Result<[u8; 64], ParserError> {
         let mut bytes = [0u8; 64];
-        let asset_1_bytes = self.asset_1.to_bytes()?;
-        let asset_2_bytes = self.asset_2.to_bytes()?;
+        let asset_1_bytes = self.asset_1.to_bytes();
+        let asset_2_bytes = self.asset_2.to_bytes();
 
         bytes[..32].copy_from_slice(&asset_1_bytes);
         bytes[32..].copy_from_slice(&asset_2_bytes);
@@ -76,9 +80,9 @@ impl TradingPair {
         let mut proto = [0u8; Self::PROTO_LEN];
 
         proto[0..6].copy_from_slice(&Self::PROTO_PREFIX_ASSET_1);
-        proto[6..38].copy_from_slice(&self.asset_1.to_bytes()?);
-        proto[38..42].copy_from_slice(&Self::PROTO_PREFIX_ASSET_2); 
-        proto[42..74].copy_from_slice(&self.asset_2.to_bytes()?);
+        proto[6..38].copy_from_slice(&self.asset_1.to_bytes());
+        proto[38..42].copy_from_slice(&Self::PROTO_PREFIX_ASSET_2);
+        proto[42..74].copy_from_slice(&self.asset_2.to_bytes());
 
         Ok(proto)
     }

@@ -14,6 +14,15 @@
  *  limitations under the License.
  ********************************************************************************/
 #define U128_STR_MAX_LEN 40
+// plus null terminator
+#define MAX_DENOM_LEN 120 + 1
+
+// Constant to use to allocate a buffer on the stack
+// to hold the formatting of a value_t type, following
+// provided documentation, we choose the worst case, where
+// a value contains an unknown token and we use a custom denom
+// U128 + space + denom + null terminator
+#define VALUE_DISPLAY_MAX_LEN (U128_STR_MAX_LEN + 1 + MAX_DENOM_LEN)  // = 162
 
 // raw address len before encoding
 #define ADDRESS_LEN_BYTES 80
@@ -53,3 +62,13 @@
 
 // This is the largest text length we can support
 #define MAX_TEXT_LEN MEMO_LEN_BYTES - ADDRESS_LEN_BYTES
+// The number of metadata we can handle in RAM during
+// transaction signing
+#define MAX_TX_METADATA_LEN 5
+
+// The staking token asset ID (upenumbra)
+// Bech32m: passet1984fctenw8m2fpl8a9wzguzp7j34d7vravryuhft808nyt9fdggqxmanqm
+#define STAKING_TOKEN_ASSET_ID_BYTES { \
+    0x29, 0xea, 0x9c, 0x2f, 0x33, 0x71, 0xf6, 0xa4, 0x87, 0xe7, 0xe9, 0x5c, 0x24, 0x70, 0x41, 0xf4, \
+    0xa3, 0x56, 0xf9, 0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10  \
+}

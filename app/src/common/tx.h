@@ -48,6 +48,12 @@ uint8_t *tx_get_buffer();
 /// \return It returns NULL if data is valid or error message otherwise.
 const char *tx_parse();
 
+/// Parse transaction metadata
+/// storing result in parser context
+/// this metadata is used during transaction
+/// processing
+const char *tx_parse_metadata();
+
 /// Return the number of items in the transaction
 zxerr_t tx_getNumItems(uint8_t *num_items);
 

@@ -25,6 +25,7 @@
 #include "crypto.h"
 #include "parser_common.h"
 #include "parser_impl.h"
+#include "tx_metadata.h"
 
 parser_error_t parser_init_context(parser_context_t *ctx, const uint8_t *buffer, uint16_t bufferSize) {
     ctx->offset = 0;
@@ -119,4 +120,8 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
     }
 
     return parser_display_idx_out_of_range;
+}
+
+parser_error_t parser_parseTxMetadata(const uint8_t *data, size_t dataLen, tx_metadata_t *metadata, uint8_t metadataLen) {
+    return metadata_parse(data, dataLen, metadata, metadataLen);
 }
