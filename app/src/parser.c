@@ -28,6 +28,7 @@
 #include "parser_impl.h"
 #include "plan/output_plan.h"
 #include "tx_metadata.h"
+#include "memo.h"
 
 static uint8_t action_idx = 0;
 
@@ -73,6 +74,10 @@ parser_error_t parser_getNumItems(const parser_context_t *ctx, uint8_t *num_item
     uint8_t parameters_num_items = 0;
     CHECK_ERROR(parameters_getNumItems(ctx, &parameters_num_items))
     *num_items = parameters_num_items;
+
+    uint8_t memo_num_items = 0;
+    CHECK_ERROR(memo_getNumItems(ctx, &memo_num_items))
+    *num_items += memo_num_items;
 
     // Add actions number of items
     for (uint8_t i = 0; i < ctx->tx_obj->plan.actions.qty; i++) {
@@ -125,13 +130,18 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
         CHECK_ERROR(parameters_getItem(ctx, displayIdx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
     }
 
-    // TODO: print memo
+    // Print memo
+    uint8_t memo_num_items = 0;
+    CHECK_ERROR(memo_getNumItems(ctx, &memo_num_items))
+    if (displayIdx >= parameters_num_items && displayIdx < (parameters_num_items + memo_num_items)) {
+        CHECK_ERROR(memo_getItem(ctx, displayIdx - parameters_num_items, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+    }
 
     // Print actions
-    if (displayIdx >= parameters_num_items) {
+    if (displayIdx >= parameters_num_items + memo_num_items) {
         // Increment action_idx only if displayIdx change
         if (displayIdx != action_idx) {
-            action_idx = displayIdx - parameters_num_items;
+            action_idx = displayIdx - parameters_num_items - memo_num_items;
         }
         if (action_idx >= ctx->tx_obj->plan.actions.qty) {
             return parser_unexpected_error;

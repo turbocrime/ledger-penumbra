@@ -153,6 +153,7 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui_utils.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parameters.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/tx_metadata.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/memo.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})

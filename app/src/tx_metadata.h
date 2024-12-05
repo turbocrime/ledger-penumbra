@@ -35,7 +35,7 @@ parser_error_t metadata_toAssetId(const tx_metadata_t *metadata, uint8_t *assetI
  */
 uint8_t metadata_getDenom(const tx_metadata_t *metadata,
                          uint8_t metadataLen,
-                         const asset_id_t *asset,
+                         const bytes_t *asset,
                          char *denom,
                          uint8_t len);
 

@@ -36,8 +36,11 @@ pub mod swap;
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct TransactionPlanC {
     pub actions_hashes: ActionsHashC,
+    pub has_parameters: bool,
     pub parameters_hash: ParametersHash,
+    pub has_memo: bool,
     pub memo: MemoPlanC,
+    pub has_detection_data: bool,
     pub detection_data: DetectionDataPlanC,
 }
 
@@ -582,6 +585,35 @@ mod tests {
         let expected_hash = "b648fd6fb4b3801586a0d3c6881338a9da1aef1d5def434340b32b719ba7e890d65673ec5423e99668606d11f51bafd11e0158556f7c958809e9dd2b01921d7a";
         if let Ok(swap_action_hash_bytes) = swap_action_hash {
             let computed_hash = hex::encode(swap_action_hash_bytes.as_array());
+            assert_eq!(computed_hash, expected_hash);
+        } else {
+            panic!("output_action_hash is not Ok");
+        }
+    }
+
+    #[test]
+    fn test_memo_hash() {
+        // Create dummy MemoPlanC
+        let memo_key_bytes =
+            hex::decode("d6b269dbe8d6e04bdbba2025285d956864c723c3932ba608db6fd433a194731b")
+                .unwrap();
+        let memo_inner_bytes = hex::decode("8d5b14d34c66c974180c1c3537b4c6167759244fc34a3fcd582f6e937a48aa27939fdb08733c64a49a59461977b6a45e5201fd087fef594b117f3e6628e1889ecc382d5d5dfc8a383fa51ff84119bc85").unwrap();
+        let memo_plaintext = hex::decode("7a20383842204f736d334a6f3020204b713567204820354b5a4a35203736536251774a6e71316450306b33664152303620654257205a345720315837734c4820577420363420336c6d4e536b30495073664b3020204c20203951204b357336204c466a206571202041204c396d20204f4e2020577849202043656d333944584a20733930506350203139694368316757783132376642204f51334a32205a3820396f3020534e6e4c20505a667a69204a4639334848202073452048437666494b62532067355075675a43206877654d").unwrap();
+        let dummy_memo_plan = MemoPlanC {
+            plaintext: MemoPlaintextC {
+                return_address: AddressC {
+                    inner: BytesC::from_slice(&memo_inner_bytes),
+                    alt_bech32m: BytesC::default(),
+                },
+                text: BytesC::from_slice(&memo_plaintext),
+            },
+            key: BytesC::from_slice(&memo_key_bytes),
+        };
+
+        let memo_hash = dummy_memo_plan.effect_hash();
+        let expected_hash = "2f3fbb301cf857926eebf1339fc49ebff5eef78488e5e50414eeefd046f83bd40b8bd0e8cd2ec592aab1a0b83f9c800d8079d5378393f26a71bf57489b6280fc";
+        if let Ok(memo_hash_bytes) = memo_hash {
+            let computed_hash = hex::encode(memo_hash_bytes.as_array());
             assert_eq!(computed_hash, expected_hash);
         } else {
             panic!("output_action_hash is not Ok");

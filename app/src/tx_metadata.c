@@ -93,11 +93,11 @@ parser_error_t metadata_toAssetId(const tx_metadata_t *metadata, uint8_t *asset,
 
 uint8_t metadata_getDenom(const tx_metadata_t *metadata,
                          uint8_t metadataLen,
-                         const asset_id_t *asset,
+                         const bytes_t *asset,
                          char *denom,
                          uint8_t len) {
     if (metadataLen == 0 || metadata == NULL ||
-        asset == NULL || denom == NULL || len == 0) {
+        asset == NULL || asset->len == 0 || denom == NULL || len == 0) {
         return 0;
     }
 
@@ -108,7 +108,7 @@ uint8_t metadata_getDenom(const tx_metadata_t *metadata,
         found = &metadata[i];
         CHECK_ERROR(metadata_toAssetId(found, computed_asset, ASSET_ID_LEN));
 
-        if (MEMCMP(computed_asset, asset->inner.ptr, ASSET_ID_LEN) == 0) {
+        if (MEMCMP(computed_asset, asset->ptr, ASSET_ID_LEN) == 0) {
             if (found->len <= len) {
                 MEMCPY(denom, found->denom, found->len);
                 return found->len;

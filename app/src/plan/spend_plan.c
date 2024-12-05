@@ -85,7 +85,7 @@ parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *sp
     switch ( displayIdx ) {
         case 0:
             snprintf(outKey, outKeyLen, "Spend");
-            return printValue(ctx, &spend->note.value, outVal, outValLen);
+            return printValue(ctx, &spend->note.value.amount, &spend->note.value.asset_id.inner, outVal, outValLen);
             break;
         case 1:
             snprintf(outKey, outKeyLen, "From");

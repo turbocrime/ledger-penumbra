@@ -60,17 +60,21 @@ impl MemoCiphertext {
     pub fn encrypt(memo_key: &BytesC, memo: &MemoPlaintextC) -> Result<Self, ParserError> {
         let mut ciphertext = [0u8; MEMO_CIPHERTEXT_LEN_BYTES];
 
-        // Get memo plaintext bytes
-        let memo_bytes = memo
-            .get_memo_plaintext_bytes()
-            .ok_or(ParserError::UnexpectedError)?;
+        let return_address_bytes = memo.return_address.inner.get_bytes()?;
+        let text_bytes = match memo.text.get_bytes() {
+            Ok(bytes) => bytes,
+            Err(_) => &[],
+        };
 
-        if memo_bytes.len() > MEMO_LEN_BYTES {
+        if (memo.return_address.inner.len as usize + memo.text.len as usize) > MEMO_LEN_BYTES {
             return Err(ParserError::InvalidLength);
         }
 
-        // Copy memo bytes to ciphertext buffer
-        ciphertext[..memo_bytes.len()].copy_from_slice(memo_bytes);
+        // Copy return_address_bytes to ciphertext buffer
+        ciphertext[..return_address_bytes.len()].copy_from_slice(return_address_bytes);
+        // Copy text_bytes to ciphertext buffer after return_address_bytes
+        ciphertext[return_address_bytes.len()..(return_address_bytes.len() + text_bytes.len())]
+            .copy_from_slice(text_bytes);
 
         // Get memo key bytes
         let memo_key_bytes = memo_key.get_bytes()?;
@@ -79,6 +83,7 @@ impl MemoCiphertext {
         let key = PayloadKey::from_bytes(memo_key_bytes);
         key.encrypt(&mut ciphertext, PayloadKind::Memo, MEMO_LEN_BYTES)
             .map_err(|_| ParserError::UnexpectedError)?;
+
 
         Ok(MemoCiphertext(ciphertext))
     }

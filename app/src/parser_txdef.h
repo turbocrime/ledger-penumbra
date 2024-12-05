@@ -240,8 +240,11 @@ typedef struct {
 
 typedef struct {
     actions_hash_t actions;
+    bool has_parameters;
     hash_t parameters_hash;
+    bool has_memo;
     memo_plan_t memo;
+    bool has_detection_data;
     detection_data_t detection_data;
 } transaction_plan_t;
 

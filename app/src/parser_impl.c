@@ -167,8 +167,13 @@ parser_error_t _read(parser_context_t *c, parser_tx_t *v) {
         return parser_unexpected_error;
     }
 
+    v->plan.has_parameters = request.has_transaction_parameters;
+    if (request.has_transaction_parameters) {
+        CHECK_ERROR(decode_parameters(&data, &request.transaction_parameters, &v->parameters_plan));
+    }
+    v->plan.has_memo = request.has_memo;
+    v->plan.has_detection_data = request.has_detection_data;
     v->plan.actions.qty = actions_qty;
-    CHECK_ERROR(decode_parameters(&data, &request.transaction_parameters, &v->parameters_plan));
 
     return parser_ok;
 }

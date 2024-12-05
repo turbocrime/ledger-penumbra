@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-parser_error_t printValue(const parser_context_t *ctx, const value_t *value,
+parser_error_t printValue(const parser_context_t *ctx, const amount_t *amount, const bytes_t *asset_id,
                           char *outVal, uint16_t outValLen);
 
 #ifdef __cplusplus

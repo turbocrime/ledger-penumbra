@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2018 - 2023 Zondax AG
+ *  (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,15 +13,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
-#include "constants.h"
+#pragma once
+
 #include "parser_common.h"
 
-#pragma once
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-const asset_info_t *asset_info_from_table(const uint8_t asset_id[ASSET_ID_LEN]);
+parser_error_t memo_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
+parser_error_t memo_getItem(const parser_context_t *ctx, uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
+                             char *outVal, uint16_t outValLen, uint8_t pageIdx,
+                             uint8_t *pageCount);
 
 #ifdef __cplusplus
 }
