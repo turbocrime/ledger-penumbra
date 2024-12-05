@@ -26,6 +26,7 @@
 #include "delegate_plan.h"
 #include "undelegate_plan.h"
 #include "ics20_withdrawal.h"
+#include "parameters.h"
 #include "swap.h"
 #include "zxformat.h"
 
@@ -166,22 +167,8 @@ parser_error_t _read(parser_context_t *c, parser_tx_t *v) {
         return parser_unexpected_error;
     }
 
-    // get transaction parameters
-    extract_data_from_tag(&data, &v->parameters_plan.data_bytes,
-                          penumbra_core_transaction_v1_TransactionPlan_transaction_parameters_tag);
     v->plan.actions.qty = actions_qty;
-
-    // copy parameters
-    v->parameters_plan.expiry_height = request.transaction_parameters.expiry_height;
-    v->parameters_plan.has_fee = request.transaction_parameters.has_fee;
-    if (v->parameters_plan.has_fee) {
-        v->parameters_plan.fee.has_amount = request.transaction_parameters.fee.has_amount;
-        if (v->parameters_plan.fee.has_amount) {
-            v->parameters_plan.fee.amount.lo = request.transaction_parameters.fee.amount.lo;
-            v->parameters_plan.fee.amount.hi = request.transaction_parameters.fee.amount.hi;
-        }
-        v->parameters_plan.fee.has_asset_id = request.transaction_parameters.fee.has_asset_id;
-    }
+    CHECK_ERROR(decode_parameters(&data, &request.transaction_parameters, &v->parameters_plan));
 
     return parser_ok;
 }

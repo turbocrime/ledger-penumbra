@@ -85,13 +85,6 @@ typedef struct {
 } epoch_t;
 
 typedef struct {
-    bool has_amount;
-    amount_t amount;
-    bool has_asset_id;
-    asset_id_t asset_id;
-} fee_t;
-
-typedef struct {
     bytes_t inner;
 } denom_t;
 
@@ -129,7 +122,7 @@ typedef struct {
     bool has_delta_2_i;
     amount_t delta_2_i;
     bool has_claim_fee;
-    fee_t claim_fee;
+    value_t claim_fee;
     bool has_claim_address;
     address_plan_t claim_address;
     bytes_t rseed;
@@ -241,7 +234,7 @@ typedef struct {
     uint64_t expiry_height;
     bytes_t chain_id;
     bool has_fee;
-    fee_t fee;
+    value_t fee;
     bytes_t data_bytes;
 } parameters_t;
 

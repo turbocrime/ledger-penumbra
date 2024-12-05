@@ -151,6 +151,8 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui/note.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/known_assets.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parameters.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/tx_metadata.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})

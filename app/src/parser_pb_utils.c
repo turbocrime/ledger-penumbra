@@ -65,7 +65,7 @@ void setup_decode_variable_field(pb_callback_t *callback, variable_size_field_t 
     callback->arg = arg;
 }
 
-parser_error_t extract_data_from_tag(bytes_t *in, bytes_t *out, uint32_t tag) {
+parser_error_t extract_data_from_tag(const bytes_t *in, bytes_t *out, uint32_t tag) {
     const uint8_t *start = NULL;
     const uint8_t *end = NULL;
     bool eof = false;

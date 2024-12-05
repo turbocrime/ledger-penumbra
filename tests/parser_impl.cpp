@@ -14,8 +14,6 @@
  *  limitations under the License.
  ********************************************************************************/
 
-// #{TODO} --> Apply tests that check this app's encoding/libraries
-
 #include "parser_impl.h"
 
 #include <hexutils.h>

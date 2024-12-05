@@ -48,7 +48,7 @@ bool decode_variable_field(pb_istream_t *stream, const pb_field_t *field, void *
 
 void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, bytes_t *bytes, uint16_t expected_size);
 void setup_decode_variable_field(pb_callback_t *callback, variable_size_field_t *arg, bytes_t *bytes);
-parser_error_t extract_data_from_tag(bytes_t *in, bytes_t *out, uint32_t tag);
+parser_error_t extract_data_from_tag(const bytes_t *in, bytes_t *out, uint32_t tag);
 
 #ifdef __cplusplus
 }

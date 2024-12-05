@@ -25,9 +25,9 @@
 #include "crypto.h"
 #include "gmock/gmock.h"
 #include "parser.h"
+#include "parser_interface.h"
 #include "utils/common.h"
 #include "zxformat.h"
-#include "parser_interface.h"
 
 using ::testing::TestWithParam;
 
@@ -36,14 +36,14 @@ typedef struct {
     std::string name;
     std::string blob;
     std::string hash;
-} testcase_t;
+} testcase_effect_hash_t;
 
-class JsonTestsA : public ::testing::TestWithParam<testcase_t> {
+class JsonTestsEffectHash : public ::testing::TestWithParam<testcase_effect_hash_t> {
    public:
     struct PrintToStringParamName {
         template <class ParamType>
         std::string operator()(const testing::TestParamInfo<ParamType> &info) const {
-            auto p = static_cast<testcase_t>(info.param);
+            auto p = static_cast<testcase_effect_hash_t>(info.param);
             std::stringstream ss;
             ss << p.index << "_" << p.name;
             return ss.str();
@@ -52,8 +52,8 @@ class JsonTestsA : public ::testing::TestWithParam<testcase_t> {
 };
 
 // Retrieve testcases from json file
-std::vector<testcase_t> GetJsonTestCases(std::string jsonFile) {
-    auto answer = std::vector<testcase_t>();
+std::vector<testcase_effect_hash_t> GetJsonTestCasesEffectHash(std::string jsonFile) {
+    auto answer = std::vector<testcase_effect_hash_t>();
 
     Json::CharReaderBuilder builder;
     Json::Value obj;
@@ -71,14 +71,14 @@ std::vector<testcase_t> GetJsonTestCases(std::string jsonFile) {
     std::cout << "Number of testcases: " << obj.size() << std::endl;
 
     for (int i = 0; i < obj.size(); i++) {
-        answer.push_back(testcase_t{obj[i]["index"].asUInt64(), obj[i]["name"].asString(), obj[i]["blob"].asString(),
-                                    obj[i]["hash"].asString()});
+        answer.push_back(testcase_effect_hash_t{obj[i]["index"].asUInt64(), obj[i]["name"].asString(),
+                                                obj[i]["blob"].asString(), obj[i]["hash"].asString()});
     }
 
     return answer;
 }
 
-void check_testcase(const testcase_t &tc, bool expert_mode) {
+void check_testcase_effect_hash(const testcase_effect_hash_t &tc, bool expert_mode) {
     app_mode_set_expert(expert_mode);
 
     parser_context_t ctx = {0};
@@ -103,10 +103,10 @@ void check_testcase(const testcase_t &tc, bool expert_mode) {
     // compute parameters hash
     zxerr = compute_parameters_hash(&tx_obj.parameters_plan.data_bytes, &tx_obj.plan.parameters_hash);
     ASSERT_EQ(zxerr, zxerr_ok);
-    
+
     for (uint16_t i = 0; i < tx_obj.plan.actions.qty; i++) {
-        zxerr = compute_action_hash(&tx_obj.actions_plan[i], &sk_bytes, &tx_obj.plan.memo.key,
-                                   &tx_obj.plan.actions.hashes[i]);
+        zxerr =
+            compute_action_hash(&tx_obj.actions_plan[i], &sk_bytes, &tx_obj.plan.memo.key, &tx_obj.plan.actions.hashes[i]);
         ASSERT_EQ(zxerr, zxerr_ok);
     }
 
@@ -122,6 +122,7 @@ void check_testcase(const testcase_t &tc, bool expert_mode) {
 
 INSTANTIATE_TEST_SUITE_P
 
-    (JsonTestCasesCurrentTxVer, JsonTestsA, ::testing::ValuesIn(GetJsonTestCases("plan_effect_hash_testcases.json")));
+    (JsonTestCasesCurrentTxEffectHash, JsonTestsEffectHash,
+     ::testing::ValuesIn(GetJsonTestCasesEffectHash("plan_effect_hash_testcases.json")));
 
-TEST_P(JsonTestsA, CheckUIOutput_CurrentTX) { check_testcase(GetParam(), false); }
+TEST_P(JsonTestsEffectHash, CheckUIOutput_CurrentTX) { check_testcase_effect_hash(GetParam(), false); }
