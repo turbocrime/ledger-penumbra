@@ -17,11 +17,11 @@
 use crate::keys::FullViewingKey;
 use crate::parser::{
     bytes::BytesC,
-    note::{Note, NoteC},
     commitment::Commitment,
+    effect_hash::{create_personalized_state, EffectHash},
+    note::{Note, NoteC},
     nullifier::Nullifier,
     value::{Sign, Value},
-    effect_hash::{create_personalized_state, EffectHash},
 };
 use crate::ParserError;
 use decaf377::Fr;

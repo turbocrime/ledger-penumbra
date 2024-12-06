@@ -9,6 +9,7 @@ pub const ADDR_INDEX_LEN: usize = 16;
 pub const ADDRESS_LEN: usize = 80;
 
 pub const KEY_LEN: usize = 32;
+pub const FVK_LEN: usize = 64;
 pub const DIVERSIFIER_KEY_LEN: usize = 16;
 pub const OUTGOING_VIEWING_KEY_LEN: usize = KEY_LEN;
 pub const NULLIFIER_KEY_LEN: usize = KEY_LEN; // Assuming decaf377 curve parameters

@@ -29,7 +29,8 @@ pub enum Sign {
     Provided,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Value {
     pub amount: Amount,
     // The asset ID. 256 bits.
@@ -58,7 +59,7 @@ impl Value {
         let value_blinding_generator = Commitment::value_blinding_generator();
         commitment += blinding_factor * value_blinding_generator;
 
-        Ok(Commitment(commitment))
+        Ok(commitment.into())
     }
 
     pub fn to_bytes(&self) -> Result<[u8; Self::LEN], ParserError> {

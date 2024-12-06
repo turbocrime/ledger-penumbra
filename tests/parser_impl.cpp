@@ -45,7 +45,6 @@ TEST(SCALE, ReadBytes) {
                                             0x52, 0x0d, 0xa6, 0x50, 0x63, 0x2d, 0x35, 0x85, 0x3b, 0xf5, 0x91,
                                             0xb3, 0x6b, 0xb4, 0x28, 0x63, 0x0a, 0x4d, 0x87, 0xc4, 0xdc};
     std::copy(sk_bytes_raw.begin(), sk_bytes_raw.end(), sk_bytes);
-    ctx.sk_bytes = &sk_bytes;
 
     err = parser_parse(&ctx, buffer, bufferLen, &tx_obj);
     ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);

@@ -15,16 +15,8 @@
  ********************************************************************************/
 #pragma once
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
 #include <zxmacros.h>
-
 #include "parser_common.h"
-#include "parser_txdef.h"
-#include "pb_common.h"
-#include "pb_decode.h"
-#include "zxtypes.h"
 
 #ifdef __cplusplus
 extern "C" {

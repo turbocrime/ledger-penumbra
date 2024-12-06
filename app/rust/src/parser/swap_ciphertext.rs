@@ -16,7 +16,8 @@
 
 use crate::constants::SWAP_CIPHERTEXT_BYTES;
 
-#[derive(Debug, Clone)]
+#[derive(Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct SwapCiphertext(pub [u8; SWAP_CIPHERTEXT_BYTES]);
 
 impl SwapCiphertext {

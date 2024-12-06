@@ -35,7 +35,7 @@ extern "C" {
 #define EFFECT_HASH_LEN 64u
 
 #define COIN_AMOUNT_DECIMAL_PLACES 6
-#define COIN_TICKER "PEN"
+#define COIN_TICKER "penumbra"
 
 #define MENU_MAIN_APP_LINE1 "Penumbra"
 #define MENU_MAIN_APP_LINE2 "Ready"

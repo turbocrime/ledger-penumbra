@@ -4,7 +4,8 @@ use super::{nk::NullifierKey, spend_key::SpendKeyBytes};
 
 /// Allows viewing outgoing notes, i.e., notes sent from the spending key this
 /// key is derived from.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Ovk(pub(crate) [u8; Self::LEN]);
 
 impl Ovk {

@@ -33,7 +33,8 @@ use decaf377::{Element, Encoding, Fq, Fr};
 pub const NOTE_LEN_BYTES: usize = 160;
 pub const NOTE_CIPHERTEXT_BYTES: usize = 176;
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct NoteCiphertext(pub [u8; NOTE_CIPHERTEXT_BYTES]);
 
 pub struct Note {

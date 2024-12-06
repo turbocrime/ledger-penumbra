@@ -47,7 +47,11 @@ parser_error_t decode_parameters(const bytes_t *data,
 
 parser_error_t parameters_getNumItems(const parser_context_t *ctx, uint8_t *num_items) {
     UNUSED(ctx);
-    *num_items = 3;
+    if (ctx->tx_obj->parameters_plan.expiry_height == 0) {
+        *num_items = 2;
+    } else {
+        *num_items = 3;
+    }
     return parser_ok;
 }
 
@@ -65,15 +69,20 @@ parser_error_t parameters_getItem(const parser_context_t *ctx, uint8_t displayId
             pageStringExt(outVal, outValLen, (char *)ctx->tx_obj->parameters_plan.chain_id.ptr, ctx->tx_obj->parameters_plan.chain_id.len, pageIdx, pageCount);
             return parser_ok;
         case 1:
-            snprintf(outKey, outKeyLen, "Expiry Height");
-            if (uint64_to_str(bufferUI, sizeof(bufferUI), ctx->tx_obj->parameters_plan.expiry_height) != NULL) {
-                return parser_unexpected_value;
+            if (ctx->tx_obj->parameters_plan.expiry_height == 0) {
+                snprintf(outKey, outKeyLen, "Fee");
+                CHECK_ERROR(printFee(ctx, &ctx->tx_obj->parameters_plan.fee, &ctx->tx_obj->parameters_plan.chain_id, bufferUI, sizeof(bufferUI)));
+            } else {
+                snprintf(outKey, outKeyLen, "Expiry Height");
+                if (uint64_to_str(bufferUI, sizeof(bufferUI), ctx->tx_obj->parameters_plan.expiry_height) != NULL) {
+                    return parser_unexpected_value;
+                }
             }
             pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
             return parser_ok;
         case 2:
             snprintf(outKey, outKeyLen, "Fee");
-            CHECK_ERROR(printValue(ctx, &ctx->tx_obj->parameters_plan.fee.amount, &ctx->tx_obj->parameters_plan.chain_id, bufferUI, sizeof(bufferUI)));
+            CHECK_ERROR(printFee(ctx, &ctx->tx_obj->parameters_plan.fee, &ctx->tx_obj->parameters_plan.chain_id, bufferUI, sizeof(bufferUI)));
             pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
             return parser_ok;
         default:

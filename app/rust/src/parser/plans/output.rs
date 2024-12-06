@@ -31,7 +31,8 @@ use crate::parser::{
 use crate::ParserError;
 use decaf377::Fr;
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Body {
     pub note_payload: NotePayload,
     pub balance_commitment: Commitment,

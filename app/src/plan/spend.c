@@ -14,15 +14,10 @@
  *  limitations under the License.
  ********************************************************************************/
 
-#include "parser_impl.h"
-#include "parser_interface.h"
 #include "parser_pb_utils.h"
-#include "pb_common.h"
-#include "pb_decode.h"
-#include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "zxformat.h"
-#include "known_assets.h"
 #include "note.h"
+#include "ui_utils.h"
 
 parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     penumbra_core_component_shielded_pool_v1_SpendPlan spend_plan =
@@ -55,9 +50,43 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
         return parser_spend_plan_error;
     }
 
-    output->note.value.amount.lo = spend_plan.note.value.amount.lo;
-    output->note.value.amount.hi = spend_plan.note.value.amount.hi;
+    output->note.value.has_amount = spend_plan.note.value.has_amount;
+    if (output->note.value.has_amount) {
+        output->note.value.amount.lo = spend_plan.note.value.amount.lo;
+        output->note.value.amount.hi = spend_plan.note.value.amount.hi;
+    }
+    output->note.value.has_asset_id = spend_plan.note.value.has_asset_id;
     output->position = spend_plan.position;
+
+    return parser_ok;
+}
+
+
+parser_error_t spend_printValue(const parser_context_t *ctx, const spend_plan_t *spend, char *outVal, uint16_t outValLen) {
+    if (ctx == NULL || spend == NULL || outVal == NULL) {
+        return parser_no_data;
+    }
+
+    if (outValLen < SPEND_DISPLAY_MAX_LEN) {
+        return parser_unexpected_buffer_end;
+    }
+
+    MEMZERO(outVal, outValLen);
+
+    // example: Spend 100 USDC to penumbra1k0zzug62gpz60sejdvu9q7mq…
+
+    // add action title
+    uint16_t written_local = snprintf(outVal, outValLen, "Spend ");
+
+    // add value
+    CHECK_ERROR(printValue(ctx, &spend->note.value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_local, outValLen - written_local));
+    uint16_t written_value = strlen(outVal);
+
+    // add "from"
+    written_local = snprintf(outVal + written_value, outValLen - written_value, " from ");
+
+    // add address
+    CHECK_ERROR(printTxAddress(&spend->note.address.inner, outVal + written_local + written_value, outValLen - written_local - written_value));
 
     return parser_ok;
 }
@@ -67,7 +96,8 @@ parser_error_t spend_getNumItems(const parser_context_t *ctx, uint8_t *num_items
     // from spends we display only two items:
     // - Spend 100 USDC
     // - From Main Account
-    *num_items = 2;
+    // all concatenated in a single string
+    *num_items = 1;
     return parser_ok;
 }
 
@@ -77,23 +107,21 @@ parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *sp
                              uint8_t *pageCount) {
 
     parser_error_t err = parser_no_data;
+
     if (spend == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;
     }
 
-
-    switch ( displayIdx ) {
-        case 0:
-            snprintf(outKey, outKeyLen, "Spend");
-            return printValue(ctx, &spend->note.value.amount, &spend->note.value.asset_id.inner, outVal, outValLen);
-            break;
-        case 1:
-            snprintf(outKey, outKeyLen, "From");
-            snprintf(outVal, outValLen, "Main Account");
-            break;
-        default:
-            return parser_no_data;
+    if (displayIdx != 0) {
+        return err;
     }
-    return parser_ok;
 
+
+    char bufferUI[SPEND_DISPLAY_MAX_LEN] = {0};
+
+    snprintf(outKey, outKeyLen, "Action");
+    CHECK_ERROR(spend_printValue(ctx, spend, bufferUI, sizeof(bufferUI)));
+    pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
+
+    return parser_ok;
 }

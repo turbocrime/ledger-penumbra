@@ -16,19 +16,20 @@
 
 use crate::keys::FullViewingKey;
 use crate::parser::{
+    amount::Amount,
     bytes::BytesC,
     commitment::Commitment,
     effect_hash::{create_personalized_state, EffectHash},
-    swap_plaintext::SwapPlaintextC,
-    amount::Amount,
-    swap_payload::SwapPayload,
-    trading_pair::TradingPair,
     fee::Fee,
+    swap_payload::SwapPayload,
     swap_plaintext::SwapPlaintext,
+    swap_plaintext::SwapPlaintextC,
+    trading_pair::TradingPair,
 };
 use crate::ParserError;
 use decaf377::Fr;
 
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Body {
     pub trading_pair: TradingPair,
     pub delta_1_i: Amount,
@@ -53,8 +54,7 @@ impl SwapPlanC {
         let body = self.swap_body(fvk);
 
         if let Ok(body) = body {
-            let mut state =
-                create_personalized_state("/penumbra.core.component.dex.v1.SwapBody");
+            let mut state = create_personalized_state("/penumbra.core.component.dex.v1.SwapBody");
 
             state.update(&body.trading_pair.to_proto()?);
             state.update(&[0x12]); // encode tag
@@ -94,7 +94,7 @@ impl SwapPlanC {
     pub fn fee_commitment(&self) -> Result<Commitment, ParserError> {
         let fee_blinding_fr = self.get_fee_blinding_fr()?;
         let fee = Fee::try_from(self.swap_plaintext.claim_fee.clone())?;
-        Ok(fee.commit(fee_blinding_fr)?)
+        fee.commit(fee_blinding_fr)
     }
 
     pub fn get_fee_blinding(&self) -> Result<&[u8], ParserError> {
@@ -105,5 +105,4 @@ impl SwapPlanC {
         let fee_blinding_bytes = self.get_fee_blinding()?;
         Ok(Fr::from_le_bytes_mod_order(fee_blinding_bytes))
     }
-
 }

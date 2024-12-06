@@ -24,6 +24,7 @@ extern "C" {
 #include "constants.h"
 
 #define KEY_LEN 32
+#define FVK_LEN 64
 #define DIVERSIFIER_KEY_LEN 16
 #define OUTGOING_VIEWING_KEY_LEN KEY_LEN
 #define NULLIFIER_KEY_LEN KEY_LEN            // Assuming decaf377 curve parameters

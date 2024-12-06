@@ -23,9 +23,9 @@ extern crate no_std_compat as std;
 #[cfg(test)]
 extern crate hex_literal;
 
-use poseidon377 as _;
-use educe as _;
 use arrayref as _;
+use educe as _;
+use poseidon377 as _;
 
 pub(crate) mod address;
 mod bolos;
@@ -36,6 +36,7 @@ pub mod network;
 pub mod parser;
 mod utils;
 pub mod wallet_id;
+pub mod zxerror;
 
 pub use parser::{FromBytes, ParserError, ViewError};
 pub(crate) use utils::prf::{expand_fq, expand_fr};

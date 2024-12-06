@@ -15,23 +15,18 @@
  ********************************************************************************/
 #pragma once
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
 #include <zxmacros.h>
-
 #include "parser_common.h"
-#include "parser_txdef.h"
-#include "pb_common.h"
-#include "pb_decode.h"
-#include "zxtypes.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-parser_error_t decode_delegate_plan(const bytes_t *data, delegate_plan_t *delegate);
-
+parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output);
+parser_error_t output_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
+parser_error_t output_getItem(const parser_context_t *ctx, const output_plan_t *output, uint8_t displayIdx, char *outKey,
+                              uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
+parser_error_t output_printValue(const parser_context_t *ctx, const output_plan_t *output, char *outVal, uint16_t outValLen);
 #ifdef __cplusplus
 }
 #endif

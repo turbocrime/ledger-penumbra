@@ -16,12 +16,14 @@
 
 #include <stdio.h>
 
+#include "ui_utils.h"
 #include "parser_common.h"
 #include "rslib.h"
 #include "zxerror.h"
 #include "zxformat.h"
 #include "zxmacros.h"
 #include "constants.h"
+#include "crypto_helper.h"
 
 
 parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data,
@@ -47,7 +49,41 @@ parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const
     return parser_ok;
 }
 
-parser_error_t printAddress(const uint8_t *address, uint16_t address_len, char *out, uint16_t out_len) {
+
+/// Prints an address
+/// but a difference to the other formatting functions here, this method uses
+/// the device keys to check if the passed address is visible or not
+parser_error_t printTxAddress(const bytes_t *address, char *out, uint16_t out_len){
+    if (out == NULL || out_len == 0 || address == NULL) {
+        return parser_no_data;
+    }
+
+    // Validate input length
+    if (address->len != ADDRESS_LEN_BYTES) {
+        return parser_invalid_address;
+    }
+
+    bool is_visible = false;
+    uint32_t index = 0;
+    CHECK_ERROR(rs_is_address_visible(address, &is_visible, &index));
+
+    if (is_visible) {
+        if (index == 0) {
+            snprintf(out, out_len, "Main Account");
+        } else {
+            // We can use %d, because account is an uint32_t
+            // otherwise u64_to_str or any other alternative
+            // must be used
+            snprintf(out, out_len, "Sub-account #%d", index);
+        }
+    } else {
+        return printShortAddress(address->ptr, address->len, out, out_len);
+    }
+
+    return parser_ok;
+}
+
+parser_error_t encodeAddress(const uint8_t *address, uint16_t address_len, char *out, uint16_t out_len) {
     // Validate input length
     if (address_len != ADDRESS_LEN_BYTES) {
         return parser_invalid_address;
@@ -63,12 +99,11 @@ parser_error_t printAddress(const uint8_t *address, uint16_t address_len, char *
 parser_error_t printShortAddress(const uint8_t *address, uint16_t address_len, char *out, uint16_t out_len) {
     // First get the full address encoded
     char full_address[ENCODED_ADDR_BUFFER_SIZE] = {0};
-    // parser_error_t printAddress(uint8_t *address, uint16_t address_len, char *out, uint16_t out_len) {
-    parser_error_t err = printAddress(address, address_len, full_address, (uint16_t)sizeof(full_address));
+    parser_error_t err = encodeAddress(address, address_len, full_address, (uint16_t)sizeof(full_address));
     if (err != parser_ok) {
         return err;
     }
-    
+
     // Calculate required length for short form
     uint16_t prefix_and_sep_len = sizeof(ADDR_BECH32_PREFIX); // prefix + separator
     uint16_t required_len = prefix_and_sep_len + SHORT_ADDRESS_VISIBLE_CHARS;

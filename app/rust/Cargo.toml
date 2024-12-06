@@ -45,10 +45,16 @@ getrandom = { version = "0.1.14", default-features = false }
 panic-halt = "0.2.0"
 
 [profile.release]
-lto = false
 codegen-units = 1
-debug = true
+debug = false
 opt-level = "z"
+panic = "abort"
+# lto = false
+# Settings below aimed to reduce
+# binary size due to code
+lto = "thin"
+overflow-checks = false
+strip = true
 
 [profile.dev]
 panic = "abort"
@@ -56,10 +62,3 @@ panic = "abort"
 [features]
 clippy = []
 derive-debug = []
-
-[patch.crates-io]
-# decaf377 = { path = "../decaf377" }
-# decaf377-rdsa = { path = "../decaf377-rdsa" }
-# decaf377 = { path = "../decaf377" }
-# decaf377-rdsa = { path = "../decaf377-rdsa" }
-# blake2b_simd = { path = "../blake2_simd/blake2b" }

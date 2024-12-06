@@ -23,7 +23,7 @@ pub mod action;
 mod address;
 pub mod amount;
 pub mod balance;
-mod bytes;
+pub mod bytes;
 mod clue_plan;
 pub mod commitment;
 pub mod detection;

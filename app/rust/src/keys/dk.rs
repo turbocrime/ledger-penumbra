@@ -9,7 +9,8 @@ use decaf377::{Element, Fq};
 
 use super::spend_key::SpendKeyBytes;
 
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Diversifier(pub(crate) [u8; Diversifier::LEN]);
 
 impl Diversifier {

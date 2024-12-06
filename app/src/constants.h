@@ -73,6 +73,16 @@
     0xa3, 0x56, 0xf9, 0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10  \
 }
 
+#define DEFAULT_CHAIN_ID "penumbra-1"
+
 // Constant to use to allocate a buffer on the stack to hold the formatting of an output action
 #define OUTPUT_DISPLAY_MAX_LEN \
     (VALUE_DISPLAY_MAX_LEN + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS) + sizeof(ADDR_BECH32_PREFIX) + 6)  // = 202
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an spend action
+#define SPEND_DISPLAY_MAX_LEN \
+    (VALUE_DISPLAY_MAX_LEN + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS) + sizeof(ADDR_BECH32_PREFIX) + 10)  // = 202
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an swap action
+#define SWAP_DISPLAY_MAX_LEN \
+    (2*VALUE_DISPLAY_MAX_LEN + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS) + 6)  // = 355

@@ -325,6 +325,9 @@ mod tests {
 
         // Create TransactionPlanC with dummy data
         let transaction_plan = TransactionPlanC {
+            has_parameters: false,
+            has_memo: true,
+            has_detection_data: true,
             actions_hashes: dummy_action_hashes,
             parameters_hash: ParametersHash([0u8; 64]),
             memo: dummy_memo_plan,

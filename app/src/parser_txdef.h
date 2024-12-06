@@ -37,8 +37,8 @@ extern "C" {
 #define RSEED_LEN 32
 #define CHAIN_ID_LEN 32
 
-#define MAX_SYMBOL_LEN 40
-#define MAX_ASSET_NAME_LEN 120
+#define MAX_SYMBOL_LEN 20
+#define MAX_ASSET_NAME_LEN 20
 
 typedef struct {
     const uint8_t *ptr;

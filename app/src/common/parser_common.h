@@ -48,8 +48,38 @@ typedef enum {
     parser_display_idx_out_of_range,
     parser_display_page_out_of_range,
     parser_unexpected_error,
-
-    // Coin generic
+    // Additional variants from Rust enum
+    parser_invalid_hash_mode,            // Added
+    parser_invalid_signature,            // Added
+    parser_invalid_pubkey_encoding,      // Added
+    parser_invalid_address_version,      // Added
+    parser_invalid_address_length,       // Added
+    parser_invalid_type_id,             // Added
+    parser_invalid_codec,               // Added
+    parser_invalid_threshold,           // Added
+    parser_invalid_network_id,          // Added
+    parser_invalid_chain_id,            // Added
+    parser_invalid_ascii_value,         // Added
+    parser_invalid_timestamp,           // Added
+    parser_invalid_staking_amount,      // Added
+    parser_operation_overflows,         // Added
+    parser_invalid_path,               // Added
+    parser_invalid_length,             // Added
+    parser_too_many_outputs,           // Added
+    parser_unexpected_data,            // Added
+    parser_invalid_clue_key,           // Added
+    parser_invalid_tx_key,             // Added
+    parser_invalid_fq,                 // Added
+    parser_invalid_detection_key,       // Added
+    parser_invalid_fvk,                // Added
+    parser_invalid_ivk,                // Added
+    parser_invalid_key_len,            // Added
+    parser_invalid_action_type,         // Added
+    parser_invalid_precision,           // Added
+    parser_precision_too_large,         // Added
+    parser_clue_creation_failed,        // Added
+    parser_invalid_asset_id,            // Added
+    // Existing C enum variants
     parser_unexpected_type,
     parser_unexpected_method,
     parser_unexpected_buffer_end,
@@ -80,7 +110,6 @@ typedef struct {
     uint16_t bufferLen;
     uint16_t offset;
     parser_tx_t *tx_obj;
-    spend_key_bytes_t *sk_bytes;
     address_index_t address_index;
     tx_metadata_t tx_metadata[MAX_TX_METADATA_LEN];
     uint8_t tx_metadata_len;

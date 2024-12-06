@@ -13,16 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
-#include "output_plan.h"
+#include "output.h"
 
-#include "parser_impl.h"
-#include "parser_interface.h"
 #include "parser_pb_utils.h"
-#include "pb_common.h"
-#include "pb_decode.h"
-#include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "zxformat.h"
-#include "known_assets.h"
 #include "note.h"
 #include "ui_utils.h"
 
@@ -53,8 +47,12 @@ parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
         return parser_output_plan_error;
     }
 
-    output->value.amount.lo = output_plan.value.amount.lo;
-    output->value.amount.hi = output_plan.value.amount.hi;
+    output->value.has_amount = output_plan.value.has_amount;
+    if (output->value.has_amount) {
+        output->value.amount.lo = output_plan.value.amount.lo;
+        output->value.amount.hi = output_plan.value.amount.hi;
+    }
+    output->value.has_asset_id = output_plan.value.has_asset_id;
 
     return parser_ok;
 }
@@ -79,16 +77,16 @@ parser_error_t output_getItem(const parser_context_t *ctx, const output_plan_t *
     }
 
 
-    char bufferUI[OUTPUT_DISPLAY_MAX_LEN] = {0};
-    switch ( displayIdx ) {
-        case 0:
-            snprintf(outKey, outKeyLen, "Action");
-            CHECK_ERROR(output_printValue(ctx, output, bufferUI, sizeof(bufferUI)));
-            pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
-            break;
-        default:
-            return parser_no_data;
+    if (displayIdx != 0) {
+        return parser_no_data;
     }
+
+    char bufferUI[OUTPUT_DISPLAY_MAX_LEN] = {0};
+
+    snprintf(outKey, outKeyLen, "Action");
+    CHECK_ERROR(output_printValue(ctx, output, bufferUI, sizeof(bufferUI)));
+    pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
+
     return parser_ok;
 
 }
@@ -105,19 +103,19 @@ parser_error_t output_printValue(const parser_context_t *ctx, const output_plan_
     MEMZERO(outVal, outValLen);
 
     // example: Output 100 USDC to penumbra1k0zzug62gpz60sejdvu9q7mq…
-    
+
     // add action title
     uint16_t written_local = snprintf(outVal, outValLen, "Output ");
 
     // add value
-    CHECK_ERROR(printValue(ctx, &output->value.amount, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_local, outValLen - written_local));
+    CHECK_ERROR(printValue(ctx, &output->value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_local, outValLen - written_local));
     uint16_t written_value = strlen(outVal);
 
     // add "to"
     written_local = snprintf(outVal + written_value, outValLen - written_value, " to ");
 
     // add address
-    CHECK_ERROR(printShortAddress((uint8_t *)output->dest_address.inner.ptr, output->dest_address.inner.len, outVal + written_local + written_value, outValLen - written_local - written_value));
+    CHECK_ERROR(printTxAddress(&output->dest_address.inner, outVal + written_local + written_value, outValLen - written_local - written_value));
 
     return parser_ok;
 }

@@ -14,11 +14,12 @@
 *  limitations under the License.
 ********************************************************************************/
 
+use crate::parser::commitment::Commitment;
 use crate::parser::commitment::StateCommitment;
 use crate::parser::swap_ciphertext::SwapCiphertext;
-use crate::parser::commitment::Commitment;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct SwapPayload {
     pub commitment: StateCommitment,
     pub encrypted_swap: SwapCiphertext,
@@ -31,9 +32,10 @@ impl SwapPayload {
     pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
         let mut proto = [0u8; Self::PROTO_LEN];
 
-        proto[0..3].copy_from_slice(&Self::PROTO_PREFIX); 
+        proto[0..3].copy_from_slice(&Self::PROTO_PREFIX);
         proto[3..Commitment::PROTO_LEN + 3].copy_from_slice(&self.commitment.to_proto_swap());
-        proto[Commitment::PROTO_LEN + 3..Self::PROTO_LEN].copy_from_slice(&self.encrypted_swap.to_proto());
+        proto[Commitment::PROTO_LEN + 3..Self::PROTO_LEN]
+            .copy_from_slice(&self.encrypted_swap.to_proto());
 
         proto
     }

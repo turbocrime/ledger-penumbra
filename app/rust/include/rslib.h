@@ -26,6 +26,8 @@ parser_error_t rs_compute_keys(keys_t *keys);
 int32_t rs_bech32_encode(const uint8_t *hrp_ptr, size_t hrp_len, const uint8_t *data_ptr, size_t data_len,
                          uint8_t *output_ptr, size_t output_len);
 
+parser_error_t rs_is_address_visible(const bytes_t *address, bool *is_visible, uint32_t *index);
+
 parser_error_t rs_compute_effect_hash(transaction_plan_t *plan, uint8_t *output, size_t output_len);
 
 parser_error_t rs_parameter_hash(bytes_t *data, uint8_t *output, size_t output_len);

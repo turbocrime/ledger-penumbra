@@ -14,27 +14,28 @@
 *  limitations under the License.
 ********************************************************************************/
 
+use crate::address::Address;
+use crate::constants::{SWAP_CIPHERTEXT_BYTES, SWAP_LEN_BYTES};
+use crate::keys::ovk::Ovk;
 use crate::parser::{
-    amount::{Amount, AmountC},
     address::AddressC,
+    amount::{Amount, AmountC},
     bytes::BytesC,
-    trading_pair::TradingPairC,
+    commitment::StateCommitment,
     fee::{Fee, FeeC},
     rseed::Rseed,
-    trading_pair::TradingPair,
-    commitment::StateCommitment,
-    symmetric::PayloadKey,
     swap_ciphertext::SwapCiphertext,
     swap_payload::SwapPayload,
+    symmetric::PayloadKey,
+    trading_pair::TradingPair,
+    trading_pair::TradingPairC,
 };
 use crate::ParserError;
 use decaf377::Fq;
-use poseidon377::{hash_7, hash_4};
-use crate::address::Address;
-use crate::keys::ovk::Ovk;
-use crate::constants::{SWAP_LEN_BYTES, SWAP_CIPHERTEXT_BYTES};
+use poseidon377::{hash_4, hash_7};
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct SwapPlaintext {
     pub trading_pair: TradingPair,
     pub delta_1_i: Amount,
@@ -140,7 +141,10 @@ impl SwapPlaintext {
         let mut offset = 0;
 
         // Write trading pair bytes
-        let trading_pair_bytes = self.trading_pair.to_bytes().expect("trading pair conversion failed");
+        let trading_pair_bytes = self
+            .trading_pair
+            .to_bytes()
+            .expect("trading pair conversion failed");
         bytes[offset..offset + trading_pair_bytes.len()].copy_from_slice(&trading_pair_bytes);
         offset += trading_pair_bytes.len();
 
@@ -160,7 +164,10 @@ impl SwapPlaintext {
         offset += fee_bytes.len();
 
         // Write claim address bytes
-        let addr_bytes = self.claim_address.to_bytes().expect("address conversion failed");
+        let addr_bytes = self
+            .claim_address
+            .to_bytes()
+            .expect("address conversion failed");
         bytes[offset..offset + addr_bytes.len()].copy_from_slice(&addr_bytes);
         offset += addr_bytes.len();
 

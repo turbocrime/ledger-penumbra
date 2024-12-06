@@ -8,10 +8,11 @@ use decaf377::Fr;
 /// situations where clue key might or might not actually be used.  This saves
 /// computation; at the point that a clue key will be used to create a [`Clue`],
 /// it can be expanded to an [`ExpandedClueKey`].
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct ClueKey(pub [u8; 32]);
 
-#[derive(Debug)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct ExpandedClueKey {
     root_pub: decaf377::Element,
     root_pub_enc: decaf377::Encoding,
@@ -19,7 +20,7 @@ pub struct ExpandedClueKey {
     subkey_index: u8,
 }
 
-#[derive(Debug)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Clue(pub(crate) [u8; 68]);
 
 impl Default for Clue {

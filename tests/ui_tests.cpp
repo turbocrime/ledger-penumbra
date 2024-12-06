@@ -97,13 +97,6 @@ void check_testcase(const testcase_t &tc, bool expert_mode) {
 
     parser_context_t ctx = {0};
     parser_error_t err;
-
-    spend_key_bytes_t sk_bytes = {0};
-    std::array<uint8_t, 32> sk_bytes_raw = {0xa1, 0xff, 0xba, 0x0c, 0x37, 0x93, 0x1f, 0x0a, 0x62, 0x61, 0x37,
-                                            0x52, 0x0d, 0xa6, 0x50, 0x63, 0x2d, 0x35, 0x85, 0x3b, 0xf5, 0x91,
-                                            0xb3, 0x6b, 0xb4, 0x28, 0x63, 0x0a, 0x4d, 0x87, 0xc4, 0xdc};
-    std::copy(sk_bytes_raw.begin(), sk_bytes_raw.end(), sk_bytes);
-    ctx.sk_bytes = &sk_bytes;
     
     uint8_t buffer[5000];
     uint16_t bufferLen = parseHexString(buffer, sizeof(buffer), tc.blob.c_str());

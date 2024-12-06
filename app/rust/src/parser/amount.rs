@@ -15,11 +15,12 @@
 ********************************************************************************/
 
 use crate::constants::AMOUNT_LEN_BYTES;
+use crate::utils::protobuf::encode_varint;
 use crate::ParserError;
 use decaf377::{Fq, Fr};
-use crate::utils::protobuf::encode_varint;
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Amount {
     pub inner: u128,
 }

@@ -25,7 +25,8 @@ pub mod address_view;
 
 use crate::constants::ADDRESS_LEN;
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 // pub struct Address([u8; Address::LEN]);
 /// A valid payment address.
 pub struct Address {
@@ -122,8 +123,6 @@ impl Address {
         f4jumble::f4jumble_mut(&mut bytes).map_err(|_| ParserError::InvalidLength)?;
         Ok(bytes)
     }
-
-    
 }
 
 impl TryFrom<&[u8]> for Address {
@@ -136,7 +135,8 @@ impl TryFrom<&[u8]> for Address {
         let mut unjumbled_bytes = [0u8; 80];
         unjumbled_bytes.copy_from_slice(jumbled_bytes);
 
-        f4jumble::f4jumble_inv_mut(&mut unjumbled_bytes).map_err(|_| ParserError::InvalidAddress)?;
+        f4jumble::f4jumble_inv_mut(&mut unjumbled_bytes)
+            .map_err(|_| ParserError::InvalidAddress)?;
 
         let diversifier_bytes = &unjumbled_bytes[0..16];
 
@@ -144,7 +144,11 @@ impl TryFrom<&[u8]> for Address {
 
         let clue_key_bytes = &unjumbled_bytes[48..80];
 
-        let diversifier = Diversifier(diversifier_bytes.try_into().expect("can form diversifier bytes"));
+        let diversifier = Diversifier(
+            diversifier_bytes
+                .try_into()
+                .expect("can form diversifier bytes"),
+        );
 
         Address::from_components(
             diversifier,
@@ -155,7 +159,8 @@ impl TryFrom<&[u8]> for Address {
     }
 }
 
-#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug)]
+#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct AddressIndex {
     pub account: u32,
     pub randomizer: [u8; Self::RAND_LEN],

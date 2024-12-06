@@ -68,7 +68,7 @@ impl FullViewingKey {
         let ovk = {
             let hash_result = prf::expand(b"Penumbra_DeriOVK", &nk.0.to_bytes(), ak.as_ref())?;
             let mut ovk = [0; 32];
-            ovk.copy_from_slice(&hash_result);
+            ovk.copy_from_slice(&hash_result[0..32]);
             ovk
         };
 

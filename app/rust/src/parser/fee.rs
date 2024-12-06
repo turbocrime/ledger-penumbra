@@ -1,3 +1,4 @@
+use crate::constants::{AMOUNT_LEN_BYTES, ID_LEN_BYTES};
 use crate::parser::commitment::Commitment;
 use crate::parser::id::Id;
 use crate::parser::value::Sign;
@@ -5,7 +6,6 @@ use crate::parser::value::{Value, ValueC};
 use crate::ParserError;
 use decaf377::Fq;
 use decaf377::Fr;
-use crate::constants::{AMOUNT_LEN_BYTES, ID_LEN_BYTES};
 // The staking token asset ID (upenumbra)
 // Bech32m: passet1984fctenw8m2fpl8a9wzguzp7j34d7vravryuhft808nyt9fdggqxmanqm
 pub const STAKING_TOKEN_ASSET_ID_BYTES: [u8; 32] = [
@@ -13,7 +13,8 @@ pub const STAKING_TOKEN_ASSET_ID_BYTES: [u8; 32] = [
     0xa3, 0x56, 0xf9, 0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10,
 ];
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Fee(pub Value);
 
 #[repr(C)]

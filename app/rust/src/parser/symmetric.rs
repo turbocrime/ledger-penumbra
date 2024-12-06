@@ -15,13 +15,13 @@
 ********************************************************************************/
 
 use crate::constants::{NONCE_LEN, NONCE_MEMO, NONCE_MEMO_KEYS, NONCE_NOTE, NONCE_SWAP};
+use crate::keys::ka;
+use crate::keys::ovk::Ovk;
+use crate::parser::commitment::{Commitment, StateCommitment};
 use crate::ParserError;
 use chacha20poly1305::aead::{AeadInPlace, Nonce};
 use chacha20poly1305::{ChaCha20Poly1305, Key, KeyInit};
-use crate::keys::ovk::Ovk;
 use decaf377::Fq;
-use crate::keys::ka;
-use crate::parser::commitment::{Commitment, StateCommitment};
 use rand::{CryptoRng, RngCore};
 
 pub const PAYLOAD_KEY_LEN_BYTES: usize = 32;
@@ -56,22 +56,23 @@ impl PayloadKind {
 /// Represents a symmetric `ChaCha20Poly1305` key.
 ///
 /// Used for encrypting and decrypting notes, swaps, memos, and memo keys.
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct PayloadKey(Key);
 
 impl PayloadKey {
-        /// Use Blake2b-256 to derive a `PayloadKey`.
-        pub fn derive(shared_secret: &ka::SharedSecret, epk: &ka::Public) -> Self {
-            let mut kdf_params = blake2b_simd::Params::new();
-            kdf_params.personal(b"Penumbra_Payload");
-            kdf_params.hash_length(32);
-            let mut kdf = kdf_params.to_state();
-            kdf.update(&shared_secret.0);
-            kdf.update(&epk.0);
-    
-            let key = kdf.finalize();
-            Self(*Key::from_slice(key.as_bytes()))
-        }
+    /// Use Blake2b-256 to derive a `PayloadKey`.
+    pub fn derive(shared_secret: &ka::SharedSecret, epk: &ka::Public) -> Self {
+        let mut kdf_params = blake2b_simd::Params::new();
+        kdf_params.personal(b"Penumbra_Payload");
+        kdf_params.hash_length(32);
+        let mut kdf = kdf_params.to_state();
+        kdf.update(&shared_secret.0);
+        kdf.update(&epk.0);
+
+        let key = kdf.finalize();
+        Self(*Key::from_slice(key.as_bytes()))
+    }
 
     pub fn from_bytes(bytes: &[u8]) -> Self {
         assert_eq!(bytes.len(), PAYLOAD_KEY_LEN_BYTES, "Invalid key length");
@@ -86,7 +87,12 @@ impl PayloadKey {
     }
 
     // Encrypt a note, memo, or memo key using the `PayloadKey`.
-    pub fn encrypt(&self, plaintext: &mut [u8], kind: PayloadKind, text_len: usize) -> Result<(), ParserError> {
+    pub fn encrypt(
+        &self,
+        plaintext: &mut [u8],
+        kind: PayloadKind,
+        text_len: usize,
+    ) -> Result<(), ParserError> {
         let cipher = ChaCha20Poly1305::new(Key::from_slice(&self.0));
         let nonce_bytes = kind.nonce();
         let nonce = Nonce::<ChaCha20Poly1305>::from_slice(&nonce_bytes);
@@ -104,14 +110,14 @@ impl PayloadKey {
     /// Use Blake2b-256 to derive an encryption key from the OVK and public fields for swaps.
     pub fn derive_swap(ovk: &Ovk, cm: StateCommitment) -> Self {
         let cm_bytes: [u8; 32] = cm.0.to_bytes();
-    
+
         let mut kdf_params = blake2b_simd::Params::new();
         kdf_params.personal(b"Penumbra_Payswap");
         kdf_params.hash_length(32);
         let mut kdf = kdf_params.to_state();
         kdf.update(&ovk.to_bytes());
         kdf.update(&cm_bytes);
-    
+
         let key = kdf.finalize();
         Self(*Key::from_slice(key.as_bytes()))
     }
@@ -128,15 +134,15 @@ impl PayloadKey {
             .encrypt_in_place_detached(nonce, b"", &mut plaintext[..text_len])
             .map_err(|_| ParserError::UnexpectedError)?;
 
-            plaintext[plaintext_len - 16..].copy_from_slice(&tag);
+        plaintext[plaintext_len - 16..].copy_from_slice(&tag);
 
         Ok(())
     }
 }
 
-
 /// Represents encrypted key material used to reconstruct a `PayloadKey`.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct OvkWrappedKey(pub [u8; OVK_WRAPPED_LEN_BYTES]);
 
 impl OvkWrappedKey {
@@ -155,18 +161,14 @@ impl OvkWrappedKey {
 ///
 /// Used for encrypting and decrypting [`OvkWrappedKey`] material used to decrypt
 /// outgoing notes, and memos.
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct OutgoingCipherKey(Key);
 impl OutgoingCipherKey {
     pub const PROTO_LEN: usize = OVK_WRAPPED_LEN_BYTES + 4;
 
     /// Use Blake2b-256 to derive an encryption key `ock` from the OVK and public fields.
-    pub fn derive(
-        ovk: &Ovk,
-        cv: Commitment,
-        cm: &Fq,
-        epk: &ka::Public,
-    ) -> Self {
-        let cv_bytes: [u8; 32] = cv.0.vartime_compress().0;
+    pub fn derive(ovk: &Ovk, cv: Commitment, cm: &Fq, epk: &ka::Public) -> Self {
+        let cv_bytes: [u8; 32] = cv.bytes_compress();
         let cm_bytes: [u8; 32] = cm.to_bytes();
 
         let mut kdf_params = blake2b_simd::Params::new();
@@ -198,7 +200,6 @@ impl OutgoingCipherKey {
         let nonce_bytes = kind.nonce();
         let nonce = Nonce::<ChaCha20Poly1305>::from_slice(&nonce_bytes);
 
-
         let plaintext_len = plaintext.len();
 
         let tag = cipher
@@ -209,8 +210,8 @@ impl OutgoingCipherKey {
     }
 }
 
-
-#[derive(Clone, Debug)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct WrappedMemoKey(pub [u8; MEMOKEY_WRAPPED_LEN_BYTES]);
 
 impl WrappedMemoKey {
@@ -236,10 +237,10 @@ impl WrappedMemoKey {
         let mut encryption_result = [0u8; OVK_WRAPPED_LEN_BYTES];
         encryption_result[..memo_key.0.len()].copy_from_slice(&memo_key.0);
 
-        action_key.encrypt(&mut encryption_result, PayloadKind::MemoKey, 32).map_err(|_| ParserError::UnexpectedError).unwrap();
-        let wrapped_memo_key_bytes: [u8; MEMOKEY_WRAPPED_LEN_BYTES] = encryption_result
-            .try_into()
+        action_key
+            .encrypt(&mut encryption_result, PayloadKind::MemoKey, 32)
             .map_err(|_| ParserError::UnexpectedError)?;
+        let wrapped_memo_key_bytes: [u8; MEMOKEY_WRAPPED_LEN_BYTES] = encryption_result;
 
         Ok(WrappedMemoKey(wrapped_memo_key_bytes))
     }

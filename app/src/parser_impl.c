@@ -21,10 +21,10 @@
 #include "pb_common.h"
 #include "pb_decode.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
-#include "spend_plan.h"
-#include "output_plan.h"
-#include "delegate_plan.h"
-#include "undelegate_plan.h"
+#include "spend.h"
+#include "output.h"
+#include "delegate.h"
+#include "undelegate.h"
 #include "ics20_withdrawal.h"
 #include "parameters.h"
 #include "swap.h"
@@ -186,8 +186,82 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "No more data";
         case parser_init_context_empty:
             return "Initialized empty context";
+        case parser_display_idx_out_of_range:
+            return "Display index out of range";
+        case parser_display_page_out_of_range:
+            return "Display page out of range";
+        case parser_unexpected_error:
+            return "Unexpected error";
+        case parser_invalid_hash_mode:
+            return "Invalid hash mode";
+        case parser_invalid_signature:
+            return "Invalid signature";
+        case parser_invalid_pubkey_encoding:
+            return "Invalid public key encoding";
+        case parser_invalid_address_version:
+            return "Invalid address version";
+        case parser_invalid_address_length:
+            return "Invalid address length";
+        case parser_invalid_type_id:
+            return "Invalid type ID";
+        case parser_invalid_codec:
+            return "Invalid codec";
+        case parser_invalid_threshold:
+            return "Invalid threshold";
+        case parser_invalid_network_id:
+            return "Invalid network ID";
+        case parser_invalid_chain_id:
+            return "Invalid chain ID";
+        case parser_invalid_ascii_value:
+            return "Invalid ASCII value";
+        case parser_invalid_timestamp:
+            return "Invalid timestamp";
+        case parser_invalid_staking_amount:
+            return "Invalid staking amount";
+        case parser_operation_overflows:
+            return "Operation overflows";
+        case parser_invalid_path:
+            return "Invalid path";
+        case parser_invalid_length:
+            return "Invalid length";
+        case parser_too_many_outputs:
+            return "Too many outputs";
+        case parser_unexpected_data:
+            return "Unexpected data";
+        case parser_invalid_clue_key:
+            return "Invalid clue key";
+        case parser_invalid_tx_key:
+            return "Invalid transaction key";
+        case parser_invalid_fq:
+            return "Invalid Fq";
+        case parser_invalid_detection_key:
+            return "Invalid detection key";
+        case parser_invalid_fvk:
+            return "Invalid FVK";
+        case parser_invalid_ivk:
+            return "Invalid IVK";
+        case parser_invalid_key_len:
+            return "Invalid key length";
+        case parser_invalid_action_type:
+            return "Invalid action type";
+        case parser_invalid_precision:
+            return "Invalid precision";
+        case parser_precision_too_large:
+            return "Precision too large";
+        case parser_clue_creation_failed:
+            return "Clue creation failed";
+        case parser_invalid_asset_id:
+            return "Invalid asset ID";
+        case parser_unexpected_type:
+            return "Unexpected type";
+        case parser_unexpected_method:
+            return "Unexpected method";
         case parser_unexpected_buffer_end:
             return "Unexpected buffer end";
+        case parser_unexpected_value:
+            return "Unexpected value";
+        case parser_unexpected_number_items:
+            return "Unexpected number of items";
         case parser_unexpected_version:
             return "Unexpected version";
         case parser_unexpected_characters:
@@ -198,22 +272,32 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Unexpected duplicated field";
         case parser_value_out_of_range:
             return "Value out of range";
+        case parser_invalid_address:
+            return "Invalid address";
         case parser_unexpected_chain:
             return "Unexpected chain";
         case parser_missing_field:
-            return "missing field";
-
-        case parser_display_idx_out_of_range:
-            return "display index out of range";
-        case parser_display_page_out_of_range:
-            return "display page out of range";
-        case parser_actions_overflow:
-            return "actions overflow";
+            return "Missing field";
+        case paser_unknown_transaction:
+            return "Unknown transaction";
         case parser_detection_data_overflow:
-            return "detection data overflow";
+            return "Detection data overflow";
+        case parser_actions_overflow:
+            return "Actions overflow";
+        case parser_spend_plan_error:
+            return "Spend plan error";
+        case parser_output_plan_error:
+            return "Output plan error";
+        case parser_delegate_plan_error:
+            return "Delegate plan error";
+        case parser_undelegate_plan_error:
+            return "Undelegate plan error";
+        case parser_ics20_withdrawal_plan_error:
+            return "ICS20 withdrawal plan error";
+        case parser_swap_plan_error:
+            return "Swap plan error";
         case parser_invalid_metadata:
-            return "invalid metadata";
-
+            return "Invalid metadata";
         default:
             return "Unrecognized error code";
     }

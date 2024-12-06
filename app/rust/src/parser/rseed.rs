@@ -14,21 +14,24 @@
 *  limitations under the License.
 ********************************************************************************/
 
-use decaf377::{Fq, Fr};
-use crate::{ParserError, utils::prf};
-use crate::parser::bytes::BytesC;
-use crate::keys::ka;
 use crate::constants::RSEED_LEN_BYTES;
-#[derive(Clone, Debug)]
+use crate::keys::ka;
+use crate::parser::bytes::BytesC;
+use crate::{utils::prf, ParserError};
+use decaf377::{Fq, Fr};
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Rseed(pub [u8; 32]);
 
 impl Rseed {
     pub const LEN: usize = RSEED_LEN_BYTES;
 
     /// Derive the ephemeral secret key from the rseed.
-    pub fn derive_esk(&self) ->  Result<ka::Secret, ParserError> {
+    pub fn derive_esk(&self) -> Result<ka::Secret, ParserError> {
         let hash_result = prf::expand(b"Penumbra_DeriEsk", &self.0, &[4u8])?;
-        Ok( ka::Secret::new_from_field(Fr::from_le_bytes_mod_order(&hash_result)))
+        Ok(ka::Secret::new_from_field(Fr::from_le_bytes_mod_order(
+            &hash_result,
+        )))
     }
 
     /// Derive note commitment randomness from the rseed.

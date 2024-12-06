@@ -4,14 +4,17 @@ use zeroize::Zeroize;
 
 use crate::ParserError;
 
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Public(pub [u8; 32]);
 
-#[derive(Clone, Zeroize, PartialEq, Eq, Debug)]
+#[derive(Clone, Zeroize, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 #[zeroize(drop)]
 pub struct Secret(decaf377::Fr);
 
-#[derive(Clone, Zeroize, PartialEq, Eq, Debug)]
+#[derive(Clone, Zeroize, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 #[zeroize(drop)]
 pub struct SharedSecret(pub [u8; 32]);
 
