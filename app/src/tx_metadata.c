@@ -14,11 +14,13 @@
  *  limitations under the License.
  ********************************************************************************/
 
-#include <zxmacros.h>
-#include "parser_txdef.h"
 #include "tx_metadata.h"
-#include "rslib.h"
+
+#include <zxmacros.h>
+
 #include "constants.h"
+#include "parser_txdef.h"
+#include "rslib.h"
 
 parser_error_t metadata_parse(const uint8_t *data, size_t dataLen, tx_metadata_t *metadata, uint8_t metadataLen) {
     if (metadata == NULL) {
@@ -40,7 +42,7 @@ parser_error_t metadata_parse(const uint8_t *data, size_t dataLen, tx_metadata_t
         return parser_unexpected_number_items;
     }
 
-    size_t data_offset = 1; // Start after the num_strings byte
+    size_t data_offset = 1;  // Start after the num_strings byte
 
     // Iterate over each metadata string
     for (uint8_t i = 0; i < num_strings; i++) {
@@ -91,20 +93,16 @@ parser_error_t metadata_toAssetId(const tx_metadata_t *metadata, uint8_t *asset,
     return parser_ok;
 }
 
-uint8_t metadata_getDenom(const tx_metadata_t *metadata,
-                         uint8_t metadataLen,
-                         const bytes_t *asset,
-                         char *denom,
-                         uint8_t len) {
-    if (metadataLen == 0 || metadata == NULL ||
-        asset == NULL || asset->len == 0 || denom == NULL || len == 0) {
+uint8_t metadata_getDenom(const tx_metadata_t *metadata, uint8_t metadataLen, const bytes_t *asset, char *denom,
+                          uint8_t len) {
+    if (metadataLen == 0 || metadata == NULL || asset == NULL || asset->len == 0 || denom == NULL || len == 0) {
         return 0;
     }
 
     uint8_t computed_asset[ASSET_ID_LEN] = {0};
     const tx_metadata_t *found = NULL;
 
-    for(uint8_t i = 0; i < metadataLen; ++i) {
+    for (uint8_t i = 0; i < metadataLen; ++i) {
         found = &metadata[i];
         CHECK_ERROR(metadata_toAssetId(found, computed_asset, ASSET_ID_LEN));
 

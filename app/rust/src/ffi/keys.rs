@@ -126,12 +126,12 @@ mod test {
     use std::string::ToString;
 
     use super::*;
+    use crate::keys::fvk::FullViewingKey;
+    use crate::keys::nk::NullifierKey;
     use crate::keys::spend_key::SpendKeyBytes;
+    use decaf377::Fq;
     use decaf377_rdsa::{SpendAuth, VerificationKey};
     use std::println;
-    use crate::keys::nk::NullifierKey;
-    use decaf377::Fq;
-    use crate::keys::fvk::FullViewingKey;
     const SPEND_KEY: &str = "ff726c71bcec76abc6a88cba71df655b28de6580edbd33c7415fdfded2e422e7";
     const SPEND_ZEMU_KEY: &str = "a1ffba0c37931f0a626137520da650632d35853bf591b36bb428630a4d87c4dc";
     const ACCOUNT_IDX: u32 = 1;
@@ -246,7 +246,7 @@ mod test {
         let nk = NullifierKey(Fq::from_le_bytes_mod_order(nk_bytes.as_ref()));
         let fvk_2 = FullViewingKey::from_components(ak, nk).unwrap();
 
-        let mut keys_2= Keys {
+        let mut keys_2 = Keys {
             skb: [0; SpendKeyBytes::LEN],
             fvk: [0; KEY_LEN * 2],
             address: [0; Address::LEN],

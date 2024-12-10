@@ -121,7 +121,7 @@ void check_testcase_effect_hash(const testcase_effect_hash_t &tc, bool expert_mo
 
 INSTANTIATE_TEST_SUITE_P
 
-    (DISABLED_JsonTestCasesCurrentTxEffectHash, JsonTestsEffectHash,
+    (JsonTestCasesCurrentTxEffectHash, JsonTestsEffectHash,
      ::testing::ValuesIn(GetJsonTestCasesEffectHash("plan_effect_hash_testcases.json")));
 
 TEST_P(JsonTestsEffectHash, CheckUIOutput_CurrentTX) { check_testcase_effect_hash(GetParam(), false); }

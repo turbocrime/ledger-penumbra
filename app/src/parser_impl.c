@@ -16,18 +16,18 @@
 
 #include "parser_impl.h"
 
+#include "delegate.h"
+#include "ics20_withdrawal.h"
+#include "output.h"
+#include "parameters.h"
 #include "parser_interface.h"
 #include "parser_pb_utils.h"
 #include "pb_common.h"
 #include "pb_decode.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "spend.h"
-#include "output.h"
-#include "delegate.h"
-#include "undelegate.h"
-#include "ics20_withdrawal.h"
-#include "parameters.h"
 #include "swap.h"
+#include "undelegate.h"
 #include "zxformat.h"
 
 static bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg);
@@ -35,6 +35,17 @@ static bool decode_detection_data(pb_istream_t *stream, const pb_field_t *field,
 
 static uint16_t actions_qty = 0;
 static uint16_t detection_data_qty = 0;
+static parser_error_t decode_error = parser_ok;
+
+#define CHECK_ACTION_ERROR(__CALL)            \
+    {                                         \
+        decode_error = __CALL;                \
+        CHECK_APP_CANARY()                    \
+        if (decode_error != parser_ok) {      \
+            return false;                     \
+        }                                     \
+    }
+
 
 bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
     if (arg == NULL || *arg == NULL) {
@@ -47,6 +58,7 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
     }
 
     if (actions_qty >= ACTIONS_QTY) {
+        decode_error = parser_actions_overflow;
         return false;
     }
 
@@ -62,27 +74,28 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
     switch (action.which_action) {
         case penumbra_core_transaction_v1_ActionPlan_spend_tag:
             decode_arg[actions_qty].action_data = action_data;
-            CHECK_ERROR(decode_spend_plan(&action_data, &decode_arg[actions_qty].action.spend));
+            CHECK_ACTION_ERROR(decode_spend_plan(&action_data, &decode_arg[actions_qty].action.spend));
             break;
         case penumbra_core_transaction_v1_ActionPlan_output_tag:
             decode_arg[actions_qty].action_data = action_data;
-            CHECK_ERROR(decode_output_plan(&action_data, &decode_arg[actions_qty].action.output));
+            CHECK_ACTION_ERROR(decode_output_plan(&action_data, &decode_arg[actions_qty].action.output));
             break;
         case penumbra_core_transaction_v1_ActionPlan_delegate_tag:
             decode_arg[actions_qty].action_data = action_data;
-            CHECK_ERROR(decode_delegate_plan(&action_data, &decode_arg[actions_qty].action.delegate));
+            CHECK_ACTION_ERROR(decode_delegate_plan(&action_data, &decode_arg[actions_qty].action.delegate));
             break;
         case penumbra_core_transaction_v1_ActionPlan_undelegate_tag:
             decode_arg[actions_qty].action_data = action_data;
-            CHECK_ERROR(decode_undelegate_plan(&action_data, &decode_arg[actions_qty].action.undelegate));
+            CHECK_ACTION_ERROR(decode_undelegate_plan(&action_data, &decode_arg[actions_qty].action.undelegate));
             break;
         case penumbra_core_transaction_v1_ActionPlan_ics20_withdrawal_tag:
             decode_arg[actions_qty].action_data = ics20_withdrawal_data;
-            CHECK_ERROR(decode_ics20_withdrawal_plan(&ics20_withdrawal_data, &decode_arg[actions_qty].action.ics20_withdrawal));
+            CHECK_ACTION_ERROR(
+                decode_ics20_withdrawal_plan(&ics20_withdrawal_data, &decode_arg[actions_qty].action.ics20_withdrawal));
             break;
         case penumbra_core_transaction_v1_ActionPlan_swap_tag:
             decode_arg[actions_qty].action_data = action_data;
-            CHECK_ERROR(decode_swap_plan(&action_data, &decode_arg[actions_qty].action.swap));
+            CHECK_ACTION_ERROR(decode_swap_plan(&action_data, &decode_arg[actions_qty].action.swap));
             break;
         default:
             return false;
@@ -96,6 +109,7 @@ bool decode_detection_data(pb_istream_t *stream, const pb_field_t *field, void *
     if (stream->bytes_left == 0 || arg == NULL) return false;
 
     if (detection_data_qty >= DETECTION_DATA_QTY) {
+        decode_error = parser_detection_data_overflow;
         return false;
     }
 
@@ -146,23 +160,24 @@ parser_error_t _read(parser_context_t *c, parser_tx_t *v) {
     // parameters callbacks
     fixed_size_field_t parameter_asset_id_arg;
     variable_size_field_t parameter_chain_id_arg;
-    setup_decode_variable_field(&request.transaction_parameters.chain_id, &parameter_chain_id_arg, &v->parameters_plan.chain_id);
-    setup_decode_fixed_field(&request.transaction_parameters.fee.asset_id.inner, &parameter_asset_id_arg, &v->parameters_plan.fee.asset_id.inner, ASSET_ID_LEN);
+    setup_decode_variable_field(&request.transaction_parameters.chain_id, &parameter_chain_id_arg,
+                                &v->parameters_plan.chain_id);
+    setup_decode_fixed_field(&request.transaction_parameters.fee.asset_id.inner, &parameter_asset_id_arg,
+                             &v->parameters_plan.fee.asset_id.inner, ASSET_ID_LEN);
 
     // detection data callbacks
     request.detection_data.clue_plans.funcs.decode = &decode_detection_data;
     request.detection_data.clue_plans.arg = &v->plan.detection_data.clue_plans;
 
+    // reset error
+    decode_error = parser_ok;
+
     pb_istream_t stream = pb_istream_from_buffer(c->buffer, c->bufferLen);
     CHECK_APP_CANARY()
     const bool status = pb_decode(&stream, penumbra_core_transaction_v1_TransactionPlan_fields, &request);
     if (!status) {
-        // TODO: improve handling errors from callbacks
-        if (actions_qty == ACTIONS_QTY) {
-            return parser_actions_overflow;
-        }
-        if (detection_data_qty == DETECTION_DATA_QTY) {
-            return parser_detection_data_overflow;
+        if (decode_error != parser_ok) {
+            return decode_error;
         }
         return parser_unexpected_error;
     }

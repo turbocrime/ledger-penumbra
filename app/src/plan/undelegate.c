@@ -14,9 +14,9 @@
  *  limitations under the License.
  ********************************************************************************/
 
+#include "note.h"
 #include "parser_pb_utils.h"
 #include "zxformat.h"
-#include "note.h"
 
 parser_error_t decode_undelegate_plan(const bytes_t *data, undelegate_plan_t *undelegate) {
     penumbra_core_component_stake_v1_Undelegate undelegate_plan = penumbra_core_component_stake_v1_Undelegate_init_default;

@@ -15,18 +15,15 @@
 ********************************************************************************/
 
 use crate::parser::{
-    detection::DetectionDataPlanC,
-    memo::MemoPlanC,
-    action::ActionsHashC,
-    action::ActionPlan,
+    action::ActionPlan, action::ActionsHashC, detection::DetectionDataPlanC, memo::MemoPlanC,
 };
 
-use crate::keys::spend_key::SpendKeyBytes;
-use crate::parser::effect_hash::EffectHash;
-use crate::parser::bytes::BytesC;
-use crate::ParserError;
 use crate::constants::EFFECT_HASH_LEN;
+use crate::keys::spend_key::SpendKeyBytes;
+use crate::parser::bytes::BytesC;
+use crate::parser::effect_hash::EffectHash;
 use crate::parser::parameters::ParametersHash;
+use crate::ParserError;
 
 pub mod output;
 pub mod spend;
@@ -47,8 +44,8 @@ pub struct TransactionPlanC {
 impl TransactionPlanC {
     pub fn effect_hash(&self) -> Result<EffectHash, ParserError> {
         let mut state = blake2b_simd::Params::new()
-        .personal(b"PenumbraEfHs")
-        .to_state();
+            .personal(b"PenumbraEfHs")
+            .to_state();
 
         state.update(&self.parameters_hash.0);
         state.update(self.memo.effect_hash()?.as_array());
@@ -108,7 +105,10 @@ pub unsafe extern "C" fn rs_parameter_hash(
 
     let effect_hash: EffectHash;
     if let Ok(data_to_hash) = data.get_bytes() {
-        effect_hash = EffectHash::from_proto_effecting_data("/penumbra.core.transaction.v1.TransactionParameters", data_to_hash);
+        effect_hash = EffectHash::from_proto_effecting_data(
+            "/penumbra.core.transaction.v1.TransactionParameters",
+            data_to_hash,
+        );
 
         let body_hash_array = effect_hash.as_bytes();
         let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
@@ -230,13 +230,22 @@ pub unsafe extern "C" fn rs_generic_action_hash(
     if let Ok(data_to_hash) = data.get_bytes() {
         match action_type {
             ActionPlan::Delegate => {
-                effect_hash = EffectHash::from_proto_effecting_data("/penumbra.core.component.stake.v1.Delegate", data_to_hash);
+                effect_hash = EffectHash::from_proto_effecting_data(
+                    "/penumbra.core.component.stake.v1.Delegate",
+                    data_to_hash,
+                );
             }
             ActionPlan::Undelegate => {
-                effect_hash = EffectHash::from_proto_effecting_data("/penumbra.core.component.stake.v1.Undelegate", data_to_hash);
+                effect_hash = EffectHash::from_proto_effecting_data(
+                    "/penumbra.core.component.stake.v1.Undelegate",
+                    data_to_hash,
+                );
             }
             ActionPlan::Ics20Withdrawal => {
-                effect_hash = EffectHash::from_proto_effecting_data("/penumbra.core.component.ibc.v1.Ics20Withdrawal", data_to_hash);
+                effect_hash = EffectHash::from_proto_effecting_data(
+                    "/penumbra.core.component.ibc.v1.Ics20Withdrawal",
+                    data_to_hash,
+                );
             }
             _ => {
                 return ParserError::UnexpectedData as u32;
@@ -255,21 +264,21 @@ pub unsafe extern "C" fn rs_generic_action_hash(
 mod tests {
     use super::*;
     use crate::keys::spend_key::SpendKeyBytes;
+    use crate::parser::action::ActionHash;
+    use crate::parser::action::ActionsHashC;
     use crate::parser::address::AddressC;
+    use crate::parser::amount::AmountC;
     use crate::parser::bytes::BytesC;
     use crate::parser::clue_plan::CluePlanC;
-    use crate::parser::note::NoteC;
-    use crate::parser::action::ActionsHashC;
-    use crate::parser::amount::AmountC;
     use crate::parser::detection::DetectionDataPlanC;
+    use crate::parser::fee::FeeC;
     use crate::parser::id::IdC;
     use crate::parser::memo::MemoPlanC;
     use crate::parser::memo_plain_text::MemoPlaintextC;
-    use crate::parser::value::ValueC;
-    use crate::parser::action::ActionHash;
-    use crate::parser::trading_pair::TradingPairC;
+    use crate::parser::note::NoteC;
     use crate::parser::swap_plaintext::SwapPlaintextC;
-    use crate::parser::fee::FeeC;
+    use crate::parser::trading_pair::TradingPairC;
+    use crate::parser::value::ValueC;
     #[test]
     fn test_transaction_plan_hash() {
         let dummy_action_hashes = ActionsHashC {
@@ -333,7 +342,6 @@ mod tests {
             memo: dummy_memo_plan,
             detection_data: dummy_detection_data,
         };
-
 
         let memo_effect_hash = transaction_plan.memo.effect_hash();
         let expected_hash = "0954149b3feec5d414a22d47ce4e69f895f52431db9fdf7adf0bb5325c2520540357b206b5a04ec8685aea0e69a93a679fcb5c220cff85ebecc3d65c6d82b4d1";
@@ -497,7 +505,6 @@ mod tests {
 
     #[test]
     fn test_swap_action_hash() {
-
         // create trading pair dummy
         let asset_1_id_bytes =
             hex::decode("29ea9c2f3371f6a487e7e95c247041f4a356f983eb064e5d2b3bcf322ca96a10")
@@ -522,10 +529,7 @@ mod tests {
         };
 
         // Create dummy fee
-        let fee_amount = AmountC {
-            lo: 5,
-            hi: 0,
-        };
+        let fee_amount = AmountC { lo: 5, hi: 0 };
         let dummy_fee = FeeC(ValueC {
             has_amount: true,
             amount: fee_amount,
@@ -557,7 +561,6 @@ mod tests {
             claim_address: dummy_address,
             rseed: BytesC::from_slice(&dummy_rseed_bytes),
         };
-
 
         // create dummy swap action
         let dummy_fee_blinding =

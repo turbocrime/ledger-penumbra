@@ -14,20 +14,20 @@
  *  limitations under the License.
  ********************************************************************************/
 
+#include "ui_utils.h"
+
 #include <stdio.h>
 
-#include "ui_utils.h"
+#include "constants.h"
+#include "crypto_helper.h"
 #include "parser_common.h"
 #include "rslib.h"
 #include "zxerror.h"
 #include "zxformat.h"
 #include "zxmacros.h"
-#include "constants.h"
-#include "crypto_helper.h"
 
-
-parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data,
-                                         uint16_t data_len, char *out, uint16_t out_len) {
+parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data, uint16_t data_len, char *out,
+                                  uint16_t out_len) {
     if (data == NULL) {
         return parser_unexpected_error;
     }
@@ -39,8 +39,7 @@ parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const
 
     MEMZERO(out, out_len);
 
-    int32_t ret = rs_bech32_encode((const uint8_t *)prefix, prefix_len, data,
-                                   data_len, (uint8_t *)out, out_len);
+    int32_t ret = rs_bech32_encode((const uint8_t *)prefix, prefix_len, data, data_len, (uint8_t *)out, out_len);
 
     if (ret < 0) {
         return parser_unexpected_error;
@@ -49,11 +48,10 @@ parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const
     return parser_ok;
 }
 
-
 /// Prints an address
 /// but a difference to the other formatting functions here, this method uses
 /// the device keys to check if the passed address is visible or not
-parser_error_t printTxAddress(const bytes_t *address, char *out, uint16_t out_len){
+parser_error_t printTxAddress(const bytes_t *address, char *out, uint16_t out_len) {
     if (out == NULL || out_len == 0 || address == NULL) {
         return parser_no_data;
     }
@@ -88,12 +86,10 @@ parser_error_t encodeAddress(const uint8_t *address, uint16_t address_len, char 
     if (address_len != ADDRESS_LEN_BYTES) {
         return parser_invalid_address;
     }
-// printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data,
-//                                          uint16_t data_len, uint16_t expected_len,
-//                                          char *out, uint16_t out_len);
-    return printBech32Encoded(ADDR_BECH32_PREFIX, sizeof(ADDR_BECH32_PREFIX) - 1,
-                              address, address_len,
-                              out, out_len);
+    // printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data,
+    //                                          uint16_t data_len, uint16_t expected_len,
+    //                                          char *out, uint16_t out_len);
+    return printBech32Encoded(ADDR_BECH32_PREFIX, sizeof(ADDR_BECH32_PREFIX) - 1, address, address_len, out, out_len);
 }
 
 parser_error_t printShortAddress(const uint8_t *address, uint16_t address_len, char *out, uint16_t out_len) {
@@ -105,7 +101,7 @@ parser_error_t printShortAddress(const uint8_t *address, uint16_t address_len, c
     }
 
     // Calculate required length for short form
-    uint16_t prefix_and_sep_len = sizeof(ADDR_BECH32_PREFIX); // prefix + separator
+    uint16_t prefix_and_sep_len = sizeof(ADDR_BECH32_PREFIX);  // prefix + separator
     uint16_t required_len = prefix_and_sep_len + SHORT_ADDRESS_VISIBLE_CHARS;
 
     // + ellipsis + null
@@ -124,14 +120,12 @@ parser_error_t printShortAddress(const uint8_t *address, uint16_t address_len, c
     return parser_ok;
 }
 
-
 parser_error_t printAssetId(const uint8_t *asset, uint16_t asset_len, char *out, uint16_t out_len) {
     if (asset_len != ASSET_ID_LEN) {
         return parser_unexpected_buffer_end;
     }
 
-    return printBech32Encoded(ASSET_BECH32_PREFIX, sizeof(ASSET_BECH32_PREFIX) - 1,
-                              asset, asset_len, out, out_len);
+    return printBech32Encoded(ASSET_BECH32_PREFIX, sizeof(ASSET_BECH32_PREFIX) - 1, asset, asset_len, out, out_len);
 }
 
 parser_error_t uint128_to_str(char *data, int dataLen, uint64_t high, uint64_t low) {

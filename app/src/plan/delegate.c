@@ -14,11 +14,11 @@
  *  limitations under the License.
  ********************************************************************************/
 
-#include "parser_pb_utils.h"
-#include "zxformat.h"
 #include "note.h"
-#include "ui_utils.h"
+#include "parser_pb_utils.h"
 #include "rslib.h"
+#include "ui_utils.h"
+#include "zxformat.h"
 
 parser_error_t decode_delegate_plan(const bytes_t *data, delegate_plan_t *delegate) {
     penumbra_core_component_stake_v1_Delegate delegate_plan = penumbra_core_component_stake_v1_Delegate_init_default;

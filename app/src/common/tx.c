@@ -59,12 +59,11 @@ uint32_t tx_get_buffer_length() { return buffering_get_buffer()->pos; }
 
 uint8_t *tx_get_buffer() { return buffering_get_buffer()->data; }
 
-
 const char *tx_parse_metadata() {
     MEMZERO(ctx_parsed_tx.tx_metadata, sizeof(ctx_parsed_tx.tx_metadata));
 
-    uint8_t err = parser_parseTxMetadata(tx_get_buffer(), tx_get_buffer_length(), ctx_parsed_tx.tx_metadata,
-                                         MAX_TX_METADATA_LEN);
+    uint8_t err =
+        parser_parseTxMetadata(tx_get_buffer(), tx_get_buffer_length(), ctx_parsed_tx.tx_metadata, MAX_TX_METADATA_LEN);
 
     CHECK_APP_CANARY()
 

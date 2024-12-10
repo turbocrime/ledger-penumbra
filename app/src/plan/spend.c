@@ -14,10 +14,10 @@
  *  limitations under the License.
  ********************************************************************************/
 
-#include "parser_pb_utils.h"
-#include "zxformat.h"
 #include "note.h"
+#include "parser_pb_utils.h"
 #include "ui_utils.h"
+#include "zxformat.h"
 
 parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     penumbra_core_component_shielded_pool_v1_SpendPlan spend_plan =
@@ -61,7 +61,6 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     return parser_ok;
 }
 
-
 parser_error_t spend_printValue(const parser_context_t *ctx, const spend_plan_t *spend, char *outVal, uint16_t outValLen) {
     if (ctx == NULL || spend == NULL || outVal == NULL) {
         return parser_no_data;
@@ -76,17 +75,20 @@ parser_error_t spend_printValue(const parser_context_t *ctx, const spend_plan_t 
     // example: Spend 100 USDC to penumbra1k0zzug62gpz60sejdvu9q7mq…
 
     // add action title
-    uint16_t written_local = snprintf(outVal, outValLen, "Spend ");
-
-    // add value
-    CHECK_ERROR(printValue(ctx, &spend->note.value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_local, outValLen - written_local));
+    snprintf(outVal, outValLen, "%s", "Spend ");
     uint16_t written_value = strlen(outVal);
 
+    // add value
+    CHECK_ERROR(printValue(ctx, &spend->note.value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+                           outValLen - written_value));
+    written_value = strlen(outVal);
+
     // add "from"
-    written_local = snprintf(outVal + written_value, outValLen - written_value, " from ");
+    snprintf(outVal + written_value, outValLen - written_value, " from ");
+    written_value = strlen(outVal);
 
     // add address
-    CHECK_ERROR(printTxAddress(&spend->note.address.inner, outVal + written_local + written_value, outValLen - written_local - written_value));
+    CHECK_ERROR(printTxAddress(&spend->note.address.inner, outVal + written_value, outValLen - written_value));
 
     return parser_ok;
 }
@@ -101,25 +103,17 @@ parser_error_t spend_getNumItems(const parser_context_t *ctx, uint8_t *num_items
     return parser_ok;
 }
 
-parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *spend,
-                             uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
-                             char *outVal, uint16_t outValLen, uint8_t pageIdx,
-                             uint8_t *pageCount) {
-
+parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *spend, uint8_t actionIdx, char *outKey,
+                             uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
 
     if (spend == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;
     }
 
-    if (displayIdx != 0) {
-        return err;
-    }
-
-
     char bufferUI[SPEND_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action");
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
     CHECK_ERROR(spend_printValue(ctx, spend, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

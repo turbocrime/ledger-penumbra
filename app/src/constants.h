@@ -44,7 +44,9 @@
 #define ASSET_ID_LEN 32
 // HRP length + 1 (separator) + 52 (data) + 6 (checksum) + 1 (null terminator)
 // 6 + 1 + 52 + 6 + 2 = 67
-#define ENCODED_ASSET_SIZE (strlen(ASSET_BECH32_PREFIX) + ((ASSET_ID_LEN * BITS_PER_BYTE + BECH32_BITS_PER_CHAR - 1) / BECH32_BITS_PER_CHAR) + CHECKSUM_LENGTH + 1)
+#define ENCODED_ASSET_SIZE                                                                                              \
+    (strlen(ASSET_BECH32_PREFIX) + ((ASSET_ID_LEN * BITS_PER_BYTE + BECH32_BITS_PER_CHAR - 1) / BECH32_BITS_PER_CHAR) + \
+     CHECKSUM_LENGTH + 1)
 
 #define ENCODED_DATA_LENGTH \
     (((ADDRESS_LEN_BYTES + CHECKSUM_LENGTH) * BITS_PER_BYTE + BECH32_BITS_PER_CHAR - 1) / BECH32_BITS_PER_CHAR)
@@ -52,7 +54,6 @@
 #define ENCODED_ADDR_LEN (sizeof(ADDR_BECH32_PREFIX) + SEPARATOR_LENGTH + ENCODED_DATA_LENGTH)
 
 #define ENCODED_ADDR_BUFFER_SIZE (ENCODED_ADDR_LEN + 2)
-
 
 // MEMO transaction constants
 #define MEMO_CIPHERTEXT_LEN_BYTES 528
@@ -68,10 +69,11 @@
 
 // The staking token asset ID (upenumbra)
 // Bech32m: passet1984fctenw8m2fpl8a9wzguzp7j34d7vravryuhft808nyt9fdggqxmanqm
-#define STAKING_TOKEN_ASSET_ID_BYTES { \
-    0x29, 0xea, 0x9c, 0x2f, 0x33, 0x71, 0xf6, 0xa4, 0x87, 0xe7, 0xe9, 0x5c, 0x24, 0x70, 0x41, 0xf4, \
-    0xa3, 0x56, 0xf9, 0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10  \
-}
+#define STAKING_TOKEN_ASSET_ID_BYTES                                                                                      \
+    {                                                                                                                     \
+        0x29, 0xea, 0x9c, 0x2f, 0x33, 0x71, 0xf6, 0xa4, 0x87, 0xe7, 0xe9, 0x5c, 0x24, 0x70, 0x41, 0xf4, 0xa3, 0x56, 0xf9, \
+            0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10                                  \
+    }
 
 #define DEFAULT_CHAIN_ID "penumbra-1"
 
@@ -84,5 +86,8 @@
     (VALUE_DISPLAY_MAX_LEN + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS) + sizeof(ADDR_BECH32_PREFIX) + 10)  // = 202
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an swap action
-#define SWAP_DISPLAY_MAX_LEN \
-    (2*VALUE_DISPLAY_MAX_LEN + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS) + 6)  // = 355
+#define SWAP_DISPLAY_MAX_LEN (2 * VALUE_DISPLAY_MAX_LEN + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS) + 6)  // = 355
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an ics20 withdrawal action
+#define ICS20_WITHDRAWAL_DISPLAY_MAX_LEN \
+    (VALUE_DISPLAY_MAX_LEN + 300 + 36)  // = 498 -> 300 bytes for the channel and destination address

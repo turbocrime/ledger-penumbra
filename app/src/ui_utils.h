@@ -36,8 +36,8 @@
  *         - `parser_invalid_address` if the length of the input data does not match the expected length.
  *         - `parser_display_idx_out_of_range` if the output buffer is too small.
  */
-parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data,
-                                         uint16_t data_len, char *out, uint16_t out_len);
+parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data, uint16_t data_len, char *out,
+                                  uint16_t out_len);
 
 /**
  * Formats a raw Penumbra address into its canonical short form with Bech32 encoding.

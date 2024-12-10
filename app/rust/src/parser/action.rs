@@ -63,4 +63,3 @@ pub struct ActionsHashC {
     pub qty: u8,
     pub hashes: [ActionHash; ACTION_DATA_QTY],
 }
-

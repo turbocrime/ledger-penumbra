@@ -16,6 +16,7 @@
 #pragma once
 
 #include <zxmacros.h>
+
 #include "parser_common.h"
 
 #ifdef __cplusplus
@@ -24,7 +25,8 @@ extern "C" {
 
 parser_error_t decode_swap_plan(const bytes_t *data, swap_plan_t *swap);
 parser_error_t swap_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
-parser_error_t swap_getItem(const parser_context_t *ctx, const swap_plan_t *swap, uint8_t displayIdx, char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
+parser_error_t swap_getItem(const parser_context_t *ctx, const swap_plan_t *swap, uint8_t actionIdx, char *outKey,
+                            uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
 parser_error_t swap_printValue(const parser_context_t *ctx, const swap_plan_t *swap, char *outVal, uint16_t outValLen);
 
 #ifdef __cplusplus

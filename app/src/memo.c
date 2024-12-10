@@ -29,8 +29,8 @@ parser_error_t memo_getNumItems(const parser_context_t *ctx, uint8_t *num_items)
     return parser_ok;
 }
 
-parser_error_t memo_getItem(const parser_context_t *ctx, uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
-                                  char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
+parser_error_t memo_getItem(const parser_context_t *ctx, uint8_t displayIdx, char *outKey, uint16_t outKeyLen, char *outVal,
+                            uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (ctx == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;
@@ -41,7 +41,8 @@ parser_error_t memo_getItem(const parser_context_t *ctx, uint8_t displayIdx, cha
         case 0:
             if (ctx->tx_obj->plan.has_memo) {
                 snprintf(outKey, outKeyLen, "Memo Sender Address");
-                CHECK_ERROR(printTxAddress(&ctx->tx_obj->plan.memo.plaintext.return_address.inner, short_address, sizeof(short_address)));
+                CHECK_ERROR(printTxAddress(&ctx->tx_obj->plan.memo.plaintext.return_address.inner, short_address,
+                                           sizeof(short_address)));
                 pageString(outVal, outValLen, (char *)short_address, pageIdx, pageCount);
             } else {
                 snprintf(outKey, outKeyLen, "Memo");
@@ -53,7 +54,8 @@ parser_error_t memo_getItem(const parser_context_t *ctx, uint8_t displayIdx, cha
                 return parser_no_data;
             }
             snprintf(outKey, outKeyLen, "Memo Text");
-            pageStringExt(outVal, outValLen, (char *)ctx->tx_obj->plan.memo.plaintext.text.ptr, ctx->tx_obj->plan.memo.plaintext.text.len, pageIdx, pageCount);
+            pageStringExt(outVal, outValLen, (char *)ctx->tx_obj->plan.memo.plaintext.text.ptr,
+                          ctx->tx_obj->plan.memo.plaintext.text.len, pageIdx, pageCount);
             return parser_ok;
         default:
             return parser_no_data;

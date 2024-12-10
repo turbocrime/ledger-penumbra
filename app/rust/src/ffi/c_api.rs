@@ -1,8 +1,8 @@
+use crate::constants::FVK_LEN;
+use crate::keys::{fvk::FullViewingKey, nk::NullifierKey};
 use crate::zxerror::ZxErr;
-use crate::keys::{nk::NullifierKey, fvk::FullViewingKey};
 use decaf377::Fq;
 use decaf377_rdsa::{SpendAuth, VerificationKey};
-use crate::constants::FVK_LEN;
 extern "C" {
     pub fn crypto_getFvkBytes(fvk: *mut u8, len: u16) -> ZxErr;
 }

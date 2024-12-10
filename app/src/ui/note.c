@@ -1,17 +1,16 @@
 #include "note.h"
 
+#include "coin.h"
 #include "constants.h"
 #include "known_assets.h"
 #include "tx_metadata.h"
 #include "ui_utils.h"
 #include "zxformat.h"
-#include "coin.h"
 
-bool is_zero_amount(const value_t *value) {
-    return value->amount.hi == 0 && value->amount.lo == 0;
-}
+bool is_zero_amount(const value_t *value) { return value->amount.hi == 0 && value->amount.lo == 0; }
 
-parser_error_t printValue(const parser_context_t *ctx, const value_t *value, const bytes_t *chain_id, char *outVal, uint16_t outValLen) {
+parser_error_t printValue(const parser_context_t *ctx, const value_t *value, const bytes_t *chain_id, char *outVal,
+                          uint16_t outValLen) {
     if (ctx == NULL || value == NULL || outVal == NULL || chain_id == NULL) {
         return parser_no_data;
     }
@@ -42,10 +41,10 @@ parser_error_t printValue(const parser_context_t *ctx, const value_t *value, con
     // Case 1: Known assets
     if (known_asset != NULL) {
         // check if chain id is penumbra-1
-        if (strncmp((const char *)chain_id->ptr, DEFAULT_CHAIN_ID, chain_id->len) == 0) { 
+        if (strncmp((const char *)chain_id->ptr, DEFAULT_CHAIN_ID, chain_id->len) == 0) {
             return printNumber(amount_str, COIN_AMOUNT_DECIMAL_PLACES, known_asset->symbol, "", outVal, outValLen);
         } else {
-            // check in denom the format data 
+            // check in denom the format data
             bool was_printed = false;
             CHECK_ERROR(tryPrintDenom(ctx, value, amount_str, outVal, outValLen, &was_printed));
             if (was_printed) {
@@ -73,7 +72,8 @@ parser_error_t printValue(const parser_context_t *ctx, const value_t *value, con
     return parser_ok;
 }
 
-parser_error_t printFee(const parser_context_t *ctx, const value_t *value, const bytes_t *chain_id, char *outVal, uint16_t outValLen) {
+parser_error_t printFee(const parser_context_t *ctx, const value_t *value, const bytes_t *chain_id, char *outVal,
+                        uint16_t outValLen) {
     if (ctx == NULL || value == NULL || outVal == NULL || chain_id == NULL) {
         return parser_no_data;
     }
@@ -98,7 +98,8 @@ parser_error_t printFee(const parser_context_t *ctx, const value_t *value, const
     return parser_ok;
 }
 
-parser_error_t tryPrintDenom(const parser_context_t *ctx, const value_t *value, const char *amount_str, char *outVal, uint16_t outValLen, bool *was_printed) {
+parser_error_t tryPrintDenom(const parser_context_t *ctx, const value_t *value, const char *amount_str, char *outVal,
+                             uint16_t outValLen, bool *was_printed) {
     if (ctx == NULL || value == NULL || outVal == NULL || amount_str == NULL) {
         return parser_no_data;
     }
@@ -108,12 +109,14 @@ parser_error_t tryPrintDenom(const parser_context_t *ctx, const value_t *value, 
 
     uint8_t trace_len = 0;
     if (value->asset_id.inner.ptr != NULL && value->asset_id.inner.len != 0) {
-        trace_len = metadata_getDenom(&ctx->tx_metadata[0], MAX_TX_METADATA_LEN, &value->asset_id.inner, denom, MAX_DENOM_LEN + 1);
+        trace_len =
+            metadata_getDenom(&ctx->tx_metadata[0], MAX_TX_METADATA_LEN, &value->asset_id.inner, denom, MAX_DENOM_LEN + 1);
     }
 
     if (trace_len != 0) {
         // We found denom trace in provided transaction metadata
-        int written = snprintf(outVal, outValLen - 1, "%s", amount_str);
+        snprintf(outVal, outValLen - 1, "%s", amount_str);
+        uint16_t written = strlen(outVal);
         if (written < 0 || written >= outValLen - 1) {
             return parser_unexpected_buffer_end;
         }
@@ -138,7 +141,8 @@ parser_error_t tryPrintDenom(const parser_context_t *ctx, const value_t *value, 
 }
 
 parser_error_t printFallback(const value_t *value, const char *amount_str, char *outVal, uint16_t outValLen) {
-    int written = snprintf(outVal, outValLen - 1, "%s", amount_str);
+    snprintf(outVal, outValLen - 1, "%s", amount_str);
+    uint16_t written = strlen(outVal);
     if (written < 0 || written >= outValLen - 1) {
         return parser_unexpected_buffer_end;
     }
@@ -149,8 +153,8 @@ parser_error_t printFallback(const value_t *value, const char *amount_str, char 
     return printAssetId(value->asset_id.inner.ptr, value->asset_id.inner.len, outVal + written, outValLen - written - 1);
 }
 
-parser_error_t printNumber(const char *amount, uint8_t decimalPlaces, const char *postfix, const char *prefix, char *outVal, uint16_t outValLen) {
-
+parser_error_t printNumber(const char *amount, uint8_t decimalPlaces, const char *postfix, const char *prefix, char *outVal,
+                           uint16_t outValLen) {
     char amount_trimmed[VALUE_DISPLAY_MAX_LEN] = {0};
     if (strcmp(amount, "0") == 0) {
         snprintf(amount_trimmed, VALUE_DISPLAY_MAX_LEN, "%s", "0");
@@ -165,7 +169,7 @@ parser_error_t printNumber(const char *amount, uint8_t decimalPlaces, const char
     // add space
     size_t fpstr_len = strlen(amount_trimmed);
     amount_trimmed[fpstr_len] = ' ';
-    
+
     if (z_str3join(amount_trimmed, VALUE_DISPLAY_MAX_LEN, prefix, postfix) != zxerr_ok) {
         return parser_unexpected_buffer_end;
     }
@@ -175,7 +179,8 @@ parser_error_t printNumber(const char *amount, uint8_t decimalPlaces, const char
     return parser_ok;
 }
 
-parser_error_t printAssetIdFromValue(const parser_context_t *ctx, const value_t *value, const bytes_t *chain_id, char *outVal, uint16_t outValLen) {
+parser_error_t printAssetIdFromValue(const parser_context_t *ctx, const value_t *value, const bytes_t *chain_id,
+                                     char *outVal, uint16_t outValLen) {
     if (ctx == NULL || value == NULL || outVal == NULL || chain_id == NULL) {
         return parser_no_data;
     }
@@ -195,7 +200,7 @@ parser_error_t printAssetIdFromValue(const parser_context_t *ctx, const value_t 
     // Case 1: Known assets
     if (known_asset != NULL) {
         // check if chain id is penumbra-1
-        if (strncmp((const char *)chain_id->ptr, DEFAULT_CHAIN_ID, chain_id->len) == 0) { 
+        if (strncmp((const char *)chain_id->ptr, DEFAULT_CHAIN_ID, chain_id->len) == 0) {
             snprintf(outVal, outValLen, "%s", known_asset->symbol);
         } else {
             CHECK_ERROR(printAssetId(value->asset_id.inner.ptr, value->asset_id.inner.len, outVal, outValLen));
@@ -204,12 +209,13 @@ parser_error_t printAssetIdFromValue(const parser_context_t *ctx, const value_t 
         return parser_ok;
     }
 
-    // Case 2: Base denom 
+    // Case 2: Base denom
     char denom[MAX_DENOM_LEN + 1] = {0};
 
     uint8_t trace_len = 0;
     if (value->asset_id.inner.ptr != NULL && value->asset_id.inner.len != 0) {
-        trace_len = metadata_getDenom(&ctx->tx_metadata[0], MAX_TX_METADATA_LEN, &value->asset_id.inner, denom, MAX_DENOM_LEN + 1);
+        trace_len =
+            metadata_getDenom(&ctx->tx_metadata[0], MAX_TX_METADATA_LEN, &value->asset_id.inner, denom, MAX_DENOM_LEN + 1);
     }
 
     if (trace_len != 0) {
@@ -219,7 +225,7 @@ parser_error_t printAssetIdFromValue(const parser_context_t *ctx, const value_t 
         return parser_ok;
     }
 
-    // Case 3: Bech32 fallback 
+    // Case 3: Bech32 fallback
     CHECK_ERROR(printAssetId(value->asset_id.inner.ptr, value->asset_id.inner.len, outVal, outValLen));
 
     return parser_ok;

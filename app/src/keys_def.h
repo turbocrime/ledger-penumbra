@@ -21,6 +21,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdint.h>
+
 #include "constants.h"
 
 #define KEY_LEN 32

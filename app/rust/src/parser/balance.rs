@@ -14,10 +14,10 @@
 *  limitations under the License.
 ********************************************************************************/
 
-use std::num::NonZeroU128;
-use crate::ParserError;
 use crate::parser::id::Id;
 use crate::parser::value::Value;
+use crate::ParserError;
+use std::num::NonZeroU128;
 
 // Define a constant for the maximum number of assets
 const MAX_ASSETS: usize = 10;
@@ -38,7 +38,10 @@ impl TryFrom<Value> for Balance {
 
         let balances = core::array::from_fn(|_| NonZeroU128::new(value.amount.inner).unwrap());
 
-        Ok(Balance { negated, ids, balances })
+        Ok(Balance {
+            negated,
+            ids,
+            balances,
+        })
     }
 }
-

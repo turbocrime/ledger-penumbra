@@ -24,8 +24,8 @@
 #include "parser_txdef.h"
 #include "pb_common.h"
 #include "pb_decode.h"
-#include "zxtypes.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
+#include "zxtypes.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,8 +37,7 @@ parser_error_t decode_parameters(const bytes_t *data,
 
 parser_error_t parameters_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
 parser_error_t parameters_getItem(const parser_context_t *ctx, uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
-                             char *outVal, uint16_t outValLen, uint8_t pageIdx,
-                             uint8_t *pageCount);
+                                  char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
 
 #ifdef __cplusplus
 }

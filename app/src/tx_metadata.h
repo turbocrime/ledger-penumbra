@@ -33,12 +33,8 @@ parser_error_t metadata_toAssetId(const tx_metadata_t *metadata, uint8_t *assetI
  * @param len Length of the denomination buffer
  * @return Length of denomination copied, 0 if not found or error
  */
-uint8_t metadata_getDenom(const tx_metadata_t *metadata,
-                         uint8_t metadataLen,
-                         const bytes_t *asset,
-                         char *denom,
-                         uint8_t len);
-
+uint8_t metadata_getDenom(const tx_metadata_t *metadata, uint8_t metadataLen, const bytes_t *asset, char *denom,
+                          uint8_t len);
 
 #ifdef __cplusplus
 }

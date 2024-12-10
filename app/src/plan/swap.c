@@ -16,10 +16,10 @@
 
 #include "swap.h"
 
-#include "parser_pb_utils.h"
-#include "zxformat.h"
 #include "note.h"
+#include "parser_pb_utils.h"
 #include "ui_utils.h"
+#include "zxformat.h"
 
 bool is_delta_empty(const amount_t *amount, const bool has_delta) {
     return !has_delta || (has_delta && amount->hi == 0 && amount->lo == 0);
@@ -32,14 +32,19 @@ parser_error_t decode_swap_plan(const bytes_t *data, swap_plan_t *swap) {
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
-    fixed_size_field_t fee_blinding_arg, proof_blinding_r_arg, proof_blinding_s_arg, asset_1_arg, asset_2_arg, fee_asset_id_arg, claim_address_arg, rseed_arg;
+    fixed_size_field_t fee_blinding_arg, proof_blinding_r_arg, proof_blinding_s_arg, asset_1_arg, asset_2_arg,
+        fee_asset_id_arg, claim_address_arg, rseed_arg;
     setup_decode_fixed_field(&swap_plan.fee_blinding, &fee_blinding_arg, &swap->fee_blinding, 32);
     setup_decode_fixed_field(&swap_plan.proof_blinding_r, &proof_blinding_r_arg, &swap->proof_blinding_r, 32);
     setup_decode_fixed_field(&swap_plan.proof_blinding_s, &proof_blinding_s_arg, &swap->proof_blinding_s, 32);
-    setup_decode_fixed_field(&swap_plan.swap_plaintext.trading_pair.asset_1.inner, &asset_1_arg, &swap->swap_plaintext.trading_pair.asset_1.inner, 32);
-    setup_decode_fixed_field(&swap_plan.swap_plaintext.trading_pair.asset_2.inner, &asset_2_arg, &swap->swap_plaintext.trading_pair.asset_2.inner, 32);
-    setup_decode_fixed_field(&swap_plan.swap_plaintext.claim_fee.asset_id.alt_bech32m, &fee_asset_id_arg, &swap->swap_plaintext.claim_fee.asset_id.inner, 32);
-    setup_decode_fixed_field(&swap_plan.swap_plaintext.claim_address.inner, &claim_address_arg, &swap->swap_plaintext.claim_address.inner, 80);
+    setup_decode_fixed_field(&swap_plan.swap_plaintext.trading_pair.asset_1.inner, &asset_1_arg,
+                             &swap->swap_plaintext.trading_pair.asset_1.inner, 32);
+    setup_decode_fixed_field(&swap_plan.swap_plaintext.trading_pair.asset_2.inner, &asset_2_arg,
+                             &swap->swap_plaintext.trading_pair.asset_2.inner, 32);
+    setup_decode_fixed_field(&swap_plan.swap_plaintext.claim_fee.asset_id.alt_bech32m, &fee_asset_id_arg,
+                             &swap->swap_plaintext.claim_fee.asset_id.inner, 32);
+    setup_decode_fixed_field(&swap_plan.swap_plaintext.claim_address.inner, &claim_address_arg,
+                             &swap->swap_plaintext.claim_address.inner, 80);
     setup_decode_fixed_field(&swap_plan.swap_plaintext.rseed, &rseed_arg, &swap->swap_plaintext.rseed, 32);
 
     if (!pb_decode(&swap_stream, penumbra_core_component_dex_v1_SwapPlan_fields, &swap_plan)) {
@@ -65,18 +70,20 @@ parser_error_t decode_swap_plan(const bytes_t *data, swap_plan_t *swap) {
     }
 
     // check if both delta_1_i and delta_2_i are empty
-    if (is_delta_empty(&swap->swap_plaintext.delta_1_i, swap->swap_plaintext.has_delta_1_i) && is_delta_empty(&swap->swap_plaintext.delta_2_i, swap->swap_plaintext.has_delta_2_i)) {
+    if (is_delta_empty(&swap->swap_plaintext.delta_1_i, swap->swap_plaintext.has_delta_1_i) &&
+        is_delta_empty(&swap->swap_plaintext.delta_2_i, swap->swap_plaintext.has_delta_2_i)) {
         return parser_swap_plan_error;
     }
 
     // one delta must be nonzero
-    if (!is_delta_empty(&swap->swap_plaintext.delta_1_i, swap->swap_plaintext.has_delta_1_i) && !is_delta_empty(&swap->swap_plaintext.delta_2_i, swap->swap_plaintext.has_delta_2_i)) {
+    if (!is_delta_empty(&swap->swap_plaintext.delta_1_i, swap->swap_plaintext.has_delta_1_i) &&
+        !is_delta_empty(&swap->swap_plaintext.delta_2_i, swap->swap_plaintext.has_delta_2_i)) {
         return parser_swap_plan_error;
     }
 
     swap->swap_plaintext.has_claim_fee = swap_plan.swap_plaintext.has_claim_fee;
     if (swap->swap_plaintext.has_claim_fee) {
-        swap->swap_plaintext.claim_fee.has_amount = swap_plan.swap_plaintext.claim_fee.has_amount;  
+        swap->swap_plaintext.claim_fee.has_amount = swap_plan.swap_plaintext.claim_fee.has_amount;
         if (swap->swap_plaintext.claim_fee.has_amount) {
             swap->swap_plaintext.claim_fee.amount.hi = swap_plan.swap_plaintext.claim_fee.amount.hi;
             swap->swap_plaintext.claim_fee.amount.lo = swap_plan.swap_plaintext.claim_fee.amount.lo;
@@ -88,36 +95,26 @@ parser_error_t decode_swap_plan(const bytes_t *data, swap_plan_t *swap) {
     return parser_ok;
 }
 
-
 parser_error_t swap_getNumItems(const parser_context_t *ctx, uint8_t *num_items) {
     UNUSED(ctx);
     *num_items = 1;
     return parser_ok;
 }
 
-parser_error_t swap_getItem(const parser_context_t *ctx, const swap_plan_t *swap,
-                             uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
-                             char *outVal, uint16_t outValLen, uint8_t pageIdx,
-                             uint8_t *pageCount) {
-
+parser_error_t swap_getItem(const parser_context_t *ctx, const swap_plan_t *swap, uint8_t actionIdx, char *outKey,
+                            uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (swap == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;
     }
 
-
-    if (displayIdx != 0) {
-        return parser_no_data;
-    }
-
     char bufferUI[SWAP_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action");
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
     CHECK_ERROR(swap_printValue(ctx, swap, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 
     return parser_ok;
-
 }
 
 parser_error_t swap_printValue(const parser_context_t *ctx, const swap_plan_t *swap, char *outVal, uint16_t outValLen) {
@@ -125,7 +122,7 @@ parser_error_t swap_printValue(const parser_context_t *ctx, const swap_plan_t *s
         return parser_no_data;
     }
 
-    if (outValLen < OUTPUT_DISPLAY_MAX_LEN) {
+    if (outValLen < SWAP_DISPLAY_MAX_LEN) {
         return parser_unexpected_buffer_end;
     }
 
@@ -134,7 +131,8 @@ parser_error_t swap_printValue(const parser_context_t *ctx, const swap_plan_t *s
     // example: Output 100 USDC to penumbra1k0zzug62gpz60sejdvu9q7mq…
 
     // add action title
-    uint16_t written_value = snprintf(outVal, outValLen, "Swap ");
+    snprintf(outVal, outValLen, "Swap ");
+    uint16_t written_value = strlen(outVal);
 
     // add value
     value_t output_value = {0};
@@ -169,20 +167,22 @@ parser_error_t swap_printValue(const parser_context_t *ctx, const swap_plan_t *s
     snprintf(outVal + written_value, outValLen - written_value, "Input ");
     written_value = strlen(outVal);
 
-    CHECK_ERROR(printValue(ctx, &input_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value, outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &input_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+                           outValLen - written_value));
     written_value = strlen(outVal);
 
     snprintf(outVal + written_value, outValLen - written_value, " Output Asset ");
     written_value = strlen(outVal);
 
-    CHECK_ERROR(printAssetIdFromValue(ctx, &input_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value, outValLen - written_value));
+    CHECK_ERROR(printAssetIdFromValue(ctx, &input_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+                                      outValLen - written_value));
     written_value = strlen(outVal);
 
     snprintf(outVal + written_value, outValLen - written_value, " Claim Fee ");
     written_value = strlen(outVal);
 
-    CHECK_ERROR(printFee(ctx, &swap->swap_plaintext.claim_fee, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value, outValLen - written_value));
-    written_value = strlen(outVal);
+    CHECK_ERROR(printFee(ctx, &swap->swap_plaintext.claim_fee, &ctx->tx_obj->parameters_plan.chain_id,
+                         outVal + written_value, outValLen - written_value));
 
     return parser_ok;
 }

@@ -140,7 +140,6 @@ zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureM
     keys_t keys = {0};
     zxerr_t error = zxerr_invalid_crypto_settings;
 
-
     // compute parameters hash
     CATCH_ZX_ERROR(compute_parameters_hash(&tx_obj->parameters_plan.data_bytes, &tx_obj->plan.parameters_hash));
 

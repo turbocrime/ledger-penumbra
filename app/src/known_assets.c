@@ -21,10 +21,7 @@
 // TODO: A place holder for known assets in penumbra
 // bellow dummy values
 static const asset_info_t supported_assets[] = {
-    {STAKING_TOKEN_ASSET_ID_BYTES,
-     "penumbra",
-     "Penumbra",
-     6},
+    {STAKING_TOKEN_ASSET_ID_BYTES, "penumbra", "Penumbra", 6},
 };
 
 const asset_info_t *asset_info_from_table(const uint8_t asset_id[ASSET_ID_LEN]) {

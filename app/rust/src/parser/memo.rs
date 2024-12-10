@@ -17,10 +17,10 @@
 use super::memo_plain_text::MemoPlaintextC;
 use super::symmetric::{PayloadKey, PayloadKind};
 use crate::constants::{MEMO_CIPHERTEXT_LEN_BYTES, MEMO_LEN_BYTES};
-use crate::ParserError;
-use crate::parser::effect_hash::{create_personalized_state, EffectHash};
 use crate::parser::bytes::BytesC;
+use crate::parser::effect_hash::{create_personalized_state, EffectHash};
 use crate::utils::protobuf::encode_varint;
+use crate::ParserError;
 
 #[repr(C)]
 #[derive(Default)]
@@ -83,7 +83,6 @@ impl MemoCiphertext {
         let key = PayloadKey::from_bytes(memo_key_bytes);
         key.encrypt(&mut ciphertext, PayloadKind::Memo, MEMO_LEN_BYTES)
             .map_err(|_| ParserError::UnexpectedError)?;
-
 
         Ok(MemoCiphertext(ciphertext))
     }

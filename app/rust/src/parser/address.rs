@@ -31,10 +31,16 @@ impl AddressC {
     }
 
     pub unsafe fn get_inner_bytes<'a>(self) -> Result<&'a [u8], ParserError> {
-        Ok(std::slice::from_raw_parts(self.inner.ptr, self.inner.len as usize))
+        Ok(std::slice::from_raw_parts(
+            self.inner.ptr,
+            self.inner.len as usize,
+        ))
     }
 
     pub unsafe fn get_alt_bech32m_bytes<'a>(self) -> Result<&'a [u8], ParserError> {
-        Ok(std::slice::from_raw_parts(self.alt_bech32m.ptr, self.alt_bech32m.len as usize))
+        Ok(std::slice::from_raw_parts(
+            self.alt_bech32m.ptr,
+            self.alt_bech32m.len as usize,
+        ))
     }
 }
