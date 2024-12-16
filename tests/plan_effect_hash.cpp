@@ -85,12 +85,6 @@ void check_testcase_effect_hash(const testcase_effect_hash_t &tc, bool expert_mo
     parser_error_t err;
     zxerr_t zxerr;
 
-    spend_key_bytes_t sk_bytes = {0};
-    std::array<uint8_t, 32> sk_bytes_raw = {0xa1, 0xff, 0xba, 0x0c, 0x37, 0x93, 0x1f, 0x0a, 0x62, 0x61, 0x37,
-                                            0x52, 0x0d, 0xa6, 0x50, 0x63, 0x2d, 0x35, 0x85, 0x3b, 0xf5, 0x91,
-                                            0xb3, 0x6b, 0xb4, 0x28, 0x63, 0x0a, 0x4d, 0x87, 0xc4, 0xdc};
-    std::copy(sk_bytes_raw.begin(), sk_bytes_raw.end(), sk_bytes);
-
     uint8_t buffer[5000];
     uint16_t bufferLen = parseHexString(buffer, sizeof(buffer), tc.blob.c_str());
 
@@ -104,8 +98,7 @@ void check_testcase_effect_hash(const testcase_effect_hash_t &tc, bool expert_mo
     ASSERT_EQ(zxerr, zxerr_ok);
 
     for (uint16_t i = 0; i < tx_obj.plan.actions.qty; i++) {
-        zxerr =
-            compute_action_hash(&tx_obj.actions_plan[i], &sk_bytes, &tx_obj.plan.memo.key, &tx_obj.plan.actions.hashes[i]);
+        zxerr = compute_action_hash(&tx_obj.actions_plan[i], &tx_obj.plan.memo.key, &tx_obj.plan.actions.hashes[i]);
         ASSERT_EQ(zxerr, zxerr_ok);
     }
 

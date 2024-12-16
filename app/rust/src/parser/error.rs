@@ -45,6 +45,8 @@ pub enum ParserError {
     UndelegatePlanError,      // Added
     Ics20WithdrawalPlanError, // Added
     SwapPlanError,            // Added
+    ParameterHashError,       // Added
+    EffectHashError,          // Added
     // Chain related
     InvalidChainId,
     UnexpectedChain, // Added

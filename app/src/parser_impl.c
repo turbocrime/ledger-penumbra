@@ -37,15 +37,14 @@ static uint16_t actions_qty = 0;
 static uint16_t detection_data_qty = 0;
 static parser_error_t decode_error = parser_ok;
 
-#define CHECK_ACTION_ERROR(__CALL)            \
-    {                                         \
-        decode_error = __CALL;                \
-        CHECK_APP_CANARY()                    \
-        if (decode_error != parser_ok) {      \
-            return false;                     \
-        }                                     \
+#define CHECK_ACTION_ERROR(__CALL)       \
+    {                                    \
+        decode_error = __CALL;           \
+        CHECK_APP_CANARY()               \
+        if (decode_error != parser_ok) { \
+            return false;                \
+        }                                \
     }
-
 
 bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
     if (arg == NULL || *arg == NULL) {

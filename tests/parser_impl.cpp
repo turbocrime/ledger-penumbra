@@ -51,12 +51,6 @@ TEST(SCALE, ReadBytes) {
         "6350203139694368316757783132376642204f51334a32205a3820396f3020534e6e4c20505a667a69204a46393348482020734520484376664"
         "94b62532067355075675a43206877654d1220d6b269dbe8d6e04bdbba2025285d956864c723c3932ba608db6fd433a194731b");
 
-    spend_key_bytes_t sk_bytes = {0};
-    std::array<uint8_t, 32> sk_bytes_raw = {0xa1, 0xff, 0xba, 0x0c, 0x37, 0x93, 0x1f, 0x0a, 0x62, 0x61, 0x37,
-                                            0x52, 0x0d, 0xa6, 0x50, 0x63, 0x2d, 0x35, 0x85, 0x3b, 0xf5, 0x91,
-                                            0xb3, 0x6b, 0xb4, 0x28, 0x63, 0x0a, 0x4d, 0x87, 0xc4, 0xdc};
-    std::copy(sk_bytes_raw.begin(), sk_bytes_raw.end(), sk_bytes);
-
     err = parser_parse(&ctx, buffer, bufferLen, &tx_obj);
     ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);
 
@@ -66,8 +60,7 @@ TEST(SCALE, ReadBytes) {
 
     // compute action hashes
     for (uint16_t i = 0; i < tx_obj.plan.actions.qty; i++) {
-        zxerr =
-            compute_action_hash(&tx_obj.actions_plan[i], &sk_bytes, &tx_obj.plan.memo.key, &tx_obj.plan.actions.hashes[i]);
+        zxerr = compute_action_hash(&tx_obj.actions_plan[i], &tx_obj.plan.memo.key, &tx_obj.plan.actions.hashes[i]);
         ASSERT_EQ(zxerr, zxerr_ok);
     }
 

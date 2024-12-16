@@ -25,6 +25,8 @@
 #include "zxmacros.h"
 
 uint32_t hdPath[HDPATH_LEN_DEFAULT];
+full_viewing_key_t fvk_cached = {0};
+bool fvk_cached_set = false;
 
 __Z_INLINE zxerr_t copyKeys(keys_t *keys, key_kind_e req_type, uint8_t *output, uint16_t len, uint16_t *cmdResponseLen) {
     if (keys == NULL || output == NULL) {
@@ -88,14 +90,22 @@ zxerr_t crypto_fillKeys(uint8_t *output, uint16_t len, uint16_t *cmdResponseLen)
         return error;
     }
 
-    // Compute seed
-    CATCH_ZX_ERROR(computeSpendKey(&keys));
+    if (!fvk_cached_set) { 
+        // Compute seed
+        CATCH_ZX_ERROR(computeSpendKey(&keys));
 
-    // use seed to compute viewieng keys
-    CATCH_ZX_ERROR(compute_keys(&keys));
+        // use seed to compute viewieng keys
+        CATCH_ZX_ERROR(compute_keys(&keys));
+    
+        // Copy keys
+        CATCH_ZX_ERROR(copyKeys(&keys, Fvk, output, len, cmdResponseLen));
 
-    // Copy keys
-    CATCH_ZX_ERROR(copyKeys(&keys, Fvk, output, len, cmdResponseLen));
+        MEMCPY(fvk_cached, keys.fvk, FVK_LEN);
+
+        fvk_cached_set = true;
+    } else {
+        MEMCPY(output, fvk_cached, FVK_LEN);
+    }
 
     error = zxerr_ok;
 
@@ -137,19 +147,15 @@ zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureM
         return zxerr_invalid_crypto_settings;
     }
 
-    keys_t keys = {0};
     zxerr_t error = zxerr_invalid_crypto_settings;
 
     // compute parameters hash
     CATCH_ZX_ERROR(compute_parameters_hash(&tx_obj->parameters_plan.data_bytes, &tx_obj->plan.parameters_hash));
 
-    // compute spend key
-    CATCH_ZX_ERROR(computeSpendKey(&keys));
-
     // compute action hashes
     for (uint16_t i = 0; i < tx_obj->plan.actions.qty; i++) {
-        CATCH_ZX_ERROR(compute_action_hash(&tx_obj->actions_plan[i], &keys.skb, &tx_obj->plan.memo.key,
-                                           &tx_obj->plan.actions.hashes[i]));
+        CATCH_ZX_ERROR(
+            compute_action_hash(&tx_obj->actions_plan[i], &tx_obj->plan.memo.key, &tx_obj->plan.actions.hashes[i]));
     }
 
     // compute effect hash
@@ -160,7 +166,6 @@ zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureM
     return zxerr_ok;
 
 catch_zx_error:
-    MEMZERO(&keys, sizeof(keys));
     MEMZERO(signature, signatureMaxlen);
 
     if (error != zxerr_ok) {

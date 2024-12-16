@@ -19,10 +19,10 @@ use crate::parser::{
 };
 
 use crate::constants::EFFECT_HASH_LEN;
-use crate::keys::spend_key::SpendKeyBytes;
 use crate::parser::bytes::BytesC;
 use crate::parser::effect_hash::EffectHash;
 use crate::parser::parameters::ParametersHash;
+use crate::ffi::c_api::c_fvk_bytes;
 use crate::ParserError;
 
 pub mod output;
@@ -83,6 +83,8 @@ pub unsafe extern "C" fn rs_compute_effect_hash(
         let plan_hash_array = plan_hash.as_array();
         let copy_len: usize = core::cmp::min(output.len(), plan_hash_array.len());
         output[..copy_len].copy_from_slice(&plan_hash_array[..copy_len]);
+    } else {
+        return ParserError::UnexpectedError as u32;
     }
 
     ParserError::Ok as u32
@@ -113,6 +115,8 @@ pub unsafe extern "C" fn rs_parameter_hash(
         let body_hash_array = effect_hash.as_bytes();
         let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
         output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    } else {
+        return ParserError::EffectHashError as u32;
     }
 
     ParserError::Ok as u32
@@ -122,7 +126,6 @@ pub unsafe extern "C" fn rs_parameter_hash(
 /// Use to compute an address and write it back into output
 /// argument.
 pub unsafe extern "C" fn rs_spend_action_hash(
-    sk: &SpendKeyBytes,
     plan: &spend::SpendPlanC,
     output: *mut u8,
     output_len: usize,
@@ -134,13 +137,17 @@ pub unsafe extern "C" fn rs_spend_action_hash(
         return ParserError::Ok as u32;
     }
 
-    let fvk = sk.fvk().unwrap();
+    let Ok(fvk) = c_fvk_bytes() else {
+        return ParserError::UnexpectedError as u32;
+    };
     let body_hash_bytes = plan.effect_hash(&fvk);
 
     if let Ok(body_hash_bytes) = body_hash_bytes {
         let body_hash_array = body_hash_bytes.as_array();
         let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
         output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    } else {
+        return ParserError::SpendPlanError as u32;
     }
 
     ParserError::Ok as u32
@@ -150,7 +157,6 @@ pub unsafe extern "C" fn rs_spend_action_hash(
 /// Use to compute an address and write it back into output
 /// argument.
 pub unsafe extern "C" fn rs_output_action_hash(
-    sk: &SpendKeyBytes,
     plan: &output::OutputPlanC,
     memo_key: &BytesC,
     output: *mut u8,
@@ -163,7 +169,10 @@ pub unsafe extern "C" fn rs_output_action_hash(
         return ParserError::Ok as u32;
     }
 
-    let fvk: crate::keys::FullViewingKey = sk.fvk().unwrap();
+    let Ok(fvk) = c_fvk_bytes() else {
+        return ParserError::UnexpectedError as u32;
+    };
+
     let memo_key_bytes = match memo_key.get_bytes() {
         Ok(bytes) => bytes,
         Err(_) => &[0u8; 32],
@@ -175,6 +184,8 @@ pub unsafe extern "C" fn rs_output_action_hash(
         let body_hash_array = body_hash_bytes.as_array();
         let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
         output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    } else {
+        return ParserError::OutputPlanError as u32;
     }
 
     ParserError::Ok as u32
@@ -184,7 +195,6 @@ pub unsafe extern "C" fn rs_output_action_hash(
 /// Use to compute an address and write it back into output
 /// argument.
 pub unsafe extern "C" fn rs_swap_action_hash(
-    sk: &SpendKeyBytes,
     plan: &swap::SwapPlanC,
     output: *mut u8,
     output_len: usize,
@@ -196,7 +206,9 @@ pub unsafe extern "C" fn rs_swap_action_hash(
         return ParserError::Ok as u32;
     }
 
-    let fvk: crate::keys::FullViewingKey = sk.fvk().unwrap();
+    let Ok(fvk) = c_fvk_bytes() else {
+        return ParserError::UnexpectedError as u32;
+    };
 
     let body_hash_bytes = plan.effect_hash(&fvk);
 
@@ -204,6 +216,8 @@ pub unsafe extern "C" fn rs_swap_action_hash(
         let body_hash_array = body_hash_bytes.as_array();
         let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
         output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    } else {
+        return ParserError::SwapPlanError as u32;
     }
 
     ParserError::Ok as u32
