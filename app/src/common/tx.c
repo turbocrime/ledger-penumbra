@@ -25,7 +25,7 @@
 
 #if defined(TARGET_NANOX) || defined(TARGET_NANOS2) || defined(TARGET_STAX) || defined(TARGET_FLEX)
 #define RAM_BUFFER_SIZE 4096
-#define FLASH_BUFFER_SIZE 16384
+#define FLASH_BUFFER_SIZE 14000
 #elif defined(TARGET_NANOS)
 #define RAM_BUFFER_SIZE 256
 #define FLASH_BUFFER_SIZE 8192

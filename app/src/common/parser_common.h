@@ -103,6 +103,7 @@ typedef enum {
     parser_ics20_withdrawal_plan_error,
     parser_swap_plan_error,
     parser_invalid_metadata,
+    parser_invalid_signature_len,
 } parser_error_t;
 
 typedef struct {

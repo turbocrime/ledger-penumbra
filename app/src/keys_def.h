@@ -34,10 +34,11 @@ extern "C" {
 #define INCOMING_VIEWING_KEY_LEN KEY_LEN     // Assuming modulo r size
 #define ADDR_MAX_ENC_LEN 150                 // The maximun length of the encoded address
 
+#define SIGNATURE_LEN 64
+
 /// Number of bits in the address short form divided by the number of bits per Bech32m character
 #define ADDRESS_NUM_CHARS_SHORT_FORM 24
 
-// TODO: sure it is 16, the same as the tag?
 #define DIVERSIFIER_KEY_LEN 16
 
 #define ADDR_RANDOMIZER_LEN 12
@@ -88,6 +89,8 @@ typedef uint8_t diversifier_tag_t[16];
 
 // A bech32m encoded address
 typedef uint8_t address_t[ADDRESS_LEN_BYTES];
+// A signature type
+typedef uint8_t signature_t[SIGNATURE_LEN];
 
 typedef struct {
     spend_key_bytes_t skb;

@@ -23,6 +23,11 @@
 #include "parser_interface.h"
 #include "zxformat.h"
 #include "zxmacros.h"
+#include "nv_signature.h"
+#include "rslib.h"
+
+// TODO: Maybe move this to crypto_helper
+#include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 
 uint32_t hdPath[HDPATH_LEN_DEFAULT];
 full_viewing_key_t fvk_cached = {0};
@@ -90,13 +95,13 @@ zxerr_t crypto_fillKeys(uint8_t *output, uint16_t len, uint16_t *cmdResponseLen)
         return error;
     }
 
-    if (!fvk_cached_set) { 
+    if (!fvk_cached_set) {
         // Compute seed
         CATCH_ZX_ERROR(computeSpendKey(&keys));
 
         // use seed to compute viewieng keys
         CATCH_ZX_ERROR(compute_keys(&keys));
-    
+
         // Copy keys
         CATCH_ZX_ERROR(copyKeys(&keys, Fvk, output, len, cmdResponseLen));
 
@@ -143,14 +148,20 @@ catch_zx_error:
 }
 
 zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureMaxlen) {
-    if (signature == NULL || tx_obj == NULL || signatureMaxlen < EFFECT_HASH_LEN) {
+    if (signature == NULL || tx_obj == NULL || signatureMaxlen < EFFECT_HASH_LEN + 2 * sizeof(uint16_t)) {
         return zxerr_invalid_crypto_settings;
     }
+
+    keys_t keys = {0};
+    nv_signature_init();
 
     zxerr_t error = zxerr_invalid_crypto_settings;
 
     // compute parameters hash
     CATCH_ZX_ERROR(compute_parameters_hash(&tx_obj->parameters_plan.data_bytes, &tx_obj->plan.parameters_hash));
+
+    // compute spend key
+    CATCH_ZX_ERROR(computeSpendKey(&keys));
 
     // compute action hashes
     for (uint16_t i = 0; i < tx_obj->plan.actions.qty; i++) {
@@ -161,7 +172,34 @@ zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureM
     // compute effect hash
     CATCH_ZX_ERROR(compute_effect_hash(&tx_obj->plan, tx_obj->effect_hash, sizeof(tx_obj->effect_hash)));
 
-    MEMCPY(signature, tx_obj->effect_hash, EFFECT_HASH_LEN);
+    // Similar to what is done in:
+    // https://github.com/penumbra-zone/penumbra/blob/main/crates/core/transaction/src/plan/auth.rs#L12
+    uint8_t spend_signature[64] = {0};
+    bytes_t effect_hash = {.ptr = tx_obj->effect_hash, .len = 64};
+    for (uint16_t i = 0; i < tx_obj->plan.actions.qty; i++) {
+        if (tx_obj->actions_plan[i].action_type == penumbra_core_transaction_v1_ActionPlan_spend_tag){
+            if (rs_sign_spend(&effect_hash, &tx_obj->actions_plan[i].action.spend.randomizer, &keys.skb, spend_signature, 64) != parser_ok) {
+                return zxerr_invalid_crypto_settings;
+            }
+
+            // TODO:
+            // Copy signature to flash either one by one
+            // or by chunks.
+            if (!nv_write_signature(spend_signature, Spend)) {
+                return zxerr_buffer_too_small;
+            }
+        }
+    }
+
+    uint8_t *current_ptr = signature;
+    MEMCPY(current_ptr, tx_obj->effect_hash, EFFECT_HASH_LEN);
+    current_ptr += EFFECT_HASH_LEN;
+    uint16_t spend_signatures = (uint16_t)nv_num_signatures(Spend);
+    uint16_t delegator_signatures = 0;
+    MEMCPY(current_ptr, &spend_signatures, sizeof(uint16_t));
+    current_ptr += sizeof(uint16_t);
+
+    MEMCPY(current_ptr, &delegator_signatures, sizeof(uint16_t));
 
     return zxerr_ok;
 

@@ -31,6 +31,8 @@ poseidon377 = { version = "1.1.0", default-features = false }
 f4jumble = { version = "0.1.0", default-features = false }
 bech32 = { version = "0.11.0", default-features = false }
 chacha20poly1305 = { version = "0.10.1", default-features = false }
+# rand_core = { version = "0.6.4", default-features = false }
+rand_chacha = { version = "0.3.1", default-features = false }
 
 [dev-dependencies]
 hex = "0.4.2"
@@ -51,9 +53,9 @@ panic = "abort"
 # lto = false
 # Settings below aimed to reduce
 # binary size due to code
-lto = "thin"
+lto = "fat"
 overflow-checks = false
-strip = true
+strip = "symbols"
 
 [profile.dev]
 lto = false

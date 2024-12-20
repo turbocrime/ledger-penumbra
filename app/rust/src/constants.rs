@@ -1,5 +1,7 @@
 pub const ADDR_INDEX_LEN: usize = 16;
 
+pub const SIGNATURE_LEN: usize = 64;
+
 // Diversifier: 16 bytes
 // Transmission Key: 32 bytes
 // Clue Key: 32 bytes

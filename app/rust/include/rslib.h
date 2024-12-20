@@ -38,6 +38,8 @@ parser_error_t rs_generic_action_hash(bytes_t *data, uint8_t action_type, uint8_
 
 parser_error_t rs_get_asset_id_from_metadata(const bytes_t *metadata, uint8_t *asset_id, uint16_t asset_id_len);
 
+parser_error_t rs_sign_spend(const bytes_t *effect_hash, const bytes_t *randomizer, const spend_key_bytes_t *spend_key, uint8_t *signature, uint16_t len);
+
 #ifdef __cplusplus
 }
 #endif

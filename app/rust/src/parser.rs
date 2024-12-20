@@ -48,6 +48,7 @@ pub mod value;
 
 pub use bytes::BytesC;
 pub use error::ParserError;
+pub use plans::spend::SpendPlanC;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(test, derive(Debug))]

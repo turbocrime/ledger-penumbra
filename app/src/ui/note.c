@@ -117,7 +117,7 @@ parser_error_t tryPrintDenom(const parser_context_t *ctx, const value_t *value, 
         // We found denom trace in provided transaction metadata
         snprintf(outVal, outValLen - 1, "%s", amount_str);
         uint16_t written = strlen(outVal);
-        if (written < 0 || written >= outValLen - 1) {
+        if (written >= outValLen - 1) {
             return parser_unexpected_buffer_end;
         }
 
@@ -143,7 +143,7 @@ parser_error_t tryPrintDenom(const parser_context_t *ctx, const value_t *value, 
 parser_error_t printFallback(const value_t *value, const char *amount_str, char *outVal, uint16_t outValLen) {
     snprintf(outVal, outValLen - 1, "%s", amount_str);
     uint16_t written = strlen(outVal);
-    if (written < 0 || written >= outValLen - 1) {
+    if (written >= outValLen - 1) {
         return parser_unexpected_buffer_end;
     }
     // Space

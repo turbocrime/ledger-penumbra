@@ -86,7 +86,7 @@ impl SpendPlanC {
     pub fn nullifier(&self, fvk: &FullViewingKey) -> Result<Nullifier, ParserError> {
         let nk = fvk.nullifier_key();
         let note = Note::try_from(self.note.clone())?;
-        let nullifier = Nullifier::derive(&nk, self.position, &note.commit()?.0);
+        let nullifier = Nullifier::derive(nk, self.position, &note.commit()?.0);
         Ok(nullifier)
     }
 

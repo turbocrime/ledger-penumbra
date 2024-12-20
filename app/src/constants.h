@@ -24,6 +24,8 @@
 // U128 + space + denom + null terminator
 #define VALUE_DISPLAY_MAX_LEN (U128_STR_MAX_LEN + 1 + MAX_DENOM_LEN)  // = 162
 
+#define SIGNATURE_LEN_BYTES 64
+
 // raw address len before encoding
 #define ADDRESS_LEN_BYTES 80
 // https://protocol.penumbra.zone/main/addresses_keys/addresses.html#short-address-form
