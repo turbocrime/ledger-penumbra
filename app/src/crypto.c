@@ -20,18 +20,16 @@
 #include "crypto_helper.h"
 #include "cx.h"
 #include "keys_def.h"
+#include "nv_signature.h"
 #include "parser_interface.h"
+#include "rslib.h"
 #include "zxformat.h"
 #include "zxmacros.h"
-#include "nv_signature.h"
-#include "rslib.h"
 
 // TODO: Maybe move this to crypto_helper
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 
 uint32_t hdPath[HDPATH_LEN_DEFAULT];
-full_viewing_key_t fvk_cached = {0};
-bool fvk_cached_set = false;
 
 __Z_INLINE zxerr_t copyKeys(keys_t *keys, key_kind_e req_type, uint8_t *output, uint16_t len, uint16_t *cmdResponseLen) {
     if (keys == NULL || output == NULL) {
@@ -88,6 +86,9 @@ catch_cx_error:
 zxerr_t crypto_fillKeys(uint8_t *output, uint16_t len, uint16_t *cmdResponseLen) {
     zemu_log("Crypto_fillKeys\n");
 
+    static full_viewing_key_t fvk_cached = {0};
+    static bool fvk_cached_set = false;
+
     keys_t keys = {0};
     zxerr_t error = zxerr_invalid_crypto_settings;
 
@@ -116,6 +117,8 @@ zxerr_t crypto_fillKeys(uint8_t *output, uint16_t len, uint16_t *cmdResponseLen)
 
 catch_zx_error:
     MEMZERO(&keys, sizeof(keys));
+    MEMZERO(fvk_cached, FVK_LEN);
+    fvk_cached_set = false;
 
     return error;
 }
@@ -177,8 +180,9 @@ zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureM
     uint8_t spend_signature[64] = {0};
     bytes_t effect_hash = {.ptr = tx_obj->effect_hash, .len = 64};
     for (uint16_t i = 0; i < tx_obj->plan.actions.qty; i++) {
-        if (tx_obj->actions_plan[i].action_type == penumbra_core_transaction_v1_ActionPlan_spend_tag){
-            if (rs_sign_spend(&effect_hash, &tx_obj->actions_plan[i].action.spend.randomizer, &keys.skb, spend_signature, 64) != parser_ok) {
+        if (tx_obj->actions_plan[i].action_type == penumbra_core_transaction_v1_ActionPlan_spend_tag) {
+            if (rs_sign_spend(&effect_hash, &tx_obj->actions_plan[i].action.spend.randomizer, &keys.skb, spend_signature,
+                              64) != parser_ok) {
                 return zxerr_invalid_crypto_settings;
             }
 

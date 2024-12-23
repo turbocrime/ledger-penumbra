@@ -1,4 +1,5 @@
 use crate::constants::MAX_CLUE_SUBKEYS;
+use crate::utils::apdu_unwrap::ApduPanic;
 use crate::ParserError;
 use decaf377::Fr;
 /// Bytes representing a clue key corresponding to some
@@ -166,7 +167,7 @@ impl ExpandedClueKey {
 
         let m = Fr::from_le_bytes_mod_order(hash.as_bytes());
 
-        let y = (z - m) * r.inverse().expect("random element is nonzero");
+        let y = (z - m) * r.inverse().apdu_expect("random element is nonzero");
 
         let mut buf = [0u8; 68];
         buf[0..32].copy_from_slice(&p_encoding.0[..]);

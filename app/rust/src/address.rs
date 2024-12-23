@@ -20,7 +20,6 @@ use crate::keys::dk::Diversifier;
 use crate::keys::{ka, ClueKey};
 use crate::{keys::dk::DiversifierKey, ParserError};
 
-pub mod address_index;
 pub mod address_view;
 
 use crate::constants::ADDRESS_LEN;
@@ -115,7 +114,7 @@ impl Address {
         &self.ck_d
     }
 
-    pub fn to_bytes(&self) -> Result<[u8; Self::LEN], ParserError> {
+    pub fn to_bytes(self) -> Result<[u8; Self::LEN], ParserError> {
         let mut bytes = [0; Self::LEN];
         bytes[0..16].copy_from_slice(self.diversifier().as_ref());
         bytes[16..48].copy_from_slice(&self.transmission_key().0);
@@ -147,13 +146,21 @@ impl TryFrom<&[u8]> for Address {
         let diversifier = Diversifier(
             diversifier_bytes
                 .try_into()
-                .expect("can form diversifier bytes"),
+                .map_err(|_| ParserError::InvalidAddress)?,
         );
 
         Address::from_components(
             diversifier,
-            ka::Public(pk_d_bytes.try_into().expect("can form pk_d bytes")),
-            ClueKey(clue_key_bytes.try_into().expect("can form clue_key bytes")),
+            ka::Public(
+                pk_d_bytes
+                    .try_into()
+                    .map_err(|_| ParserError::InvalidAddress)?,
+            ),
+            ClueKey(
+                clue_key_bytes
+                    .try_into()
+                    .map_err(|_| ParserError::InvalidAddress)?,
+            ),
         )
         .map_err(|_| ParserError::InvalidAddress)
     }
@@ -220,8 +227,14 @@ impl TryFrom<&[u8]> for AddressIndex {
         }
 
         Ok(AddressIndex {
-            account: u32::from_le_bytes(slice[0..4].try_into().expect("can form 4 byte array")),
-            randomizer: slice[4..16].try_into().expect("can form 12 byte array"),
+            account: u32::from_le_bytes(
+                slice[0..4]
+                    .try_into()
+                    .map_err(|_| ParserError::InvalidAddress)?,
+            ),
+            randomizer: slice[4..16]
+                .try_into()
+                .map_err(|_| ParserError::UnexpectedError)?,
         })
     }
 }

@@ -27,6 +27,7 @@ use crate::parser::{
     symmetric::{OutgoingCipherKey, OvkWrappedKey, PayloadKind, OVK_WRAPPED_LEN_BYTES},
     value::{Value, ValueC},
 };
+use crate::utils::apdu_unwrap::ApduPanic;
 use crate::ParserError;
 use decaf377::{Element, Encoding, Fq, Fr};
 
@@ -86,7 +87,7 @@ impl Note {
         Ok(Note {
             value,
             rseed,
-            address: address.clone(),
+            address,
             transmission_key_s: Fq::from_bytes_checked(&address.transmission_key().0)
                 .map_err(|_| ParserError::InvalidFvk)?,
         })
@@ -115,7 +116,7 @@ impl Note {
 
         let shared_secret = esk
             .key_agreement_with(self.transmission_key())
-            .expect("key agreement succeeded");
+            .apdu_expect("key agreement succeeded");
 
         let mut encryption_result = [0u8; OVK_WRAPPED_LEN_BYTES];
         encryption_result[..shared_secret.0.len()].copy_from_slice(&shared_secret.0);
@@ -125,7 +126,7 @@ impl Note {
         Ok(OvkWrappedKey(
             encryption_result[..OVK_WRAPPED_LEN_BYTES]
                 .try_into()
-                .expect("OVK encryption result fits in ciphertext len"),
+                .apdu_expect("OVK encryption result fits in ciphertext len"),
         ))
     }
 
@@ -135,7 +136,7 @@ impl Note {
         let epk = esk.diversified_public(&self.diversified_generator()?);
         let shared_secret = esk
             .key_agreement_with(self.transmission_key())
-            .expect("key agreement succeeded");
+            .apdu_expect("key agreement succeeded");
 
         let key = PayloadKey::derive(&shared_secret, &epk);
 
@@ -146,9 +147,7 @@ impl Note {
         key.encrypt(&mut encryption_result, PayloadKind::Note, NOTE_LEN_BYTES)
             .map_err(|_| ParserError::UnexpectedError)?;
 
-        let ciphertext: [u8; NOTE_CIPHERTEXT_BYTES] = encryption_result
-            .try_into()
-            .expect("note encryption result fits in ciphertext len");
+        let ciphertext: [u8; NOTE_CIPHERTEXT_BYTES] = encryption_result;
 
         Ok(NoteCiphertext(ciphertext))
     }

@@ -17,13 +17,10 @@
 
 #include "buffering.h"
 #include "coin.h"
-#include "zxerror.h"
 #include "keys_def.h"
+#include "zxerror.h"
 
-typedef enum SignatureType {
-    Spend,
-    DelegatorVote
-} signature_type_t;
+typedef enum SignatureType { Spend, DelegatorVote } signature_type_t;
 
 void nv_signature_init();
 

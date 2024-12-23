@@ -22,6 +22,7 @@
 #include "apdu_codes.h"
 #include "coin.h"
 #include "crypto.h"
+#include "nv_signature.h"
 #include "parser_interface.h"
 #include "tx.h"
 #include "zxerror.h"
@@ -85,13 +86,27 @@ __Z_INLINE void app_sign() {
 
     check_app_canary();
 
+    // |   64 bytes  |         2 bytes          |        2 bytes        |
+    // | effect hash | spend auth signature qty | binding signature qty |
     if (err != zxerr_ok) {
         set_code(G_io_apdu_buffer, 0, APDU_CODE_SIGN_VERIFY_ERROR);
         io_exchange(CHANNEL_APDU | IO_RETURN_AFTER_TX, 2);
     } else {
-        set_code(G_io_apdu_buffer, EFFECT_HASH_LEN, APDU_CODE_OK);
-        io_exchange(CHANNEL_APDU | IO_RETURN_AFTER_TX, EFFECT_HASH_LEN + 2);
+        set_code(G_io_apdu_buffer, EFFECT_HASH_LEN + 2 * sizeof(uint16_t), APDU_CODE_OK);
+        io_exchange(CHANNEL_APDU | IO_RETURN_AFTER_TX, EFFECT_HASH_LEN + 2 * sizeof(uint16_t) + 2);
     }
+}
+
+__Z_INLINE zxerr_t app_fill_signatures(uint16_t index, signature_type_t signature_type) {
+    // Put data directly in the apdu buffer
+    MEMZERO(G_io_apdu_buffer, IO_APDU_BUFFER_SIZE);
+
+    cmdResponseLen = nv_get_signature(index, (signature_t *)G_io_apdu_buffer, signature_type);
+    if (cmdResponseLen == 0) {
+        THROW(APDU_CODE_EXECUTION_ERROR);
+    }
+
+    return zxerr_ok;
 }
 
 __Z_INLINE void app_reject() {

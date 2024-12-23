@@ -1,4 +1,4 @@
-mod apdu_unwrap;
+pub mod apdu_unwrap;
 pub mod prf;
 pub mod protobuf;
 

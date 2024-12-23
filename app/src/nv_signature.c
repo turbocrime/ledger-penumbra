@@ -15,11 +15,12 @@
  ********************************************************************************/
 
 #include "nv_signature.h"
+
 #include "zxmacros.h"
 
 #define MAX_SIGNATURES 16
 
-#define SIGNATURE_BUFFER_LEN MAX_SIGNATURES *sizeof(signature_t)
+#define SIGNATURE_BUFFER_LEN MAX_SIGNATURES * sizeof(signature_t)
 
 // Flash
 typedef struct {

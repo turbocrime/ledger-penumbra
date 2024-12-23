@@ -21,6 +21,7 @@
 // TODO: A place holder for known assets in penumbra
 // bellow dummy values
 static const asset_info_t supported_assets[] = {
+    // Updated asset symbol for penumbra main asset_id
     {STAKING_TOKEN_ASSET_ID_BYTES, "penumbra", "Penumbra", 6},
 };
 

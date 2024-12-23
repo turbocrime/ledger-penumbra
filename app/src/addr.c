@@ -45,7 +45,22 @@ zxerr_t addr_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *
     char encoded_addr[ENCODED_ADDR_BUFFER_SIZE + 1] = {'\0'};
 
     switch (displayIdx) {
+        // The provided UI requirements mandates to render
+        // account base addresses, but for stax and flex,
+        // it is better to render the full address first to
+        // take advantage of the QR code functionality.
         case 0: {
+            snprintf(outKey, outKeyLen, "Address");
+
+            if (printShortAddress(G_io_apdu_buffer, ADDRESS_LEN_BYTES, encoded_addr, ENCODED_ADDR_BUFFER_SIZE) !=
+                parser_ok) {
+                return zxerr_unknown;
+            }
+
+            pageString(outVal, outValLen, encoded_addr, pageIdx, pageCount);
+            return zxerr_ok;
+        }
+        case 1:
             snprintf(outKey, outKeyLen, "Address Index");
             if (address_idx_account == 0) {
                 pageString(outVal, outValLen, "Main Account", pageIdx, pageCount);
@@ -57,17 +72,6 @@ zxerr_t addr_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *
                 pageString(outVal, outValLen, buffer, pageIdx, pageCount);
             }
 
-            return zxerr_ok;
-        }
-        case 1:
-            snprintf(outKey, outKeyLen, "Address");
-
-            if (printShortAddress(G_io_apdu_buffer, ADDRESS_LEN_BYTES, encoded_addr, ENCODED_ADDR_BUFFER_SIZE) !=
-                parser_ok) {
-                return zxerr_unknown;
-            }
-
-            pageString(outVal, outValLen, encoded_addr, pageIdx, pageCount);
             return zxerr_ok;
 
         case 2: {

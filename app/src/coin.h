@@ -46,6 +46,8 @@ extern "C" {
 // Custom apdu instructions
 #define INS_GET_FVK 0x03
 #define INS_TX_METADATA 0x04
+#define INS_GET_SPEND_AUTH_SIGNATURES 0x05
+#define INS_GET_DELEGATOR_VOTE_SIGNATURES 0x06
 
 typedef enum {
     Address = 0,
