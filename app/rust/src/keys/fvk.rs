@@ -24,7 +24,7 @@ pub struct FullViewingKey {
 impl FullViewingKey {
     pub const ACCOUNT_ID_DOMAIN_SEP: &'static [u8] = b"Penumbra_HashFVK";
 
-    fn derive_from(spk: &SpendKeyBytes) -> Result<Self, ParserError> {
+    pub(crate) fn derive_from(spk: &SpendKeyBytes) -> Result<Self, ParserError> {
         crate::zlog("FullViewingKey::derive_from\x00");
         let ak = spk.verification_key()?;
         let nk = spk.nullifier_key()?;
@@ -68,7 +68,7 @@ impl FullViewingKey {
         let ovk = {
             let hash_result = prf::expand(b"Penumbra_DeriOVK", &nk.0.to_bytes(), ak.as_ref())?;
             let mut ovk = [0; 32];
-            ovk.copy_from_slice(&hash_result);
+            ovk.copy_from_slice(&hash_result[0..32]);
             ovk
         };
 

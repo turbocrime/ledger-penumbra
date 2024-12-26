@@ -78,7 +78,6 @@ $(info PATHS LIST = $(APPPATH))
 
 APP_LOAD_PARAMS = --curve secp256k1 $(COMMON_LOAD_PARAMS) --path $(APPPATH)
 INCLUDES_PATH += $(CURDIR)/src/protobuf
-INCLUDES_PATH += $(CURDIR)/../deps/nanopb
 
 ifeq ($(TARGET_NAME),TARGET_NANOS)
 	APP_STACK_MIN_SIZE := 1600
@@ -124,7 +123,6 @@ CFLAGS += -Wvla
 LDFLAGS += -z muldefs
 LDLIBS   += -lm -lgcc -lc
 LDLIBS += -L$(MY_DIR)rust/target/$(RUST_TARGET)/release -lrslib
-CFLAGS += -I$(CURDIR)/../deps/nanopb/
 
 
 ifeq ($(DEBUG), 1)

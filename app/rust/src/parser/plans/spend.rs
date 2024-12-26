@@ -1,67 +1,116 @@
-use core::{mem::MaybeUninit, ptr::addr_of_mut};
+/*******************************************************************************
+*   (c) 2024 Zondax GmbH
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+********************************************************************************/
 
-use crate::{
-    parser::{Fq, Fr, Note, Position},
-    FromBytes, ParserError,
+use crate::keys::FullViewingKey;
+use crate::parser::{
+    bytes::BytesC,
+    commitment::Commitment,
+    effect_hash::{create_personalized_state, EffectHash},
+    note::{Note, NoteC},
+    nullifier::Nullifier,
+    value::{Sign, Value},
 };
-// proto:
-// message SpendPlan {
-//   // The plaintext note we plan to spend.
-//   Note note = 1;
-//   // The position of the note we plan to spend.
-//   uint64 position = 2;
-//   // The randomizer to use for the spend.
-//   bytes randomizer = 3;
-//   // The blinding factor to use for the value commitment.
-//   bytes value_blinding = 4;
-//   // The first blinding factor to use for the ZK spend proof.
-//   bytes proof_blinding_r = 5;
-//   // The second blinding factor to use for the ZK spend proof.
-//   bytes proof_blinding_s = 6;
-// }
-#[cfg_attr(test, derive(Debug))]
-#[derive(Copy, PartialEq, Eq, Clone)]
-pub struct SpendPlan<'a> {
-    pub note: Note<'a>,
-    pub position: Position,
-    pub randomizer: Fr<'a>,
-    pub value_blinding: Fr<'a>,
-    pub proof_blinding_r: Fq<'a>,
-    pub proof_blinding_s: Fq<'a>,
+use crate::ParserError;
+use decaf377::Fr;
+use decaf377_rdsa::{SpendAuth, VerificationKey};
+
+pub struct Body {
+    pub balance_commitment: Commitment,
+    pub nullifier: Nullifier,
+    pub rk: VerificationKey<SpendAuth>,
 }
 
-impl<'b> FromBytes<'b> for SpendPlan<'b> {
-    fn from_bytes_into(
-        input: &'b [u8],
-        out: &mut MaybeUninit<Self>,
-    ) -> Result<&'b [u8], nom::Err<ParserError>> {
-        let output = out.as_mut_ptr();
+#[repr(C)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+pub struct SpendPlanC {
+    pub note: NoteC,
+    pub position: u64,
+    pub randomizer: BytesC,
+    pub value_blinding: BytesC,
+    pub proof_blinding_r: BytesC,
+    pub proof_blinding_s: BytesC,
+}
 
-        // Parsing each field sequentially
-        // Parse `note`
-        let note = unsafe { &mut *addr_of_mut!((*output).note).cast() };
-        let input = Note::from_bytes_into(input, note)?;
+impl SpendPlanC {
+    pub fn effect_hash(&self, fvk: &FullViewingKey) -> Result<EffectHash, ParserError> {
+        let body = self.spend_body(fvk);
 
-        // Parse `position`
-        let position = unsafe { &mut *addr_of_mut!((*output).position).cast() };
-        let input = Position::from_bytes_into(input, position)?;
+        if let Ok(body) = body {
+            let mut state =
+                create_personalized_state("/penumbra.core.component.shielded_pool.v1.SpendBody");
 
-        // Parse `randomizer`
-        let randomizer = unsafe { &mut *addr_of_mut!((*output).randomizer).cast() };
-        let input = Fr::from_bytes_into(input, randomizer)?;
+            state.update(&body.balance_commitment.to_proto_spend());
 
-        // Parse `value_blinding`
-        let value = unsafe { &mut *addr_of_mut!((*output).value_blinding).cast() };
-        let input = Fr::from_bytes_into(input, value)?;
+            state.update(&[0x22, 0x22, 0x0a, 0x20]);
+            state.update(&body.rk.to_bytes());
 
-        // Parse `proof_blinding_r`
-        let proof = unsafe { &mut *addr_of_mut!((*output).proof_blinding_r).cast() };
-        let input = Fq::from_bytes_into(input, proof)?;
+            state.update(&body.nullifier.to_proto());
 
-        // Parse `proof_blinding_s`
-        let proof = unsafe { &mut *addr_of_mut!((*output).proof_blinding_s).cast() };
-        let input = Fq::from_bytes_into(input, proof)?;
+            let hash = state.finalize();
+            Ok(EffectHash(*hash.as_array()))
+        } else {
+            Err(ParserError::InvalidLength)
+        }
+    }
 
-        Ok(input)
+    pub fn spend_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {
+        Ok(Body {
+            balance_commitment: self
+                .balance()?
+                .commit(self.get_value_blinding_fr()?, Sign::Provided)?,
+            nullifier: self.nullifier(fvk)?,
+            rk: self.rk(fvk)?,
+        })
+    }
+
+    pub fn balance(&self) -> Result<Value, ParserError> {
+        // We should return a Balance struct here, but since we are currently managing only one value, it isn’t necessary for now
+        let value = Value::try_from(self.note.value.clone())?;
+        Ok(value)
+    }
+
+    pub fn nullifier(&self, fvk: &FullViewingKey) -> Result<Nullifier, ParserError> {
+        let nk = fvk.nullifier_key();
+        let note = Note::try_from(self.note.clone())?;
+        let nullifier = Nullifier::derive(nk, self.position, &note.commit()?.0);
+        Ok(nullifier)
+    }
+
+    pub fn rk(&self, fvk: &FullViewingKey) -> Result<VerificationKey<SpendAuth>, ParserError> {
+        Ok(fvk
+            .spend_verification_key()
+            .randomize(&self.get_randomizer_fr()?))
+    }
+
+    pub fn get_randomizer(&self) -> Result<&[u8], ParserError> {
+        self.randomizer.get_bytes()
+    }
+
+    pub fn get_randomizer_fr(&self) -> Result<Fr, ParserError> {
+        let randomizer_bytes = self.get_randomizer()?;
+        Ok(Fr::from_le_bytes_mod_order(randomizer_bytes))
+    }
+
+    pub fn get_value_blinding(&self) -> Result<&[u8], ParserError> {
+        self.value_blinding.get_bytes()
+    }
+
+    pub fn get_value_blinding_fr(&self) -> Result<Fr, ParserError> {
+        let value_blinding_bytes = self.get_value_blinding()?;
+        Ok(Fr::from_le_bytes_mod_order(value_blinding_bytes))
     }
 }

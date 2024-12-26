@@ -1,6 +1,7 @@
 use crate::ParserError;
 
 use crate::address::AddressIndex;
+use crate::utils::apdu_unwrap::ApduPanic;
 use crate::utils::prf;
 
 use aes::cipher::{generic_array::GenericArray, BlockDecrypt, BlockEncrypt, KeyInit};
@@ -10,6 +11,7 @@ use decaf377::{Element, Fq};
 use super::spend_key::SpendKeyBytes;
 
 #[derive(Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Diversifier(pub(crate) [u8; Diversifier::LEN]);
 
 impl Diversifier {
@@ -19,11 +21,8 @@ impl Diversifier {
     /// Generate the diversified basepoint associated to this diversifier.
     pub fn diversified_generator(&self) -> Element {
         crate::zlog("Diversifier::diversified_generator\x00");
-        // let hash = blake2b_simd::Params::new()
-        //     .personal(Self::LABEL)
-        //     .hash(&self.0);
-        // Element::encode_to_curve(&Fq::from_le_bytes_mod_order(hash.as_bytes()))
-        let hash = prf::expand(Self::LABEL, &[], &self.0).expect("can expand");
+
+        let hash = prf::expand(Self::LABEL, &[], &self.0).apdu_expect("can expand");
         Element::encode_to_curve(&Fq::from_le_bytes_mod_order(&hash))
     }
 }
@@ -105,11 +104,13 @@ impl DiversifierKey {
 
         AddressIndex {
             account: u32::from_le_bytes(
-                index_bytes[0..4].try_into().expect("can form 4 byte array"),
+                index_bytes[0..4]
+                    .try_into()
+                    .apdu_expect("can form 4 byte array"),
             ),
             randomizer: index_bytes[4..16]
                 .try_into()
-                .expect("can form 12 byte array"),
+                .apdu_expect("can form 12 byte array"),
         }
     }
 

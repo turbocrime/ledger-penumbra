@@ -55,6 +55,8 @@ void extractAddressIndex(uint32_t rx, uint32_t offset, address_index_t *address_
         THROW(APDU_CODE_DATA_INVALID);
     }
 
+    MEMZERO(address_index, sizeof(address_index_t));
+
     // check for account data
     if (rx < offset || (rx - offset) < sizeof(address_index_t)) {
         THROW(APDU_CODE_WRONG_LENGTH);
@@ -63,7 +65,7 @@ void extractAddressIndex(uint32_t rx, uint32_t offset, address_index_t *address_
     memcpy(address_index, &G_io_apdu_buffer[offset], sizeof(address_index_t));
 }
 
-__Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
+__Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx, bool handle_path) {
     const uint8_t payloadType = G_io_apdu_buffer[OFFSET_PAYLOAD_TYPE];
     if (rx < OFFSET_DATA) {
         THROW(APDU_CODE_WRONG_LENGTH);
@@ -73,7 +75,9 @@ __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
         case P1_INIT:
             tx_initialize();
             tx_reset();
-            extractHDPath(rx, OFFSET_DATA);
+            if (handle_path) {
+                extractHDPath(rx, OFFSET_DATA);
+            }
             tx_initialized = true;
             return false;
         case P1_ADD:
@@ -160,25 +164,44 @@ __Z_INLINE void handleGetFVK(volatile uint32_t *flags, volatile uint32_t *tx, ui
     THROW(APDU_CODE_OK);
 }
 
+__Z_INLINE void handleTxMetadata(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+    zemu_log("handleTxMetadata\n");
+
+    if (!process_chunk(tx, rx, false)) {
+        THROW(APDU_CODE_OK);
+    }
+
+    __Z_UNUSED const char *error_msg = tx_parse_metadata();
+    CHECK_APP_CANARY()
+    if (error_msg != NULL) {
+        const int error_msg_length = strnlen(error_msg, sizeof(G_io_apdu_buffer));
+        memcpy(G_io_apdu_buffer, error_msg, error_msg_length);
+        *tx += (error_msg_length);
+        THROW(APDU_CODE_DATA_INVALID);
+    }
+
+    THROW(APDU_CODE_OK);
+}
+
 __Z_INLINE void handleSign(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleSign\n");
 
-    if (!process_chunk(tx, rx)) {
+    if (!process_chunk(tx, rx, true)) {
         THROW(APDU_CODE_OK);
     }
 
     __Z_UNUSED const char *error_msg = tx_parse();
     CHECK_APP_CANARY()
-    // if (error_msg != NULL) {
-    //     const int error_msg_length = strnlen(error_msg, sizeof(G_io_apdu_buffer));
-    //     memcpy(G_io_apdu_buffer, error_msg, error_msg_length);
-    //     *tx += (error_msg_length);
-    //     THROW(APDU_CODE_DATA_INVALID);
-    // }
+    if (error_msg != NULL) {
+        const int error_msg_length = strnlen(error_msg, sizeof(G_io_apdu_buffer));
+        memcpy(G_io_apdu_buffer, error_msg, error_msg_length);
+        *tx += (error_msg_length);
+        THROW(APDU_CODE_DATA_INVALID);
+    }
 
-    // view_review_init(tx_getItem, tx_getNumItems, app_sign);
-    // view_review_show(REVIEW_TXN);
-    // *flags |= IO_ASYNCH_REPLY;
+    view_review_init(tx_getItem, tx_getNumItems, app_sign);
+    view_review_show(REVIEW_TXN);
+    *flags |= IO_ASYNCH_REPLY;
 }
 
 __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile uint32_t *tx) {
@@ -205,6 +228,42 @@ __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile 
     G_io_apdu_buffer[11] = (TARGET_ID >> 0) & 0xFF;
 
     *tx += 12;
+    THROW(APDU_CODE_OK);
+}
+
+__Z_INLINE void handleGetSpendAuthSignatures(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+    zemu_log("handleGetSpendAuthSignatures\n");
+    if (rx < OFFSET_DATA) {
+        THROW(APDU_CODE_WRONG_LENGTH);
+    }
+
+    uint16_t index = (uint16_t)G_io_apdu_buffer[OFFSET_P1];
+    zxerr_t zxerr = app_fill_signatures(index, Spend);
+    *tx = cmdResponseLen;
+
+    if (zxerr != zxerr_ok) {
+        *tx = 0;
+        THROW(APDU_CODE_DATA_INVALID);
+    }
+
+    THROW(APDU_CODE_OK);
+}
+
+__Z_INLINE void handleGetDelegatorVoteSignatures(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+    zemu_log("handleGetDelegatorVoteSignatures\n");
+    if (rx < OFFSET_DATA) {
+        THROW(APDU_CODE_WRONG_LENGTH);
+    }
+
+    uint16_t index = (uint16_t)G_io_apdu_buffer[OFFSET_P1];
+    zxerr_t zxerr = app_fill_signatures(index, DelegatorVote);
+    *tx = cmdResponseLen;
+
+    if (zxerr != zxerr_ok) {
+        *tx = 0;
+        THROW(APDU_CODE_DATA_INVALID);
+    }
+
     THROW(APDU_CODE_OK);
 }
 
@@ -249,6 +308,21 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
                 case INS_SIGN: {
                     CHECK_PIN_VALIDATED()
                     handleSign(flags, tx, rx);
+                    break;
+                }
+
+                case INS_TX_METADATA: {
+                    handleTxMetadata(flags, tx, rx);
+                    break;
+                }
+
+                case INS_GET_SPEND_AUTH_SIGNATURES: {
+                    handleGetSpendAuthSignatures(flags, tx, rx);
+                    break;
+                }
+
+                case INS_GET_DELEGATOR_VOTE_SIGNATURES: {
+                    handleGetDelegatorVoteSignatures(flags, tx, rx);
                     break;
                 }
 

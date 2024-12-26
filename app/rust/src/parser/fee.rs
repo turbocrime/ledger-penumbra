@@ -1,57 +1,64 @@
-/*******************************************************************************
-*   (c) 2024 Zondax GmbH
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-********************************************************************************/
+use crate::constants::{AMOUNT_LEN_BYTES, ID_LEN_BYTES};
+use crate::parser::commitment::Commitment;
+use crate::parser::id::Id;
+use crate::parser::value::Sign;
+use crate::parser::value::{Value, ValueC};
+use crate::ParserError;
+use decaf377::Fq;
+use decaf377::Fr;
+// The staking token asset ID (upenumbra)
+// Bech32m: passet1984fctenw8m2fpl8a9wzguzp7j34d7vravryuhft808nyt9fdggqxmanqm
+pub const STAKING_TOKEN_ASSET_ID_BYTES: [u8; 32] = [
+    0x29, 0xea, 0x9c, 0x2f, 0x33, 0x71, 0xf6, 0xa4, 0x87, 0xe7, 0xe9, 0x5c, 0x24, 0x70, 0x41, 0xf4,
+    0xa3, 0x56, 0xf9, 0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10,
+];
 
-use core::{mem::MaybeUninit, ptr::addr_of_mut};
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+pub struct Fee(pub Value);
 
-use crate::{FromBytes, ParserError};
+#[repr(C)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+pub struct FeeC(pub ValueC);
 
-use super::{Amount, AssetId};
+impl TryFrom<FeeC> for Fee {
+    type Error = ParserError;
 
-/// Specifies fees paid by a transaction.
-#[cfg_attr(test, derive(Debug))]
-#[derive(Copy, PartialEq, Eq, Clone)]
-pub struct Fee<'a> {
-    // The amount of the token used to pay fees.
-    amount: Amount,
-    // If present, the asset ID of the token used to pay fees.
-    // If absent, specifies the staking token implicitly.
-    asset_id: Option<AssetId<'a>>,
-}
-
-impl<'a> Fee<'a> {
-    pub fn new(amount: Amount, asset_id: Option<AssetId<'a>>) -> Self {
-        Self { amount, asset_id }
+    fn try_from(value: FeeC) -> Result<Self, Self::Error> {
+        if value.0.has_asset_id {
+            Ok(Fee(Value::try_from(value.0)?))
+        } else {
+            // If conversion fails, create a new Value with the amount and staking token asset ID
+            Ok(Fee(Value {
+                amount: value.0.amount.try_into()?,
+                asset_id: Id {
+                    0: Fq::from_le_bytes_mod_order(&STAKING_TOKEN_ASSET_ID_BYTES),
+                },
+            }))
+        }
     }
 }
 
-impl<'b> FromBytes<'b> for Fee<'b> {
-    fn from_bytes_into(
-        input: &'b [u8],
-        out: &mut MaybeUninit<Self>,
-    ) -> Result<&'b [u8], nom::Err<ParserError>> {
-        // Amount
-        let out = out.as_mut_ptr();
-        let amount = unsafe { &mut *addr_of_mut!((*out).amount).cast() };
-        let rem = Amount::from_bytes_into(input, amount)?;
+impl FeeC {
+    pub fn to_value_c(&self) -> ValueC {
+        self.0.clone()
+    }
+}
 
-        // Asset ID
-        // remember it is an optional field
-        let asset = unsafe { &mut *addr_of_mut!((*out).asset_id).cast() };
-        let rem = AssetId::from_bytes_into(rem, asset)?;
+impl Fee {
+    pub const LEN: usize = AMOUNT_LEN_BYTES + ID_LEN_BYTES;
 
-        Ok(rem)
+    pub fn commit(&self, blinding: Fr) -> Result<Commitment, ParserError> {
+        let value = Value::try_from(self.0.clone());
+        if let Ok(value) = value {
+            Ok(value.commit(blinding, Sign::Required)?)
+        } else {
+            Err(ParserError::ClueCreationFailed)
+        }
+    }
+
+    pub fn to_bytes(&self) -> Result<[u8; Self::LEN], ParserError> {
+        self.0.to_bytes()
     }
 }

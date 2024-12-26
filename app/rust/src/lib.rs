@@ -20,38 +20,44 @@
 
 extern crate no_std_compat as std;
 
-#[cfg(test)]
-extern crate hex_literal;
-
+use arrayref as _;
+use educe as _;
 use poseidon377 as _;
 
-// pub(crate) mod addr;
 pub(crate) mod address;
 mod bolos;
 pub mod constants;
-pub mod effect_hash;
 pub mod ffi;
 pub(crate) mod keys;
 pub mod network;
 pub mod parser;
 mod utils;
 pub mod wallet_id;
+pub mod zxerror;
 
-pub use effect_hash::EffectHash;
 pub use parser::{FromBytes, ParserError, ViewError};
 pub(crate) use utils::prf::{expand_fq, expand_fr};
 
 fn debug(_msg: &str) {}
 
-#[cfg(all(not(test), not(feature = "clippy"), not(feature = "fuzzing")))]
+// for cpp_tests we need to define the panic handler
+// the remaining features does not need as dev-dependencies
+// are used and their include a handler from std
+#[cfg(all(not(test), not(feature = "clippy"), not(feature = "fuzzing"),))]
 use core::panic::PanicInfo;
 
-#[cfg(all(not(test), not(feature = "clippy"), not(feature = "fuzzing")))]
+#[cfg(all(not(test), not(feature = "clippy"), not(feature = "fuzzing"),))]
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
+#[cfg(all(
+    not(test),
+    not(feature = "clippy"),
+    not(feature = "fuzzing"),
+    not(feature = "cpp_tests")
+))]
 extern "C" {
     fn check_app_canary();
     fn pic(link_address: u32) -> u32;
@@ -60,24 +66,39 @@ extern "C" {
 }
 
 pub(crate) fn canary() {
-    #[cfg(not(any(test, fuzzing)))]
+    #[cfg(all(
+        not(test),
+        not(feature = "clippy"),
+        not(feature = "fuzzing"),
+        not(feature = "cpp_tests")
+    ))]
     unsafe {
         check_app_canary();
     }
 }
 
-#[cfg(not(any(test, fuzzing)))]
+#[cfg(all(
+    not(test),
+    not(feature = "clippy"),
+    not(feature = "fuzzing"),
+    not(feature = "cpp_tests")
+))]
 pub fn is_expert_mode() -> bool {
     unsafe { app_mode_expert() > 0 }
 }
 
-#[cfg(any(test, fuzzing))]
+#[cfg(any(test, feature = "clippy", feature = "fuzzing", feature = "cpp_tests"))]
 pub fn is_expert_mode() -> bool {
     true
 }
 
 pub fn zlog(_msg: &str) {
-    #[cfg(not(any(test, fuzzing)))]
+    #[cfg(all(
+        not(test),
+        not(feature = "clippy"),
+        not(feature = "fuzzing"),
+        not(feature = "cpp_tests")
+    ))]
     unsafe {
         zemu_log_stack(_msg.as_bytes().as_ptr());
     }

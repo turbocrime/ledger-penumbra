@@ -35,3 +35,11 @@ impl TryFrom<&SpendKeyBytes> for NullifierKey {
         Self::derive_from(value)
     }
 }
+
+impl TryFrom<&[u8; 32]> for NullifierKey {
+    type Error = ParserError;
+
+    fn try_from(value: &[u8; 32]) -> Result<Self, Self::Error> {
+        Ok(Self(Fq::from_bytes_checked(value).unwrap()))
+    }
+}

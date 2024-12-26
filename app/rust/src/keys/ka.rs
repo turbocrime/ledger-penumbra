@@ -5,11 +5,18 @@ use zeroize::Zeroize;
 use crate::ParserError;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Public(pub [u8; 32]);
 
 #[derive(Clone, Zeroize, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 #[zeroize(drop)]
 pub struct Secret(decaf377::Fr);
+
+#[derive(Clone, Zeroize, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+#[zeroize(drop)]
+pub struct SharedSecret(pub [u8; 32]);
 
 impl Secret {
     /// Generate a new secret key using the provided `decaf377` field element.
@@ -33,6 +40,17 @@ impl Secret {
     /// Convenience wrapper around an [`Into`] impl.
     pub fn to_bytes(&self) -> [u8; 32] {
         self.0.to_bytes()
+    }
+
+    /// Perform key agreement with the provided public key.
+    ///
+    /// Fails if the provided public key is invalid.
+    pub fn key_agreement_with(&self, other: &Public) -> Result<SharedSecret, ParserError> {
+        let pk = decaf377::Encoding(other.0)
+            .vartime_decompress()
+            .map_err(|_| ParserError::InvalidPubkeyEncoding)?;
+
+        Ok(SharedSecret((self.0 * pk).vartime_compress().into()))
     }
 }
 

@@ -40,11 +40,3 @@ zxerr_t compute_keys(keys_t *keys) {
 
     return zxerr_ok;
 }
-
-zxerr_t compute_effect_hash() {
-    if (rs_compute_effect_hash() != parser_ok) {
-        return zxerr_unknown;
-    }
-
-    return zxerr_ok;
-}

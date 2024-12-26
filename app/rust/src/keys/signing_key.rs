@@ -1,6 +1,7 @@
 use crate::{constants::KEY_LEN, ParserError};
 
 use crate::{expand_fr::expand_ff, keys::spend_key::SpendKeyBytes};
+use decaf377::Fr;
 use decaf377_rdsa::{SigningKey, SpendAuth, VerificationKey};
 
 // Documentation says that the ask in used as a SigningKey in decaf377-rdsa,
@@ -35,5 +36,9 @@ impl Sk {
 
     pub fn signing_key(&self) -> &SigningKey<SpendAuth> {
         &self.0
+    }
+
+    pub fn randomize(&self, randomizer: &Fr) -> SigningKey<SpendAuth> {
+        self.0.randomize(randomizer)
     }
 }

@@ -47,7 +47,6 @@ extern "C" {
 
 zxerr_t compute_address(keys_t *keys, uint32_t account, uint8_t *randomizer);
 zxerr_t compute_keys(keys_t *keys);
-zxerr_t compute_effect_hash();
 
 #ifdef __cplusplus
 }

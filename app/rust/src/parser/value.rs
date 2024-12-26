@@ -1,73 +1,93 @@
-use core::{mem::MaybeUninit, ptr::addr_of_mut};
+/*******************************************************************************
+*   (c) 2024 Zondax GmbH
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+********************************************************************************/
 
-use crate::{FromBytes, ParserError};
+use crate::constants::{AMOUNT_LEN_BYTES, ID_LEN_BYTES};
+use crate::parser::{
+    amount::{Amount, AmountC},
+    commitment::Commitment,
+    id::{Id, IdC},
+    ParserError,
+};
+use decaf377::Fr;
 
-use super::{Amount, AssetId};
-
-// proto:
-// message Value {
-//   core.num.v1alpha1.Amount amount = 1;
-//   AssetId asset_id = 2;
-// }
-
-#[cfg_attr(test, derive(Debug))]
-#[derive(Copy, PartialEq, Eq, Clone)]
-pub struct Value<'a> {
-    amount: Amount,
-    asset_id: AssetId<'a>,
+// this should be in imbalance.rs. For now, it’s not necessary
+pub enum Sign {
+    Required,
+    Provided,
 }
 
-impl<'b> FromBytes<'b> for Value<'b> {
-    fn from_bytes_into(
-        input: &'b [u8],
-        out: &mut MaybeUninit<Self>,
-    ) -> Result<&'b [u8], nom::Err<ParserError>> {
-        let output = out.as_mut_ptr();
-        // First, parse the `Amount`
-        let amount = unsafe { &mut *addr_of_mut!((*output).amount).cast() };
-        let input = Amount::from_bytes_into(input, amount)?;
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+pub struct Value {
+    pub amount: Amount,
+    // The asset ID. 256 bits.
+    pub asset_id: Id,
+}
 
-        // Then, parse the `AssetId`
-        let asset_id = unsafe { &mut *addr_of_mut!((*output).asset_id).cast() };
-        let input = AssetId::<'b>::from_bytes_into(input, asset_id)?;
+// this should be implemented in the Balance, but since we are currently managing only one value, it isn’t necessary for now
+impl Value {
+    pub const LEN: usize = AMOUNT_LEN_BYTES + ID_LEN_BYTES;
+    pub fn commit(&self, blinding_factor: Fr, sign: Sign) -> Result<Commitment, ParserError> {
+        let mut commitment = decaf377::Element::IDENTITY;
+        let g_v = self.asset_id.value_generator();
+        let amount_fr: Fr = Into::into(self.amount.clone());
 
-        Ok(input)
+        if amount_fr.ne(&Fr::ZERO) {
+            match sign {
+                Sign::Required => {
+                    commitment -= g_v * amount_fr;
+                }
+                Sign::Provided => {
+                    commitment += g_v * amount_fr;
+                }
+            }
+        }
+
+        let value_blinding_generator = Commitment::value_blinding_generator();
+        commitment += blinding_factor * value_blinding_generator;
+
+        Ok(commitment.into())
+    }
+
+    pub fn to_bytes(&self) -> Result<[u8; Self::LEN], ParserError> {
+        let mut bytes = [0; Self::LEN];
+        bytes[0..AMOUNT_LEN_BYTES].copy_from_slice(&self.amount.to_le_bytes());
+        bytes[AMOUNT_LEN_BYTES..AMOUNT_LEN_BYTES + ID_LEN_BYTES]
+            .copy_from_slice(&self.asset_id.to_bytes());
+        Ok(bytes)
     }
 }
 
-#[cfg(test)]
-mod tests {
+#[repr(C)]
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+pub struct ValueC {
+    pub has_amount: bool,
+    pub amount: AmountC,
+    pub has_asset_id: bool,
+    pub asset_id: IdC,
+}
 
-    use super::*;
+impl TryFrom<ValueC> for Value {
+    type Error = ParserError;
 
-    use std::vec::Vec;
-
-    #[test]
-    fn test_value_from_bytes() {
-        let asset_encoded = [
-            10, 32, 98, 101, 10, 229, 197, 119, 125, 22, 96, 204, 23, 252, 212, 244, 143, 106, 102,
-            185, 164, 194, 175, 205, 72, 246, 236, 175, 245, 90, 222, 240, 190, 239,
-        ];
-
-        let amount_encoded = [149, 154, 239, 58, 177, 209, 249, 214, 3];
-        let hex_str = "62650ae5c5777d1660cc17fcd4f48f6a66b9a4c2afcd48f6ecaff55adef0beef";
-        let asset_id_bytes = hex::decode(hex_str).expect("Invalid hex string");
-
-        let mut encoded_data = Vec::new();
-        encoded_data.extend(amount_encoded);
-        encoded_data.extend(asset_encoded);
-
-        let (rem, value) = Value::from_bytes(&encoded_data).unwrap();
-
-        assert!(rem.is_empty());
-
-        // Check values
-        let lo = 123456789;
-        let hi = 987654321;
-
-        assert_eq!(value.amount.lo, lo);
-        assert_eq!(value.amount.hi, hi);
-
-        assert_eq!(&value.asset_id.0[..], asset_id_bytes.as_slice());
+    fn try_from(value: ValueC) -> Result<Self, Self::Error> {
+        Ok(Value {
+            amount: value.amount.try_into()?,
+            asset_id: value.asset_id.try_into()?,
+        })
     }
 }

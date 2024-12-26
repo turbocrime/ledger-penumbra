@@ -21,7 +21,8 @@ use crate::{constants::PAYLOAD_KEY_LEN_BYTES, utils::read_fixed_bytes, FromBytes
 /// Represents a symmetric `ChaCha20Poly1305` key.
 ///
 /// Used for encrypting and decrypting notes, swaps, memos, and memo keys.
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct PayloadKey<'a>(&'a [u8; PAYLOAD_KEY_LEN_BYTES]);
 
 impl<'a> FromBytes<'a> for PayloadKey<'a> {

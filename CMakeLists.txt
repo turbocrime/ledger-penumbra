@@ -14,6 +14,7 @@
 #*  limitations under the License.
 #********************************************************************************
 cmake_minimum_required(VERSION 3.28)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 include("cmake/HunterGate.cmake")
 HunterGate(
     URL "https://github.com/cpp-pm/hunter/archive/v0.25.5.tar.gz"
@@ -22,7 +23,7 @@ HunterGate(
 )
 
 if(CMAKE_GENERATOR MATCHES "Ninja")
-        message(FATAL_ERROR "This project does not support the Ninja generator. "
+    message(FATAL_ERROR "This project does not support the Ninja generator. "
                             "Please use Unix Makefiles or another supported generator. "
                             "This error is typical in CLion. In this case, switch to generator Unix Makefiles.")
 endif()
@@ -141,6 +142,22 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/nanopb_tiny/pb_common.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/nanopb_tiny/pb_decode.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parser_interface.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parser_pb_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/spend.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/output.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/delegate.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/undelegate.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/ics20_withdrawal.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/swap.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui/note.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/known_assets.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parameters.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/tx_metadata.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/memo.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/swap.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/c_api/rust.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/ics20_withdrawal.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})
@@ -153,11 +170,16 @@ target_include_directories(app_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/nanopb_tiny
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/protobuf
         ${CMAKE_CURRENT_SOURCE_DIR}/app/rust/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/ui
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/c_api
         )
 
 ##############################################################
 ## Rust library for CPP tests
 set(RUST_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/app/rust")
+message(STATUS "Rust library path: ${RUST_LIB}")
+message(STATUS "Rust library path2: ${RUST_LIB_DIR}")
 
 # Determine the Rust target triple based on the host system
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
@@ -181,7 +203,7 @@ else()
 endif()
 
 # Use debug mode for debugging tests
-set(RUST_TARGET_DIR "${RUST_LIB_DIR}/target/${RUST_TARGET_TRIPLE}/debug")
+set(RUST_TARGET_DIR "${RUST_LIB_DIR}/target/${RUST_TARGET_TRIPLE}/release")
 
 # Custom target for the Rust library
 add_custom_target(RustLibClean
@@ -189,7 +211,7 @@ add_custom_target(RustLibClean
     WORKING_DIRECTORY ${RUST_LIB_DIR}
 )
 add_custom_target(RustLibBuild
-    COMMAND cargo build --target ${RUST_TARGET_TRIPLE}
+    COMMAND cargo build --release --target ${RUST_TARGET_TRIPLE} --features cpp_tests
     WORKING_DIRECTORY ${RUST_LIB_DIR}
     DEPENDS RustLibClean
 )
@@ -220,27 +242,34 @@ if(ENABLE_FUZZING)
         target_link_options(fuzz-${target} PRIVATE "-fsanitize=fuzzer")
     endforeach()
 else()
-##############################################################
-#  Tests
-file(GLOB_RECURSE TESTS_SRC
+    ##############################################################
+    #  Tests
+    file(GLOB_RECURSE TESTS_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp)
 
-add_executable(unittests ${TESTS_SRC})
-target_include_directories(unittests PRIVATE
+    add_executable(unittests ${TESTS_SRC})
+    target_include_directories(unittests PRIVATE
         ${gtest_SOURCE_DIR}/include
         ${gmock_SOURCE_DIR}/include
         ${CONAN_INCLUDE_DIRS_FMT}
         ${CONAN_INCLUDE_DIRS_JSONCPP}
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/rust/include
         )
 
     target_link_libraries(unittests PRIVATE
-        rslib
-        app_lib
-        GTest::gtest_main
-        fmt::fmt
-        JsonCpp::JsonCpp)
+    app_lib
+    rslib
+    GTest::gtest_main
+    fmt::fmt
+    JsonCpp::JsonCpp)
+    # target_link_libraries(unittests PRIVATE
+    #     rslib
+    #     app_lib
+    #     GTest::gtest_main
+    #     fmt::fmt
+    #     JsonCpp::JsonCpp)
 
     add_compile_definitions(TESTVECTORS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/")
     add_test(NAME unittests COMMAND unittests)

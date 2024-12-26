@@ -1,15 +1,31 @@
+/*******************************************************************************
+*   (c) 2024 Zondax GmbH
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+********************************************************************************/
+
 use decaf377::Fq;
 
 use crate::keys::dk::Diversifier;
 use crate::keys::{ka, ClueKey};
 use crate::{keys::dk::DiversifierKey, ParserError};
 
-pub mod address_index;
 pub mod address_view;
 
 use crate::constants::ADDRESS_LEN;
 
 #[derive(Clone, Copy, PartialEq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 // pub struct Address([u8; Address::LEN]);
 /// A valid payment address.
 pub struct Address {
@@ -90,11 +106,15 @@ impl Address {
         &self.pk_d
     }
 
+    pub fn transmission_key_s(&self) -> &Fq {
+        &self.tsk
+    }
+
     pub fn clue_key(&self) -> &ClueKey {
         &self.ck_d
     }
 
-    pub fn raw_bytes(&self) -> Result<[u8; Self::LEN], ParserError> {
+    pub fn to_bytes(self) -> Result<[u8; Self::LEN], ParserError> {
         let mut bytes = [0; Self::LEN];
         bytes[0..16].copy_from_slice(self.diversifier().as_ref());
         bytes[16..48].copy_from_slice(&self.transmission_key().0);
@@ -102,8 +122,6 @@ impl Address {
         f4jumble::f4jumble_mut(&mut bytes).map_err(|_| ParserError::InvalidLength)?;
         Ok(bytes)
     }
-
-    
 }
 
 impl TryFrom<&[u8]> for Address {
@@ -116,7 +134,8 @@ impl TryFrom<&[u8]> for Address {
         let mut unjumbled_bytes = [0u8; 80];
         unjumbled_bytes.copy_from_slice(jumbled_bytes);
 
-        f4jumble::f4jumble_inv_mut(&mut unjumbled_bytes).map_err(|_| ParserError::InvalidAddress)?;
+        f4jumble::f4jumble_inv_mut(&mut unjumbled_bytes)
+            .map_err(|_| ParserError::InvalidAddress)?;
 
         let diversifier_bytes = &unjumbled_bytes[0..16];
 
@@ -124,18 +143,31 @@ impl TryFrom<&[u8]> for Address {
 
         let clue_key_bytes = &unjumbled_bytes[48..80];
 
-        let diversifier = Diversifier(diversifier_bytes.try_into().expect("can form diversifier bytes"));
+        let diversifier = Diversifier(
+            diversifier_bytes
+                .try_into()
+                .map_err(|_| ParserError::InvalidAddress)?,
+        );
 
         Address::from_components(
             diversifier,
-            ka::Public(pk_d_bytes.try_into().expect("can form pk_d bytes")),
-            ClueKey(clue_key_bytes.try_into().expect("can form clue_key bytes")),
+            ka::Public(
+                pk_d_bytes
+                    .try_into()
+                    .map_err(|_| ParserError::InvalidAddress)?,
+            ),
+            ClueKey(
+                clue_key_bytes
+                    .try_into()
+                    .map_err(|_| ParserError::InvalidAddress)?,
+            ),
         )
         .map_err(|_| ParserError::InvalidAddress)
     }
 }
 
-#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug)]
+#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct AddressIndex {
     pub account: u32,
     pub randomizer: [u8; Self::RAND_LEN],
@@ -195,8 +227,14 @@ impl TryFrom<&[u8]> for AddressIndex {
         }
 
         Ok(AddressIndex {
-            account: u32::from_le_bytes(slice[0..4].try_into().expect("can form 4 byte array")),
-            randomizer: slice[4..16].try_into().expect("can form 12 byte array"),
+            account: u32::from_le_bytes(
+                slice[0..4]
+                    .try_into()
+                    .map_err(|_| ParserError::InvalidAddress)?,
+            ),
+            randomizer: slice[4..16]
+                .try_into()
+                .map_err(|_| ParserError::UnexpectedError)?,
         })
     }
 }

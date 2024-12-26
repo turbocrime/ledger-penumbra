@@ -17,12 +17,16 @@
 
 #include "coin.h"
 #include "os.h"
+#include "parser_txdef.h"
 #include "zxerror.h"
 
 void tx_initialize();
 
 /// Clears the transaction buffer
 void tx_reset();
+
+/// Returns the transaction object
+parser_tx_t *tx_get_txObject();
 
 /// Appends buffer to the end of the current transaction buffer
 /// Transaction buffer will grow until it reaches the maximum allowed size
@@ -43,6 +47,12 @@ uint8_t *tx_get_buffer();
 /// This function should be called as soon as full buffer data is loaded.
 /// \return It returns NULL if data is valid or error message otherwise.
 const char *tx_parse();
+
+/// Parse transaction metadata
+/// storing result in parser context
+/// this metadata is used during transaction
+/// processing
+const char *tx_parse_metadata();
 
 /// Return the number of items in the transaction
 zxerr_t tx_getNumItems(uint8_t *num_items);

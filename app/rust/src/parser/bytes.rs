@@ -14,6 +14,8 @@
 *  limitations under the License.
 ********************************************************************************/
 
+use crate::ParserError;
+
 #[cfg(any(feature = "derive-debug", test))]
 use core::fmt;
 
@@ -22,6 +24,25 @@ use core::fmt;
 pub struct BytesC {
     pub ptr: *const u8,
     pub len: u16,
+}
+
+impl BytesC {
+    pub fn into_array<const L: usize>(&self) -> Result<[u8; L], ParserError> {
+        let slice: &[u8] = self.into();
+        slice.try_into().map_err(|_| ParserError::InvalidLength)
+    }
+}
+
+impl From<&BytesC> for &[u8] {
+    fn from(value: &BytesC) -> Self {
+        unsafe {
+            if value.ptr.is_null() {
+                &[]
+            } else {
+                std::slice::from_raw_parts(value.ptr, value.len as usize)
+            }
+        }
+    }
 }
 
 #[cfg(any(feature = "derive-debug", test))]
@@ -35,11 +56,11 @@ impl fmt::Debug for BytesC {
 }
 
 impl BytesC {
-    pub fn get_bytes(&self) -> Option<&[u8]> {
+    pub fn get_bytes(&self) -> Result<&[u8], ParserError> {
         if self.ptr.is_null() || self.len == 0 {
-            None
+            Err(ParserError::UnexpectedData)
         } else {
-            unsafe { Some(std::slice::from_raw_parts(self.ptr, self.len as usize)) }
+            unsafe { Ok(std::slice::from_raw_parts(self.ptr, self.len as usize)) }
         }
     }
 }

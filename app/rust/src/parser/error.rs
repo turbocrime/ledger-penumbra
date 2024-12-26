@@ -1,18 +1,56 @@
+/*******************************************************************************
+*   (c) 2024 Zondax GmbH
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+********************************************************************************/
+
 use arrayvec::CapacityError;
 use nom::error::ErrorKind;
 
 #[repr(u32)]
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
-// #[cfg_attr(test, derive(Debug))]
 pub enum ParserError {
     Ok = 0,
     // Generic errors
     NoData,
+    InitContextEmpty, // Added
     DisplayIdxOutOfRange,
     DisplayPageOutOfRange,
     UnexpectedError,
-    // Required fields
-    // Coin specific
+    // Method/Version related
+    UnexpectedMethod,     // Added
+    UnexpectedVersion,    // Added
+    UnexpectedCharacters, // Added
+    // Field related
+    DuplicatedField, // Added
+    MissingField,    // Added
+    UnexpectedField,
+    // Transaction related
+    UnknownTransaction, // Added
+    InvalidTransactionType,
+    // Plan related
+    SpendPlanError,           // Added
+    OutputPlanError,          // Added
+    DelegatePlanError,        // Added
+    UndelegatePlanError,      // Added
+    Ics20WithdrawalPlanError, // Added
+    SwapPlanError,            // Added
+    ParameterHashError,       // Added
+    EffectHashError,          // Added
+    // Chain related
+    InvalidChainId,
+    UnexpectedChain, // Added
+    // Other existing variants remain unchanged
     InvalidHashMode,
     InvalidSignature,
     InvalidPubkeyEncoding,
@@ -22,16 +60,13 @@ pub enum ParserError {
     InvalidCodec,
     InvalidThreshold,
     InvalidNetworkId,
-    InvalidChainId,
     InvalidAsciiValue,
     InvalidTimestamp,
     InvalidStakingAmount,
     UnexpectedType,
-    InvalidTransactionType,
     OperationOverflows,
     UnexpectedBufferEnd,
     UnexpectedNumberItems,
-    UnexpectedField,
     ValueOutOfRange,
     InvalidAddress,
     InvalidPath,
@@ -49,6 +84,11 @@ pub enum ParserError {
     InvalidPrecision,
     PrecisionTooLarge,
     ClueCreationFailed,
+    InvalidAssetId,
+    // Additional variants from C enum
+    DetectionDataOverflow, // Added
+    ActionsOverflow,       // Added
+    InvalidMetadata,       // Added
 }
 
 impl From<ErrorKind> for ParserError {

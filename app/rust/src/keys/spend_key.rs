@@ -31,7 +31,8 @@ impl SpendKey {
 /// raw data is comming from C, it is not kept
 /// in memory and gets zeroized after use.
 #[repr(C)]
-#[derive(Debug, Clone, Zeroize, ZeroizeOnDrop)]
+#[derive(Clone, Zeroize, ZeroizeOnDrop)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct SpendKeyBytes([u8; SpendKeyBytes::LEN]);
 
 impl SpendKeyBytes {

@@ -32,9 +32,10 @@ extern "C" {
 
 #define PK_LEN_25519 32u
 #define SK_LEN_25519 64u
+#define EFFECT_HASH_LEN 64u
 
 #define COIN_AMOUNT_DECIMAL_PLACES 6
-#define COIN_TICKER "PEN"
+#define COIN_TICKER "penumbra"
 
 #define MENU_MAIN_APP_LINE1 "Penumbra"
 #define MENU_MAIN_APP_LINE2 "Ready"
@@ -44,6 +45,9 @@ extern "C" {
 
 // Custom apdu instructions
 #define INS_GET_FVK 0x03
+#define INS_TX_METADATA 0x04
+#define INS_GET_SPEND_AUTH_SIGNATURES 0x05
+#define INS_GET_DELEGATOR_VOTE_SIGNATURES 0x06
 
 typedef enum {
     Address = 0,

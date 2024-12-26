@@ -1,6 +1,9 @@
+use crate::address::address_view::AddressView;
 use crate::address::{Address, AddressIndex};
 use crate::constants::KEY_LEN;
+use crate::ffi::c_api::c_fvk_bytes;
 use crate::keys::spend_key::SpendKeyBytes;
+use crate::parser::bytes::BytesC;
 use crate::ParserError;
 
 #[repr(C)]
@@ -50,6 +53,50 @@ pub unsafe extern "C" fn rs_compute_address(
     ParserError::Ok as u32
 }
 
+#[no_mangle]
+/// Use to compute an address and write it back into output
+/// argument.
+pub unsafe extern "C" fn rs_is_address_visible(
+    address: &BytesC,
+    is_visible: *mut bool,
+    index: *mut u32,
+) -> u32 {
+    crate::zlog("rs_is_address_visible\x00");
+
+    if is_visible.is_null() || index.is_null() {
+        return ParserError::NoData as u32;
+    }
+
+    let Ok(fvk) = c_fvk_bytes() else {
+        return ParserError::UnexpectedError as u32;
+    };
+
+    let Ok(address_bytes) = address.get_bytes() else {
+        return ParserError::InvalidAddress as u32;
+    };
+
+    let Ok(address) = Address::try_from(address_bytes) else {
+        return ParserError::InvalidAddress as u32;
+    };
+
+    let Ok(address_view) = fvk.view_address(address) else {
+        return ParserError::InvalidAddress as u32;
+    };
+
+    match address_view {
+        AddressView::Opaque { .. } => {
+            *is_visible = false;
+            *index = 0;
+        }
+        AddressView::Visible { index: idx, .. } => {
+            *is_visible = true;
+            *index = idx.account;
+        }
+    }
+
+    ParserError::Ok as u32
+}
+
 fn compute_address(keys: &mut Keys, addr_idx: AddressIndex) -> Result<(), ParserError> {
     let spk = SpendKeyBytes::from(keys.skb);
     let fvk = spk.fvk()?;
@@ -58,7 +105,7 @@ fn compute_address(keys: &mut Keys, addr_idx: AddressIndex) -> Result<(), Parser
     let address = ivk.payment_address(addr_idx).map(|(addr, _)| addr)?;
 
     // return the f4jumble encoded raw address
-    let raw = address.raw_bytes()?;
+    let raw = address.to_bytes()?;
 
     keys.address.copy_from_slice(&raw);
 
@@ -75,10 +122,18 @@ fn compute_keys(keys: &mut Keys) -> Result<(), ParserError> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use crate::keys::spend_key::SpendKeyBytes;
+    use std::format;
+    use std::string::ToString;
 
+    use super::*;
+    use crate::keys::fvk::FullViewingKey;
+    use crate::keys::nk::NullifierKey;
+    use crate::keys::spend_key::SpendKeyBytes;
+    use decaf377::Fq;
+    use decaf377_rdsa::{SpendAuth, VerificationKey};
+    use std::println;
     const SPEND_KEY: &str = "ff726c71bcec76abc6a88cba71df655b28de6580edbd33c7415fdfded2e422e7";
+    const SPEND_ZEMU_KEY: &str = "a1ffba0c37931f0a626137520da650632d35853bf591b36bb428630a4d87c4dc";
     const ACCOUNT_IDX: u32 = 1;
     const EXPECTED_ADDR: &str = "70c4d192ddf3c4cdf97fddc4c4aa07d112b5a7bf6d0810da37ae777990913737babcaa57fd4031d19260d88f1ec0c357a375c289f9943e7efa242ae963abcce749543a22039d687d8a027cb05b33438c";
     const EXPECTED_DIV: &str = "fe8f546c0172716f9efd52eba9074148";
@@ -130,5 +185,78 @@ mod test {
         let s = hex::encode(keys.fvk);
 
         assert_eq!(s, EXPECTED_FVK);
+    }
+
+    #[test]
+    fn print_address() {
+        let key_bytes = hex::decode(SPEND_ZEMU_KEY).unwrap();
+        let mut key_bytes_array = [0u8; 32];
+        key_bytes_array.copy_from_slice(&key_bytes);
+        let spend_key = SpendKeyBytes::from(key_bytes_array);
+
+        let dummy_address =
+        hex::decode("cefe3931877df56e2eb50626ae0d54c2d44791c154a2b8f056daf11c378116c1a924f91862da10b8b39ecd045062f04dcb345041b0001471d97d73136d424f64239804708ff3d78d645c084ec3ee0315")
+            .unwrap();
+        let address = Address::try_from(dummy_address.as_slice()).unwrap();
+
+        let fvk = spend_key.fvk().unwrap();
+
+        let address_view = fvk.view_address(address).unwrap();
+
+        let account_str = match address_view {
+            AddressView::Opaque { address: _ } => panic!("Address is opaque"),
+            AddressView::Visible {
+                address: _,
+                index,
+                wallet_id: _,
+            } => {
+                if index.account == 0 {
+                    "Main Account".to_string()
+                } else {
+                    format!("Sub-account #{}", index.account)
+                }
+            }
+        };
+
+        assert_eq!(account_str, "Sub-account #90");
+    }
+
+    #[test]
+    fn get_fvk_from_bytes() {
+        let key_bytes = hex::decode(SPEND_ZEMU_KEY).unwrap();
+        let mut key_bytes_array = [0u8; 32];
+        key_bytes_array.copy_from_slice(&key_bytes);
+        let spend_key = SpendKeyBytes::from(key_bytes_array);
+
+        let fvk = spend_key.fvk().unwrap();
+
+        let mut keys = Keys {
+            skb: [0; SpendKeyBytes::LEN],
+            fvk: [0; KEY_LEN * 2],
+            address: [0; Address::LEN],
+        };
+
+        fvk.to_bytes_into(&mut keys.fvk).unwrap();
+
+        let s = hex::encode(keys.fvk);
+
+        let ak_bytes: [u8; 32] = keys.fvk[0..32].try_into().unwrap();
+        let nk_bytes: [u8; 32] = keys.fvk[32..64].try_into().unwrap();
+        let ak = VerificationKey::<SpendAuth>::try_from(ak_bytes.as_ref()).unwrap();
+        let nk = NullifierKey(Fq::from_le_bytes_mod_order(nk_bytes.as_ref()));
+        let fvk_2 = FullViewingKey::from_components(ak, nk).unwrap();
+
+        let mut keys_2 = Keys {
+            skb: [0; SpendKeyBytes::LEN],
+            fvk: [0; KEY_LEN * 2],
+            address: [0; Address::LEN],
+        };
+
+        fvk_2.to_bytes_into(&mut keys_2.fvk).unwrap();
+
+        let s_2 = hex::encode(keys_2.fvk);
+        println!("HOLA {}", s_2);
+
+        assert_eq!(s, s_2);
     }
 }

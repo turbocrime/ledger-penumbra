@@ -22,12 +22,10 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
-typedef struct {
-    uint8_t *ptr;
-    uint16_t len;
-} bytes_t;
+#include "constants.h"
 
 #define KEY_LEN 32
+#define FVK_LEN 64
 #define DIVERSIFIER_KEY_LEN 16
 #define OUTGOING_VIEWING_KEY_LEN KEY_LEN
 #define NULLIFIER_KEY_LEN KEY_LEN            // Assuming decaf377 curve parameters
@@ -36,16 +34,17 @@ typedef struct {
 #define INCOMING_VIEWING_KEY_LEN KEY_LEN     // Assuming modulo r size
 #define ADDR_MAX_ENC_LEN 150                 // The maximun length of the encoded address
 
-// raw address len before encoding
-#define ADDRESS_LEN_BYTES 80
+#define SIGNATURE_LEN 64
 
 /// Number of bits in the address short form divided by the number of bits per Bech32m character
 #define ADDRESS_NUM_CHARS_SHORT_FORM 24
 
-// TODO: sure it is 16, the same as the tag?
 #define DIVERSIFIER_KEY_LEN 16
 
 #define ADDR_RANDOMIZER_LEN 12
+
+#define ADDRESS_NUM_CHARS_SHORT_FORM 24
+#define NUM_CHARS_TO_DISPLAY 33
 
 // raw keys in bytes
 
@@ -90,6 +89,8 @@ typedef uint8_t diversifier_tag_t[16];
 
 // A bech32m encoded address
 typedef uint8_t address_t[ADDRESS_LEN_BYTES];
+// A signature type
+typedef uint8_t signature_t[SIGNATURE_LEN];
 
 typedef struct {
     spend_key_bytes_t skb;
