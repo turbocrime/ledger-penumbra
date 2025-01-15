@@ -28,6 +28,8 @@ use crate::ParserError;
 pub mod output;
 pub mod spend;
 pub mod swap;
+pub mod undelegate_claim;
+pub mod delegator_vote;
 
 #[repr(C)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
@@ -138,7 +140,7 @@ pub unsafe extern "C" fn rs_spend_action_hash(
     }
 
     let Ok(fvk) = c_fvk_bytes() else {
-        return ParserError::UnexpectedError as u32;
+        return ParserError::InvalidFvk as u32;
     };
     let body_hash_bytes = plan.effect_hash(&fvk);
 
@@ -170,15 +172,12 @@ pub unsafe extern "C" fn rs_output_action_hash(
     }
 
     let Ok(fvk) = c_fvk_bytes() else {
-        return ParserError::UnexpectedError as u32;
+        return ParserError::InvalidFvk as u32;
     };
 
-    let memo_key_bytes = match memo_key.get_bytes() {
-        Ok(bytes) => bytes,
-        Err(_) => &[0u8; 32],
-    };
+    let memo_key_bytes = memo_key.get_bytes().unwrap_or(&[0u8; 32]);
 
-    let body_hash_bytes = plan.effect_hash(&fvk, &memo_key_bytes);
+    let body_hash_bytes = plan.effect_hash(&fvk, memo_key_bytes);
 
     if let Ok(body_hash_bytes) = body_hash_bytes {
         let body_hash_array = body_hash_bytes.as_array();
@@ -207,7 +206,7 @@ pub unsafe extern "C" fn rs_swap_action_hash(
     }
 
     let Ok(fvk) = c_fvk_bytes() else {
-        return ParserError::UnexpectedError as u32;
+        return ParserError::InvalidFvk as u32;
     };
 
     let body_hash_bytes = plan.effect_hash(&fvk);
@@ -218,6 +217,68 @@ pub unsafe extern "C" fn rs_swap_action_hash(
         output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
     } else {
         return ParserError::SwapPlanError as u32;
+    }
+
+    ParserError::Ok as u32
+}
+
+#[no_mangle]
+/// Use to compute an address and write it back into output
+/// argument.
+pub unsafe extern "C" fn rs_undelegate_claim_action_hash(
+    plan: &undelegate_claim::UndelegateClaimPlanC,
+    output: *mut u8,
+    output_len: usize,
+) -> u32 {
+    crate::zlog("rs_undelegate_claim_action_hash\x00");
+    let output = std::slice::from_raw_parts_mut(output, output_len);
+
+    if output.len() < 64 {
+        return ParserError::Ok as u32;
+    }
+
+    let body_hash_bytes = plan.effect_hash();
+
+    if let Ok(body_hash_bytes) = body_hash_bytes {
+        let body_hash_array = body_hash_bytes.as_array();
+        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    } else {
+        return ParserError::UndelegateClaimPlanError as u32;
+    }
+
+    ParserError::Ok as u32
+}
+
+#[no_mangle]
+/// Use to compute an address and write it back into output
+/// argument.
+pub unsafe extern "C" fn rs_delegator_vote_action_hash(
+    plan: &delegator_vote::DelegatorVotePlanC,
+    output: *mut u8,
+    output_len: usize,
+) -> u32 {
+    crate::zlog("rs_delegator_vote_action_hash\x00");
+    let output = std::slice::from_raw_parts_mut(output, output_len);
+
+
+
+    if output.len() < 64 {
+        return ParserError::Ok as u32;
+    }
+
+    let Ok(fvk) = c_fvk_bytes() else {
+        return ParserError::InvalidFvk as u32;
+    };
+
+    let body_hash_bytes = plan.effect_hash(&fvk);
+
+    if let Ok(body_hash_bytes) = body_hash_bytes {
+        let body_hash_array = body_hash_bytes.as_array();
+        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    } else {
+        return ParserError::DelegatorVotePlanError as u32;
     }
 
     ParserError::Ok as u32
@@ -293,6 +354,9 @@ mod tests {
     use crate::parser::swap_plaintext::SwapPlaintextC;
     use crate::parser::trading_pair::TradingPairC;
     use crate::parser::value::ValueC;
+    use crate::parser::penalty::PenaltyC;
+    use crate::parser::identity_key::IdentityKeyC;
+
     #[test]
     fn test_transaction_plan_hash() {
         let dummy_action_hashes = ActionsHashC {
@@ -403,6 +467,8 @@ mod tests {
                 .unwrap();
         let dummy_address_inner = hex::decode("890bc98e3698aa4578e419b028da5672e627c280d8b06166f4c42d5366bccf1fcf3b296cd61e8d744a21f75f2fb697183e18595d8a79008539d8fb138b405db09db65cc42d54c0e772e5d42d5f20b52f").unwrap();
         let dummy_note = NoteC {
+            has_value: true,
+            has_address: true,
             value: dummy_value,
             rseed: BytesC::from_slice(&dummy_rseed_bytes),
             address: AddressC {
@@ -639,4 +705,148 @@ mod tests {
             panic!("output_action_hash is not Ok");
         }
     }
+
+    #[test]
+    fn test_undelegate_claim_action_hash() {
+        // Create dummy ActionC
+        let dummy_amount = AmountC {
+            lo: 74432202791432231,
+            hi: 0,
+        };
+
+        // Create dummy validator identity
+        let ik_bytes =
+            hex::decode("1e32c63102334a0fdfed9fdd4aa6b088824d1d42ad40109f4a56f8845dfb0e32")
+                .unwrap();
+        let dummy_validator_identity = IdentityKeyC {
+            ik: BytesC::from_slice(&ik_bytes),
+        };
+
+
+        // Create dummy penalty
+        let inner_bytes =
+            hex::decode("00000000000000000000000000000000fecbfb15b573eab367a0f9096bb98c7f")
+                .unwrap();
+        let dummy_penalty = PenaltyC {
+            inner: BytesC::from_slice(&inner_bytes),
+        };
+
+        let dummy_balance_blinding_bytes =
+            hex::decode("02a147e3c45b43f4f0cc9d8d6e2940c6927cbb5141b6062aae8ac3ba10ac4504")
+                .unwrap();
+        let dummy_proof_blinding_r_bytes =
+            hex::decode("a6f9bd68892e3c662cd41452dca6c196e31ce877f9e7303166e4eb25b496aa0a")
+                .unwrap();
+        let dummy_proof_blinding_s_bytes =
+            hex::decode("84d5bd78cab02b9528a4135abcdcf46d4953ab230d1e6d4dc295eb4208b5bf0d")
+                .unwrap();
+
+        let dummy_action = undelegate_claim::UndelegateClaimPlanC {
+            has_validator_identity: true,
+            validator_identity: dummy_validator_identity,
+            start_epoch_index: 0,
+            has_penalty: true,
+            penalty: dummy_penalty,
+            has_unbonding_amount: true,
+            unbonding_amount: dummy_amount,
+            balance_blinding: BytesC::from_slice(&dummy_balance_blinding_bytes),
+            proof_blinding_r: BytesC::from_slice(&dummy_proof_blinding_r_bytes),
+            proof_blinding_s: BytesC::from_slice(&dummy_proof_blinding_s_bytes),
+            unbonding_start_height: 25928,
+        };
+
+        let output_action_hash: Result<EffectHash, ParserError> = dummy_action.effect_hash();
+        let expected_hash = "6d780b622209a23a6ac8d2895abceb8420f89b611a2a5767e146aead8aa337a6a8999f258f80a7a2c6f4c21bff674615e0ea1430c4bf86b7d1ab76565d08569e";
+        if let Ok(output_action_hash_bytes) = output_action_hash {
+            let computed_hash = hex::encode(output_action_hash_bytes.as_array());
+            assert_eq!(computed_hash, expected_hash);
+        } else {
+            panic!("output_action_hash is not Ok Error: {:?}", output_action_hash);
+
+        }
+    }
+
+    #[test]
+    fn test_delegator_vote_action_hash() {
+        // Create dummy ActionC
+        let dummy_amount = AmountC {
+            lo: 881370723936900418,
+            hi: 0,
+        };
+
+        let asset_id_bytes =
+            hex::decode("29ea9c2f3371f6a487e7e95c247041f4a356f983eb064e5d2b3bcf322ca96a10")
+                .unwrap();
+        let dummy_asset_id = IdC {
+            inner: BytesC::from_slice(&asset_id_bytes),
+        };
+
+        let dummy_value = ValueC {
+            has_amount: true,
+            amount: dummy_amount,
+            has_asset_id: true,
+            asset_id: dummy_asset_id,
+        };
+
+        let dummy_rseed_bytes =
+            hex::decode("7c14e7434fde0abeccbc2579e58eeb65045e538b14cad708c988075b9fc0df66")
+                .unwrap();
+        let dummy_address_inner = hex::decode("7616f6c402371db1fa79eca16f1892132bbc1ea65e133fa67388049719f62f45c36fe666cc95ecc4444f6561a36d30fa6aad47a89032c8966f05a7cb098f9fd9ee392d0d337f3c35a33284ed4317f392").unwrap();
+        let dummy_note = NoteC {
+            has_value: true,
+            has_address: true,
+            value: dummy_value,
+            rseed: BytesC::from_slice(&dummy_rseed_bytes),
+            address: AddressC {
+                inner: BytesC::from_slice(&dummy_address_inner),
+                alt_bech32m: BytesC::default(),
+            },
+        };
+
+        let dummy_unbonded_amount = AmountC {
+            lo: 254692294976886837,
+            hi: 0,
+        };
+
+        let dummy_randomizer_bytes =
+            hex::decode("8ee3fae74bc73f0107e4f6fbb6a58be4326a0d6991af104f825b8ee4387a6b01")
+                .unwrap();
+        let dummy_proof_blinding_r_bytes =
+            hex::decode("3ad8f590111f2259243cc440cd5aebcce1f96c719095b6d68f6111ceb1f1ae05")
+                .unwrap();
+        let dummy_proof_blinding_s_bytes =
+            hex::decode("f59b1272a4d5ba8bea095233e51b392fe32ec7b97667aa44bf9f89321810ec10")
+                .unwrap();
+        let dummy_action = delegator_vote::DelegatorVotePlanC {
+            proposal: 267193148,
+            start_position: 20,
+            has_vote: true,
+            vote: 1,
+            has_staked_note: true,
+            staked_note: dummy_note,
+            staked_note_position: 30,
+            has_unbonded_amount: true,
+            unbonded_amount: dummy_unbonded_amount,
+            randomizer: BytesC::from_slice(&dummy_randomizer_bytes),
+            proof_blinding_r: BytesC::from_slice(&dummy_proof_blinding_r_bytes),
+            proof_blinding_s: BytesC::from_slice(&dummy_proof_blinding_s_bytes),
+        };
+
+        let spend_key = SpendKeyBytes::from([
+            0xa1, 0xff, 0xba, 0x0c, 0x37, 0x93, 0x1f, 0x0a, 0x62, 0x61, 0x37, 0x52, 0x0d, 0xa6,
+            0x50, 0x63, 0x2d, 0x35, 0x85, 0x3b, 0xf5, 0x91, 0xb3, 0x6b, 0xb4, 0x28, 0x63, 0x0a,
+            0x4d, 0x87, 0xc4, 0xdc,
+        ]);
+        let fvk = spend_key.fvk().unwrap();
+
+        let spend_action_hash = dummy_action.effect_hash(&fvk);
+        let expected_hash = "9b886b91ecbbbe24a6fc01dd425d4954f1e28ddd9bd3c8e446e5f447313c7b3754f7644c1cd6c934fdbfd6a926c16993241ad44ed55b8cf98a0c8f3c2e9ad4ec";
+        if let Ok(spend_action_hash_bytes) = spend_action_hash {
+            let computed_hash = hex::encode(spend_action_hash_bytes.as_array());
+            assert_eq!(computed_hash, expected_hash);
+        } else {
+            panic!("spend_action_hash is not Ok");
+        }
+    }
+
 }

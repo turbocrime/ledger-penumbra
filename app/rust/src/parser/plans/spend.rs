@@ -21,7 +21,7 @@ use crate::parser::{
     effect_hash::{create_personalized_state, EffectHash},
     note::{Note, NoteC},
     nullifier::Nullifier,
-    value::{Sign, Value},
+    value::{Sign, Value, Balance, Imbalance},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -47,40 +47,39 @@ pub struct SpendPlanC {
 
 impl SpendPlanC {
     pub fn effect_hash(&self, fvk: &FullViewingKey) -> Result<EffectHash, ParserError> {
-        let body = self.spend_body(fvk);
+        let body = self.spend_body(fvk)?;
 
-        if let Ok(body) = body {
-            let mut state =
-                create_personalized_state("/penumbra.core.component.shielded_pool.v1.SpendBody");
+        let mut state =
+            create_personalized_state("/penumbra.core.component.shielded_pool.v1.SpendBody");
 
-            state.update(&body.balance_commitment.to_proto_spend());
+        state.update(&body.balance_commitment.to_proto_spend());
 
-            state.update(&[0x22, 0x22, 0x0a, 0x20]);
-            state.update(&body.rk.to_bytes());
+        state.update(&[0x22, 0x22, 0x0a, 0x20]);
+        state.update(&body.rk.to_bytes());
 
-            state.update(&body.nullifier.to_proto());
+        state.update(&body.nullifier.to_proto());
 
-            let hash = state.finalize();
-            Ok(EffectHash(*hash.as_array()))
-        } else {
-            Err(ParserError::InvalidLength)
-        }
+        let hash = state.finalize();
+        Ok(EffectHash(*hash.as_array()))
     }
 
     pub fn spend_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {
         Ok(Body {
             balance_commitment: self
                 .balance()?
-                .commit(self.get_value_blinding_fr()?, Sign::Provided)?,
+                .commit(self.get_value_blinding_fr()?)?,
             nullifier: self.nullifier(fvk)?,
             rk: self.rk(fvk)?,
         })
     }
 
-    pub fn balance(&self) -> Result<Value, ParserError> {
-        // We should return a Balance struct here, but since we are currently managing only one value, it isn’t necessary for now
-        let value = Value::try_from(self.note.value.clone())?;
-        Ok(value)
+    pub fn balance(&self) -> Result<Balance, ParserError> {
+        let mut balance = Balance::new();
+        balance.add(Imbalance{
+            value: Value::try_from(self.note.value.clone())?,
+            sign: Sign::Provided,
+        })?;
+        Ok(balance)
     }
 
     pub fn nullifier(&self, fvk: &FullViewingKey) -> Result<Nullifier, ParserError> {

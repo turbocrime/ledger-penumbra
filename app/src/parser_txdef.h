@@ -38,8 +38,15 @@ extern "C" {
 #define RSEED_LEN 32
 #define CHAIN_ID_LEN 32
 
-#define MAX_SYMBOL_LEN 20
-#define MAX_ASSET_NAME_LEN 20
+#define MAX_SYMBOL_LEN 80
+#define MAX_ASSET_NAME_LEN 120
+
+typedef enum {
+    VOTE_UNSPECIFIED = 0,
+    VOTE_ABSTAIN = 1,
+    VOTE_YES = 2,
+    VOTE_NO = 3
+} governance_vote_e;
 
 typedef struct {
     const uint8_t *ptr;
@@ -71,8 +78,10 @@ typedef struct {
 } address_plan_t;
 
 typedef struct {
+    bool has_value;
     value_t value;
     bytes_t rseed;
+    bool has_address;
     address_plan_t address;
 } note_t;
 
@@ -128,6 +137,14 @@ typedef struct {
     address_plan_t claim_address;
     bytes_t rseed;
 } swap_plaintext_t;
+
+typedef struct {
+    bytes_t inner;
+} penalty_t;
+
+typedef struct {
+    governance_vote_e vote_enum;
+} vote_t;
 
 typedef struct {
     note_t note;
@@ -193,6 +210,35 @@ typedef struct {
 } ics20_withdrawal_plan_t;
 
 typedef struct {
+    bool has_validator_identity;
+    identity_key_t validator_identity;
+    uint64_t start_epoch_index;
+    bool has_penalty;
+    penalty_t penalty;
+    bool has_unbonding_amount;
+    amount_t unbonding_amount;
+    bytes_t balance_blinding;
+    bytes_t proof_blinding_r;
+    bytes_t proof_blinding_s;
+    uint64_t unbonding_start_height;
+} undelegate_claim_plan_t;
+
+typedef struct {
+    uint64_t proposal;
+    uint64_t start_position;
+    bool has_vote;
+    uint8_t vote;
+    bool has_staked_note;
+    note_t staked_note;
+    uint64_t staked_note_position;
+    bool has_unbonded_amount;
+    amount_t unbonded_amount;
+    bytes_t randomizer;
+    bytes_t proof_blinding_r;
+    bytes_t proof_blinding_s;
+} delegator_vote_plan_t;
+
+typedef struct {
     address_plan_t return_address;
     bytes_t text;
 } memo_plain_text_t;
@@ -218,10 +264,12 @@ typedef struct {
     union {
         spend_plan_t spend;
         output_plan_t output;
-        delegate_plan_t delegate;
-        undelegate_plan_t undelegate;
         ics20_withdrawal_plan_t ics20_withdrawal;
         swap_plan_t swap;
+        delegate_plan_t delegate;
+        undelegate_plan_t undelegate;
+        undelegate_claim_plan_t undelegate_claim;
+        delegator_vote_plan_t delegator_vote;
     } action;
 } action_t;
 

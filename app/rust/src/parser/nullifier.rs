@@ -30,7 +30,7 @@ impl Nullifier {
     pub fn derive(nk: &NullifierKey, pos: u64, state_commitment: &Fq) -> Nullifier {
         Nullifier(hash_3(
             &Self::nullifier_domain_sep(),
-            (nk.0, *state_commitment, (u64::from(pos)).into()),
+            (nk.0, *state_commitment, pos.into()),
         ))
     }
 

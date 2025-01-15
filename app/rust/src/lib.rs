@@ -23,6 +23,7 @@ extern crate no_std_compat as std;
 use arrayref as _;
 use educe as _;
 use poseidon377 as _;
+use ethnum as _;
 
 pub(crate) mod address;
 mod bolos;

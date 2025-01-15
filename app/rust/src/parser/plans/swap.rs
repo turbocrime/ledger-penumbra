@@ -51,28 +51,24 @@ pub struct SwapPlanC {
 
 impl SwapPlanC {
     pub fn effect_hash(&self, fvk: &FullViewingKey) -> Result<EffectHash, ParserError> {
-        let body = self.swap_body(fvk);
+        let body = self.swap_body(fvk)?;
 
-        if let Ok(body) = body {
-            let mut state = create_personalized_state("/penumbra.core.component.dex.v1.SwapBody");
+        let mut state = create_personalized_state("/penumbra.core.component.dex.v1.SwapBody");
 
-            state.update(&body.trading_pair.to_proto()?);
-            state.update(&[0x12]); // encode tag
-            let (asset_1, len_1) = body.delta_1_i.to_proto();
-            state.update(&asset_1[..len_1]);
+        state.update(&body.trading_pair.to_proto()?);
+        state.update(&[0x12]); // encode tag
+        let (asset_1, len_1) = body.delta_1_i.to_proto();
+        state.update(&asset_1[..len_1]);
 
-            state.update(&[0x1a]); // encode tag
-            let (asset_2, len_2) = body.delta_2_i.to_proto();
-            state.update(&asset_2[..len_2]);
+        state.update(&[0x1a]); // encode tag
+        let (asset_2, len_2) = body.delta_2_i.to_proto();
+        state.update(&asset_2[..len_2]);
 
-            state.update(&body.fee_commitment.to_proto_swap());
-            state.update(&body.payload.to_proto());
+        state.update(&body.fee_commitment.to_proto_swap());
+        state.update(&body.payload.to_proto());
 
-            let hash = state.finalize();
-            Ok(EffectHash(*hash.as_array()))
-        } else {
-            Err(ParserError::InvalidLength)
-        }
+        let hash = state.finalize();
+        Ok(EffectHash(*hash.as_array()))
     }
 
     pub fn swap_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {

@@ -128,6 +128,15 @@ parser_error_t printAssetId(const uint8_t *asset, uint16_t asset_len, char *out,
     return printBech32Encoded(ASSET_BECH32_PREFIX, sizeof(ASSET_BECH32_PREFIX) - 1, asset, asset_len, out, out_len);
 }
 
+
+parser_error_t encodeIdentityKey(const uint8_t *identity_key, uint16_t identity_key_len, char *out, uint16_t out_len) {
+    // Validate input length
+    if (identity_key_len != IDENTITY_KEY_LEN) {
+        return parser_invalid_address;
+    }
+    return printBech32Encoded(IDENTITY_KEY_BECH32_PREFIX, sizeof(IDENTITY_KEY_BECH32_PREFIX) - 1, identity_key, identity_key_len, out, out_len);
+}
+
 parser_error_t uint128_to_str(char *data, int dataLen, uint64_t high, uint64_t low) {
     if (data == NULL) return parser_no_data;
     if (dataLen < U128_STR_MAX_LEN) return parser_value_out_of_range;

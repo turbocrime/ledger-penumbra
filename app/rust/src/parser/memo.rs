@@ -61,10 +61,7 @@ impl MemoCiphertext {
         let mut ciphertext = [0u8; MEMO_CIPHERTEXT_LEN_BYTES];
 
         let return_address_bytes = memo.return_address.inner.get_bytes()?;
-        let text_bytes = match memo.text.get_bytes() {
-            Ok(bytes) => bytes,
-            Err(_) => &[],
-        };
+        let text_bytes = memo.text.get_bytes().unwrap_or(&[]);
 
         if (memo.return_address.inner.len as usize + memo.text.len as usize) > MEMO_LEN_BYTES {
             return Err(ParserError::InvalidLength);

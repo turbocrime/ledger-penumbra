@@ -25,6 +25,7 @@ pub struct Id(pub Fq);
 
 impl Id {
     pub const LEN: usize = ID_LEN_BYTES;
+    pub const PROTO_LEN: usize = Self::LEN + 4;
 
     /// Compute the value generator   for this asset, used for computing balance commitments.
     pub fn value_generator(&self) -> decaf377::Element {
@@ -42,6 +43,13 @@ impl Id {
         let mut bytes = [0; Self::LEN];
         bytes.copy_from_slice(&self.0.to_bytes());
         bytes
+    }
+
+    pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
+        let mut proto = [0u8; Self::PROTO_LEN];
+        proto[0..4].copy_from_slice(&[0x12, 0x22, 0x0a, 0x20]);
+        proto[4..].copy_from_slice(&self.to_bytes());
+        proto
     }
 }
 

@@ -92,9 +92,7 @@ impl SwapPlaintext {
 
         key.encrypt_swap(&mut encryption_result, SWAP_LEN_BYTES)?;
 
-        let ciphertext: [u8; SWAP_CIPHERTEXT_BYTES] = encryption_result
-            .try_into()
-            .map_err(|_| ParserError::InvalidLength)?;
+        let ciphertext: [u8; SWAP_CIPHERTEXT_BYTES] = encryption_result;
 
         Ok(SwapPayload {
             encrypted_swap: SwapCiphertext(ciphertext),
@@ -109,8 +107,8 @@ impl SwapPlaintext {
         let inner = hash_7(
             &Self::swap_domain_sep(),
             (
-                Fq::from_le_bytes_mod_order(&self.rseed.to_bytes()?.as_ref()[..]),
-                self.claim_fee.0.amount.clone().into(),
+                Fq::from_le_bytes_mod_order(self.rseed.to_bytes()?.as_ref()),
+                self.claim_fee.0.amount.into(),
                 self.claim_fee.0.asset_id.0,
                 self.claim_address
                     .diversified_generator()
@@ -122,8 +120,8 @@ impl SwapPlaintext {
                     (
                         self.trading_pair.asset_1().0,
                         self.trading_pair.asset_2().0,
-                        self.delta_1_i.clone().into(),
-                        self.delta_2_i.clone().into(),
+                        self.delta_1_i.into(),
+                        self.delta_2_i.into(),
                     ),
                 ),
             ),

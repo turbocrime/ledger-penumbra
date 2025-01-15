@@ -41,69 +41,88 @@ extern "C" {
     } while (0)
 
 typedef enum {
-    // Generic errors
+    // Success
     parser_ok = 0,
+
+    // Generic errors
     parser_no_data,
     parser_init_context_empty,
     parser_display_idx_out_of_range,
     parser_display_page_out_of_range,
     parser_unexpected_error,
-    // Additional variants from Rust enum
-    parser_invalid_hash_mode,        // Added
-    parser_invalid_signature,        // Added
-    parser_invalid_pubkey_encoding,  // Added
-    parser_invalid_address_version,  // Added
-    parser_invalid_address_length,   // Added
-    parser_invalid_type_id,          // Added
-    parser_invalid_codec,            // Added
-    parser_invalid_threshold,        // Added
-    parser_invalid_network_id,       // Added
-    parser_invalid_chain_id,         // Added
-    parser_invalid_ascii_value,      // Added
-    parser_invalid_timestamp,        // Added
-    parser_invalid_staking_amount,   // Added
-    parser_operation_overflows,      // Added
-    parser_invalid_path,             // Added
-    parser_invalid_length,           // Added
-    parser_too_many_outputs,         // Added
-    parser_unexpected_data,          // Added
-    parser_invalid_clue_key,         // Added
-    parser_invalid_tx_key,           // Added
-    parser_invalid_fq,               // Added
-    parser_invalid_detection_key,    // Added
-    parser_invalid_fvk,              // Added
-    parser_invalid_ivk,              // Added
-    parser_invalid_key_len,          // Added
-    parser_invalid_action_type,      // Added
-    parser_invalid_precision,        // Added
-    parser_precision_too_large,      // Added
-    parser_clue_creation_failed,     // Added
-    parser_invalid_asset_id,         // Added
-    // Existing C enum variants
-    parser_unexpected_type,
+
+    // Method/Version related
     parser_unexpected_method,
-    parser_unexpected_buffer_end,
-    parser_unexpected_value,
-    parser_unexpected_number_items,
     parser_unexpected_version,
     parser_unexpected_characters,
-    parser_unexpected_field,
+
+    // Field related
     parser_duplicated_field,
-    parser_value_out_of_range,
-    parser_invalid_address,
-    parser_unexpected_chain,
     parser_missing_field,
-    paser_unknown_transaction,
-    parser_detection_data_overflow,
-    parser_actions_overflow,
+    parser_unexpected_field,
+
+    // Transaction related
+    parser_unknown_transaction,
+    parser_invalid_transaction_type,
+
+    // Plan related
     parser_spend_plan_error,
     parser_output_plan_error,
     parser_delegate_plan_error,
     parser_undelegate_plan_error,
     parser_ics20_withdrawal_plan_error,
     parser_swap_plan_error,
+    parser_parameter_hash_error,
+    parser_effect_hash_error,
+    parser_undelegate_claim_plan_error,
+    parser_delegator_vote_plan_error,
+
+    // Chain related
+    parser_invalid_chain_id,
+    parser_unexpected_chain,
+
+    // Cryptographic and key-related errors
+    parser_invalid_hash_mode,
+    parser_invalid_signature,
+    parser_invalid_pubkey_encoding,
+    parser_invalid_address_version,
+    parser_invalid_address_length,
+    parser_invalid_type_id,
+    parser_invalid_codec,
+    parser_invalid_threshold,
+    parser_invalid_network_id,
+    parser_invalid_ascii_value,
+    parser_invalid_timestamp,
+    parser_invalid_staking_amount,
+    parser_unexpected_type,
+    parser_operation_overflows,
+    parser_unexpected_buffer_end,
+    parser_unexpected_number_items,
+    parser_value_out_of_range,
+    parser_invalid_address,
+    parser_invalid_path,
+    parser_invalid_length,
+    parser_too_many_outputs,
+    parser_unexpected_data,
+    parser_invalid_clue_key,
+    parser_invalid_tx_key,
+    parser_invalid_fq,
+    parser_invalid_detection_key,
+    parser_invalid_fvk,
+    parser_invalid_ivk,
+    parser_invalid_key_len,
+    parser_invalid_action_type,
+    parser_invalid_precision,
+    parser_precision_too_large,
+    parser_clue_creation_failed,
+    parser_invalid_asset_id,
+    parser_detection_data_overflow,
+    parser_actions_overflow,
     parser_invalid_metadata,
     parser_invalid_signature_len,
+    parser_overflow,
+    parser_non_integral,
+    parser_unexpected_value,
 } parser_error_t;
 
 typedef struct {

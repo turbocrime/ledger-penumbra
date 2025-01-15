@@ -45,6 +45,9 @@ pub mod swap_plaintext;
 pub mod symmetric;
 pub mod trading_pair;
 pub mod value;
+pub mod identity_key;
+pub mod penalty;
+pub mod fixpoint;
 
 pub use bytes::BytesC;
 pub use error::ParserError;

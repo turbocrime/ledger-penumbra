@@ -211,6 +211,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "ethnum"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b90ca2580b73ab6a1f724b76ca11ab632df820fd6040c336200d2c1df7b3c82c"
+
+[[package]]
 name = "f4jumble"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -265,6 +271,12 @@ checksum = "a0c10553d664a4d0bcff9f4215d0aac67a639cc68ef660840afe309b807bc9f5"
 dependencies = [
  "generic-array",
 ]
+
+[[package]]
+name = "itoa"
+version = "1.0.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d75a2a4b1b190afb6f5425f10f6a8f959d2ea0b9c2b1d79553551850539e4674"
 
 [[package]]
 name = "libc"
@@ -445,9 +457,11 @@ dependencies = [
  "decaf377",
  "decaf377-rdsa",
  "educe",
+ "ethnum",
  "f4jumble",
  "getrandom 0.1.16",
  "hex",
+ "itoa",
  "no-std-compat",
  "nom",
  "panic-halt",

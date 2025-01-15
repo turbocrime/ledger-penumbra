@@ -50,11 +50,15 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
         return parser_spend_plan_error;
     }
 
-    output->note.value.has_amount = spend_plan.note.value.has_amount;
-    if (output->note.value.has_amount) {
-        output->note.value.amount.lo = spend_plan.note.value.amount.lo;
-        output->note.value.amount.hi = spend_plan.note.value.amount.hi;
+    output->note.has_value = spend_plan.note.has_value;
+    if (output->note.has_value) {
+        output->note.value.has_amount = spend_plan.note.value.has_amount;
+        if (output->note.value.has_amount) {
+            output->note.value.amount.lo = spend_plan.note.value.amount.lo;
+            output->note.value.amount.hi = spend_plan.note.value.amount.hi;
+        }
     }
+    output->note.has_address = spend_plan.note.has_address;
     output->note.value.has_asset_id = spend_plan.note.value.has_asset_id;
     output->position = spend_plan.position;
 

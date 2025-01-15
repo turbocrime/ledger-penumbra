@@ -32,6 +32,9 @@
 #define SHORT_ADDRESS_VISIBLE_CHARS 24
 #define ELLIPSIS "…"
 
+#define IDENTITY_KEY_BECH32_PREFIX "penumbravalid"
+#define IDENTITY_KEY_LEN 32
+
 // Common BECH32m constants
 #define CHECKSUM_LENGTH 8
 #define BECH32_BITS_PER_CHAR 5
@@ -93,3 +96,9 @@
 // Constant to use to allocate a buffer on the stack to hold the formatting of an ics20 withdrawal action
 #define ICS20_WITHDRAWAL_DISPLAY_MAX_LEN \
     (VALUE_DISPLAY_MAX_LEN + 300 + 36)  // = 498 -> 300 bytes for the channel and destination address
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an delegate action
+#define DELEGATE_DISPLAY_MAX_LEN (VALUE_DISPLAY_MAX_LEN + 92)  // = 254
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an undelegate action
+#define UNDELEGATE_DISPLAY_MAX_LEN (2 * VALUE_DISPLAY_MAX_LEN + 100)  // = 424

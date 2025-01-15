@@ -57,8 +57,10 @@ pub struct Note {
 #[derive(Clone)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct NoteC {
+    pub has_value: bool,
     pub value: ValueC,
     pub rseed: BytesC,
+    pub has_address: bool,
     pub address: AddressC,
 }
 
@@ -98,7 +100,7 @@ impl Note {
             &Self::notecommit_domain_sep(),
             (
                 self.note_blinding()?,
-                self.value.amount.clone().into(),
+                self.value.amount.into(),
                 self.value.asset_id.0,
                 self.diversified_generator()?.vartime_compress_to_field(),
                 self.transmission_key_s,

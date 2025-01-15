@@ -21,36 +21,45 @@ use nom::error::ErrorKind;
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum ParserError {
     Ok = 0,
+
     // Generic errors
     NoData,
-    InitContextEmpty, // Added
+    InitContextEmpty,
     DisplayIdxOutOfRange,
     DisplayPageOutOfRange,
     UnexpectedError,
+
     // Method/Version related
-    UnexpectedMethod,     // Added
-    UnexpectedVersion,    // Added
-    UnexpectedCharacters, // Added
+    UnexpectedMethod,
+    UnexpectedVersion,
+    UnexpectedCharacters,
+
     // Field related
-    DuplicatedField, // Added
-    MissingField,    // Added
+    DuplicatedField,
+    MissingField,
     UnexpectedField,
+
     // Transaction related
-    UnknownTransaction, // Added
+    UnknownTransaction,
     InvalidTransactionType,
+
     // Plan related
-    SpendPlanError,           // Added
-    OutputPlanError,          // Added
-    DelegatePlanError,        // Added
-    UndelegatePlanError,      // Added
-    Ics20WithdrawalPlanError, // Added
-    SwapPlanError,            // Added
-    ParameterHashError,       // Added
-    EffectHashError,          // Added
+    SpendPlanError,
+    OutputPlanError,
+    DelegatePlanError,
+    UndelegatePlanError,
+    Ics20WithdrawalPlanError,
+    SwapPlanError,
+    ParameterHashError,
+    EffectHashError,
+    UndelegateClaimPlanError,
+    DelegatorVotePlanError,
+
     // Chain related
     InvalidChainId,
-    UnexpectedChain, // Added
-    // Other existing variants remain unchanged
+    UnexpectedChain,
+
+    // Cryptographic and key-related errors
     InvalidHashMode,
     InvalidSignature,
     InvalidPubkeyEncoding,
@@ -85,10 +94,13 @@ pub enum ParserError {
     PrecisionTooLarge,
     ClueCreationFailed,
     InvalidAssetId,
-    // Additional variants from C enum
-    DetectionDataOverflow, // Added
-    ActionsOverflow,       // Added
-    InvalidMetadata,       // Added
+    DetectionDataOverflow,
+    ActionsOverflow,
+    InvalidMetadata,
+    InvalidSignatureLen,
+    Overflow,
+    NonIntegral,
+    UnexpectedValue,
 }
 
 impl From<ErrorKind> for ParserError {

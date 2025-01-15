@@ -1,5 +1,13 @@
 use bech32::{Bech32m, ByteIterExt, Fe32IterExt, Hrp};
 
+/// Encodes data using the Bech32m format.
+///
+/// # Safety
+///
+/// This function is unsafe because it dereferences raw pointers. The caller must ensure that:
+/// - `hrp_ptr` points to a valid memory location with at least `hrp_len` bytes.
+/// - `data_ptr` points to a valid memory location with at least `data_len` bytes.
+/// - `output_ptr` points to a valid memory location with at least `output_len` bytes.
 #[no_mangle]
 pub unsafe extern "C" fn rs_bech32_encode(
     hrp_ptr: *const u8,

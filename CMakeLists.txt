@@ -124,6 +124,9 @@ add_definitions(
     -DLEDGER_MINOR_VERSION=${MINOR_VERSION}
 )
 
+# Add flag to compile all Penumbra actions for cpp tests 
+add_definitions(-DFULL_APP)
+
 ##############################################################
 # Static Libraries
 file(GLOB_RECURSE LIB_SRC
@@ -158,6 +161,8 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/swap.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/c_api/rust.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/ics20_withdrawal.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/undelegate_claim.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/delegator_vote.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})

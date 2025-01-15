@@ -26,7 +26,7 @@ use crate::parser::{
     rseed::Rseed,
     symmetric::PayloadKey,
     symmetric::{OvkWrappedKey, WrappedMemoKey},
-    value::{Sign, Value, ValueC},
+    value::{Sign, Value, ValueC, Balance, Imbalance},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -81,7 +81,7 @@ impl OutputPlanC {
         let ovk = fvk.outgoing();
         let note = self.output_note()?;
         let value = self.balance()?;
-        let balance_commitment = value.commit(self.get_value_blinding_fr()?, Sign::Required)?;
+        let balance_commitment = value.commit(self.get_value_blinding_fr()?)?;
 
         // Encrypt the note to the recipient...
         let esk = note.ephemeral_secret_key()?;
@@ -112,10 +112,13 @@ impl OutputPlanC {
         Note::from_parts(address, value, rseed)
     }
 
-    pub fn balance(&self) -> Result<Value, ParserError> {
-        // We should return a Balance struct here, but since we are currently managing only one value, it isn’t necessary for now
-        let value = Value::try_from(self.value.clone())?;
-        Ok(value)
+    pub fn balance(&self) -> Result<Balance, ParserError> {
+        let mut balance = Balance::new();
+        balance.add(Imbalance{
+            value: Value::try_from(self.value.clone())?,
+            sign: Sign::Required,
+        })?;
+        Ok(balance)
     }
 
     pub fn get_rseed(&self) -> Result<&[u8], ParserError> {

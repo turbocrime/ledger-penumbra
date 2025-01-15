@@ -131,7 +131,6 @@ mod test {
     use crate::keys::spend_key::SpendKeyBytes;
     use decaf377::Fq;
     use decaf377_rdsa::{SpendAuth, VerificationKey};
-    use std::println;
     const SPEND_KEY: &str = "ff726c71bcec76abc6a88cba71df655b28de6580edbd33c7415fdfded2e422e7";
     const SPEND_ZEMU_KEY: &str = "a1ffba0c37931f0a626137520da650632d35853bf591b36bb428630a4d87c4dc";
     const ACCOUNT_IDX: u32 = 1;
@@ -255,7 +254,6 @@ mod test {
         fvk_2.to_bytes_into(&mut keys_2.fvk).unwrap();
 
         let s_2 = hex::encode(keys_2.fvk);
-        println!("HOLA {}", s_2);
 
         assert_eq!(s, s_2);
     }

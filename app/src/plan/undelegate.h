@@ -24,6 +24,12 @@ extern "C" {
 #endif
 
 parser_error_t decode_undelegate_plan(const bytes_t *data, undelegate_plan_t *undelegate);
+parser_error_t undelegate_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
+parser_error_t undelegate_getItem(const parser_context_t *ctx, const undelegate_plan_t *undelegate, uint8_t actionIdx,
+                                  char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx,
+                                  uint8_t *pageCount);
+parser_error_t undelegate_printValue(const parser_context_t *ctx, const undelegate_plan_t *undelegate, char *outVal,
+                                     uint16_t outValLen);
 
 #ifdef __cplusplus
 }
