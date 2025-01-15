@@ -16,17 +16,17 @@
 
 use crate::keys::FullViewingKey;
 use crate::parser::{
+    amount::{Amount, AmountC},
     bytes::BytesC,
-    amount::{AmountC, Amount},
     effect_hash::{create_personalized_state, EffectHash},
-    note::{NoteC, Note},
+    note::{Note, NoteC},
     nullifier::Nullifier,
     value::Value,
 };
+use crate::utils::protobuf::encode_varint;
+use crate::ParserError;
 use decaf377::Fr;
 use decaf377_rdsa::{SpendAuth, VerificationKey};
-use crate::ParserError;
-use crate::utils::protobuf::encode_varint;
 
 pub struct Body {
     /// The proposal ID the vote is for.
@@ -67,7 +67,8 @@ impl DelegatorVotePlanC {
     pub fn effect_hash(&self, fvk: &FullViewingKey) -> Result<EffectHash, ParserError> {
         let body = self.delegator_vote_body(fvk)?;
 
-        let mut state = create_personalized_state("/penumbra.core.component.governance.v1.DelegatorVoteBody");
+        let mut state =
+            create_personalized_state("/penumbra.core.component.governance.v1.DelegatorVoteBody");
 
         // proposal
         let mut encoded = [0u8; 10];
@@ -91,7 +92,7 @@ impl DelegatorVotePlanC {
         len = encode_varint(body.vote as u64, &mut encoded[pos..]);
         state.update(&encoded[..len + 1]);
 
-        // value amount 
+        // value amount
         state.update(&[0x22]);
         let (value, value_len) = body.value.to_proto();
         state.update(&value[..value_len]);

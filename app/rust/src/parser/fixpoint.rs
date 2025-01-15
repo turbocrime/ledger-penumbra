@@ -1,6 +1,6 @@
-use ethnum::U256;
-use crate::parser::ParserError;
 use crate::parser::amount::Amount;
+use crate::parser::ParserError;
+use ethnum::U256;
 use std::ops::Mul;
 
 #[derive(Copy, Clone)]

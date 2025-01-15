@@ -14,22 +14,22 @@
 *  limitations under the License.
 ********************************************************************************/
 
-use crate::parser::{
-    bytes::BytesC,
-    identity_key::IdentityKeyC,
-    amount::AmountC,
-    penalty::{PenaltyC, Penalty},
-    effect_hash::{create_personalized_state, EffectHash},
-    commitment::Commitment,
-    value::Balance,
-    id::Id,
-    id::AssetId,
-};
-use decaf377::{Fr, Fq};
-use crate::ParserError;
 use crate::ffi::bech32::bech32_encode;
-use itoa::Buffer;
+use crate::parser::{
+    amount::AmountC,
+    bytes::BytesC,
+    commitment::Commitment,
+    effect_hash::{create_personalized_state, EffectHash},
+    id::AssetId,
+    id::Id,
+    identity_key::IdentityKeyC,
+    penalty::{Penalty, PenaltyC},
+    value::Balance,
+};
 use crate::utils::protobuf::encode_varint;
+use crate::ParserError;
+use decaf377::{Fq, Fr};
+use itoa::Buffer;
 
 pub struct Body {
     /// The identity key of the validator to undelegate from.
@@ -63,7 +63,8 @@ impl UndelegateClaimPlanC {
     pub fn effect_hash(&self) -> Result<EffectHash, ParserError> {
         let body = self.undelegate_claim_body()?;
 
-        let mut state = create_personalized_state("/penumbra.core.component.stake.v1.UndelegateClaimBody");
+        let mut state =
+            create_personalized_state("/penumbra.core.component.stake.v1.UndelegateClaimBody");
 
         state.update(&[0x0a, 0x22, 0x0a, 0x20]); // encode header 0a220a20 validator_identity
         state.update(&body.validator_identity);
@@ -84,8 +85,18 @@ impl UndelegateClaimPlanC {
     }
 
     pub fn undelegate_claim_body(&self) -> Result<Body, ParserError> {
-        let validator_identity: [u8; 32] = self.validator_identity.ik.get_bytes()?.try_into().map_err(|_| ParserError::InvalidLength)?;
-        let penalty = self.penalty.inner.get_bytes()?.try_into().map_err(|_| ParserError::InvalidLength)?;
+        let validator_identity: [u8; 32] = self
+            .validator_identity
+            .ik
+            .get_bytes()?
+            .try_into()
+            .map_err(|_| ParserError::InvalidLength)?;
+        let penalty = self
+            .penalty
+            .inner
+            .get_bytes()?
+            .try_into()
+            .map_err(|_| ParserError::InvalidLength)?;
         let balance_commitment = self.balance()?.commit(self.get_balance_blinding_fr()?)?;
 
         let body = Body {
@@ -110,27 +121,34 @@ impl UndelegateClaimPlanC {
     pub fn balance(&self) -> Result<Balance, ParserError> {
         let penalty = Penalty::try_from(self.penalty.clone())?;
         let unbonding_amount = self.unbonding_amount.clone().try_into()?;
-        penalty
-            .balance_for_claim(self.unbonding_id()?, unbonding_amount)
+        penalty.balance_for_claim(self.unbonding_id()?, unbonding_amount)
     }
 
     pub fn unbonding_id(&self) -> Result<Id, ParserError> {
         let hrp = "penumbravalid";
         let mut validator_identity_bytes = [0u8; 72];
-        bech32_encode(hrp, self.validator_identity.ik.get_bytes()?, &mut validator_identity_bytes).unwrap();
-    
+        bech32_encode(
+            hrp,
+            self.validator_identity.ik.get_bytes()?,
+            &mut validator_identity_bytes,
+        )
+        .unwrap();
+
         let mut result = [0u8; 150];
         let prefix = b"uunbonding_start_at_";
-    
+
         let mut buffer = Buffer::new();
         let unbonding_start_height_str = buffer.format(self.unbonding_start_height).as_bytes();
-        let id_len = prefix.len() + unbonding_start_height_str.len() + 1 + validator_identity_bytes.len();
-    
+        let id_len =
+            prefix.len() + unbonding_start_height_str.len() + 1 + validator_identity_bytes.len();
+
         result[..prefix.len()].copy_from_slice(prefix);
-        result[prefix.len()..prefix.len() + unbonding_start_height_str.len()].copy_from_slice(unbonding_start_height_str);
+        result[prefix.len()..prefix.len() + unbonding_start_height_str.len()]
+            .copy_from_slice(unbonding_start_height_str);
         result[prefix.len() + unbonding_start_height_str.len()] = b'_';
-        result[prefix.len() + unbonding_start_height_str.len() + 1..id_len].copy_from_slice(&validator_identity_bytes);
-    
+        result[prefix.len() + unbonding_start_height_str.len() + 1..id_len]
+            .copy_from_slice(&validator_identity_bytes);
+
         unsafe {
             let data_slice = std::slice::from_raw_parts(result.as_ptr(), id_len);
             if let Ok(asset) = AssetId::new(std::str::from_utf8(data_slice).unwrap()) {

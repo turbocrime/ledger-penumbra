@@ -21,8 +21,8 @@ use crate::parser::{
     id::{Id, IdC},
     ParserError,
 };
-use decaf377::Fr;
 use crate::utils::protobuf::encode_varint;
+use decaf377::Fr;
 
 #[derive(Clone)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
@@ -76,13 +76,13 @@ impl Balance {
         if !self.has_valid_imbalance() {
             return Err(ParserError::InvalidLength);
         }
-    
+
         let mut commitment = decaf377::Element::IDENTITY;
-    
+
         for imbalance in self.imbalances.iter().flatten() {
             let g_v = imbalance.value.asset_id.value_generator();
             let amount_fr: Fr = Into::into(imbalance.value.amount);
-    
+
             if amount_fr.ne(&Fr::ZERO) {
                 match imbalance.sign {
                     Sign::Required => {
@@ -94,10 +94,10 @@ impl Balance {
                 }
             }
         }
-    
+
         let value_blinding_generator = Commitment::value_blinding_generator();
         commitment += blinding_factor * value_blinding_generator;
-    
+
         Ok(commitment.into())
     }
 
@@ -128,14 +128,14 @@ impl Value {
 
         // Calculate the total length of the value
         let value_len = 1 + value_amount_len + Id::PROTO_LEN;
-        
+
         // Encode the length as a varint
         let mut value_len_encoded = [0u8; 10];
         let len = encode_varint(value_len as u64, &mut value_len_encoded);
 
         // Initialize the proto buffer
         let mut proto = [0u8; 62];
-        
+
         // Copy the encoded length into the proto buffer
         proto[..len].copy_from_slice(&value_len_encoded[..len]);
 

@@ -15,16 +15,15 @@
 ********************************************************************************/
 use crate::parser::bytes::BytesC;
 use crate::parser::{
-    fixpoint::U128x128,
-    ParserError,
     amount::Amount,
-    value::{Balance, Imbalance, Sign},
+    fee::STAKING_TOKEN_ASSET_ID_BYTES,
+    fixpoint::U128x128,
     id::Id,
     value::Value,
-    fee::STAKING_TOKEN_ASSET_ID_BYTES,
+    value::{Balance, Imbalance, Sign},
+    ParserError,
 };
 use decaf377::Fq;
-
 
 #[derive(Copy, Clone)]
 pub struct Penalty(U128x128);
@@ -44,21 +43,25 @@ impl Penalty {
     /// This method takes the `unbonding_id` rather than the `UnbondingToken` so
     /// that it can be used in mock proof verification, where computation of the
     /// unbonding token's asset ID happens outside of the circuit.
-    pub fn balance_for_claim(&self, unbonding_id: Id, unbonding_amount: Amount) -> Result<Balance, ParserError> {
+    pub fn balance_for_claim(
+        &self,
+        unbonding_id: Id,
+        unbonding_amount: Amount,
+    ) -> Result<Balance, ParserError> {
         // The undelegate claim action subtracts the unbonding amount and adds
         // the unbonded amount from the transaction's value balance.
         let mut balance = Balance::new();
-        balance.add(Imbalance{
-            value: Value{
+        balance.add(Imbalance {
+            value: Value {
                 amount: unbonding_amount,
                 asset_id: unbonding_id,
             },
             sign: Sign::Required,
         })?;
-        balance.add(Imbalance{
-            value: Value{
+        balance.add(Imbalance {
+            value: Value {
                 amount: self.apply_to_amount(unbonding_amount),
-                asset_id: Id(Fq::from_le_bytes_mod_order(&STAKING_TOKEN_ASSET_ID_BYTES))
+                asset_id: Id(Fq::from_le_bytes_mod_order(&STAKING_TOKEN_ASSET_ID_BYTES)),
             },
             sign: Sign::Provided,
         })?;
@@ -77,7 +80,9 @@ impl<'a> TryFrom<&'a [u8]> for Penalty {
     type Error = ParserError;
 
     fn try_from(value: &'a [u8]) -> Result<Self, Self::Error> {
-        U128x128::try_from(value).map(Self).map_err(|_| ParserError::InvalidLength)
+        U128x128::try_from(value)
+            .map(Self)
+            .map_err(|_| ParserError::InvalidLength)
     }
 }
 

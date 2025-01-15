@@ -25,8 +25,9 @@ extern "C" {
 
 parser_error_t decode_delegate_plan(const bytes_t *data, delegate_plan_t *delegate);
 parser_error_t delegate_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
-parser_error_t delegate_getItem(const parser_context_t *ctx, const delegate_plan_t *delegate, uint8_t actionIdx, char *outKey,
-                               uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
+parser_error_t delegate_getItem(const parser_context_t *ctx, const delegate_plan_t *delegate, uint8_t actionIdx,
+                                char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx,
+                                uint8_t *pageCount);
 parser_error_t delegate_printValue(const parser_context_t *ctx, const delegate_plan_t *delegate, char *outVal,
                                    uint16_t outValLen);
 

@@ -15,10 +15,10 @@
 ********************************************************************************/
 
 use crate::constants::AMOUNT_LEN_BYTES;
+use crate::parser::fixpoint::U128x128;
 use crate::utils::protobuf::encode_varint;
 use crate::ParserError;
 use decaf377::{Fq, Fr};
-use crate::parser::fixpoint::U128x128;
 
 #[derive(Copy, Clone)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]

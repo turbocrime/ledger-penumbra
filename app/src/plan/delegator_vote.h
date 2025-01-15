@@ -25,10 +25,11 @@ extern "C" {
 
 parser_error_t decode_delegator_vote_plan(const bytes_t *data, delegator_vote_plan_t *delegator_vote);
 parser_error_t delegator_vote_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
-parser_error_t delegator_vote_getItem(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote, uint8_t actionIdx, char *outKey,
-                               uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount);
-parser_error_t delegator_vote_printValue(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote, char *outVal,
-                                   uint16_t outValLen);
+parser_error_t delegator_vote_getItem(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote,
+                                      uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen,
+                                      uint8_t pageIdx, uint8_t *pageCount);
+parser_error_t delegator_vote_printValue(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote,
+                                         char *outVal, uint16_t outValLen);
 
 #ifdef __cplusplus
 }

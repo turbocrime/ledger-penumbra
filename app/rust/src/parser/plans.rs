@@ -19,17 +19,17 @@ use crate::parser::{
 };
 
 use crate::constants::EFFECT_HASH_LEN;
+use crate::ffi::c_api::c_fvk_bytes;
 use crate::parser::bytes::BytesC;
 use crate::parser::effect_hash::EffectHash;
 use crate::parser::parameters::ParametersHash;
-use crate::ffi::c_api::c_fvk_bytes;
 use crate::ParserError;
 
+pub mod delegator_vote;
 pub mod output;
 pub mod spend;
 pub mod swap;
 pub mod undelegate_claim;
-pub mod delegator_vote;
 
 #[repr(C)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
@@ -261,8 +261,6 @@ pub unsafe extern "C" fn rs_delegator_vote_action_hash(
     crate::zlog("rs_delegator_vote_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-
-
     if output.len() < 64 {
         return ParserError::Ok as u32;
     }
@@ -348,14 +346,14 @@ mod tests {
     use crate::parser::detection::DetectionDataPlanC;
     use crate::parser::fee::FeeC;
     use crate::parser::id::IdC;
+    use crate::parser::identity_key::IdentityKeyC;
     use crate::parser::memo::MemoPlanC;
     use crate::parser::memo_plain_text::MemoPlaintextC;
     use crate::parser::note::NoteC;
+    use crate::parser::penalty::PenaltyC;
     use crate::parser::swap_plaintext::SwapPlaintextC;
     use crate::parser::trading_pair::TradingPairC;
     use crate::parser::value::ValueC;
-    use crate::parser::penalty::PenaltyC;
-    use crate::parser::identity_key::IdentityKeyC;
 
     #[test]
     fn test_transaction_plan_hash() {
@@ -722,7 +720,6 @@ mod tests {
             ik: BytesC::from_slice(&ik_bytes),
         };
 
-
         // Create dummy penalty
         let inner_bytes =
             hex::decode("00000000000000000000000000000000fecbfb15b573eab367a0f9096bb98c7f")
@@ -761,8 +758,10 @@ mod tests {
             let computed_hash = hex::encode(output_action_hash_bytes.as_array());
             assert_eq!(computed_hash, expected_hash);
         } else {
-            panic!("output_action_hash is not Ok Error: {:?}", output_action_hash);
-
+            panic!(
+                "output_action_hash is not Ok Error: {:?}",
+                output_action_hash
+            );
         }
     }
 
@@ -848,5 +847,4 @@ mod tests {
             panic!("spend_action_hash is not Ok");
         }
     }
-
 }

@@ -32,51 +32,49 @@ describe('Standard', function () {
   })
 
   describe.each(ACTIONS_TESTCASES)('Wallet transactions', function (data) {
-  test.concurrent.each(models)('sign', async function (m) {
-    const sim = new Zemu(m.path)
-    try {
-      await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PenumbraApp(sim.getTransport())
+    test.concurrent.each(models)('sign', async function (m) {
+      const sim = new Zemu(m.path)
+      try {
+        await sim.start({ ...defaultOptions, model: m.name })
+        const app = new PenumbraApp(sim.getTransport())
 
-      const messageToSign = Buffer.from(data.blob, 'hex')
+        const messageToSign = Buffer.from(data.blob, 'hex')
 
-      const addressIndex: AddressIndex = {
-        account: ACCOUNT_ID,
-        randomizer: undefined,
+        const addressIndex: AddressIndex = {
+          account: ACCOUNT_ID,
+          randomizer: undefined,
+        }
+        // do not wait here... we need to navigate
+        const signatureRequest = app.sign(PENUMBRA_PATH, messageToSign)
+
+        // Wait until we are not in the main menu
+        await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
+        await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-sign_${data.name}`)
+
+        const signatureResponse = await signatureRequest
+        console.log('Effect hash:', signatureResponse.effectHash.toString('hex'))
+
+        if (signatureResponse.spendAuthSignatures.length > 0) {
+          signatureResponse.spendAuthSignatures.forEach((signature, index) => {
+            console.log(`Spend Auth Signature ${index + 1}: ${signature.toString('hex')}`)
+          })
+        } else {
+          console.log('No spend auth signatures available.')
+        }
+
+        if (signatureResponse.delegatorVoteSignatures.length > 0) {
+          signatureResponse.delegatorVoteSignatures.forEach((signature, index) => {
+            console.log(`Delegator Vote Signature ${index + 1}: ${signature.toString('hex')}`)
+          })
+        } else {
+          console.log('No delegator vote signatures available.')
+        }
+
+        // Now verify effect hash
+        expect(signatureResponse.effectHash.toString('hex')).toEqual(data.expected_effect_hash)
+      } finally {
+        await sim.close()
       }
-      // do not wait here... we need to navigate
-      const signatureRequest = app.sign(PENUMBRA_PATH, messageToSign)
-
-      // Wait until we are not in the main menu
-      await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
-      await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-sign_${data.name}`)
-
-      
-      const signatureResponse = await signatureRequest
-      console.log("Effect hash:", signatureResponse.effectHash.toString('hex'))
-
-      if (signatureResponse.spendAuthSignatures.length > 0) {
-        signatureResponse.spendAuthSignatures.forEach((signature, index) => {
-          console.log(`Spend Auth Signature ${index + 1}: ${signature.toString('hex')}`);
-        })
-      } else {
-        console.log("No spend auth signatures available.");
-      }
-
-      if (signatureResponse.delegatorVoteSignatures.length > 0) {
-        signatureResponse.delegatorVoteSignatures.forEach((signature, index) => {
-          console.log(`Delegator Vote Signature ${index + 1}: ${signature.toString('hex')}`);
-        });
-      } else {
-        console.log("No delegator vote signatures available.");
-      }
-
-      // Now verify effect hash
-      expect(signatureResponse.effectHash.toString('hex')).toEqual(data.expected_effect_hash)
-
-    } finally {
-      await sim.close()
-    }
     })
   })
 })

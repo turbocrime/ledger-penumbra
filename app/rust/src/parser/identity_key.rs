@@ -1,7 +1,6 @@
 use crate::parser::bytes::BytesC;
 use decaf377_rdsa::{SpendAuth, VerificationKeyBytes};
 
-
 pub struct IdentityKey(pub VerificationKeyBytes<SpendAuth>);
 
 #[repr(C)]
@@ -10,5 +9,3 @@ pub struct IdentityKey(pub VerificationKeyBytes<SpendAuth>);
 pub struct IdentityKeyC {
     pub ik: BytesC,
 }
-
-

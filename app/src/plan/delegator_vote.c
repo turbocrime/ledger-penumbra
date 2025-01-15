@@ -40,7 +40,8 @@ static void vote_to_string(const uint8_t vote, char *outVal, uint16_t outValLen)
 }
 
 parser_error_t decode_delegator_vote_plan(const bytes_t *data, delegator_vote_plan_t *delegator_vote) {
-    penumbra_core_component_governance_v1_DelegatorVotePlan delegator_vote_plan = penumbra_core_component_governance_v1_DelegatorVotePlan_init_default;
+    penumbra_core_component_governance_v1_DelegatorVotePlan delegator_vote_plan =
+        penumbra_core_component_governance_v1_DelegatorVotePlan_init_default;
 
     pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
@@ -48,14 +49,19 @@ parser_error_t decode_delegator_vote_plan(const bytes_t *data, delegator_vote_pl
     // Set up fixed size fields
     fixed_size_field_t randomizer_arg, proof_blinding_r_arg, proof_blinding_s_arg;
     setup_decode_fixed_field(&delegator_vote_plan.randomizer, &randomizer_arg, &delegator_vote->randomizer, 32);
-    setup_decode_fixed_field(&delegator_vote_plan.proof_blinding_r, &proof_blinding_r_arg, &delegator_vote->proof_blinding_r, 32);
-    setup_decode_fixed_field(&delegator_vote_plan.proof_blinding_s, &proof_blinding_s_arg, &delegator_vote->proof_blinding_s, 32);
+    setup_decode_fixed_field(&delegator_vote_plan.proof_blinding_r, &proof_blinding_r_arg, &delegator_vote->proof_blinding_r,
+                             32);
+    setup_decode_fixed_field(&delegator_vote_plan.proof_blinding_s, &proof_blinding_s_arg, &delegator_vote->proof_blinding_s,
+                             32);
 
     // staked_note
     fixed_size_field_t address_inner_arg, asset_id_arg, rseed_arg;
-    setup_decode_fixed_field(&delegator_vote_plan.staked_note.address.inner, &address_inner_arg, &delegator_vote->staked_note.address.inner, 80);
-    setup_decode_fixed_field(&delegator_vote_plan.staked_note.value.asset_id.inner, &asset_id_arg, &delegator_vote->staked_note.value.asset_id.inner, ASSET_ID_LEN);
-    setup_decode_fixed_field(&delegator_vote_plan.staked_note.rseed, &rseed_arg, &delegator_vote->staked_note.rseed, RSEED_LEN);
+    setup_decode_fixed_field(&delegator_vote_plan.staked_note.address.inner, &address_inner_arg,
+                             &delegator_vote->staked_note.address.inner, 80);
+    setup_decode_fixed_field(&delegator_vote_plan.staked_note.value.asset_id.inner, &asset_id_arg,
+                             &delegator_vote->staked_note.value.asset_id.inner, ASSET_ID_LEN);
+    setup_decode_fixed_field(&delegator_vote_plan.staked_note.rseed, &rseed_arg, &delegator_vote->staked_note.rseed,
+                             RSEED_LEN);
 
     if (!pb_decode(&spend_stream, penumbra_core_component_governance_v1_DelegatorVotePlan_fields, &delegator_vote_plan)) {
         return parser_delegate_plan_error;
@@ -101,8 +107,9 @@ parser_error_t delegator_vote_getNumItems(const parser_context_t *ctx, uint8_t *
     return parser_ok;
 }
 
-parser_error_t delegator_vote_getItem(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote, uint8_t actionIdx, char *outKey,
-                               uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
+parser_error_t delegator_vote_getItem(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote,
+                                      uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen,
+                                      uint8_t pageIdx, uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (delegator_vote == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;
@@ -117,8 +124,8 @@ parser_error_t delegator_vote_getItem(const parser_context_t *ctx, const delegat
     return parser_ok;
 }
 
-parser_error_t delegator_vote_printValue(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote, char *outVal,
-                                   uint16_t outValLen) {
+parser_error_t delegator_vote_printValue(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote,
+                                         char *outVal, uint16_t outValLen) {
     if (ctx == NULL || delegator_vote == NULL || outVal == NULL) {
         return parser_no_data;
     }
@@ -149,15 +156,14 @@ parser_error_t delegator_vote_printValue(const parser_context_t *ctx, const dele
 
     // add unbonded amount
     static const uint8_t default_asset_id[ASSET_ID_LEN] = STAKING_TOKEN_ASSET_ID_BYTES;
-    value_t local_value = {
-        .amount.hi = delegator_vote->unbonded_amount.hi,
-        .amount.lo = delegator_vote->unbonded_amount.lo,
-        .asset_id.inner.ptr = default_asset_id,
-        .asset_id.inner.len = ASSET_ID_LEN,
-        .has_amount = true,
-        .has_asset_id = true
-    };
-    CHECK_ERROR(printValue(ctx, &local_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value, outValLen - written_value));
+    value_t local_value = {.amount.hi = delegator_vote->unbonded_amount.hi,
+                           .amount.lo = delegator_vote->unbonded_amount.lo,
+                           .asset_id.inner.ptr = default_asset_id,
+                           .asset_id.inner.len = ASSET_ID_LEN,
+                           .has_amount = true,
+                           .has_asset_id = true};
+    CHECK_ERROR(printValue(ctx, &local_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+                           outValLen - written_value));
 
     return parser_ok;
 }

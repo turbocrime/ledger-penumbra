@@ -26,7 +26,7 @@ use crate::parser::{
     rseed::Rseed,
     symmetric::PayloadKey,
     symmetric::{OvkWrappedKey, WrappedMemoKey},
-    value::{Sign, Value, ValueC, Balance, Imbalance},
+    value::{Balance, Imbalance, Sign, Value, ValueC},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -114,7 +114,7 @@ impl OutputPlanC {
 
     pub fn balance(&self) -> Result<Balance, ParserError> {
         let mut balance = Balance::new();
-        balance.add(Imbalance{
+        balance.add(Imbalance {
             value: Value::try_from(self.value.clone())?,
             sign: Sign::Required,
         })?;

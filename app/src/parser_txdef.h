@@ -41,12 +41,7 @@ extern "C" {
 #define MAX_SYMBOL_LEN 80
 #define MAX_ASSET_NAME_LEN 120
 
-typedef enum {
-    VOTE_UNSPECIFIED = 0,
-    VOTE_ABSTAIN = 1,
-    VOTE_YES = 2,
-    VOTE_NO = 3
-} governance_vote_e;
+typedef enum { VOTE_UNSPECIFIED = 0, VOTE_ABSTAIN = 1, VOTE_YES = 2, VOTE_NO = 3 } governance_vote_e;
 
 typedef struct {
     const uint8_t *ptr;

@@ -62,9 +62,9 @@ parser_error_t undelegate_claim_getNumItems(const parser_context_t *ctx, uint8_t
     return parser_ok;
 }
 
-parser_error_t undelegate_claim_getItem(const parser_context_t *ctx, const undelegate_claim_plan_t *undelegate, uint8_t actionIdx,
-                                  char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx,
-                                  uint8_t *pageCount) {
+parser_error_t undelegate_claim_getItem(const parser_context_t *ctx, const undelegate_claim_plan_t *undelegate,
+                                        uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal,
+                                        uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (undelegate == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;
@@ -79,8 +79,8 @@ parser_error_t undelegate_claim_getItem(const parser_context_t *ctx, const undel
     return parser_ok;
 }
 
-parser_error_t undelegate_claim_printValue(const parser_context_t *ctx, const undelegate_claim_plan_t *undelegate, char *outVal,
-                                     uint16_t outValLen) {
+parser_error_t undelegate_claim_printValue(const parser_context_t *ctx, const undelegate_claim_plan_t *undelegate,
+                                           char *outVal, uint16_t outValLen) {
     if (ctx == NULL || undelegate == NULL || outVal == NULL) {
         return parser_no_data;
     }
@@ -108,7 +108,8 @@ parser_error_t undelegate_claim_printValue(const parser_context_t *ctx, const un
     rs_get_asset_id_from_metadata(&metadata, asset_id_bytes, ASSET_ID_LEN);
 
     // add unbonded amount
-    snprintf((char *)metadata_buffer, sizeof(metadata_buffer), "uunbonding_start_at_%llu_%s", undelegate->unbonding_start_height, validator_identity_bytes);
+    snprintf((char *)metadata_buffer, sizeof(metadata_buffer), "uunbonding_start_at_%llu_%s",
+             undelegate->unbonding_start_height, validator_identity_bytes);
     metadata.len = strlen((char *)metadata_buffer);
     rs_get_asset_id_from_metadata(&metadata, asset_id_bytes, ASSET_ID_LEN);
 

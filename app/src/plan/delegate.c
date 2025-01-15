@@ -57,8 +57,9 @@ parser_error_t delegate_getNumItems(const parser_context_t *ctx, uint8_t *num_it
     return parser_ok;
 }
 
-parser_error_t delegate_getItem(const parser_context_t *ctx, const delegate_plan_t *delegate, uint8_t actionIdx, char *outKey,
-                               uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
+parser_error_t delegate_getItem(const parser_context_t *ctx, const delegate_plan_t *delegate, uint8_t actionIdx,
+                                char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx,
+                                uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (delegate == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;
@@ -90,7 +91,8 @@ parser_error_t delegate_printValue(const parser_context_t *ctx, const delegate_p
     uint16_t written_value = strlen(outVal);
 
     // add validator identity
-    CHECK_ERROR(encodeIdentityKey(delegate->validator_identity.ik.ptr, delegate->validator_identity.ik.len, outVal + written_value, outValLen - written_value));
+    CHECK_ERROR(encodeIdentityKey(delegate->validator_identity.ik.ptr, delegate->validator_identity.ik.len,
+                                  outVal + written_value, outValLen - written_value));
     written_value = strlen(outVal);
 
     // add "Input"
@@ -106,7 +108,8 @@ parser_error_t delegate_printValue(const parser_context_t *ctx, const delegate_p
     local_value.asset_id.inner.len = ASSET_ID_LEN;
     local_value.has_amount = true;
     local_value.has_asset_id = true;
-    CHECK_ERROR(printValue(ctx, &local_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value, outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &local_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+                           outValLen - written_value));
 
     return parser_ok;
 }

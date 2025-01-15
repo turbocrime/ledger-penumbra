@@ -21,7 +21,7 @@ use crate::parser::{
     effect_hash::{create_personalized_state, EffectHash},
     note::{Note, NoteC},
     nullifier::Nullifier,
-    value::{Sign, Value, Balance, Imbalance},
+    value::{Balance, Imbalance, Sign, Value},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -65,9 +65,7 @@ impl SpendPlanC {
 
     pub fn spend_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {
         Ok(Body {
-            balance_commitment: self
-                .balance()?
-                .commit(self.get_value_blinding_fr()?)?,
+            balance_commitment: self.balance()?.commit(self.get_value_blinding_fr()?)?,
             nullifier: self.nullifier(fvk)?,
             rk: self.rk(fvk)?,
         })
@@ -75,7 +73,7 @@ impl SpendPlanC {
 
     pub fn balance(&self) -> Result<Balance, ParserError> {
         let mut balance = Balance::new();
-        balance.add(Imbalance{
+        balance.add(Imbalance {
             value: Value::try_from(self.note.value.clone())?,
             sign: Sign::Provided,
         })?;

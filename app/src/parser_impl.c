@@ -17,6 +17,7 @@
 #include "parser_impl.h"
 
 #include "delegate.h"
+#include "delegator_vote.h"
 #include "ics20_withdrawal.h"
 #include "output.h"
 #include "parameters.h"
@@ -29,7 +30,6 @@
 #include "swap.h"
 #include "undelegate.h"
 #include "undelegate_claim.h"
-#include "delegator_vote.h"
 #include "zxformat.h"
 
 static bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg);
@@ -102,7 +102,8 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
             break;
         case penumbra_core_transaction_v1_ActionPlan_undelegate_claim_tag:
             decode_arg[actions_qty].action_data = action_data_4;
-            CHECK_ACTION_ERROR(decode_undelegate_claim_plan(&action_data_4, &decode_arg[actions_qty].action.undelegate_claim));
+            CHECK_ACTION_ERROR(
+                decode_undelegate_claim_plan(&action_data_4, &decode_arg[actions_qty].action.undelegate_claim));
             break;
         case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
             decode_arg[actions_qty].action_data = action_data_4;

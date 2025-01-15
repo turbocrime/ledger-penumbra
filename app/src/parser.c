@@ -23,6 +23,8 @@
 
 #include "coin.h"
 #include "crypto.h"
+#include "delegate.h"
+#include "delegator_vote.h"
 #include "ics20_withdrawal.h"
 #include "memo.h"
 #include "output.h"
@@ -31,11 +33,9 @@
 #include "parser_impl.h"
 #include "spend.h"
 #include "swap.h"
-#include "delegate.h"
-#include "delegator_vote.h"
+#include "tx_metadata.h"
 #include "undelegate.h"
 #include "undelegate_claim.h"
-#include "tx_metadata.h"
 
 static uint8_t action_idx = 0;
 
@@ -204,15 +204,16 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
                 break;
             case penumbra_core_transaction_v1_ActionPlan_undelegate_tag:
                 CHECK_ERROR(undelegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate, action_idx + 1,
-                                             outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                                               outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_undelegate_claim_tag:
-                CHECK_ERROR(undelegate_claim_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate_claim, action_idx + 1,
-                                             outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(undelegate_claim_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate_claim,
+                                                     action_idx + 1, outKey, outKeyLen, outVal, outValLen, pageIdx,
+                                                     pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
-                CHECK_ERROR(delegator_vote_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegator_vote, action_idx + 1,
-                                             outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(delegator_vote_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegator_vote,
+                                                   action_idx + 1, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             default:
                 return parser_unexpected_error;
