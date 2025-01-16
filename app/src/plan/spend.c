@@ -23,7 +23,7 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     penumbra_core_component_shielded_pool_v1_SpendPlan spend_plan =
         penumbra_core_component_shielded_pool_v1_SpendPlan_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -46,7 +46,7 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     fixed_size_field_t rseed_arg;
     setup_decode_fixed_field(&spend_plan.note.rseed, &rseed_arg, &output->note.rseed, RSEED_LEN);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_shielded_pool_v1_SpendPlan_fields, &spend_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_shielded_pool_v1_SpendPlan_fields, &spend_plan)) {
         return parser_spend_plan_error;
     }
 

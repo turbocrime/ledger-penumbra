@@ -32,6 +32,9 @@
 #include "undelegate_claim.h"
 #include "zxformat.h"
 
+#define ACTION_OFFSET_3 3
+#define ACTION_OFFSET_4 4
+
 static bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg);
 static bool decode_detection_data(pb_istream_t *stream, const pb_field_t *field, void **arg);
 
@@ -63,10 +66,15 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
         return false;
     }
 
+    if (stream->bytes_left < ACTION_OFFSET_4) {
+        decode_error = parser_unexpected_data;
+        return false;
+    }
+
     penumbra_core_transaction_v1_ActionPlan action = penumbra_core_transaction_v1_ActionPlan_init_default;
 
-    bytes_t action_data_3 = {.ptr = stream->state + 3, .len = stream->bytes_left - 3};
-    bytes_t action_data_4 = {.ptr = stream->state + 4, .len = stream->bytes_left - 4};
+    bytes_t action_data_3 = {.ptr = stream->state + ACTION_OFFSET_3, .len = stream->bytes_left - ACTION_OFFSET_3};
+    bytes_t action_data_4 = {.ptr = stream->state + ACTION_OFFSET_4, .len = stream->bytes_left - ACTION_OFFSET_4};
 
     if (!pb_decode(stream, penumbra_core_transaction_v1_ActionPlan_fields, &action)) {
         return false;

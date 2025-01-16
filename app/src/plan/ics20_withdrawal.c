@@ -25,7 +25,7 @@ parser_error_t decode_ics20_withdrawal_plan(const bytes_t *data, ics20_withdrawa
     penumbra_core_component_ibc_v1_Ics20Withdrawal withdrawal_plan =
         penumbra_core_component_ibc_v1_Ics20Withdrawal_init_default;
 
-    pb_istream_t withdrawal_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -40,7 +40,7 @@ parser_error_t decode_ics20_withdrawal_plan(const bytes_t *data, ics20_withdrawa
                                 &withdrawal->destination_chain_address);
     setup_decode_variable_field(&withdrawal_plan.source_channel, &source_channel_arg, &withdrawal->source_channel);
 
-    if (!pb_decode(&withdrawal_stream, penumbra_core_component_ibc_v1_Ics20Withdrawal_fields, &withdrawal_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_ibc_v1_Ics20Withdrawal_fields, &withdrawal_plan)) {
         return parser_ics20_withdrawal_plan_error;
     }
 

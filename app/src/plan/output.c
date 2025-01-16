@@ -24,7 +24,7 @@ parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
     penumbra_core_component_shielded_pool_v1_OutputPlan output_plan =
         penumbra_core_component_shielded_pool_v1_OutputPlan_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -43,7 +43,7 @@ parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
     fixed_size_field_t dest_address_inner_arg;
     setup_decode_fixed_field(&output_plan.dest_address.inner, &dest_address_inner_arg, &output->dest_address.inner, 80);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_shielded_pool_v1_OutputPlan_fields, &output_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_shielded_pool_v1_OutputPlan_fields, &output_plan)) {
         return parser_output_plan_error;
     }
 

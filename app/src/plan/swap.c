@@ -28,7 +28,7 @@ bool is_delta_empty(const amount_t *amount, const bool has_delta) {
 parser_error_t decode_swap_plan(const bytes_t *data, swap_plan_t *swap) {
     penumbra_core_component_dex_v1_SwapPlan swap_plan = penumbra_core_component_dex_v1_SwapPlan_init_default;
 
-    pb_istream_t swap_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -47,7 +47,7 @@ parser_error_t decode_swap_plan(const bytes_t *data, swap_plan_t *swap) {
                              &swap->swap_plaintext.claim_address.inner, 80);
     setup_decode_fixed_field(&swap_plan.swap_plaintext.rseed, &rseed_arg, &swap->swap_plaintext.rseed, 32);
 
-    if (!pb_decode(&swap_stream, penumbra_core_component_dex_v1_SwapPlan_fields, &swap_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_dex_v1_SwapPlan_fields, &swap_plan)) {
         return parser_swap_plan_error;
     }
 

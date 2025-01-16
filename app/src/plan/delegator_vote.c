@@ -43,7 +43,7 @@ parser_error_t decode_delegator_vote_plan(const bytes_t *data, delegator_vote_pl
     penumbra_core_component_governance_v1_DelegatorVotePlan delegator_vote_plan =
         penumbra_core_component_governance_v1_DelegatorVotePlan_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -63,7 +63,7 @@ parser_error_t decode_delegator_vote_plan(const bytes_t *data, delegator_vote_pl
     setup_decode_fixed_field(&delegator_vote_plan.staked_note.rseed, &rseed_arg, &delegator_vote->staked_note.rseed,
                              RSEED_LEN);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_governance_v1_DelegatorVotePlan_fields, &delegator_vote_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_governance_v1_DelegatorVotePlan_fields, &delegator_vote_plan)) {
         return parser_delegate_plan_error;
     }
 

@@ -24,7 +24,7 @@
 parser_error_t decode_undelegate_plan(const bytes_t *data, undelegate_plan_t *undelegate) {
     penumbra_core_component_stake_v1_Undelegate undelegate_plan = penumbra_core_component_stake_v1_Undelegate_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -32,7 +32,7 @@ parser_error_t decode_undelegate_plan(const bytes_t *data, undelegate_plan_t *un
     setup_decode_fixed_field(&undelegate_plan.validator_identity.ik, &validator_identity_arg,
                              &undelegate->validator_identity.ik, 32);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_stake_v1_Undelegate_fields, &undelegate_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_stake_v1_Undelegate_fields, &undelegate_plan)) {
         return parser_undelegate_plan_error;
     }
 

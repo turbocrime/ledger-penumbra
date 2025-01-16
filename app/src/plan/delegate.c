@@ -25,7 +25,7 @@
 parser_error_t decode_delegate_plan(const bytes_t *data, delegate_plan_t *delegate) {
     penumbra_core_component_stake_v1_Delegate delegate_plan = penumbra_core_component_stake_v1_Delegate_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -33,7 +33,7 @@ parser_error_t decode_delegate_plan(const bytes_t *data, delegate_plan_t *delega
     setup_decode_fixed_field(&delegate_plan.validator_identity.ik, &validator_identity_arg, &delegate->validator_identity.ik,
                              32);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_stake_v1_Delegate_fields, &delegate_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_stake_v1_Delegate_fields, &delegate_plan)) {
         return parser_delegate_plan_error;
     }
 

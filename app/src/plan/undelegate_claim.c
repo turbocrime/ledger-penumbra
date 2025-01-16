@@ -25,7 +25,7 @@ parser_error_t decode_undelegate_claim_plan(const bytes_t *data, undelegate_clai
     penumbra_core_component_stake_v1_UndelegateClaimPlan undelegate_claim_plan =
         penumbra_core_component_stake_v1_UndelegateClaimPlan_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -40,7 +40,7 @@ parser_error_t decode_undelegate_claim_plan(const bytes_t *data, undelegate_clai
     setup_decode_fixed_field(&undelegate_claim_plan.proof_blinding_s, &proof_blinding_s,
                              &undelegate_claim_claim->proof_blinding_s, 32);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_stake_v1_UndelegateClaimPlan_fields, &undelegate_claim_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_stake_v1_UndelegateClaimPlan_fields, &undelegate_claim_plan)) {
         return parser_undelegate_plan_error;
     }
 

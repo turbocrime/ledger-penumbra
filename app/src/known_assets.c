@@ -417,6 +417,9 @@ static const asset_info_t supported_assets[] = {
 const asset_info_t *asset_info_from_table(const uint8_t asset_id[ASSET_ID_LEN]) {
     unsigned int i;
     unsigned int info_len = sizeof(supported_assets) / sizeof(asset_info_t);
+    if (asset_id == NULL) {
+        return NULL;
+    }
     for (i = 0; i < info_len; i++) {
         if (MEMCMP(supported_assets[i].asset_id, asset_id, ASSET_ID_LEN) == 0) {
             return &supported_assets[i];
