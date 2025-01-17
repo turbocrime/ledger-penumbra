@@ -102,3 +102,6 @@
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an undelegate action
 #define UNDELEGATE_DISPLAY_MAX_LEN (2 * VALUE_DISPLAY_MAX_LEN + 100)  // = 424
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an position_open action
+#define POSITION_OPEN_DISPLAY_MAX_LEN (2 * VALUE_DISPLAY_MAX_LEN + 110)  // = 434

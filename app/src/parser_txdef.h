@@ -43,6 +43,14 @@ extern "C" {
 
 typedef enum { VOTE_UNSPECIFIED = 0, VOTE_ABSTAIN = 1, VOTE_YES = 2, VOTE_NO = 3 } governance_vote_e;
 
+typedef enum {
+    POSITION_STATE_ENUM_UNSPECIFIED = 0,
+    POSITION_STATE_ENUM_OPENED = 1,
+    POSITION_STATE_ENUM_CLOSED = 2,
+    POSITION_STATE_ENUM_WITHDRAWN = 3,
+    POSITION_STATE_ENUM_CLAIMED = 4
+} position_state_enum_t;
+
 typedef struct {
     const uint8_t *ptr;
     uint16_t len;
@@ -142,6 +150,44 @@ typedef struct {
 } vote_t;
 
 typedef struct {
+    uint32_t fee;
+    bool has_p;
+    amount_t p;
+    bool has_q;
+    amount_t q;
+} bare_trading_function_t;
+
+typedef struct {
+    bool has_component;
+    bare_trading_function_t component;
+    bool has_pair;
+    trading_pair_t pair;
+} trading_function_t;
+
+typedef struct {
+    position_state_enum_t state;
+    uint64_t sequence;
+} position_state_t;
+
+typedef struct {
+    bool has_r1;
+    amount_t r1;
+    bool has_r2;
+    amount_t r2;
+} reserves_t;
+
+typedef struct {
+    bool has_phi;
+    trading_function_t phi;
+    bytes_t nonce;
+    bool has_state;
+    position_state_t state;
+    bool has_reserves;
+    reserves_t reserves;
+    bool close_on_fill;
+} position_t;
+
+typedef struct {
     note_t note;
     uint64_t position;
     bytes_t randomizer;
@@ -234,6 +280,11 @@ typedef struct {
 } delegator_vote_plan_t;
 
 typedef struct {
+    bool has_position;
+    position_t position;
+} position_open_plan_t;
+
+typedef struct {
     address_plan_t return_address;
     bytes_t text;
 } memo_plain_text_t;
@@ -265,6 +316,7 @@ typedef struct {
         undelegate_plan_t undelegate;
         undelegate_claim_plan_t undelegate_claim;
         delegator_vote_plan_t delegator_vote;
+        position_open_plan_t position_open;
     } action;
 } action_t;
 

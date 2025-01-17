@@ -30,6 +30,7 @@
 #include "swap.h"
 #include "undelegate.h"
 #include "undelegate_claim.h"
+#include "position_open.h"
 #include "zxformat.h"
 
 #define ACTION_OFFSET_3 3
@@ -116,6 +117,10 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
         case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
             decode_arg[actions_qty].action_data = action_data_4;
             CHECK_ACTION_ERROR(decode_delegator_vote_plan(&action_data_4, &decode_arg[actions_qty].action.delegator_vote));
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
+            decode_arg[actions_qty].action_data = action_data_4;
+            CHECK_ACTION_ERROR(decode_position_open_plan(&action_data_4, &decode_arg[actions_qty].action.position_open));
             break;
         default:
             return false;

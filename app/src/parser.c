@@ -36,6 +36,7 @@
 #include "tx_metadata.h"
 #include "undelegate.h"
 #include "undelegate_claim.h"
+#include "position_open.h"
 
 static uint8_t action_idx = 0;
 
@@ -115,6 +116,9 @@ parser_error_t parser_getNumItems(const parser_context_t *ctx, uint8_t *num_item
                 break;
             case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
                 CHECK_ERROR(delegator_vote_getNumItems(ctx, &action_num_items));
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
+                CHECK_ERROR(position_open_getNumItems(ctx, &action_num_items));
                 break;
             default:
                 return parser_unexpected_error;
@@ -214,6 +218,10 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
             case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
                 CHECK_ERROR(delegator_vote_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegator_vote,
                                                    action_idx + 1, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
+                CHECK_ERROR(position_open_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_open, action_idx + 1,
+                                                 outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             default:
                 return parser_unexpected_error;
