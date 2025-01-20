@@ -182,8 +182,7 @@ parser_error_t position_open_printValue(const parser_context_t *ctx, const posit
     // add close_on_fill
     if (position_open->position.close_on_fill) {
         snprintf(outVal + written_value, outValLen - written_value, " Close on fill: true");
-    } 
+    }
 
     return parser_ok;
 }
-

@@ -326,6 +326,12 @@ pub unsafe extern "C" fn rs_generic_action_hash(
                     data_to_hash,
                 );
             }
+            ActionPlan::PositionClose => {
+                effect_hash = EffectHash::from_proto_effecting_data(
+                    "/penumbra.core.component.dex.v1.PositionClose",
+                    data_to_hash,
+                );
+            }
             _ => {
                 return ParserError::UnexpectedData as u32;
             }

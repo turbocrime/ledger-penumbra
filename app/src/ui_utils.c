@@ -137,6 +137,15 @@ parser_error_t encodeIdentityKey(const uint8_t *identity_key, uint16_t identity_
                               identity_key_len, out, out_len);
 }
 
+parser_error_t encodePositionId(const uint8_t *position_id, uint16_t position_id_len, char *out, uint16_t out_len) {
+    // Validate input length
+    if (position_id_len != POSITION_ID_LEN) {
+        return parser_invalid_address;
+    }
+    return printBech32Encoded(POSITION_ID_BECH32_PREFIX, sizeof(POSITION_ID_BECH32_PREFIX) - 1, position_id, position_id_len,
+                              out, out_len);
+}
+
 parser_error_t uint128_to_str(char *data, int dataLen, uint64_t high, uint64_t low) {
     if (data == NULL) return parser_no_data;
     if (dataLen < U128_STR_MAX_LEN) return parser_value_out_of_range;

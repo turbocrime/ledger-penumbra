@@ -56,6 +56,7 @@ parser_error_t printShortAddress(const uint8_t *address, uint16_t address_len, c
 parser_error_t encodeAddress(const uint8_t *address, uint16_t address_len, char *out, uint16_t out_len);
 parser_error_t printAssetId(const uint8_t *asset, uint16_t asset_len, char *out, uint16_t out_len);
 parser_error_t encodeIdentityKey(const uint8_t *identity_key, uint16_t identity_key_len, char *out, uint16_t out_len);
+parser_error_t encodePositionId(const uint8_t *position_id, uint16_t position_id_len, char *out, uint16_t out_len);
 
 /**
  * Converts a 128-bit unsigned integer to its decimal string representation.

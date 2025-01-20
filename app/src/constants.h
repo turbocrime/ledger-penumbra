@@ -35,6 +35,9 @@
 #define IDENTITY_KEY_BECH32_PREFIX "penumbravalid"
 #define IDENTITY_KEY_LEN 32
 
+#define POSITION_ID_BECH32_PREFIX "plpid"
+#define POSITION_ID_LEN 32
+
 // Common BECH32m constants
 #define CHECKSUM_LENGTH 8
 #define BECH32_BITS_PER_CHAR 5
@@ -105,3 +108,6 @@
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an position_open action
 #define POSITION_OPEN_DISPLAY_MAX_LEN (2 * VALUE_DISPLAY_MAX_LEN + 110)  // = 434
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an position_close action
+#define POSITION_CLOSE_DISPLAY_MAX_LEN 100  // = 100

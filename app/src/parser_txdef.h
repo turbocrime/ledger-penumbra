@@ -188,6 +188,10 @@ typedef struct {
 } position_t;
 
 typedef struct {
+    bytes_t inner;
+} position_id_t;
+
+typedef struct {
     note_t note;
     uint64_t position;
     bytes_t randomizer;
@@ -285,6 +289,11 @@ typedef struct {
 } position_open_plan_t;
 
 typedef struct {
+    bool has_position_id;
+    position_id_t position_id;
+} position_close_plan_t;
+
+typedef struct {
     address_plan_t return_address;
     bytes_t text;
 } memo_plain_text_t;
@@ -317,6 +326,7 @@ typedef struct {
         undelegate_claim_plan_t undelegate_claim;
         delegator_vote_plan_t delegator_vote;
         position_open_plan_t position_open;
+        position_close_plan_t position_close;
     } action;
 } action_t;
 
