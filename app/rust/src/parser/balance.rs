@@ -84,12 +84,11 @@ impl Balance {
         let mut new_balance = self.clone();
 
         for existing_imbalance in &mut new_balance.imbalances.iter_mut().flatten() {
-            if existing_imbalance.value.asset_id == rhs.asset_id
-                && existing_imbalance.sign == sign
+            if existing_imbalance.value.asset_id == rhs.asset_id && existing_imbalance.sign == sign
             {
                 existing_imbalance.value.amount = existing_imbalance.value.amount + rhs.amount;
                 return Ok(new_balance);
-            }  
+            }
         }
 
         new_balance.insert(Imbalance {

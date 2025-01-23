@@ -135,7 +135,7 @@ parser_error_t position_open_printValue(const parser_context_t *ctx, const posit
                          .has_amount = true,
                          .has_asset_id = true};
 
-    CHECK_ERROR(printValue(ctx, &r1_amount, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &r1_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
     written_value = strlen(outVal);
 
@@ -149,7 +149,7 @@ parser_error_t position_open_printValue(const parser_context_t *ctx, const posit
                          .has_amount = true,
                          .has_asset_id = true};
 
-    CHECK_ERROR(printValue(ctx, &r2_amount, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &r2_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
     written_value = strlen(outVal);
 

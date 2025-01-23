@@ -162,7 +162,7 @@ parser_error_t delegator_vote_printValue(const parser_context_t *ctx, const dele
                            .asset_id.inner.len = ASSET_ID_LEN,
                            .has_amount = true,
                            .has_asset_id = true};
-    CHECK_ERROR(printValue(ctx, &local_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &local_value, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
 
     return parser_ok;

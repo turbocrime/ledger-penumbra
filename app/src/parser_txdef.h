@@ -193,6 +193,21 @@ typedef struct {
 } position_id_t;
 
 typedef struct {
+    bool has_input;
+    value_t input;
+    bool has_output_id;
+    asset_id_t output_id;
+    bool has_max_output;
+    amount_t max_output;
+    bool has_min_output;
+    amount_t min_output;
+    uint64_t start_height;
+    uint64_t end_height;
+    uint64_t step_count;
+    bytes_t nonce;
+} dutch_auction_description_t;
+
+typedef struct {
     note_t note;
     uint64_t position;
     bytes_t randomizer;
@@ -307,6 +322,11 @@ typedef struct {
 } position_withdraw_plan_t;
 
 typedef struct {
+    bool has_description;
+    dutch_auction_description_t description;
+} action_dutch_auction_schedule_plan_t;
+
+typedef struct {
     address_plan_t return_address;
     bytes_t text;
 } memo_plain_text_t;
@@ -341,6 +361,7 @@ typedef struct {
         position_open_plan_t position_open;
         position_close_plan_t position_close;
         position_withdraw_plan_t position_withdraw;
+        action_dutch_auction_schedule_plan_t action_dutch_auction_schedule;
     } action;
 } action_t;
 

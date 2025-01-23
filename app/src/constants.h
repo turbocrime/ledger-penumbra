@@ -114,3 +114,6 @@
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an position_withdraw action
 #define POSITION_WITHDRAW_DISPLAY_MAX_LEN 140  // = 140
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an dutch_auction_schedule action
+#define DUTCH_AUCTION_SCHEDULE_DISPLAY_MAX_LEN (4 * VALUE_DISPLAY_MAX_LEN + 154)  // = 802

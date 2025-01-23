@@ -166,6 +166,7 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/position_open.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/position_close.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/position_withdraw.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/action_dutch_auction_schedule.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})

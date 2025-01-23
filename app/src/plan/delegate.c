@@ -108,7 +108,7 @@ parser_error_t delegate_printValue(const parser_context_t *ctx, const delegate_p
     local_value.asset_id.inner.len = ASSET_ID_LEN;
     local_value.has_amount = true;
     local_value.has_asset_id = true;
-    CHECK_ERROR(printValue(ctx, &local_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &local_value, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
 
     return parser_ok;

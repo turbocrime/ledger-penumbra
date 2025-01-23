@@ -167,7 +167,7 @@ parser_error_t swap_printValue(const parser_context_t *ctx, const swap_plan_t *s
     snprintf(outVal + written_value, outValLen - written_value, "Input ");
     written_value = strlen(outVal);
 
-    CHECK_ERROR(printValue(ctx, &input_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &input_value, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
     written_value = strlen(outVal);
 

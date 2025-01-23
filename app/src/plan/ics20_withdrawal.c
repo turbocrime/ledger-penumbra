@@ -121,8 +121,8 @@ parser_error_t ics20_withdrawal_printValue(const parser_context_t *ctx, const ic
     ics20_withdrawal_value.asset_id.inner.len = ASSET_ID_LEN;
     ics20_withdrawal_value.has_amount = true;
     ics20_withdrawal_value.has_asset_id = true;
-    CHECK_ERROR(printValue(ctx, &ics20_withdrawal_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
-                           outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &ics20_withdrawal_value, &ctx->tx_obj->parameters_plan.chain_id, true,
+                           outVal + written_value, outValLen - written_value));
     written_value = strlen(outVal);
 
     snprintf(outVal + written_value, outValLen - written_value, " To ");

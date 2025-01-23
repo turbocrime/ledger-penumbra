@@ -101,7 +101,7 @@ parser_error_t output_printValue(const parser_context_t *ctx, const output_plan_
     uint16_t written_value = strlen(outVal);
 
     // add value
-    CHECK_ERROR(printValue(ctx, &output->value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &output->value, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
     written_value = strlen(outVal);
 

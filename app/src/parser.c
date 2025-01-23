@@ -21,6 +21,7 @@
 #include <zxmacros.h>
 #include <zxtypes.h>
 
+#include "action_dutch_auction_schedule.h"
 #include "coin.h"
 #include "crypto.h"
 #include "delegate.h"
@@ -39,7 +40,6 @@
 #include "tx_metadata.h"
 #include "undelegate.h"
 #include "undelegate_claim.h"
-
 static uint8_t action_idx = 0;
 
 parser_error_t parser_init_context(parser_context_t *ctx, const uint8_t *buffer, uint16_t bufferSize) {
@@ -127,6 +127,9 @@ parser_error_t parser_getNumItems(const parser_context_t *ctx, uint8_t *num_item
                 break;
             case penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag:
                 CHECK_ERROR(position_withdraw_getNumItems(ctx, &action_num_items));
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_schedule_tag:
+                CHECK_ERROR(action_dutch_auction_schedule_getNumItems(ctx, &action_num_items));
                 break;
             default:
                 return parser_unexpected_error;
@@ -239,6 +242,11 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
                 CHECK_ERROR(position_withdraw_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_withdraw,
                                                       action_idx + 1, outKey, outKeyLen, outVal, outValLen, pageIdx,
                                                       pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_schedule_tag:
+                CHECK_ERROR(action_dutch_auction_schedule_getItem(
+                    ctx, &ctx->tx_obj->actions_plan[action_idx].action.action_dutch_auction_schedule, action_idx + 1, outKey,
+                    outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             default:
                 return parser_unexpected_error;
