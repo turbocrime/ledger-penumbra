@@ -1,8 +1,10 @@
 use crate::constants::{AMOUNT_LEN_BYTES, ID_LEN_BYTES};
-use crate::parser::commitment::Commitment;
-use crate::parser::id::Id;
-use crate::parser::value::Sign;
-use crate::parser::value::{Balance, Imbalance, Value, ValueC};
+use crate::parser::{
+    balance::Balance,
+    commitment::Commitment,
+    id::Id,
+    value::{Imbalance, Sign, Value, ValueC},
+};
 use crate::ParserError;
 use decaf377::Fq;
 use decaf377::Fr;
@@ -49,7 +51,7 @@ impl Fee {
 
     pub fn commit(&self, blinding: Fr) -> Result<Commitment, ParserError> {
         let mut balance = Balance::new();
-        balance.add(Imbalance {
+        balance.insert(Imbalance {
             value: self.0.clone(),
             sign: Sign::Required,
         })?;

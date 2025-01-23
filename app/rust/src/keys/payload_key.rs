@@ -54,7 +54,7 @@ impl<'a> TryFrom<&'a [u8]> for PayloadKey<'a> {
     }
 }
 
-impl<'a> TryFrom<PayloadKey<'a>> for Key {
+impl<> TryFrom<PayloadKey<'_>> for Key {
     type Error = ParserError;
 
     fn try_from(slice: PayloadKey) -> Result<Self, Self::Error> {

@@ -27,6 +27,7 @@
 #include "pb_decode.h"
 #include "position_close.h"
 #include "position_open.h"
+#include "position_withdraw.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "spend.h"
 #include "swap.h"
@@ -126,6 +127,11 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
         case penumbra_core_transaction_v1_ActionPlan_position_close_tag:
             decode_arg[actions_qty].action_data = action_data_3;
             CHECK_ACTION_ERROR(decode_position_close_plan(&action_data_3, &decode_arg[actions_qty].action.position_close));
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag:
+            decode_arg[actions_qty].action_data = action_data_4;
+            CHECK_ACTION_ERROR(
+                decode_position_withdraw_plan(&action_data_4, &decode_arg[actions_qty].action.position_withdraw));
             break;
         default:
             return false;
@@ -284,6 +290,8 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Undelegate claim plan error";
         case parser_delegator_vote_plan_error:
             return "Delegator vote plan error";
+        case parser_position_withdraw_plan_error:
+            return "Position withdraw plan error";
 
         // Chain related
         case parser_invalid_chain_id:

@@ -14,34 +14,95 @@
 *  limitations under the License.
 ********************************************************************************/
 
-use crate::parser::id::Id;
-use crate::parser::value::Value;
+use crate::parser::{
+    commitment::Commitment,
+    value::{Imbalance, Sign, Value},
+};
 use crate::ParserError;
-use std::num::NonZeroU128;
+use decaf377::Fr;
 
-// Define a constant for the maximum number of assets
-const MAX_ASSETS: usize = 10;
+// Only ten imbalances are supported for now
+const IMBALANCES_SIZE: usize = 10;
 
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Balance {
-    negated: bool,
-    ids: [Id; MAX_ASSETS],
-    balances: [NonZeroU128; MAX_ASSETS],
+    pub imbalances: [Option<Imbalance>; IMBALANCES_SIZE],
 }
 
-impl TryFrom<Value> for Balance {
-    type Error = ParserError;
+impl Balance {
+    pub fn new() -> Self {
+        Balance {
+            imbalances: [const { None }; IMBALANCES_SIZE],
+        }
+    }
 
-    fn try_from(value: Value) -> Result<Self, Self::Error> {
-        let negated = false;
-        let mut ids = core::array::from_fn(|_| Id::default());
-        ids[0] = value.asset_id;
+    pub fn insert(&mut self, imbalance: Imbalance) -> Result<(), ParserError> {
+        for slot in &mut self.imbalances {
+            if slot.is_none() {
+                *slot = Some(imbalance);
+                return Ok(());
+            }
+        }
+        Err(ParserError::InvalidLength)
+    }
 
-        let balances = core::array::from_fn(|_| NonZeroU128::new(value.amount.inner).unwrap());
+    pub fn commit(&self, blinding_factor: Fr) -> Result<Commitment, ParserError> {
+        if !self.has_valid_imbalance() {
+            return Err(ParserError::InvalidLength);
+        }
 
-        Ok(Balance {
-            negated,
-            ids,
-            balances,
-        })
+        let mut commitment = decaf377::Element::IDENTITY;
+
+        for imbalance in self.imbalances.iter().flatten() {
+            let g_v = imbalance.value.asset_id.value_generator();
+            let amount_fr: Fr = Into::into(imbalance.value.amount);
+
+            if amount_fr.ne(&Fr::ZERO) {
+                match imbalance.sign {
+                    Sign::Required => {
+                        commitment -= g_v * amount_fr;
+                    }
+                    Sign::Provided => {
+                        commitment += g_v * amount_fr;
+                    }
+                }
+            }
+        }
+
+        let value_blinding_generator = Commitment::value_blinding_generator();
+        commitment += blinding_factor * value_blinding_generator;
+
+        Ok(commitment.into())
+    }
+
+    fn has_valid_imbalance(&self) -> bool {
+        self.imbalances.iter().any(|slot| slot.is_some())
+    }
+
+    pub fn add(&self, rhs: &Value, sign: Sign) -> Result<Balance, ParserError> {
+        let mut new_balance = self.clone();
+
+        for existing_imbalance in &mut new_balance.imbalances.iter_mut().flatten() {
+            if existing_imbalance.value.asset_id == rhs.asset_id
+                && existing_imbalance.sign == sign
+            {
+                existing_imbalance.value.amount = existing_imbalance.value.amount + rhs.amount;
+                return Ok(new_balance);
+            }  
+        }
+
+        new_balance.insert(Imbalance {
+            value: rhs.clone(),
+            sign,
+        })?;
+
+        Ok(new_balance)
+    }
+}
+
+impl Default for Balance {
+    fn default() -> Self {
+        Self::new()
     }
 }

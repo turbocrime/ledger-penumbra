@@ -32,7 +32,7 @@ describe('Standard', function () {
   })
 
   describe.each(ACTIONS_TESTCASES)('Wallet transactions', function (data) {
-    test.concurrent.each(models)('sign', async function (m) {
+    test.concurrent.each(models)('sign %s', async function (m) {
       const sim = new Zemu(m.path)
       try {
         await sim.start({ ...defaultOptions, model: m.name })

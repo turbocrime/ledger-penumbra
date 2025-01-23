@@ -16,12 +16,13 @@
 
 use crate::keys::FullViewingKey;
 use crate::parser::{
+    balance::Balance,
     bytes::BytesC,
     commitment::Commitment,
     effect_hash::{create_personalized_state, EffectHash},
     note::{Note, NoteC},
     nullifier::Nullifier,
-    value::{Balance, Imbalance, Sign, Value},
+    value::{Imbalance, Sign, Value},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -73,7 +74,7 @@ impl SpendPlanC {
 
     pub fn balance(&self) -> Result<Balance, ParserError> {
         let mut balance = Balance::new();
-        balance.add(Imbalance {
+        balance.insert(Imbalance {
             value: Value::try_from(self.note.value.clone())?,
             sign: Sign::Provided,
         })?;

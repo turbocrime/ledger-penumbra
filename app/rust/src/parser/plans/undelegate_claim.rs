@@ -17,6 +17,7 @@
 use crate::ffi::bech32::bech32_encode;
 use crate::parser::{
     amount::AmountC,
+    balance::Balance,
     bytes::BytesC,
     commitment::Commitment,
     effect_hash::{create_personalized_state, EffectHash},
@@ -24,7 +25,6 @@ use crate::parser::{
     id::Id,
     identity_key::IdentityKeyC,
     penalty::{Penalty, PenaltyC},
-    value::Balance,
 };
 use crate::utils::protobuf::encode_varint;
 use crate::ParserError;

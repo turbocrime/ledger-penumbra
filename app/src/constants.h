@@ -111,3 +111,6 @@
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an position_close action
 #define POSITION_CLOSE_DISPLAY_MAX_LEN 100  // = 100
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an position_withdraw action
+#define POSITION_WITHDRAW_DISPLAY_MAX_LEN 140  // = 140

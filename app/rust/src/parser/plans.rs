@@ -27,6 +27,7 @@ use crate::ParserError;
 
 pub mod delegator_vote;
 pub mod output;
+pub mod position_withdraw;
 pub mod spend;
 pub mod swap;
 pub mod undelegate_claim;
@@ -285,6 +286,34 @@ pub unsafe extern "C" fn rs_delegator_vote_action_hash(
 #[no_mangle]
 /// Use to compute an address and write it back into output
 /// argument.
+pub unsafe extern "C" fn rs_position_withdraw_action_hash(
+    plan: &position_withdraw::PositionWithdrawPlanC,
+    output: *mut u8,
+    output_len: usize,
+) -> u32 {
+    crate::zlog("rs_position_withdraw_action_hash\x00");
+    let output = std::slice::from_raw_parts_mut(output, output_len);
+
+    if output.len() < 64 {
+        return ParserError::Ok as u32;
+    }
+
+    let body_hash_bytes = plan.effect_hash();
+
+    if let Ok(body_hash_bytes) = body_hash_bytes {
+        let body_hash_array = body_hash_bytes.as_array();
+        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    } else {
+        return ParserError::PositionWithdrawPlanError as u32;
+    }
+
+    ParserError::Ok as u32
+}
+
+#[no_mangle]
+/// Use to compute an address and write it back into output
+/// argument.
 pub unsafe extern "C" fn rs_generic_action_hash(
     data: &BytesC,
     action_type: u8,
@@ -363,6 +392,7 @@ mod tests {
     use crate::parser::memo_plain_text::MemoPlaintextC;
     use crate::parser::note::NoteC;
     use crate::parser::penalty::PenaltyC;
+    use crate::parser::reserves::ReservesC;
     use crate::parser::swap_plaintext::SwapPlaintextC;
     use crate::parser::trading_pair::TradingPairC;
     use crate::parser::value::ValueC;
@@ -683,7 +713,7 @@ mod tests {
             let computed_hash = hex::encode(swap_action_hash_bytes.as_array());
             assert_eq!(computed_hash, expected_hash);
         } else {
-            panic!("output_action_hash is not Ok");
+            panic!("swap_action_hash is not Ok");
         }
     }
 
@@ -764,15 +794,15 @@ mod tests {
             unbonding_start_height: 25928,
         };
 
-        let output_action_hash: Result<EffectHash, ParserError> = dummy_action.effect_hash();
+        let undelegate_claim_hash: Result<EffectHash, ParserError> = dummy_action.effect_hash();
         let expected_hash = "6d780b622209a23a6ac8d2895abceb8420f89b611a2a5767e146aead8aa337a6a8999f258f80a7a2c6f4c21bff674615e0ea1430c4bf86b7d1ab76565d08569e";
-        if let Ok(output_action_hash_bytes) = output_action_hash {
-            let computed_hash = hex::encode(output_action_hash_bytes.as_array());
+        if let Ok(undelegate_claim_hash_bytes) = undelegate_claim_hash {
+            let computed_hash = hex::encode(undelegate_claim_hash_bytes.as_array());
             assert_eq!(computed_hash, expected_hash);
         } else {
             panic!(
-                "output_action_hash is not Ok Error: {:?}",
-                output_action_hash
+                "undelegate_claim_hash is not Ok Error: {:?}",
+                undelegate_claim_hash
             );
         }
     }
@@ -850,13 +880,157 @@ mod tests {
         ]);
         let fvk = spend_key.fvk().unwrap();
 
-        let spend_action_hash = dummy_action.effect_hash(&fvk);
+        let delegator_vote_hash = dummy_action.effect_hash(&fvk);
         let expected_hash = "9b886b91ecbbbe24a6fc01dd425d4954f1e28ddd9bd3c8e446e5f447313c7b3754f7644c1cd6c934fdbfd6a926c16993241ad44ed55b8cf98a0c8f3c2e9ad4ec";
-        if let Ok(spend_action_hash_bytes) = spend_action_hash {
-            let computed_hash = hex::encode(spend_action_hash_bytes.as_array());
+        if let Ok(delegator_vote_hash_bytes) = delegator_vote_hash {
+            let computed_hash = hex::encode(delegator_vote_hash_bytes.as_array());
             assert_eq!(computed_hash, expected_hash);
         } else {
-            panic!("spend_action_hash is not Ok");
+            panic!("delegator_vote_hash is not Ok");
+        }
+    }
+
+    #[test]
+    fn test_position_withdraw_action_hash() {
+        // Create dummy ActionC
+        let dummy_amount_r1 = AmountC {
+            lo: 226584393148384068,
+            hi: 0,
+        };
+
+        let dummy_amount_r2 = AmountC {
+            lo: 281946023702655276,
+            hi: 0,
+        };
+
+        let position_id_bytes =
+            hex::decode("4b3ded9a00383b8dc5e8ceb20c3d3755417c5168b372403c307847526a223b19")
+                .unwrap();
+
+        let dummy_position_id = IdC {
+            inner: BytesC::from_slice(&position_id_bytes),
+        };
+
+        let pair_1_bytes =
+            hex::decode("be7e67051f8968163a6bcdeba31c1bcb9198e6a4b8504c0766c9181eeafaf30a")
+                .unwrap();
+        let pair_2_bytes =
+            hex::decode("9f03c3910ab73af2e70701930fe9e6bf521f6f61849850a0347ad4fbef41b111")
+                .unwrap();
+
+        let dummy_reserves = ReservesC {
+            has_r1: true,
+            r1: dummy_amount_r1,
+            has_r2: true,
+            r2: dummy_amount_r2,
+        };
+
+        let dummy_pair = TradingPairC {
+            has_asset_1: true,
+            asset_1: BytesC::from_slice(&pair_1_bytes),
+            has_asset_2: true,
+            asset_2: BytesC::from_slice(&pair_2_bytes),
+        };
+
+        let dummy_reward_amount_1 = AmountC {
+            lo: 209199909799124459,
+            hi: 0,
+        };
+        let reward_1_bytes =
+            hex::decode("be7e67051f8968163a6bcdeba31c1bcb9198e6a4b8504c0766c9181eeafaf30a")
+                .unwrap();
+        let dummy_reward_1 = IdC {
+            inner: BytesC::from_slice(&reward_1_bytes),
+        };
+
+        let dummy_reward_amount_2 = AmountC {
+            lo: 89205997672165587,
+            hi: 0,
+        };
+        let reward_2_bytes =
+            hex::decode("1d6d84ab751955206db68530522fcc52d13baebd9453bfd41f9d346f2a7b3807")
+                .unwrap();
+        let dummy_reward_2 = IdC {
+            inner: BytesC::from_slice(&reward_2_bytes),
+        };
+
+        let dummy_reward_amount_3 = AmountC {
+            lo: 932590156935329082,
+            hi: 0,
+        };
+        let reward_3_bytes =
+            hex::decode("9f03c3910ab73af2e70701930fe9e6bf521f6f61849850a0347ad4fbef41b111")
+                .unwrap();
+        let dummy_reward_3 = IdC {
+            inner: BytesC::from_slice(&reward_3_bytes),
+        };
+
+        let dummy_reward_amount_4 = AmountC {
+            lo: 848681868085323946,
+            hi: 0,
+        };
+        let reward_4_bytes =
+            hex::decode("1d6d84ab751955206db68530522fcc52d13baebd9453bfd41f9d346f2a7b3807")
+                .unwrap();
+        let dummy_reward_4 = IdC {
+            inner: BytesC::from_slice(&reward_4_bytes),
+        };
+
+        let dummy_reward_1 = ValueC {
+            has_amount: true,
+            amount: dummy_reward_amount_1,
+            has_asset_id: true,
+            asset_id: dummy_reward_1,
+        };
+
+        let dummy_reward_2 = ValueC {
+            has_amount: true,
+            amount: dummy_reward_amount_2,
+            has_asset_id: true,
+            asset_id: dummy_reward_2,
+        };
+
+        let dummy_reward_3 = ValueC {
+            has_amount: true,
+            amount: dummy_reward_amount_3,
+            has_asset_id: true,
+            asset_id: dummy_reward_3,
+        };
+
+        let dummy_reward_4 = ValueC {
+            has_amount: true,
+            amount: dummy_reward_amount_4,
+            has_asset_id: true,
+            asset_id: dummy_reward_4,
+        };
+
+        let dummy_rewards = [
+            dummy_reward_1,
+            dummy_reward_2,
+            dummy_reward_3,
+            dummy_reward_4,
+            ValueC::default(),
+        ];
+
+        let dummy_action = position_withdraw::PositionWithdrawPlanC {
+            has_reserves: true,
+            reserves: dummy_reserves,
+            has_position_id: true,
+            position_id: dummy_position_id,
+            has_pair: true,
+            pair: dummy_pair,
+            sequence: 12860323043604687421,
+            rewards: dummy_rewards,
+            rewards_qty: 4,
+        };
+
+        let position_withdraw_hash = dummy_action.effect_hash();
+        let expected_hash = "29d6d7279ffad9485840d8ec3832f9598822abdb4bc6c2825045323aeb54f8b101cc1a7b59ac35307ae7b187047a4d1be185731f048ecc710bf60f7920ce2d27";
+        if let Ok(position_withdraw_hash_bytes) = position_withdraw_hash {
+            let computed_hash = hex::encode(position_withdraw_hash_bytes.as_array());
+            assert_eq!(computed_hash, expected_hash);
+        } else {
+            panic!("position_withdraw_hash is not Ok");
         }
     }
 }

@@ -71,7 +71,7 @@ impl DelegatorVotePlanC {
             create_personalized_state("/penumbra.core.component.governance.v1.DelegatorVoteBody");
 
         // proposal
-        let mut encoded = [0u8; 10];
+        let mut encoded = [0u8; 11];
         encoded[0] = 0x08;
         let mut pos = 1;
         let mut len = encode_varint(body.proposal, &mut encoded[pos..]);

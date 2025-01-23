@@ -15,20 +15,28 @@
 ********************************************************************************/
 
 use crate::constants::{AMOUNT_LEN_BYTES, ID_LEN_BYTES};
+use crate::parser::bytes::BytesC;
 use crate::parser::{
     amount::{Amount, AmountC},
-    commitment::Commitment,
     id::{Id, IdC},
     ParserError,
 };
 use crate::utils::protobuf::encode_varint;
-use decaf377::Fr;
 
 #[derive(Clone)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub enum Sign {
     Required,
     Provided,
+}
+
+impl PartialEq for Sign {
+    fn eq(&self, other: &Self) -> bool {
+        matches!(
+            (self, other),
+            (Sign::Required, Sign::Required) | (Sign::Provided, Sign::Provided)
+        )
+    }
 }
 
 #[derive(Clone)]
@@ -44,72 +52,6 @@ pub struct Value {
 pub struct Imbalance {
     pub value: Value,
     pub sign: Sign,
-}
-
-// Only two imbalances are supported for now
-const IMBALANCES_SIZE: usize = 2;
-
-#[derive(Clone)]
-#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
-pub struct Balance {
-    pub imbalances: [Option<Imbalance>; IMBALANCES_SIZE],
-}
-
-impl Balance {
-    pub fn new() -> Self {
-        Balance {
-            imbalances: [None, None],
-        }
-    }
-
-    pub fn add(&mut self, imbalance: Imbalance) -> Result<(), ParserError> {
-        for slot in &mut self.imbalances {
-            if slot.is_none() {
-                *slot = Some(imbalance);
-                return Ok(());
-            }
-        }
-        Err(ParserError::InvalidLength)
-    }
-
-    pub fn commit(&self, blinding_factor: Fr) -> Result<Commitment, ParserError> {
-        if !self.has_valid_imbalance() {
-            return Err(ParserError::InvalidLength);
-        }
-
-        let mut commitment = decaf377::Element::IDENTITY;
-
-        for imbalance in self.imbalances.iter().flatten() {
-            let g_v = imbalance.value.asset_id.value_generator();
-            let amount_fr: Fr = Into::into(imbalance.value.amount);
-
-            if amount_fr.ne(&Fr::ZERO) {
-                match imbalance.sign {
-                    Sign::Required => {
-                        commitment -= g_v * amount_fr;
-                    }
-                    Sign::Provided => {
-                        commitment += g_v * amount_fr;
-                    }
-                }
-            }
-        }
-
-        let value_blinding_generator = Commitment::value_blinding_generator();
-        commitment += blinding_factor * value_blinding_generator;
-
-        Ok(commitment.into())
-    }
-
-    fn has_valid_imbalance(&self) -> bool {
-        self.imbalances.iter().any(|slot| slot.is_some())
-    }
-}
-
-impl Default for Balance {
-    fn default() -> Self {
-        Self::new()
-    }
 }
 
 impl Value {
@@ -172,5 +114,20 @@ impl TryFrom<ValueC> for Value {
             amount: value.amount.try_into()?,
             asset_id: value.asset_id.try_into()?,
         })
+    }
+}
+
+impl Default for ValueC {
+    fn default() -> Self {
+        let amount = AmountC { lo: 0, hi: 0 };
+        let asset_id = IdC {
+            inner: BytesC::default(),
+        };
+        ValueC {
+            has_amount: false,
+            amount,
+            has_asset_id: false,
+            asset_id,
+        }
     }
 }

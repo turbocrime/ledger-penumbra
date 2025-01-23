@@ -33,6 +33,7 @@ extern "C" {
 // TODO: check size
 #define DETECTION_DATA_QTY 16
 #define ACTIONS_QTY 16
+#define MAX_CALLBACK_ARRAY_SIZE 5
 
 #define ASSET_ID_LEN 32
 #define RSEED_LEN 32
@@ -294,6 +295,18 @@ typedef struct {
 } position_close_plan_t;
 
 typedef struct {
+    bool has_reserves;
+    reserves_t reserves;
+    bool has_position_id;
+    position_id_t position_id;
+    bool has_pair;
+    trading_pair_t pair;
+    uint64_t sequence;
+    value_t rewards[MAX_CALLBACK_ARRAY_SIZE];
+    uint8_t rewards_qty;
+} position_withdraw_plan_t;
+
+typedef struct {
     address_plan_t return_address;
     bytes_t text;
 } memo_plain_text_t;
@@ -327,6 +340,7 @@ typedef struct {
         delegator_vote_plan_t delegator_vote;
         position_open_plan_t position_open;
         position_close_plan_t position_close;
+        position_withdraw_plan_t position_withdraw;
     } action;
 } action_t;
 

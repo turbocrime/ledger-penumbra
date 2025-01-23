@@ -19,6 +19,7 @@ use crate::parser::fixpoint::U128x128;
 use crate::utils::protobuf::encode_varint;
 use crate::ParserError;
 use decaf377::{Fq, Fr};
+use std::ops;
 
 #[derive(Copy, Clone)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
@@ -118,6 +119,16 @@ impl From<Amount> for Fq {
 impl From<Amount> for Fr {
     fn from(val: Amount) -> Self {
         Fr::from(val.inner)
+    }
+}
+
+impl ops::Add<Amount> for Amount {
+    type Output = Amount;
+
+    fn add(self, rhs: Amount) -> Amount {
+        Amount {
+            inner: self.inner + rhs.inner,
+        }
     }
 }
 

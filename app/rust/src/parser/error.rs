@@ -54,6 +54,7 @@ pub enum ParserError {
     EffectHashError,
     UndelegateClaimPlanError,
     DelegatorVotePlanError,
+    PositionWithdrawPlanError,
 
     // Chain related
     InvalidChainId,

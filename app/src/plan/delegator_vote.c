@@ -64,7 +64,7 @@ parser_error_t decode_delegator_vote_plan(const bytes_t *data, delegator_vote_pl
                              RSEED_LEN);
 
     if (!pb_decode(&stream, penumbra_core_component_governance_v1_DelegatorVotePlan_fields, &delegator_vote_plan)) {
-        return parser_delegate_plan_error;
+        return parser_delegator_vote_plan_error;
     }
 
     delegator_vote->proposal = delegator_vote_plan.proposal;

@@ -28,6 +28,7 @@ pub const AMOUNT_LEN_BYTES: usize = 16;
 pub const DETECTION_DATA_QTY: usize = 16;
 pub const ACTION_DATA_QTY: usize = 16;
 pub const MAX_CLUE_SUBKEYS: usize = 10;
+pub const MAX_REWARDS: usize = 5;
 
 pub const EFFECT_HASH_LEN: usize = 64;
 

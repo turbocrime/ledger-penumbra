@@ -16,11 +16,11 @@
 use crate::parser::bytes::BytesC;
 use crate::parser::{
     amount::Amount,
+    balance::Balance,
     fee::STAKING_TOKEN_ASSET_ID_BYTES,
     fixpoint::U128x128,
     id::Id,
-    value::Value,
-    value::{Balance, Imbalance, Sign},
+    value::{Imbalance, Sign, Value},
     ParserError,
 };
 use decaf377::Fq;
@@ -51,14 +51,14 @@ impl Penalty {
         // The undelegate claim action subtracts the unbonding amount and adds
         // the unbonded amount from the transaction's value balance.
         let mut balance = Balance::new();
-        balance.add(Imbalance {
+        balance.insert(Imbalance {
             value: Value {
                 amount: unbonding_amount,
                 asset_id: unbonding_id,
             },
             sign: Sign::Required,
         })?;
-        balance.add(Imbalance {
+        balance.insert(Imbalance {
             value: Value {
                 amount: self.apply_to_amount(unbonding_amount),
                 asset_id: Id(Fq::from_le_bytes_mod_order(&STAKING_TOKEN_ASSET_ID_BYTES)),

@@ -41,6 +41,7 @@ pub mod nullifier;
 mod parameters;
 pub mod penalty;
 mod plans;
+pub mod reserves;
 pub mod rseed;
 pub mod swap_ciphertext;
 pub mod swap_payload;

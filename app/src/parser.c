@@ -33,6 +33,7 @@
 #include "parser_impl.h"
 #include "position_close.h"
 #include "position_open.h"
+#include "position_withdraw.h"
 #include "spend.h"
 #include "swap.h"
 #include "tx_metadata.h"
@@ -123,6 +124,9 @@ parser_error_t parser_getNumItems(const parser_context_t *ctx, uint8_t *num_item
                 break;
             case penumbra_core_transaction_v1_ActionPlan_position_close_tag:
                 CHECK_ERROR(position_close_getNumItems(ctx, &action_num_items));
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag:
+                CHECK_ERROR(position_withdraw_getNumItems(ctx, &action_num_items));
                 break;
             default:
                 return parser_unexpected_error;
@@ -230,6 +234,11 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
             case penumbra_core_transaction_v1_ActionPlan_position_close_tag:
                 CHECK_ERROR(position_close_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_close,
                                                    action_idx + 1, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag:
+                CHECK_ERROR(position_withdraw_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_withdraw,
+                                                      action_idx + 1, outKey, outKeyLen, outVal, outValLen, pageIdx,
+                                                      pageCount))
                 break;
             default:
                 return parser_unexpected_error;

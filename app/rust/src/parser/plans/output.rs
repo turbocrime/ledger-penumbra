@@ -19,6 +19,7 @@ use crate::keys::FullViewingKey;
 use crate::parser::note::Note;
 use crate::parser::{
     address::AddressC,
+    balance::Balance,
     bytes::BytesC,
     commitment::Commitment,
     effect_hash::{create_personalized_state, EffectHash},
@@ -26,7 +27,7 @@ use crate::parser::{
     rseed::Rseed,
     symmetric::PayloadKey,
     symmetric::{OvkWrappedKey, WrappedMemoKey},
-    value::{Balance, Imbalance, Sign, Value, ValueC},
+    value::{Imbalance, Sign, Value, ValueC},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -114,7 +115,7 @@ impl OutputPlanC {
 
     pub fn balance(&self) -> Result<Balance, ParserError> {
         let mut balance = Balance::new();
-        balance.add(Imbalance {
+        balance.insert(Imbalance {
             value: Value::try_from(self.value.clone())?,
             sign: Sign::Required,
         })?;
