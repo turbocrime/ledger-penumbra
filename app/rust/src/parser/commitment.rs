@@ -78,6 +78,13 @@ impl Commitment {
         proto
     }
 
+    pub fn to_proto_action_dutch_auction_withdraw(&self) -> [u8; Self::PROTO_LEN] {
+        let mut proto = [0u8; Self::PROTO_LEN];
+        proto[0..4].copy_from_slice(&[0x1a, 0x22, 0x0a, 0x20]);
+        proto[4..].copy_from_slice(&self.0 .0);
+        proto
+    }
+
     /// Returns the vartime_compress byte representation
     /// of the internal defac377::Element
     pub fn bytes_compress(&self) -> [u8; Self::LEN] {

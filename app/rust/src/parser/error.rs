@@ -57,6 +57,7 @@ pub enum ParserError {
     PositionWithdrawPlanError,
     DutchAuctionSchedulePlanError,
     DutchAuctionEndPlanError,
+    DutchAuctionWithdrawPlanError,
 
     // Chain related
     InvalidChainId,

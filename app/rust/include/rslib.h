@@ -37,6 +37,8 @@ parser_error_t rs_swap_action_hash(swap_plan_t *plan, uint8_t *output, size_t ou
 parser_error_t rs_undelegate_claim_action_hash(undelegate_claim_plan_t *plan, uint8_t *output, size_t output_len);
 parser_error_t rs_delegator_vote_action_hash(delegator_vote_plan_t *plan, uint8_t *output, size_t output_len);
 parser_error_t rs_position_withdraw_action_hash(position_withdraw_plan_t *plan, uint8_t *output, size_t output_len);
+parser_error_t rs_action_dutch_auction_withdraw_action_hash(action_dutch_auction_withdraw_plan_t *plan, uint8_t *output,
+                                                            size_t output_len);
 parser_error_t rs_generic_action_hash(bytes_t *data, uint8_t action_type, uint8_t *output, size_t output_len);
 
 parser_error_t rs_get_asset_id_from_metadata(const bytes_t *metadata, uint8_t *asset_id, uint16_t asset_id_len);

@@ -25,6 +25,7 @@ use crate::parser::effect_hash::EffectHash;
 use crate::parser::parameters::ParametersHash;
 use crate::ParserError;
 
+pub mod action_dutch_auction_withdraw;
 pub mod delegator_vote;
 pub mod output;
 pub mod position_withdraw;
@@ -306,6 +307,34 @@ pub unsafe extern "C" fn rs_position_withdraw_action_hash(
         output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
     } else {
         return ParserError::PositionWithdrawPlanError as u32;
+    }
+
+    ParserError::Ok as u32
+}
+
+#[no_mangle]
+/// Use to compute an address and write it back into output
+/// argument.
+pub unsafe extern "C" fn rs_action_dutch_auction_withdraw_action_hash(
+    plan: &action_dutch_auction_withdraw::ActionDutchAuctionWithdrawPlanC,
+    output: *mut u8,
+    output_len: usize,
+) -> u32 {
+    crate::zlog("rs_action_dutch_auction_withdraw_action_hash\x00");
+    let output = std::slice::from_raw_parts_mut(output, output_len);
+
+    if output.len() < 64 {
+        return ParserError::Ok as u32;
+    }
+
+    let body_hash_bytes = plan.effect_hash();
+
+    if let Ok(body_hash_bytes) = body_hash_bytes {
+        let body_hash_array = body_hash_bytes.as_array();
+        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+    } else {
+        return ParserError::DutchAuctionWithdrawPlanError as u32;
     }
 
     ParserError::Ok as u32
@@ -1043,6 +1072,77 @@ mod tests {
             assert_eq!(computed_hash, expected_hash);
         } else {
             panic!("position_withdraw_hash is not Ok");
+        }
+    }
+
+    #[test]
+    fn test_dutch_auction_withdraw_action_hash() {
+        let auction_id_bytes =
+            hex::decode("c2ccae788b3e9972476a483dbff593a0739f64e2f45ee623fe72d0999224ce43")
+                .unwrap();
+
+        let dummy_auction_id = IdC {
+            inner: BytesC::from_slice(&auction_id_bytes),
+        };
+
+        // Create dummy ActionC
+        let dummy_amount_r1 = AmountC {
+            lo: 640799722200830187,
+            hi: 0,
+        };
+
+        let dummy_amount_r2 = AmountC {
+            lo: 975333553020304634,
+            hi: 0,
+        };
+
+        let pair_1_bytes =
+            hex::decode("29ea9c2f3371f6a487e7e95c247041f4a356f983eb064e5d2b3bcf322ca96a10")
+                .unwrap();
+
+        let dummy_reward_1 = IdC {
+            inner: BytesC::from_slice(&pair_1_bytes),
+        };
+
+        let pair_2_bytes =
+            hex::decode("29ea9c2f3371f6a487e7e95c247041f4a356f983eb064e5d2b3bcf322ca96a10")
+                .unwrap();
+
+        let dummy_reward_2 = IdC {
+            inner: BytesC::from_slice(&pair_2_bytes),
+        };
+
+        let dummy_reserves_input = ValueC {
+            has_amount: true,
+            amount: dummy_amount_r1,
+            has_asset_id: true,
+            asset_id: dummy_reward_1,
+        };
+
+        let dummy_reserves_output = ValueC {
+            has_amount: true,
+            amount: dummy_amount_r2,
+            has_asset_id: true,
+            asset_id: dummy_reward_2,
+        };
+
+        let dummy_action = action_dutch_auction_withdraw::ActionDutchAuctionWithdrawPlanC {
+            has_auction_id: true,
+            auction_id: dummy_auction_id,
+            seq: 589632218,
+            has_reserves_input: true,
+            reserves_input: dummy_reserves_input,
+            has_reserves_output: true,
+            reserves_output: dummy_reserves_output,
+        };
+
+        let dutch_auction_withdraw_hash = dummy_action.effect_hash();
+        let expected_hash = "696b6c9ab8c3abcc9316c062b08bcce64cb0387f1dc69a3f0db70ef490336bab4d89be958a7d3c10ad84dc63179222f5b7ae412a98fd29fad67ce4ee821502c4";
+        if let Ok(dutch_auction_withdraw_hash_bytes) = dutch_auction_withdraw_hash {
+            let computed_hash = hex::encode(dutch_auction_withdraw_hash_bytes.as_array());
+            assert_eq!(computed_hash, expected_hash);
+        } else {
+            panic!("dutch_auction_withdraw_hash is not Ok");
         }
     }
 }

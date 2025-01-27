@@ -123,3 +123,6 @@
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an dutch_auction_end action
 #define DUTCH_AUCTION_END_DISPLAY_MAX_LEN 100
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an dutch_auction_withdraw action
+#define DUTCH_AUCTION_WITHDRAW_DISPLAY_MAX_LEN (2 * VALUE_DISPLAY_MAX_LEN + ASSET_ID_LEN + 88)  // 444
