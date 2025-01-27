@@ -40,7 +40,7 @@ parser_error_t decode_action_dutch_auction_schedule_plan(
 
     if (!pb_decode(&stream, penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_fields,
                    &action_dutch_auction_schedule_pb)) {
-        return parser_output_plan_error;
+        return parser_action_dutch_auction_schedule_plan_error;
     }
 
     action_dutch_auction_schedule->has_description = action_dutch_auction_schedule_pb.has_description;

@@ -208,6 +208,10 @@ typedef struct {
 } dutch_auction_description_t;
 
 typedef struct {
+    bytes_t inner;
+} auction_id_t;
+
+typedef struct {
     note_t note;
     uint64_t position;
     bytes_t randomizer;
@@ -327,6 +331,11 @@ typedef struct {
 } action_dutch_auction_schedule_plan_t;
 
 typedef struct {
+    bool has_auction_id;
+    auction_id_t auction_id;
+} action_dutch_auction_end_plan_t;
+
+typedef struct {
     address_plan_t return_address;
     bytes_t text;
 } memo_plain_text_t;
@@ -362,6 +371,7 @@ typedef struct {
         position_close_plan_t position_close;
         position_withdraw_plan_t position_withdraw;
         action_dutch_auction_schedule_plan_t action_dutch_auction_schedule;
+        action_dutch_auction_end_plan_t action_dutch_auction_end;
     } action;
 } action_t;
 

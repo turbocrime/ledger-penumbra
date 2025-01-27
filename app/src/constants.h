@@ -38,6 +38,9 @@
 #define POSITION_ID_BECH32_PREFIX "plpid"
 #define POSITION_ID_LEN 32
 
+#define AUCTION_ID_BECH32_PREFIX "pauctid"
+#define AUCTION_ID_LEN 32
+
 // Common BECH32m constants
 #define CHECKSUM_LENGTH 8
 #define BECH32_BITS_PER_CHAR 5
@@ -110,10 +113,13 @@
 #define POSITION_OPEN_DISPLAY_MAX_LEN (2 * VALUE_DISPLAY_MAX_LEN + 110)  // = 434
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an position_close action
-#define POSITION_CLOSE_DISPLAY_MAX_LEN 100  // = 100
+#define POSITION_CLOSE_DISPLAY_MAX_LEN 100
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an position_withdraw action
-#define POSITION_WITHDRAW_DISPLAY_MAX_LEN 140  // = 140
+#define POSITION_WITHDRAW_DISPLAY_MAX_LEN 140
 
 // Constant to use to allocate a buffer on the stack to hold the formatting of an dutch_auction_schedule action
 #define DUTCH_AUCTION_SCHEDULE_DISPLAY_MAX_LEN (4 * VALUE_DISPLAY_MAX_LEN + 154)  // = 802
+
+// Constant to use to allocate a buffer on the stack to hold the formatting of an dutch_auction_end action
+#define DUTCH_AUCTION_END_DISPLAY_MAX_LEN 100

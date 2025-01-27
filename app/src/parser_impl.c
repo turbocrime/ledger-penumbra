@@ -16,6 +16,7 @@
 
 #include "parser_impl.h"
 
+#include "action_dutch_auction_end.h"
 #include "action_dutch_auction_schedule.h"
 #include "delegate.h"
 #include "delegator_vote.h"
@@ -138,6 +139,11 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
             decode_arg[actions_qty].action_data = action_data_4;
             CHECK_ACTION_ERROR(decode_action_dutch_auction_schedule_plan(
                 &action_data_4, &decode_arg[actions_qty].action.action_dutch_auction_schedule));
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_end_tag:
+            decode_arg[actions_qty].action_data = action_data_3;
+            CHECK_ACTION_ERROR(decode_action_dutch_auction_end_plan(
+                &action_data_3, &decode_arg[actions_qty].action.action_dutch_auction_end));
             break;
         default:
             return false;

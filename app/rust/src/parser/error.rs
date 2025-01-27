@@ -55,6 +55,8 @@ pub enum ParserError {
     UndelegateClaimPlanError,
     DelegatorVotePlanError,
     PositionWithdrawPlanError,
+    DutchAuctionSchedulePlanError,
+    DutchAuctionEndPlanError,
 
     // Chain related
     InvalidChainId,

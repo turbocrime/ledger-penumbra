@@ -146,6 +146,15 @@ parser_error_t encodePositionId(const uint8_t *position_id, uint16_t position_id
                               out, out_len);
 }
 
+parser_error_t encodeAuctionId(const uint8_t *auction_id, uint16_t auction_id_len, char *out, uint16_t out_len) {
+    // Validate input length
+    if (auction_id_len != AUCTION_ID_LEN) {
+        return parser_invalid_address;
+    }
+    return printBech32Encoded(AUCTION_ID_BECH32_PREFIX, sizeof(AUCTION_ID_BECH32_PREFIX) - 1, auction_id, auction_id_len,
+                              out, out_len);
+}
+
 parser_error_t uint128_to_str(char *data, int dataLen, uint64_t high, uint64_t low) {
     if (data == NULL) return parser_no_data;
     if (dataLen < U128_STR_MAX_LEN) return parser_value_out_of_range;
