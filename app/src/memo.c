@@ -43,7 +43,7 @@ parser_error_t memo_getItem(const parser_context_t *ctx, uint8_t displayIdx, cha
                 snprintf(outKey, outKeyLen, "Memo Sender Address");
                 CHECK_ERROR(printTxAddress(&ctx->tx_obj->plan.memo.plaintext.return_address.inner, short_address,
                                            sizeof(short_address)));
-                pageString(outVal, outValLen, (char *)short_address, pageIdx, pageCount);
+                pageString(outVal, outValLen, short_address, pageIdx, pageCount);
             } else {
                 snprintf(outKey, outKeyLen, "Memo");
                 snprintf(outVal, outValLen, "None");

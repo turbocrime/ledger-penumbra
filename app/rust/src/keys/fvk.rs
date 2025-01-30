@@ -65,12 +65,14 @@ impl FullViewingKey {
         ak: VerificationKey<SpendAuth>,
         nk: NullifierKey,
     ) -> Result<Self, ParserError> {
+        crate::heartbeat();
         let ovk = {
             let hash_result = prf::expand(b"Penumbra_DeriOVK", &nk.0.to_bytes(), ak.as_ref())?;
             let mut ovk = [0; 32];
             ovk.copy_from_slice(&hash_result[0..32]);
             ovk
         };
+        crate::heartbeat();
 
         let dk = {
             let hash_result = prf::expand(b"Penumbra_DerivDK", &nk.0.to_bytes(), ak.as_ref())?;
@@ -85,6 +87,7 @@ impl FullViewingKey {
             let ivk_mod_q = poseidon377::hash_2(&domain_sep, (nk.0, ak_s));
             ka::Secret::new_from_field(Fr::from_le_bytes_mod_order(&ivk_mod_q.to_bytes()))
         };
+        crate::heartbeat();
 
         let dk = DiversifierKey(dk);
         let ovk = Ovk(ovk);

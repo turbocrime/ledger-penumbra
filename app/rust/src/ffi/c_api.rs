@@ -18,32 +18,42 @@ extern "C" {
     not(feature = "cpp_tests")
 ))]
 pub fn c_fvk_bytes() -> Result<FullViewingKey, ZxErr> {
-    use crate::constants::FVK_LEN;
     use crate::keys::nk::NullifierKey;
+    use crate::{constants::FVK_LEN, heartbeat};
     use decaf377::Fq;
     use decaf377_rdsa::{SpendAuth, VerificationKey};
 
+    let mut fvk_bytes = [0u8; FVK_LEN];
     unsafe {
-        let mut fvk_bytes = [0u8; FVK_LEN];
-        let err = crypto_getFvkBytes(fvk_bytes.as_mut_ptr(), fvk_bytes.len() as u16);
+        heartbeat();
 
-        let ak_bytes: [u8; 32] = fvk_bytes[0..32]
-            .try_into()
-            .map_err(|_| ZxErr::InvalidCryptoSettings)?;
-        let nk_bytes: [u8; 32] = fvk_bytes[32..64]
-            .try_into()
-            .map_err(|_| ZxErr::InvalidCryptoSettings)?;
-        let ak = VerificationKey::<SpendAuth>::try_from(ak_bytes.as_ref())
-            .map_err(|_| ZxErr::InvalidCryptoSettings)?;
-        let nk = NullifierKey(Fq::from_le_bytes_mod_order(nk_bytes.as_ref()));
-        let fvk =
-            FullViewingKey::from_components(ak, nk).map_err(|_| ZxErr::InvalidCryptoSettings)?;
-
-        match err {
-            ZxErr::Ok => Ok(fvk),
-            _ => Err(err),
+        if ZxErr::Ok != crypto_getFvkBytes(fvk_bytes.as_mut_ptr(), fvk_bytes.len() as u16) {
+            return Err(ZxErr::InvalidCryptoSettings);
         }
+
+        heartbeat();
     }
+
+    let ak_bytes: [u8; 32] = fvk_bytes[0..32]
+        .try_into()
+        .map_err(|_| ZxErr::InvalidCryptoSettings)?;
+
+    let nk_bytes: [u8; 32] = fvk_bytes[32..64]
+        .try_into()
+        .map_err(|_| ZxErr::InvalidCryptoSettings)?;
+
+    let ak = VerificationKey::<SpendAuth>::try_from(ak_bytes.as_ref())
+        .map_err(|_| ZxErr::InvalidCryptoSettings)?;
+
+    heartbeat();
+
+    let nk = NullifierKey(Fq::from_le_bytes_mod_order(nk_bytes.as_ref()));
+
+    let fvk = FullViewingKey::from_components(ak, nk).map_err(|_| ZxErr::InvalidCryptoSettings)?;
+
+    crate::heartbeat();
+
+    Ok(fvk)
 }
 
 #[cfg(any(test, feature = "clippy", feature = "fuzzing", feature = "cpp_tests"))]

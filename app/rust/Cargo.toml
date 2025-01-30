@@ -14,9 +14,7 @@ crate-type = ["staticlib"]
 rand = { version = "0.7.3", default-features = false }
 nom = { version = "7.1.3", default-features = false }
 arrayvec = { version = "0.7.4", default-features = false }
-arrayref = { version = "0.3.7", default-features = false }
 no-std-compat = "0.4.1"
-educe = "0.5.9"
 blake2b_simd = { version = "1.0.2", default-features = false }
 # blake2b_simd = { path = "../blake2_simd/blake2b", default-features = false }
 aes = { version = "0.8.4", default-features = false }
@@ -35,6 +33,7 @@ chacha20poly1305 = { version = "0.10.1", default-features = false }
 rand_chacha = { version = "0.3.1", default-features = false }
 ethnum = { version = "1.3", default-features = false }
 itoa = { version = "1.0.1", default-features = false }
+cfg-if = "1.0.0"
 
 [dev-dependencies]
 hex = "0.4.2"
@@ -51,13 +50,14 @@ panic-halt = "0.2.0"
 codegen-units = 1
 debug = false
 opt-level = "z"
-panic = "abort"
 # lto = false
 # Settings below aimed to reduce
 # binary size due to code
-lto = "fat"
+# lto = "fat"
+lto = "thin"
 overflow-checks = false
 strip = "symbols"
+panic = "abort"
 
 [profile.dev]
 lto = false

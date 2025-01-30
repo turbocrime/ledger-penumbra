@@ -41,6 +41,8 @@ zxerr_t crypto_getFvkBytes(uint8_t *fvk, uint16_t len) {
     uint16_t cmdResponseLen = 0;
     return crypto_fillKeys(fvk, len, &cmdResponseLen);
 }
+
+void io_heartbeat() { io_seproxyhal_io_heartbeat(); }
 #else
 
 // This to support cpp tests
@@ -55,5 +57,7 @@ zxerr_t crypto_getFvkBytes(uint8_t *sk, uint16_t len) {
 
     return zxerr_ok;
 }
+
+void io_heartbeat() {}
 
 #endif
