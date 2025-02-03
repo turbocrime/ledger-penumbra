@@ -13,6 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
+#include "spend.h"
 
 #include "note.h"
 #include "parser_pb_utils.h"
@@ -23,16 +24,14 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     penumbra_core_component_shielded_pool_v1_SpendPlan spend_plan =
         penumbra_core_component_shielded_pool_v1_SpendPlan_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
-    fixed_size_field_t randomizer_arg, value_blinding_arg, proof_blinding_r_arg, proof_blinding_s_arg;
+    fixed_size_field_t randomizer_arg, value_blinding_arg;
 
     setup_decode_fixed_field(&spend_plan.randomizer, &randomizer_arg, &output->randomizer, 32);
     setup_decode_fixed_field(&spend_plan.value_blinding, &value_blinding_arg, &output->value_blinding, 32);
-    setup_decode_fixed_field(&spend_plan.proof_blinding_r, &proof_blinding_r_arg, &output->proof_blinding_r, 32);
-    setup_decode_fixed_field(&spend_plan.proof_blinding_s, &proof_blinding_s_arg, &output->proof_blinding_s, 32);
 
     // inner in address
     fixed_size_field_t address_inner_arg;
@@ -46,7 +45,7 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     fixed_size_field_t rseed_arg;
     setup_decode_fixed_field(&spend_plan.note.rseed, &rseed_arg, &output->note.rseed, RSEED_LEN);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_shielded_pool_v1_SpendPlan_fields, &spend_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_shielded_pool_v1_SpendPlan_fields, &spend_plan)) {
         return parser_spend_plan_error;
     }
 
@@ -61,38 +60,6 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     output->note.has_address = spend_plan.note.has_address;
     output->note.value.has_asset_id = spend_plan.note.value.has_asset_id;
     output->position = spend_plan.position;
-
-    return parser_ok;
-}
-
-parser_error_t spend_printValue(const parser_context_t *ctx, const spend_plan_t *spend, char *outVal, uint16_t outValLen) {
-    if (ctx == NULL || spend == NULL || outVal == NULL) {
-        return parser_no_data;
-    }
-
-    if (outValLen < SPEND_DISPLAY_MAX_LEN) {
-        return parser_unexpected_buffer_end;
-    }
-
-    MEMZERO(outVal, outValLen);
-
-    // example: Spend 100 USDC to penumbra1k0zzug62gpz60sejdvu9q7mq…
-
-    // add action title
-    snprintf(outVal, outValLen, "%s", "Spend ");
-    uint16_t written_value = strlen(outVal);
-
-    // add value
-    CHECK_ERROR(printValue(ctx, &spend->note.value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
-                           outValLen - written_value));
-    written_value = strlen(outVal);
-
-    // add "from"
-    snprintf(outVal + written_value, outValLen - written_value, " from ");
-    written_value = strlen(outVal);
-
-    // add address
-    CHECK_ERROR(printTxAddress(&spend->note.address.inner, outVal + written_value, outValLen - written_value));
 
     return parser_ok;
 }
@@ -117,9 +84,41 @@ parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *sp
 
     char bufferUI[SPEND_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(spend_printValue(ctx, spend, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
+
+    return parser_ok;
+}
+
+parser_error_t spend_printValue(const parser_context_t *ctx, const spend_plan_t *spend, char *outVal, uint16_t outValLen) {
+    if (ctx == NULL || spend == NULL || outVal == NULL) {
+        return parser_no_data;
+    }
+
+    if (outValLen < SPEND_DISPLAY_MAX_LEN) {
+        return parser_unexpected_buffer_end;
+    }
+
+    MEMZERO(outVal, outValLen);
+
+    // example: Spend 100 USDC to penumbra1k0zzug62gpz60sejdvu9q7mq…
+
+    // add action title
+    snprintf(outVal, outValLen, "Spend ");
+    uint16_t written_value = strlen(outVal);
+
+    // add value
+    CHECK_ERROR(printValue(ctx, &spend->note.value, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
+                           outValLen - written_value));
+    written_value = strlen(outVal);
+
+    // add "from"
+    snprintf(outVal + written_value, outValLen - written_value, " from ");
+    written_value = strlen(outVal);
+
+    // add address
+    MEMCPY(outVal + written_value, &spend->ui_address, SHORT_ADDRESS_LEN);
 
     return parser_ok;
 }

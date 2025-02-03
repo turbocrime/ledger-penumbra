@@ -25,13 +25,8 @@ parser_error_t decode_ics20_withdrawal_plan(const bytes_t *data, ics20_withdrawa
     penumbra_core_component_ibc_v1_Ics20Withdrawal withdrawal_plan =
         penumbra_core_component_ibc_v1_Ics20Withdrawal_init_default;
 
-    pb_istream_t withdrawal_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
-
-    // Set up fixed size fields
-    fixed_size_field_t return_address_arg;
-    setup_decode_fixed_field(&withdrawal_plan.return_address.inner, &return_address_arg, &withdrawal->return_address.inner,
-                             80);
 
     // Set up variable size fields
     variable_size_field_t denom_arg, destination_chain_address_arg, source_channel_arg;
@@ -40,7 +35,7 @@ parser_error_t decode_ics20_withdrawal_plan(const bytes_t *data, ics20_withdrawa
                                 &withdrawal->destination_chain_address);
     setup_decode_variable_field(&withdrawal_plan.source_channel, &source_channel_arg, &withdrawal->source_channel);
 
-    if (!pb_decode(&withdrawal_stream, penumbra_core_component_ibc_v1_Ics20Withdrawal_fields, &withdrawal_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_ibc_v1_Ics20Withdrawal_fields, &withdrawal_plan)) {
         return parser_ics20_withdrawal_plan_error;
     }
 
@@ -50,14 +45,6 @@ parser_error_t decode_ics20_withdrawal_plan(const bytes_t *data, ics20_withdrawa
         withdrawal->amount.hi = withdrawal_plan.amount.hi;
     }
     withdrawal->has_denom = withdrawal_plan.has_denom;
-    withdrawal->has_return_address = withdrawal_plan.has_return_address;
-    withdrawal->has_timeout_height = withdrawal_plan.has_timeout_height;
-    if (withdrawal_plan.has_timeout_height) {
-        withdrawal->timeout_height.revision_number = withdrawal_plan.timeout_height.revision_number;
-        withdrawal->timeout_height.revision_height = withdrawal_plan.timeout_height.revision_height;
-    }
-    withdrawal->timeout_time = withdrawal_plan.timeout_time;
-    withdrawal->use_compat_address = withdrawal_plan.use_compat_address;
 
     return parser_ok;
 }
@@ -78,7 +65,7 @@ parser_error_t ics20_withdrawal_getItem(const parser_context_t *ctx, const ics20
 
     char bufferUI[ICS20_WITHDRAWAL_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(ics20_withdrawal_printValue(ctx, ics20_withdrawal, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 
@@ -121,8 +108,8 @@ parser_error_t ics20_withdrawal_printValue(const parser_context_t *ctx, const ic
     ics20_withdrawal_value.asset_id.inner.len = ASSET_ID_LEN;
     ics20_withdrawal_value.has_amount = true;
     ics20_withdrawal_value.has_asset_id = true;
-    CHECK_ERROR(printValue(ctx, &ics20_withdrawal_value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
-                           outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &ics20_withdrawal_value, &ctx->tx_obj->parameters_plan.chain_id, true,
+                           outVal + written_value, outValLen - written_value));
     written_value = strlen(outVal);
 
     snprintf(outVal + written_value, outValLen - written_value, " To ");

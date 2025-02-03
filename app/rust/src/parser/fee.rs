@@ -1,8 +1,10 @@
 use crate::constants::{AMOUNT_LEN_BYTES, ID_LEN_BYTES};
-use crate::parser::commitment::Commitment;
-use crate::parser::id::Id;
-use crate::parser::value::Sign;
-use crate::parser::value::{Value, ValueC, Imbalance, Balance};
+use crate::parser::{
+    balance::Balance,
+    commitment::Commitment,
+    id::Id,
+    value::{Imbalance, Sign, Value, ValueC},
+};
 use crate::ParserError;
 use decaf377::Fq;
 use decaf377::Fr;
@@ -32,7 +34,7 @@ impl TryFrom<FeeC> for Fee {
             // If conversion fails, create a new Value with the amount and staking token asset ID
             Ok(Fee(Value {
                 amount: value.0.amount.try_into()?,
-                asset_id: Id(Fq::from_le_bytes_mod_order(&STAKING_TOKEN_ASSET_ID_BYTES))
+                asset_id: Id(Fq::from_le_bytes_mod_order(&STAKING_TOKEN_ASSET_ID_BYTES)),
             }))
         }
     }
@@ -49,7 +51,7 @@ impl Fee {
 
     pub fn commit(&self, blinding: Fr) -> Result<Commitment, ParserError> {
         let mut balance = Balance::new();
-        balance.add(Imbalance{
+        balance.insert(Imbalance {
             value: self.0.clone(),
             sign: Sign::Required,
         })?;

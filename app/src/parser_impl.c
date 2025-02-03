@@ -16,7 +16,11 @@
 
 #include "parser_impl.h"
 
+#include "action_dutch_auction_end.h"
+#include "action_dutch_auction_schedule.h"
+#include "action_dutch_auction_withdraw.h"
 #include "delegate.h"
+#include "delegator_vote.h"
 #include "ics20_withdrawal.h"
 #include "output.h"
 #include "parameters.h"
@@ -24,13 +28,19 @@
 #include "parser_pb_utils.h"
 #include "pb_common.h"
 #include "pb_decode.h"
+#include "position_close.h"
+#include "position_open.h"
+#include "position_withdraw.h"
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "spend.h"
 #include "swap.h"
+#include "ui_utils.h"
 #include "undelegate.h"
 #include "undelegate_claim.h"
-#include "delegator_vote.h"
 #include "zxformat.h"
+
+#define ACTION_OFFSET_3 3
+#define ACTION_OFFSET_4 4
 
 static bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg);
 static bool decode_detection_data(pb_istream_t *stream, const pb_field_t *field, void **arg);
@@ -63,10 +73,15 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
         return false;
     }
 
+    if (stream->bytes_left < ACTION_OFFSET_4) {
+        decode_error = parser_unexpected_data;
+        return false;
+    }
+
     penumbra_core_transaction_v1_ActionPlan action = penumbra_core_transaction_v1_ActionPlan_init_default;
 
-    bytes_t action_data_3 = {.ptr = stream->state + 3, .len = stream->bytes_left - 3};
-    bytes_t action_data_4 = {.ptr = stream->state + 4, .len = stream->bytes_left - 4};
+    bytes_t action_data_3 = {.ptr = stream->state + ACTION_OFFSET_3, .len = stream->bytes_left - ACTION_OFFSET_3};
+    bytes_t action_data_4 = {.ptr = stream->state + ACTION_OFFSET_4, .len = stream->bytes_left - ACTION_OFFSET_4};
 
     if (!pb_decode(stream, penumbra_core_transaction_v1_ActionPlan_fields, &action)) {
         return false;
@@ -102,13 +117,43 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
             break;
         case penumbra_core_transaction_v1_ActionPlan_undelegate_claim_tag:
             decode_arg[actions_qty].action_data = action_data_4;
-            CHECK_ACTION_ERROR(decode_undelegate_claim_plan(&action_data_4, &decode_arg[actions_qty].action.undelegate_claim));
+            CHECK_ACTION_ERROR(
+                decode_undelegate_claim_plan(&action_data_4, &decode_arg[actions_qty].action.undelegate_claim));
             break;
         case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
             decode_arg[actions_qty].action_data = action_data_4;
             CHECK_ACTION_ERROR(decode_delegator_vote_plan(&action_data_4, &decode_arg[actions_qty].action.delegator_vote));
             break;
+        case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
+            decode_arg[actions_qty].action_data = action_data_4;
+            CHECK_ACTION_ERROR(decode_position_open_plan(&action_data_4, &decode_arg[actions_qty].action.position_open));
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_position_close_tag:
+            decode_arg[actions_qty].action_data = action_data_3;
+            CHECK_ACTION_ERROR(decode_position_close_plan(&action_data_3, &decode_arg[actions_qty].action.position_close));
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag:
+            decode_arg[actions_qty].action_data = action_data_4;
+            CHECK_ACTION_ERROR(
+                decode_position_withdraw_plan(&action_data_4, &decode_arg[actions_qty].action.position_withdraw));
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_schedule_tag:
+            decode_arg[actions_qty].action_data = action_data_4;
+            CHECK_ACTION_ERROR(decode_action_dutch_auction_schedule_plan(
+                &action_data_4, &decode_arg[actions_qty].action.action_dutch_auction_schedule));
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_end_tag:
+            decode_arg[actions_qty].action_data = action_data_3;
+            CHECK_ACTION_ERROR(decode_action_dutch_auction_end_plan(
+                &action_data_3, &decode_arg[actions_qty].action.action_dutch_auction_end));
+            break;
+        case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_withdraw_tag:
+            decode_arg[actions_qty].action_data = action_data_4;
+            CHECK_ACTION_ERROR(decode_action_dutch_auction_withdraw_plan(
+                &action_data_4, &decode_arg[actions_qty].action.action_dutch_auction_withdraw));
+            break;
         default:
+            decode_error = parser_invalid_action_type;
             return false;
     }
     actions_qty++;
@@ -201,6 +246,30 @@ parser_error_t _read(parser_context_t *c, parser_tx_t *v) {
     v->plan.has_detection_data = request.has_detection_data;
     v->plan.actions.qty = actions_qty;
 
+    if (v->plan.has_memo) {
+        // Calculate UI memo address now to avoid delay in display
+        CHECK_ERROR(printTxAddress(&v->plan.memo.plaintext.return_address.inner, (char *)v->plan.memo.ui_address,
+                                   sizeof(v->plan.memo.ui_address)));
+    }
+
+    // Calculate action addresses now to avoid delay in display
+    for (uint16_t i = 0; i < actions_qty; i++) {
+        switch (v->actions_plan[i].action_type) {
+            case penumbra_core_transaction_v1_ActionPlan_spend_tag:
+                CHECK_ERROR(printTxAddress(&v->actions_plan[i].action.spend.note.address.inner,
+                                           (char *)v->actions_plan[i].action.spend.ui_address,
+                                           sizeof(v->actions_plan[i].action.spend.ui_address)));
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_output_tag:
+                CHECK_ERROR(printTxAddress(&v->actions_plan[i].action.output.dest_address.inner,
+                                           (char *)v->actions_plan[i].action.output.ui_address,
+                                           sizeof(v->actions_plan[i].action.output.ui_address)));
+                break;
+            default:
+                break;
+        }
+    }
+
     return parser_ok;
 }
 
@@ -265,6 +334,12 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Undelegate claim plan error";
         case parser_delegator_vote_plan_error:
             return "Delegator vote plan error";
+        case parser_position_open_plan_error:
+            return "Position open plan error";
+        case parser_position_close_plan_error:
+            return "Position close plan error";
+        case parser_position_withdraw_plan_error:
+            return "Position withdraw plan error";
 
         // Chain related
         case parser_invalid_chain_id:

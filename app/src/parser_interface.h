@@ -25,12 +25,10 @@ extern "C" {
 
 #include "keys_def.h"
 #include "parser_common.h"
-#include "zxerror.h"
-#include "zxmacros.h"
 
-zxerr_t compute_parameters_hash(bytes_t *parameters_bytes, hash_t *output);
-zxerr_t compute_effect_hash(transaction_plan_t *plan, uint8_t *effect_hash, uint16_t effect_hash_len);
-zxerr_t compute_action_hash(action_t *action, bytes_t *memo_key, hash_t *output);
+parser_error_t compute_parameters_hash(bytes_t *parameters_bytes, hash_t *output);
+parser_error_t compute_effect_hash(transaction_plan_t *plan, uint8_t *effect_hash, uint16_t effect_hash_len);
+parser_error_t compute_action_hash(action_t *action, bytes_t *memo_key, hash_t *output);
 
 #ifdef __cplusplus
 }

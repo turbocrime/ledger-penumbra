@@ -24,7 +24,7 @@
 parser_error_t decode_undelegate_plan(const bytes_t *data, undelegate_plan_t *undelegate) {
     penumbra_core_component_stake_v1_Undelegate undelegate_plan = penumbra_core_component_stake_v1_Undelegate_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
@@ -32,12 +32,11 @@ parser_error_t decode_undelegate_plan(const bytes_t *data, undelegate_plan_t *un
     setup_decode_fixed_field(&undelegate_plan.validator_identity.ik, &validator_identity_arg,
                              &undelegate->validator_identity.ik, 32);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_stake_v1_Undelegate_fields, &undelegate_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_stake_v1_Undelegate_fields, &undelegate_plan)) {
         return parser_undelegate_plan_error;
     }
 
     undelegate->has_validator_identity = undelegate_plan.has_validator_identity;
-    undelegate->start_epoch_index = undelegate_plan.start_epoch_index;
     if (undelegate_plan.has_unbonded_amount) {
         undelegate->unbonded_amount.lo = undelegate_plan.unbonded_amount.lo;
         undelegate->unbonded_amount.hi = undelegate_plan.unbonded_amount.hi;
@@ -70,7 +69,7 @@ parser_error_t undelegate_getItem(const parser_context_t *ctx, const undelegate_
 
     char bufferUI[UNDELEGATE_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(undelegate_printValue(ctx, undelegate, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 
@@ -116,7 +115,7 @@ parser_error_t undelegate_printValue(const parser_context_t *ctx, const undelega
                                      .asset_id.inner = {.ptr = asset_id_bytes, .len = ASSET_ID_LEN},
                                      .has_amount = true,
                                      .has_asset_id = true};
-    CHECK_ERROR(printValue(ctx, &local_delegate_amount, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &local_delegate_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
     written_value = strlen(outVal);
 
@@ -125,16 +124,24 @@ parser_error_t undelegate_printValue(const parser_context_t *ctx, const undelega
     written_value = strlen(outVal);
 
     // add unbonded amount
-    snprintf((char *)metadata_buffer, sizeof(metadata_buffer), "uunbonding_start_at_%llu_%s", undelegate->from_epoch.index,
+    snprintf((char *)metadata_buffer, sizeof(metadata_buffer), "uunbonding_start_at_");
+    uint16_t written_value_metadata = strlen((char *)metadata_buffer);
+    uint64_to_str((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata,
+                  undelegate->from_epoch.index);
+    written_value_metadata = strlen((char *)metadata_buffer);
+    snprintf((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata, "_");
+    written_value_metadata = strlen((char *)metadata_buffer);
+    snprintf((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata, "%s",
              validator_identity_bytes);
-    metadata.len = strlen((char *)metadata_buffer);
+    written_value_metadata = strlen((char *)metadata_buffer);
+    metadata.len = written_value_metadata;
     rs_get_asset_id_from_metadata(&metadata, asset_id_bytes, ASSET_ID_LEN);
 
     value_t local_unbonded_amount = {.amount = undelegate->unbonded_amount,
                                      .asset_id.inner = {.ptr = asset_id_bytes, .len = ASSET_ID_LEN},
                                      .has_amount = true,
                                      .has_asset_id = true};
-    CHECK_ERROR(printValue(ctx, &local_unbonded_amount, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &local_unbonded_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
     return parser_ok;
 }

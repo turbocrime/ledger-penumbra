@@ -20,22 +20,22 @@ use getrandom::getrandom;
 
 use rand::{CryptoRng, RngCore};
 
+#[cfg(all(
+    not(test),
+    not(feature = "clippy"),
+    not(feature = "fuzzing"),
+    not(feature = "cpp_tests")
+))]
+extern "C" {
+    fn check_app_canary();
+    fn pic(link_address: u32) -> u32;
+    fn app_mode_expert() -> u8;
+    fn zemu_log_stack(s: *const u8);
+    fn io_heartbeat();
+}
+
 extern "C" {
     fn cx_rng(buffer: *mut u8, len: u32);
-    fn zemu_log_stack(buffer: *const u8);
-    fn check_app_canary();
-}
-
-#[cfg(not(test))]
-pub fn c_zemu_log_stack(s: &[u8]) {
-    unsafe { zemu_log_stack(s.as_ptr()) }
-}
-
-#[cfg(test)]
-pub fn c_zemu_log_stack(_s: &[u8]) {}
-
-pub fn c_check_app_canary() {
-    unsafe { check_app_canary() }
 }
 
 pub struct Trng;
@@ -55,7 +55,7 @@ impl RngCore for Trng {
 
     #[cfg(not(test))]
     fn fill_bytes(&mut self, dest: &mut [u8]) {
-        c_zemu_log_stack(b"fill_bytes\x00".as_ref());
+        zlog("fill_bytes\x00");
 
         unsafe {
             cx_rng(dest.as_mut_ptr(), dest.len() as u32);
@@ -74,3 +74,72 @@ impl RngCore for Trng {
 }
 
 impl CryptoRng for Trng {}
+
+pub(crate) fn canary() {
+    #[cfg(all(
+        not(test),
+        not(feature = "clippy"),
+        not(feature = "fuzzing"),
+        not(feature = "cpp_tests")
+    ))]
+    unsafe {
+        check_app_canary();
+    }
+}
+
+pub fn is_expert_mode() -> bool {
+    cfg_if::cfg_if! {
+        if #[cfg(all(not(test), not(feature = "clippy"), not(feature = "fuzzing"), not(feature = "cpp_tests")))] {
+            unsafe {
+                app_mode_expert() > 0
+            }
+        } else {
+            true
+        }
+    }
+}
+
+pub fn zlog(_msg: &str) {
+    #[cfg(all(
+        not(test),
+        not(feature = "clippy"),
+        not(feature = "fuzzing"),
+        not(feature = "cpp_tests")
+    ))]
+    unsafe {
+        zemu_log_stack(_msg.as_bytes().as_ptr());
+    }
+}
+
+#[macro_export]
+macro_rules! check_canary {
+    () => {
+        use canary;
+        canary();
+    };
+}
+
+pub fn pic_addr(addr: u32) -> u32 {
+    cfg_if::cfg_if! {
+        if #[cfg(all(not(test), not(feature = "clippy"), not(feature = "fuzzing"), not(feature = "cpp_tests")))] {
+        unsafe {
+            pic(addr)
+        }
+        } else {
+            addr
+        }
+    }
+}
+
+// Lets the device breath between computations
+pub(crate) fn heartbeat() {
+    #[cfg(all(
+        not(test),
+        not(feature = "clippy"),
+        not(feature = "fuzzing"),
+        not(feature = "cpp_tests")
+    ))]
+    unsafe {
+        io_heartbeat();
+    }
+}

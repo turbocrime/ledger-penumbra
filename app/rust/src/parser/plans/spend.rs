@@ -16,12 +16,13 @@
 
 use crate::keys::FullViewingKey;
 use crate::parser::{
+    balance::Balance,
     bytes::BytesC,
     commitment::Commitment,
     effect_hash::{create_personalized_state, EffectHash},
     note::{Note, NoteC},
     nullifier::Nullifier,
-    value::{Sign, Value, Balance, Imbalance},
+    value::{Imbalance, Sign, Value},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -41,8 +42,6 @@ pub struct SpendPlanC {
     pub position: u64,
     pub randomizer: BytesC,
     pub value_blinding: BytesC,
-    pub proof_blinding_r: BytesC,
-    pub proof_blinding_s: BytesC,
 }
 
 impl SpendPlanC {
@@ -59,15 +58,12 @@ impl SpendPlanC {
 
         state.update(&body.nullifier.to_proto());
 
-        let hash = state.finalize();
-        Ok(EffectHash(*hash.as_array()))
+        Ok(EffectHash(*state.finalize().as_array()))
     }
 
     pub fn spend_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {
         Ok(Body {
-            balance_commitment: self
-                .balance()?
-                .commit(self.get_value_blinding_fr()?)?,
+            balance_commitment: self.balance()?.commit(self.get_value_blinding_fr()?)?,
             nullifier: self.nullifier(fvk)?,
             rk: self.rk(fvk)?,
         })
@@ -75,7 +71,7 @@ impl SpendPlanC {
 
     pub fn balance(&self) -> Result<Balance, ParserError> {
         let mut balance = Balance::new();
-        balance.add(Imbalance{
+        balance.insert(Imbalance {
             value: Value::try_from(self.note.value.clone())?,
             sign: Sign::Provided,
         })?;

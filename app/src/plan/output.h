@@ -28,6 +28,7 @@ parser_error_t output_getNumItems(const parser_context_t *ctx, uint8_t *num_item
 parser_error_t output_getItem(const parser_context_t *ctx, const output_plan_t *output, uint8_t displayIdx, char *outKey,
                               uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t actionIdx, uint8_t *pageCount);
 parser_error_t output_printValue(const parser_context_t *ctx, const output_plan_t *output, char *outVal, uint16_t outValLen);
+
 #ifdef __cplusplus
 }
 #endif

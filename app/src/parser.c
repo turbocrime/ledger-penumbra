@@ -21,21 +21,28 @@
 #include <zxmacros.h>
 #include <zxtypes.h>
 
+#include "action_dutch_auction_end.h"
+#include "action_dutch_auction_schedule.h"
+#include "action_dutch_auction_withdraw.h"
 #include "coin.h"
 #include "crypto.h"
+#include "delegate.h"
+#include "delegator_vote.h"
 #include "ics20_withdrawal.h"
 #include "memo.h"
 #include "output.h"
 #include "parameters.h"
 #include "parser_common.h"
 #include "parser_impl.h"
+#include "parser_interface.h"
+#include "position_close.h"
+#include "position_open.h"
+#include "position_withdraw.h"
 #include "spend.h"
 #include "swap.h"
-#include "delegate.h"
-#include "delegator_vote.h"
+#include "tx_metadata.h"
 #include "undelegate.h"
 #include "undelegate_claim.h"
-#include "tx_metadata.h"
 
 static uint8_t action_idx = 0;
 
@@ -58,6 +65,35 @@ parser_error_t parser_parse(parser_context_t *ctx, const uint8_t *data, size_t d
     CHECK_ERROR(parser_init_context(ctx, data, dataLen))
     ctx->tx_obj = tx_obj;
     return _read(ctx, tx_obj);
+}
+
+parser_error_t parser_computeEffectHash(parser_context_t *ctx) {
+#if defined(LEDGER_SPECIFIC)
+    io_seproxyhal_io_heartbeat();
+#endif
+    // compute parameters hash
+    CHECK_ERROR(compute_parameters_hash(&ctx->tx_obj->parameters_plan.data_bytes, &ctx->tx_obj->plan.parameters_hash));
+
+    // compute action hashes
+    for (uint16_t i = 0; i < ctx->tx_obj->plan.actions.qty; i++) {
+#if defined(LEDGER_SPECIFIC)
+        io_seproxyhal_io_heartbeat();
+#endif
+        CHECK_ERROR(compute_action_hash(&ctx->tx_obj->actions_plan[i], &ctx->tx_obj->plan.memo.key,
+                                        &ctx->tx_obj->plan.actions.hashes[i]));
+    }
+
+#if defined(LEDGER_SPECIFIC)
+    io_seproxyhal_io_heartbeat();
+#endif
+    // compute effect hash
+    CHECK_ERROR(compute_effect_hash(&ctx->tx_obj->plan, ctx->tx_obj->effect_hash, sizeof(ctx->tx_obj->effect_hash)));
+
+#if defined(LEDGER_SPECIFIC)
+    io_seproxyhal_io_heartbeat();
+#endif
+
+    return parser_ok;
 }
 
 parser_error_t parser_validate(parser_context_t *ctx) {
@@ -86,41 +122,8 @@ parser_error_t parser_getNumItems(const parser_context_t *ctx, uint8_t *num_item
     CHECK_ERROR(memo_getNumItems(ctx, &memo_num_items))
     *num_items += memo_num_items;
 
-    // Add actions number of items
-    for (uint8_t i = 0; i < ctx->tx_obj->plan.actions.qty; i++) {
-        uint8_t action_num_items = 0;
-        switch (ctx->tx_obj->actions_plan[i].action_type) {
-            case penumbra_core_transaction_v1_ActionPlan_spend_tag:
-                CHECK_ERROR(spend_getNumItems(ctx, &action_num_items));
-                break;
-            case penumbra_core_transaction_v1_ActionPlan_output_tag:
-                CHECK_ERROR(output_getNumItems(ctx, &action_num_items));
-                break;
-            case penumbra_core_transaction_v1_ActionPlan_ics20_withdrawal_tag:
-                CHECK_ERROR(ics20_withdrawal_getNumItems(ctx, &action_num_items));
-                break;
-#if defined(FULL_APP)
-            case penumbra_core_transaction_v1_ActionPlan_swap_tag:
-                CHECK_ERROR(swap_getNumItems(ctx, &action_num_items));
-                break;
-#endif
-            case penumbra_core_transaction_v1_ActionPlan_delegate_tag:
-                CHECK_ERROR(delegate_getNumItems(ctx, &action_num_items));
-                break;
-            case penumbra_core_transaction_v1_ActionPlan_undelegate_tag:
-                CHECK_ERROR(undelegate_getNumItems(ctx, &action_num_items));
-                break;
-            case penumbra_core_transaction_v1_ActionPlan_undelegate_claim_tag:
-                CHECK_ERROR(undelegate_claim_getNumItems(ctx, &action_num_items));
-                break;
-            case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
-                CHECK_ERROR(delegator_vote_getNumItems(ctx, &action_num_items));
-                break;
-            default:
-                return parser_unexpected_error;
-        }
-        *num_items += action_num_items;
-    }
+    // Add one item for each action
+    *num_items += ctx->tx_obj->plan.actions.qty;
 
     if (*num_items == 0) {
         return parser_unexpected_number_items;
@@ -180,42 +183,68 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
         }
         switch (ctx->tx_obj->actions_plan[action_idx].action_type) {
             case penumbra_core_transaction_v1_ActionPlan_spend_tag:
-                CHECK_ERROR(spend_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.spend, action_idx + 1, outKey,
+                CHECK_ERROR(spend_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.spend, action_idx, outKey,
                                           outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_output_tag:
-                CHECK_ERROR(output_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.output, action_idx + 1, outKey,
+                CHECK_ERROR(output_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.output, action_idx, outKey,
                                            outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_ics20_withdrawal_tag:
                 CHECK_ERROR(ics20_withdrawal_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.ics20_withdrawal,
-                                                     action_idx + 1, outKey, outKeyLen, outVal, outValLen, pageIdx,
-                                                     pageCount))
+                                                     action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
 #if defined(FULL_APP)
             case penumbra_core_transaction_v1_ActionPlan_swap_tag:
-                CHECK_ERROR(swap_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.swap, action_idx + 1, outKey,
+                CHECK_ERROR(swap_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.swap, action_idx, outKey,
                                          outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
 #endif
             case penumbra_core_transaction_v1_ActionPlan_delegate_tag:
-                CHECK_ERROR(delegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegate, action_idx + 1,
-                                             outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(delegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegate, action_idx, outKey,
+                                             outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_undelegate_tag:
-                CHECK_ERROR(undelegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate, action_idx + 1,
-                                             outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(undelegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate, action_idx,
+                                               outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_undelegate_claim_tag:
-                CHECK_ERROR(undelegate_claim_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate_claim, action_idx + 1,
-                                             outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(undelegate_claim_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate_claim,
+                                                     action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
-                CHECK_ERROR(delegator_vote_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegator_vote, action_idx + 1,
-                                             outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(delegator_vote_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegator_vote,
+                                                   action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
+                CHECK_ERROR(position_open_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_open,
+                                                  action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_position_close_tag:
+                CHECK_ERROR(position_close_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_close,
+                                                   action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag:
+                CHECK_ERROR(position_withdraw_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_withdraw,
+                                                      action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_schedule_tag:
+                CHECK_ERROR(action_dutch_auction_schedule_getItem(
+                    ctx, &ctx->tx_obj->actions_plan[action_idx].action.action_dutch_auction_schedule, action_idx, outKey,
+                    outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_end_tag:
+                CHECK_ERROR(action_dutch_auction_end_getItem(
+                    ctx, &ctx->tx_obj->actions_plan[action_idx].action.action_dutch_auction_end, action_idx, outKey,
+                    outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_withdraw_tag:
+                CHECK_ERROR(action_dutch_auction_withdraw_getItem(
+                    ctx, &ctx->tx_obj->actions_plan[action_idx].action.action_dutch_auction_withdraw, action_idx, outKey,
+                    outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             default:
-                return parser_unexpected_error;
+                return parser_invalid_action_type;
         }
     }
 

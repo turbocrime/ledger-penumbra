@@ -1,5 +1,5 @@
 use crate::{
-    address::{address_view::AddressView, Address, AddressIndex},
+    address::{Address, AddressIndex},
     utils::prf,
     wallet_id::WalletId,
     ParserError,
@@ -41,19 +41,6 @@ impl FullViewingKey {
         self.ivk().payment_address(index)
     }
 
-    /// Views the structure of the supplied address with this viewing key.
-    pub fn view_address(&self, address: Address) -> Result<AddressView, ParserError> {
-        if self.ivk().views_address(&address) {
-            Ok(AddressView::Visible {
-                index: self.ivk().index_for_diversifier(address.diversifier()),
-                wallet_id: self.wallet_id()?,
-                address,
-            })
-        } else {
-            Ok(AddressView::Opaque { address })
-        }
-    }
-
     /// Returns the index of the given address, if the address is viewed by this
     /// viewing key; otherwise, returns `None`.
     pub fn address_index(&self, address: &Address) -> Option<AddressIndex> {
@@ -65,12 +52,14 @@ impl FullViewingKey {
         ak: VerificationKey<SpendAuth>,
         nk: NullifierKey,
     ) -> Result<Self, ParserError> {
+        crate::heartbeat();
         let ovk = {
             let hash_result = prf::expand(b"Penumbra_DeriOVK", &nk.0.to_bytes(), ak.as_ref())?;
             let mut ovk = [0; 32];
             ovk.copy_from_slice(&hash_result[0..32]);
             ovk
         };
+        crate::heartbeat();
 
         let dk = {
             let hash_result = prf::expand(b"Penumbra_DerivDK", &nk.0.to_bytes(), ak.as_ref())?;
@@ -85,6 +74,7 @@ impl FullViewingKey {
             let ivk_mod_q = poseidon377::hash_2(&domain_sep, (nk.0, ak_s));
             ka::Secret::new_from_field(Fr::from_le_bytes_mod_order(&ivk_mod_q.to_bytes()))
         };
+        crate::heartbeat();
 
         let dk = DiversifierKey(dk);
         let ovk = Ovk(ovk);

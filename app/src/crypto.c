@@ -160,20 +160,8 @@ zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureM
 
     zxerr_t error = zxerr_invalid_crypto_settings;
 
-    // compute parameters hash
-    CATCH_ZX_ERROR(compute_parameters_hash(&tx_obj->parameters_plan.data_bytes, &tx_obj->plan.parameters_hash));
-
     // compute spend key
     CATCH_ZX_ERROR(computeSpendKey(&keys));
-
-    // compute action hashes
-    for (uint16_t i = 0; i < tx_obj->plan.actions.qty; i++) {
-        CATCH_ZX_ERROR(
-            compute_action_hash(&tx_obj->actions_plan[i], &tx_obj->plan.memo.key, &tx_obj->plan.actions.hashes[i]));
-    }
-
-    // compute effect hash
-    CATCH_ZX_ERROR(compute_effect_hash(&tx_obj->plan, tx_obj->effect_hash, sizeof(tx_obj->effect_hash)));
 
     // Similar to what is done in:
     // https://github.com/penumbra-zone/penumbra/blob/main/crates/core/transaction/src/plan/auth.rs#L12

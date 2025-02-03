@@ -16,17 +16,17 @@
 
 use crate::keys::FullViewingKey;
 use crate::parser::{
+    amount::{Amount, AmountC},
     bytes::BytesC,
-    amount::{AmountC, Amount},
     effect_hash::{create_personalized_state, EffectHash},
-    note::{NoteC, Note},
+    note::{Note, NoteC},
     nullifier::Nullifier,
     value::Value,
 };
+use crate::utils::protobuf::encode_varint;
+use crate::ParserError;
 use decaf377::Fr;
 use decaf377_rdsa::{SpendAuth, VerificationKey};
-use crate::ParserError;
-use crate::utils::protobuf::encode_varint;
 
 pub struct Body {
     /// The proposal ID the vote is for.
@@ -59,18 +59,17 @@ pub struct DelegatorVotePlanC {
     pub has_unbonded_amount: bool,
     pub unbonded_amount: AmountC,
     pub randomizer: BytesC,
-    pub proof_blinding_r: BytesC,
-    pub proof_blinding_s: BytesC,
 }
 
 impl DelegatorVotePlanC {
     pub fn effect_hash(&self, fvk: &FullViewingKey) -> Result<EffectHash, ParserError> {
         let body = self.delegator_vote_body(fvk)?;
 
-        let mut state = create_personalized_state("/penumbra.core.component.governance.v1.DelegatorVoteBody");
+        let mut state =
+            create_personalized_state("/penumbra.core.component.governance.v1.DelegatorVoteBody");
 
         // proposal
-        let mut encoded = [0u8; 10];
+        let mut encoded = [0u8; 11];
         encoded[0] = 0x08;
         let mut pos = 1;
         let mut len = encode_varint(body.proposal, &mut encoded[pos..]);
@@ -91,7 +90,7 @@ impl DelegatorVotePlanC {
         len = encode_varint(body.vote as u64, &mut encoded[pos..]);
         state.update(&encoded[..len + 1]);
 
-        // value amount 
+        // value amount
         state.update(&[0x22]);
         let (value, value_len) = body.value.to_proto();
         state.update(&value[..value_len]);
@@ -108,8 +107,7 @@ impl DelegatorVotePlanC {
         state.update(&[0x3a, 0x22, 0x0a, 0x20]);
         state.update(&body.rk.to_bytes());
 
-        let hash = state.finalize();
-        Ok(EffectHash(*hash.as_array()))
+        Ok(EffectHash(*state.finalize().as_array()))
     }
 
     pub fn delegator_vote_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {

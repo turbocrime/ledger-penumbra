@@ -163,6 +163,12 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/ics20_withdrawal.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/undelegate_claim.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/delegator_vote.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/position_open.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/position_close.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/position_withdraw.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/action_dutch_auction_schedule.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/action_dutch_auction_end.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/plan/action_dutch_auction_withdraw.c
         )
 
 add_library(app_lib STATIC ${LIB_SRC})
@@ -243,7 +249,9 @@ if(ENABLE_FUZZING)
 
     foreach(target ${FUZZ_TARGETS})
         add_executable(fuzz-${target} ${CMAKE_CURRENT_SOURCE_DIR}/fuzz/${target}.cpp)
-        target_link_libraries(fuzz-${target} PRIVATE app_lib)
+        target_link_libraries(fuzz-${target} PRIVATE 
+        app_lib
+        rslib)
         target_link_options(fuzz-${target} PRIVATE "-fsanitize=fuzzer")
     endforeach()
 else()

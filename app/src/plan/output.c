@@ -24,16 +24,14 @@ parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
     penumbra_core_component_shielded_pool_v1_OutputPlan output_plan =
         penumbra_core_component_shielded_pool_v1_OutputPlan_init_default;
 
-    pb_istream_t spend_stream = pb_istream_from_buffer(data->ptr, data->len);
+    pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
-    fixed_size_field_t rseed_arg, value_blinding_arg, proof_blinding_r_arg, proof_blinding_s_arg;
+    fixed_size_field_t rseed_arg, value_blinding_arg;
 
     setup_decode_fixed_field(&output_plan.rseed, &rseed_arg, &output->rseed, RSEED_LEN);
     setup_decode_fixed_field(&output_plan.value_blinding, &value_blinding_arg, &output->value_blinding, 32);
-    setup_decode_fixed_field(&output_plan.proof_blinding_r, &proof_blinding_r_arg, &output->proof_blinding_r, 32);
-    setup_decode_fixed_field(&output_plan.proof_blinding_s, &proof_blinding_s_arg, &output->proof_blinding_s, 32);
 
     // asset_id in value
     fixed_size_field_t asset_id_arg;
@@ -43,7 +41,7 @@ parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
     fixed_size_field_t dest_address_inner_arg;
     setup_decode_fixed_field(&output_plan.dest_address.inner, &dest_address_inner_arg, &output->dest_address.inner, 80);
 
-    if (!pb_decode(&spend_stream, penumbra_core_component_shielded_pool_v1_OutputPlan_fields, &output_plan)) {
+    if (!pb_decode(&stream, penumbra_core_component_shielded_pool_v1_OutputPlan_fields, &output_plan)) {
         return parser_output_plan_error;
     }
 
@@ -75,7 +73,7 @@ parser_error_t output_getItem(const parser_context_t *ctx, const output_plan_t *
 
     char bufferUI[OUTPUT_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(output_printValue(ctx, output, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 
@@ -101,7 +99,7 @@ parser_error_t output_printValue(const parser_context_t *ctx, const output_plan_
     uint16_t written_value = strlen(outVal);
 
     // add value
-    CHECK_ERROR(printValue(ctx, &output->value, &ctx->tx_obj->parameters_plan.chain_id, outVal + written_value,
+    CHECK_ERROR(printValue(ctx, &output->value, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
     written_value = strlen(outVal);
 
@@ -110,7 +108,7 @@ parser_error_t output_printValue(const parser_context_t *ctx, const output_plan_
     written_value = strlen(outVal);
 
     // add address
-    CHECK_ERROR(printTxAddress(&output->dest_address.inner, outVal + written_value, outValLen - written_value));
+    MEMCPY(outVal + written_value, &output->ui_address, SHORT_ADDRESS_LEN);
 
     return parser_ok;
 }

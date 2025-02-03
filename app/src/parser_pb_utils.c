@@ -52,6 +52,26 @@ bool decode_variable_field(pb_istream_t *stream, const pb_field_t *field, void *
     return true;
 }
 
+bool decode_variable_field_array(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+    if (stream->bytes_left == 0 || arg == NULL) return false;
+
+    variable_size_field_array_t *decode_arg = (variable_size_field_array_t *)*arg;
+    if (decode_arg == NULL || decode_arg->bytes_array == NULL) {
+        return false;
+    }
+
+    if (decode_arg->filled_count >= decode_arg->array_size) {
+        return false;  // Array is full
+    }
+
+    // Fill the next available slot in the array
+    decode_arg->bytes_array[decode_arg->filled_count].ptr = stream->state;
+    decode_arg->bytes_array[decode_arg->filled_count].len = stream->bytes_left;
+    decode_arg->filled_count++;
+
+    return true;
+}
+
 void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, bytes_t *bytes, uint16_t expected_size) {
     arg->bytes = bytes;
     arg->expected_size = expected_size;
@@ -62,6 +82,15 @@ void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, 
 void setup_decode_variable_field(pb_callback_t *callback, variable_size_field_t *arg, bytes_t *bytes) {
     arg->bytes = bytes;
     callback->funcs.decode = &decode_variable_field;
+    callback->arg = arg;
+}
+
+void setup_decode_variable_field_array(pb_callback_t *callback, variable_size_field_array_t *arg, bytes_t *bytes_array,
+                                       size_t array_size) {
+    arg->bytes_array = bytes_array;
+    arg->array_size = array_size;
+    arg->filled_count = 0;
+    callback->funcs.decode = &decode_variable_field_array;
     callback->arg = arg;
 }
 

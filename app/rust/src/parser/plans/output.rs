@@ -19,6 +19,7 @@ use crate::keys::FullViewingKey;
 use crate::parser::note::Note;
 use crate::parser::{
     address::AddressC,
+    balance::Balance,
     bytes::BytesC,
     commitment::Commitment,
     effect_hash::{create_personalized_state, EffectHash},
@@ -26,7 +27,7 @@ use crate::parser::{
     rseed::Rseed,
     symmetric::PayloadKey,
     symmetric::{OvkWrappedKey, WrappedMemoKey},
-    value::{Sign, Value, ValueC, Balance, Imbalance},
+    value::{Imbalance, Sign, Value, ValueC},
 };
 use crate::ParserError;
 use decaf377::Fr;
@@ -48,8 +49,6 @@ pub struct OutputPlanC {
     pub dest_address: AddressC,
     pub rseed: BytesC,
     pub value_blinding: BytesC,
-    pub proof_blinding_r: BytesC,
-    pub proof_blinding_s: BytesC,
 }
 
 impl OutputPlanC {
@@ -70,8 +69,7 @@ impl OutputPlanC {
             state.update(&body.wrapped_memo_key.to_proto());
             state.update(&body.ovk_wrapped_key.to_proto());
 
-            let hash = state.finalize();
-            Ok(EffectHash(*hash.as_array()))
+            Ok(EffectHash(*state.finalize().as_array()))
         } else {
             Err(ParserError::InvalidLength)
         }
@@ -114,7 +112,7 @@ impl OutputPlanC {
 
     pub fn balance(&self) -> Result<Balance, ParserError> {
         let mut balance = Balance::new();
-        balance.add(Imbalance{
+        balance.insert(Imbalance {
             value: Value::try_from(self.value.clone())?,
             sign: Sign::Required,
         })?;
