@@ -59,8 +59,6 @@ pub struct DelegatorVotePlanC {
     pub has_unbonded_amount: bool,
     pub unbonded_amount: AmountC,
     pub randomizer: BytesC,
-    pub proof_blinding_r: BytesC,
-    pub proof_blinding_s: BytesC,
 }
 
 impl DelegatorVotePlanC {
@@ -109,8 +107,7 @@ impl DelegatorVotePlanC {
         state.update(&[0x3a, 0x22, 0x0a, 0x20]);
         state.update(&body.rk.to_bytes());
 
-        let hash = state.finalize();
-        Ok(EffectHash(*hash.as_array()))
+        Ok(EffectHash(*state.finalize().as_array()))
     }
 
     pub fn delegator_vote_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {

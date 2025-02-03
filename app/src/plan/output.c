@@ -28,12 +28,10 @@ parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
-    fixed_size_field_t rseed_arg, value_blinding_arg, proof_blinding_r_arg, proof_blinding_s_arg;
+    fixed_size_field_t rseed_arg, value_blinding_arg;
 
     setup_decode_fixed_field(&output_plan.rseed, &rseed_arg, &output->rseed, RSEED_LEN);
     setup_decode_fixed_field(&output_plan.value_blinding, &value_blinding_arg, &output->value_blinding, 32);
-    setup_decode_fixed_field(&output_plan.proof_blinding_r, &proof_blinding_r_arg, &output->proof_blinding_r, 32);
-    setup_decode_fixed_field(&output_plan.proof_blinding_s, &proof_blinding_s_arg, &output->proof_blinding_s, 32);
 
     // asset_id in value
     fixed_size_field_t asset_id_arg;

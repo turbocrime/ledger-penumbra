@@ -29,23 +29,18 @@ parser_error_t decode_undelegate_claim_plan(const bytes_t *data, undelegate_clai
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
-    fixed_size_field_t validator_identity_arg, penalty_arg, balance_blinding, proof_blinding_r, proof_blinding_s;
+    fixed_size_field_t validator_identity_arg, penalty_arg, balance_blinding;
     setup_decode_fixed_field(&undelegate_claim_plan.validator_identity.ik, &validator_identity_arg,
                              &undelegate_claim_claim->validator_identity.ik, 32);
     setup_decode_fixed_field(&undelegate_claim_plan.penalty.inner, &penalty_arg, &undelegate_claim_claim->penalty.inner, 32);
     setup_decode_fixed_field(&undelegate_claim_plan.balance_blinding, &balance_blinding,
                              &undelegate_claim_claim->balance_blinding, 32);
-    setup_decode_fixed_field(&undelegate_claim_plan.proof_blinding_r, &proof_blinding_r,
-                             &undelegate_claim_claim->proof_blinding_r, 32);
-    setup_decode_fixed_field(&undelegate_claim_plan.proof_blinding_s, &proof_blinding_s,
-                             &undelegate_claim_claim->proof_blinding_s, 32);
 
     if (!pb_decode(&stream, penumbra_core_component_stake_v1_UndelegateClaimPlan_fields, &undelegate_claim_plan)) {
-        return parser_undelegate_plan_error;
+        return parser_undelegate_claim_plan_error;
     }
 
     undelegate_claim_claim->has_validator_identity = undelegate_claim_plan.has_validator_identity;
-    undelegate_claim_claim->start_epoch_index = undelegate_claim_plan.start_epoch_index;
     undelegate_claim_claim->has_penalty = undelegate_claim_plan.has_penalty;
     if (undelegate_claim_plan.has_unbonding_amount) {
         undelegate_claim_claim->unbonding_amount.lo = undelegate_claim_plan.unbonding_amount.lo;
@@ -108,9 +103,17 @@ parser_error_t undelegate_claim_printValue(const parser_context_t *ctx, const un
     rs_get_asset_id_from_metadata(&metadata, asset_id_bytes, ASSET_ID_LEN);
 
     // add unbonded amount
-    snprintf((char *)metadata_buffer, sizeof(metadata_buffer), "uunbonding_start_at_%llu_%s",
-             undelegate->unbonding_start_height, validator_identity_bytes);
-    metadata.len = strlen((char *)metadata_buffer);
+    snprintf((char *)metadata_buffer, sizeof(metadata_buffer), "uunbonding_start_at_");
+    uint16_t written_value_metadata = strlen((char *)metadata_buffer);
+    uint64_to_str((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata,
+                  undelegate->unbonding_start_height);
+    written_value_metadata = strlen((char *)metadata_buffer);
+    snprintf((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata, "_");
+    written_value_metadata = strlen((char *)metadata_buffer);
+    snprintf((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata, "%s",
+             validator_identity_bytes);
+    written_value_metadata = strlen((char *)metadata_buffer);
+    metadata.len = written_value_metadata;
     rs_get_asset_id_from_metadata(&metadata, asset_id_bytes, ASSET_ID_LEN);
 
     value_t local_unbonded_amount = {.amount = undelegate->unbonding_amount,

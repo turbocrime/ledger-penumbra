@@ -79,7 +79,7 @@ pub unsafe extern "C" fn rs_compute_effect_hash(
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
     if output.len() < EFFECT_HASH_LEN {
-        return ParserError::UnexpectedData as u32;
+        return ParserError::InvalidLength as u32;
     }
 
     let plan_hash_result = plan.effect_hash();
@@ -105,8 +105,8 @@ pub unsafe extern "C" fn rs_parameter_hash(
     crate::zlog("rs_parameter_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
     let effect_hash: EffectHash;
@@ -137,21 +137,21 @@ pub unsafe extern "C" fn rs_spend_action_hash(
     crate::zlog("rs_spend_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
     let Ok(fvk) = c_fvk_bytes() else {
         return ParserError::InvalidFvk as u32;
     };
-    let body_hash_bytes = plan.effect_hash(&fvk);
 
-    if let Ok(body_hash_bytes) = body_hash_bytes {
-        let body_hash_array = body_hash_bytes.as_array();
-        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
-        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
-    } else {
-        return ParserError::SpendPlanError as u32;
+    match plan.effect_hash(&fvk) {
+        Ok(body_hash_bytes) => {
+            let body_hash_array = body_hash_bytes.as_array();
+            let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+            output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+        }
+        Err(err) => return err as u32,
     }
 
     ParserError::Ok as u32
@@ -169,8 +169,8 @@ pub unsafe extern "C" fn rs_output_action_hash(
     crate::zlog("rs_output_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
     let Ok(fvk) = c_fvk_bytes() else {
@@ -179,14 +179,13 @@ pub unsafe extern "C" fn rs_output_action_hash(
 
     let memo_key_bytes = memo_key.get_bytes().unwrap_or(&[0u8; 32]);
 
-    let body_hash_bytes = plan.effect_hash(&fvk, memo_key_bytes);
-
-    if let Ok(body_hash_bytes) = body_hash_bytes {
-        let body_hash_array = body_hash_bytes.as_array();
-        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+    match plan.effect_hash(&fvk, memo_key_bytes) {
+        Ok(body_hash_bytes) => {
+            let body_hash_array = body_hash_bytes.as_array();
+            let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
         output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
-    } else {
-        return ParserError::OutputPlanError as u32;
+        }
+        Err(err) => return err as u32,
     }
 
     ParserError::Ok as u32
@@ -203,22 +202,21 @@ pub unsafe extern "C" fn rs_swap_action_hash(
     crate::zlog("rs_swap_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
     let Ok(fvk) = c_fvk_bytes() else {
         return ParserError::InvalidFvk as u32;
     };
 
-    let body_hash_bytes = plan.effect_hash(&fvk);
-
-    if let Ok(body_hash_bytes) = body_hash_bytes {
-        let body_hash_array = body_hash_bytes.as_array();
-        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
-        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
-    } else {
-        return ParserError::SwapPlanError as u32;
+    match plan.effect_hash(&fvk) {
+        Ok(body_hash_bytes) => {
+            let body_hash_array = body_hash_bytes.as_array();
+            let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+            output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+        }
+        Err(err) => return err as u32,
     }
 
     ParserError::Ok as u32
@@ -235,18 +233,17 @@ pub unsafe extern "C" fn rs_undelegate_claim_action_hash(
     crate::zlog("rs_undelegate_claim_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
-    let body_hash_bytes = plan.effect_hash();
-
-    if let Ok(body_hash_bytes) = body_hash_bytes {
-        let body_hash_array = body_hash_bytes.as_array();
-        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
-        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
-    } else {
-        return ParserError::UndelegateClaimPlanError as u32;
+    match plan.effect_hash() {
+        Ok(body_hash_bytes) => {
+            let body_hash_array = body_hash_bytes.as_array();
+            let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+            output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+        }
+        Err(err) => return err as u32,
     }
 
     ParserError::Ok as u32
@@ -263,22 +260,21 @@ pub unsafe extern "C" fn rs_delegator_vote_action_hash(
     crate::zlog("rs_delegator_vote_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
     let Ok(fvk) = c_fvk_bytes() else {
         return ParserError::InvalidFvk as u32;
     };
 
-    let body_hash_bytes = plan.effect_hash(&fvk);
-
-    if let Ok(body_hash_bytes) = body_hash_bytes {
-        let body_hash_array = body_hash_bytes.as_array();
-        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
-        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
-    } else {
-        return ParserError::DelegatorVotePlanError as u32;
+    match plan.effect_hash(&fvk) {
+        Ok(body_hash_bytes) => {
+            let body_hash_array = body_hash_bytes.as_array();
+            let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+            output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+        }
+        Err(err) => return err as u32,
     }
 
     ParserError::Ok as u32
@@ -295,18 +291,17 @@ pub unsafe extern "C" fn rs_position_withdraw_action_hash(
     crate::zlog("rs_position_withdraw_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
-    let body_hash_bytes = plan.effect_hash();
-
-    if let Ok(body_hash_bytes) = body_hash_bytes {
-        let body_hash_array = body_hash_bytes.as_array();
-        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
-        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
-    } else {
-        return ParserError::PositionWithdrawPlanError as u32;
+    match plan.effect_hash() {
+        Ok(body_hash_bytes) => {
+            let body_hash_array = body_hash_bytes.as_array();
+            let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+            output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+        }
+        Err(err) => return err as u32,
     }
 
     ParserError::Ok as u32
@@ -323,18 +318,17 @@ pub unsafe extern "C" fn rs_action_dutch_auction_withdraw_action_hash(
     crate::zlog("rs_action_dutch_auction_withdraw_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
-    let body_hash_bytes = plan.effect_hash();
-
-    if let Ok(body_hash_bytes) = body_hash_bytes {
-        let body_hash_array = body_hash_bytes.as_array();
-        let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
-        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
-    } else {
-        return ParserError::DutchAuctionWithdrawPlanError as u32;
+    match plan.effect_hash() {
+        Ok(body_hash_bytes) => {
+            let body_hash_array = body_hash_bytes.as_array();
+            let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
+            output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+        }
+        Err(err) => return err as u32,
     }
 
     ParserError::Ok as u32
@@ -352,8 +346,8 @@ pub unsafe extern "C" fn rs_generic_action_hash(
     crate::zlog("rs_generic_action_hash\x00");
     let output = std::slice::from_raw_parts_mut(output, output_len);
 
-    if output.len() < 64 {
-        return ParserError::Ok as u32;
+    if output.len() < EFFECT_HASH_LEN {
+        return ParserError::InvalidLength as u32;
     }
 
     let action_type = ActionPlan::from(action_type);
@@ -403,7 +397,7 @@ pub unsafe extern "C" fn rs_generic_action_hash(
                 );
             }
             _ => {
-                return ParserError::UnexpectedData as u32;
+                return ParserError::InvalidActionType as u32;
             }
         }
 
@@ -564,19 +558,12 @@ mod tests {
         let dummy_value_blinding_bytes =
             hex::decode("f2e2f45f0ea734d7c11321cbf20427b379cfed6f71874ff97e8bcbbfce2d3d01")
                 .unwrap();
-        let dummy_proof_blinding_r_bytes =
-            hex::decode("73ec22fcaeccfadc720dd0350cf6af7ec274a74be832e8334613638edfd2fb10")
-                .unwrap();
-        let dummy_proof_blinding_s_bytes =
-            hex::decode("93043bfea2094b0398f0e14bccc66a9ec335bbfd1f8e8b4c2c21428947f5e50d")
-                .unwrap();
+
         let dummy_action = spend::SpendPlanC {
             note: dummy_note,
             position: 131414504314097,
             randomizer: BytesC::from_slice(&dummy_randomizer_bytes),
             value_blinding: BytesC::from_slice(&dummy_value_blinding_bytes),
-            proof_blinding_r: BytesC::from_slice(&dummy_proof_blinding_r_bytes),
-            proof_blinding_s: BytesC::from_slice(&dummy_proof_blinding_s_bytes),
         };
 
         let spend_key = SpendKeyBytes::from([
@@ -631,20 +618,12 @@ mod tests {
         let dummy_value_blinding_bytes =
             hex::decode("4c19474a9edb1933a643ae2b2648131061b95b25fb6ffeafb3e53ccacf8fe700")
                 .unwrap();
-        let dummy_proof_blinding_r_bytes =
-            hex::decode("825b816bfb539eb34a7933f362ab7b9a3fe128074a1603a5c43afb125d44e002")
-                .unwrap();
-        let dummy_proof_blinding_s_bytes =
-            hex::decode("86ae5038cfd758ee6520792a143ea401ef8e2afbc70f65c0b6e1d58b3492b211")
-                .unwrap();
 
         let dummy_action = output::OutputPlanC {
             value: dummy_value,
             dest_address: dummy_address,
             rseed: BytesC::from_slice(&dummy_rseed_bytes),
             value_blinding: BytesC::from_slice(&dummy_value_blinding_bytes),
-            proof_blinding_r: BytesC::from_slice(&dummy_proof_blinding_r_bytes),
-            proof_blinding_s: BytesC::from_slice(&dummy_proof_blinding_s_bytes),
         };
 
         let spend_key = SpendKeyBytes::from([
@@ -727,18 +706,11 @@ mod tests {
         let dummy_fee_blinding =
             hex::decode("62b169de7af84fa05c08a5946cb62afbf57d249634c01064b6823274a9ec5a03")
                 .unwrap();
-        let dummy_proof_blinding_r_bytes =
-            hex::decode("26180d90520e02b2752c01284191750d4b382a755a75ef488eb5f5084e84e60c")
-                .unwrap();
-        let dummy_proof_blinding_s_bytes =
-            hex::decode("182dc91a3f1b20a1e1dafac53b83b3e12f0ef3e08fa5320668ccd6218e02c908")
-                .unwrap();
+
         let dummy_action = swap::SwapPlanC {
             has_swap_plaintext: true,
             swap_plaintext: dummy_swap_plaintext,
             fee_blinding: BytesC::from_slice(&dummy_fee_blinding),
-            proof_blinding_r: BytesC::from_slice(&dummy_proof_blinding_r_bytes),
-            proof_blinding_s: BytesC::from_slice(&dummy_proof_blinding_s_bytes),
         };
 
         let spend_key = SpendKeyBytes::from([
@@ -814,24 +786,15 @@ mod tests {
         let dummy_balance_blinding_bytes =
             hex::decode("02a147e3c45b43f4f0cc9d8d6e2940c6927cbb5141b6062aae8ac3ba10ac4504")
                 .unwrap();
-        let dummy_proof_blinding_r_bytes =
-            hex::decode("a6f9bd68892e3c662cd41452dca6c196e31ce877f9e7303166e4eb25b496aa0a")
-                .unwrap();
-        let dummy_proof_blinding_s_bytes =
-            hex::decode("84d5bd78cab02b9528a4135abcdcf46d4953ab230d1e6d4dc295eb4208b5bf0d")
-                .unwrap();
 
         let dummy_action = undelegate_claim::UndelegateClaimPlanC {
             has_validator_identity: true,
             validator_identity: dummy_validator_identity,
-            start_epoch_index: 0,
             has_penalty: true,
             penalty: dummy_penalty,
             has_unbonding_amount: true,
             unbonding_amount: dummy_amount,
             balance_blinding: BytesC::from_slice(&dummy_balance_blinding_bytes),
-            proof_blinding_r: BytesC::from_slice(&dummy_proof_blinding_r_bytes),
-            proof_blinding_s: BytesC::from_slice(&dummy_proof_blinding_s_bytes),
             unbonding_start_height: 25928,
         };
 
@@ -893,12 +856,6 @@ mod tests {
         let dummy_randomizer_bytes =
             hex::decode("8ee3fae74bc73f0107e4f6fbb6a58be4326a0d6991af104f825b8ee4387a6b01")
                 .unwrap();
-        let dummy_proof_blinding_r_bytes =
-            hex::decode("3ad8f590111f2259243cc440cd5aebcce1f96c719095b6d68f6111ceb1f1ae05")
-                .unwrap();
-        let dummy_proof_blinding_s_bytes =
-            hex::decode("f59b1272a4d5ba8bea095233e51b392fe32ec7b97667aa44bf9f89321810ec10")
-                .unwrap();
         let dummy_action = delegator_vote::DelegatorVotePlanC {
             proposal: 267193148,
             start_position: 20,
@@ -910,8 +867,6 @@ mod tests {
             has_unbonded_amount: true,
             unbonded_amount: dummy_unbonded_amount,
             randomizer: BytesC::from_slice(&dummy_randomizer_bytes),
-            proof_blinding_r: BytesC::from_slice(&dummy_proof_blinding_r_bytes),
-            proof_blinding_s: BytesC::from_slice(&dummy_proof_blinding_s_bytes),
         };
 
         let spend_key = SpendKeyBytes::from([

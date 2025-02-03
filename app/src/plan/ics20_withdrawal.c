@@ -28,11 +28,6 @@ parser_error_t decode_ics20_withdrawal_plan(const bytes_t *data, ics20_withdrawa
     pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
 
-    // Set up fixed size fields
-    fixed_size_field_t return_address_arg;
-    setup_decode_fixed_field(&withdrawal_plan.return_address.inner, &return_address_arg, &withdrawal->return_address.inner,
-                             80);
-
     // Set up variable size fields
     variable_size_field_t denom_arg, destination_chain_address_arg, source_channel_arg;
     setup_decode_variable_field(&withdrawal_plan.denom.denom, &denom_arg, &withdrawal->denom.inner);
@@ -50,14 +45,6 @@ parser_error_t decode_ics20_withdrawal_plan(const bytes_t *data, ics20_withdrawa
         withdrawal->amount.hi = withdrawal_plan.amount.hi;
     }
     withdrawal->has_denom = withdrawal_plan.has_denom;
-    withdrawal->has_return_address = withdrawal_plan.has_return_address;
-    withdrawal->has_timeout_height = withdrawal_plan.has_timeout_height;
-    if (withdrawal_plan.has_timeout_height) {
-        withdrawal->timeout_height.revision_number = withdrawal_plan.timeout_height.revision_number;
-        withdrawal->timeout_height.revision_height = withdrawal_plan.timeout_height.revision_height;
-    }
-    withdrawal->timeout_time = withdrawal_plan.timeout_time;
-    withdrawal->use_compat_address = withdrawal_plan.use_compat_address;
 
     return parser_ok;
 }

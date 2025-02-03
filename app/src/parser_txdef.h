@@ -180,9 +180,6 @@ typedef struct {
 typedef struct {
     bool has_phi;
     trading_function_t phi;
-    bytes_t nonce;
-    bool has_state;
-    position_state_t state;
     bool has_reserves;
     reserves_t reserves;
     bool close_on_fill;
@@ -204,7 +201,6 @@ typedef struct {
     uint64_t start_height;
     uint64_t end_height;
     uint64_t step_count;
-    bytes_t nonce;
 } dutch_auction_description_t;
 
 typedef struct {
@@ -216,8 +212,6 @@ typedef struct {
     uint64_t position;
     bytes_t randomizer;
     bytes_t value_blinding;
-    bytes_t proof_blinding_r;
-    bytes_t proof_blinding_s;
 } spend_plan_t;
 
 typedef struct {
@@ -225,32 +219,24 @@ typedef struct {
     address_plan_t dest_address;
     bytes_t rseed;
     bytes_t value_blinding;
-    bytes_t proof_blinding_r;
-    bytes_t proof_blinding_s;
 } output_plan_t;
 
 typedef struct {
     bool has_swap_plaintext;
     swap_plaintext_t swap_plaintext;
     bytes_t fee_blinding;
-    bytes_t proof_blinding_r;
-    bytes_t proof_blinding_s;
 } swap_plan_t;
 
 typedef struct {
     bool has_validator_identity;
     identity_key_t validator_identity;
-    uint64_t epoch_index;
     bool has_unbonded_amount;
     amount_t unbonded_amount;
-    bool has_delegation_amount;
-    amount_t delegation_amount;
 } delegate_plan_t;
 
 typedef struct {
     bool has_validator_identity;
     identity_key_t validator_identity;
-    uint64_t start_epoch_index;
     bool has_unbonded_amount;
     amount_t unbonded_amount;
     bool has_delegation_amount;
@@ -265,26 +251,17 @@ typedef struct {
     bool has_denom;
     denom_t denom;
     bytes_t destination_chain_address;
-    bool has_return_address;
-    address_plan_t return_address;
-    bool has_timeout_height;
-    height_t timeout_height;
-    uint64_t timeout_time;
     bytes_t source_channel;
-    bool use_compat_address;
 } ics20_withdrawal_plan_t;
 
 typedef struct {
     bool has_validator_identity;
     identity_key_t validator_identity;
-    uint64_t start_epoch_index;
     bool has_penalty;
     penalty_t penalty;
     bool has_unbonding_amount;
     amount_t unbonding_amount;
     bytes_t balance_blinding;
-    bytes_t proof_blinding_r;
-    bytes_t proof_blinding_s;
     uint64_t unbonding_start_height;
 } undelegate_claim_plan_t;
 
@@ -299,8 +276,6 @@ typedef struct {
     bool has_unbonded_amount;
     amount_t unbonded_amount;
     bytes_t randomizer;
-    bytes_t proof_blinding_r;
-    bytes_t proof_blinding_s;
 } delegator_vote_plan_t;
 
 typedef struct {

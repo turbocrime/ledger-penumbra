@@ -33,7 +33,7 @@ parser_error_t decode_position_close_plan(const bytes_t *data, position_close_pl
                              ASSET_ID_LEN);
 
     if (!pb_decode(&stream, penumbra_core_component_dex_v1_PositionClose_fields, &position_close_pb)) {
-        return parser_output_plan_error;
+        return parser_position_close_plan_error;
     }
 
     position_close->has_position_id = position_close_pb.has_position_id;

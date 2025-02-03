@@ -38,14 +38,9 @@ parser_error_t decode_delegate_plan(const bytes_t *data, delegate_plan_t *delega
     }
 
     delegate->has_validator_identity = delegate_plan.has_validator_identity;
-    delegate->epoch_index = delegate_plan.epoch_index;
     if (delegate_plan.has_unbonded_amount) {
         delegate->unbonded_amount.lo = delegate_plan.unbonded_amount.lo;
         delegate->unbonded_amount.hi = delegate_plan.unbonded_amount.hi;
-    }
-    if (delegate_plan.has_delegation_amount) {
-        delegate->delegation_amount.lo = delegate_plan.delegation_amount.lo;
-        delegate->delegation_amount.hi = delegate_plan.delegation_amount.hi;
     }
 
     return parser_ok;

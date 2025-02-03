@@ -27,16 +27,14 @@ parser_error_t decode_position_open_plan(const bytes_t *data, position_open_plan
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
-    fixed_size_field_t nonce_arg, pair_asset_1, pair_asset_2;
-
-    setup_decode_fixed_field(&position_open_pb.position.nonce, &nonce_arg, &position_open->position.nonce, 32);
+    fixed_size_field_t pair_asset_1, pair_asset_2;
     setup_decode_fixed_field(&position_open_pb.position.phi.pair.asset_1.inner, &pair_asset_1,
                              &position_open->position.phi.pair.asset_1.inner, ASSET_ID_LEN);
     setup_decode_fixed_field(&position_open_pb.position.phi.pair.asset_2.inner, &pair_asset_2,
                              &position_open->position.phi.pair.asset_2.inner, ASSET_ID_LEN);
 
     if (!pb_decode(&stream, penumbra_core_component_dex_v1_PositionOpen_fields, &position_open_pb)) {
-        return parser_output_plan_error;
+        return parser_position_open_plan_error;
     }
 
     position_open->has_position = position_open_pb.has_position;
@@ -62,12 +60,6 @@ parser_error_t decode_position_open_plan(const bytes_t *data, position_open_plan
                 position_open->position.phi.pair.has_asset_1 = position_open_pb.position.phi.pair.has_asset_1;
                 position_open->position.phi.pair.has_asset_2 = position_open_pb.position.phi.pair.has_asset_2;
             }
-        }
-
-        position_open->position.has_state = position_open_pb.position.has_state;
-        if (position_open_pb.position.has_state) {
-            position_open->position.state.state = (position_state_enum_t)position_open_pb.position.state.state;
-            position_open->position.state.sequence = position_open_pb.position.state.sequence;
         }
 
         position_open->position.has_reserves = position_open_pb.position.has_reserves;
@@ -176,7 +168,9 @@ parser_error_t position_open_printValue(const parser_context_t *ctx, const posit
     written_value = strlen(outVal);
 
     // add "Fee: "
-    snprintf(outVal + written_value, outValLen - written_value, " Fee: %u", position_open->position.phi.component.fee);
+    snprintf(outVal + written_value, outValLen - written_value, " Fee: ");
+    written_value = strlen(outVal);
+    uint32_to_str(outVal + written_value, outValLen - written_value, position_open->position.phi.component.fee);
     written_value = strlen(outVal);
 
     // add close_on_fill

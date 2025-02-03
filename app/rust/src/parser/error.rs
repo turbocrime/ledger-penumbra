@@ -54,6 +54,8 @@ pub enum ParserError {
     EffectHashError,
     UndelegateClaimPlanError,
     DelegatorVotePlanError,
+    PositionClosePlanError,
+    PositionOpenPlanError,
     PositionWithdrawPlanError,
     DutchAuctionSchedulePlanError,
     DutchAuctionEndPlanError,

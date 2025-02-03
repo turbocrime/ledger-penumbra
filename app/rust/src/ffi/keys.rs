@@ -1,4 +1,3 @@
-use crate::address::address_view::AddressView;
 use crate::address::{Address, AddressIndex};
 use crate::constants::KEY_LEN;
 use crate::ffi::c_api::c_fvk_bytes;
@@ -79,18 +78,14 @@ pub unsafe extern "C" fn rs_is_address_visible(
         return ParserError::InvalidAddress as u32;
     };
 
-    let Ok(address_view) = fvk.view_address(address) else {
-        return ParserError::InvalidAddress as u32;
-    };
-
-    match address_view {
-        AddressView::Opaque { .. } => {
-            *is_visible = false;
-            *index = 0;
-        }
-        AddressView::Visible { index: idx, .. } => {
+    match fvk.address_index(&address) {
+        Some(idx) => {
             *is_visible = true;
             *index = idx.account;
+        }
+        None => {
+            *is_visible = false;
+            *index = 0;
         }
     }
 
@@ -122,9 +117,6 @@ fn compute_keys(keys: &mut Keys) -> Result<(), ParserError> {
 
 #[cfg(test)]
 mod test {
-    use std::format;
-    use std::string::ToString;
-
     use super::*;
     use crate::keys::fvk::FullViewingKey;
     use crate::keys::nk::NullifierKey;
@@ -184,40 +176,6 @@ mod test {
         let s = hex::encode(keys.fvk);
 
         assert_eq!(s, EXPECTED_FVK);
-    }
-
-    #[test]
-    fn print_address() {
-        let key_bytes = hex::decode(SPEND_ZEMU_KEY).unwrap();
-        let mut key_bytes_array = [0u8; 32];
-        key_bytes_array.copy_from_slice(&key_bytes);
-        let spend_key = SpendKeyBytes::from(key_bytes_array);
-
-        let dummy_address =
-        hex::decode("cefe3931877df56e2eb50626ae0d54c2d44791c154a2b8f056daf11c378116c1a924f91862da10b8b39ecd045062f04dcb345041b0001471d97d73136d424f64239804708ff3d78d645c084ec3ee0315")
-            .unwrap();
-        let address = Address::try_from(dummy_address.as_slice()).unwrap();
-
-        let fvk = spend_key.fvk().unwrap();
-
-        let address_view = fvk.view_address(address).unwrap();
-
-        let account_str = match address_view {
-            AddressView::Opaque { address: _ } => panic!("Address is opaque"),
-            AddressView::Visible {
-                address: _,
-                index,
-                wallet_id: _,
-            } => {
-                if index.account == 0 {
-                    "Main Account".to_string()
-                } else {
-                    format!("Sub-account #{}", index.account)
-                }
-            }
-        };
-
-        assert_eq!(account_str, "Sub-account #90");
     }
 
     #[test]

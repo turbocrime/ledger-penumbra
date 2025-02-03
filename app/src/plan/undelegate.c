@@ -37,7 +37,6 @@ parser_error_t decode_undelegate_plan(const bytes_t *data, undelegate_plan_t *un
     }
 
     undelegate->has_validator_identity = undelegate_plan.has_validator_identity;
-    undelegate->start_epoch_index = undelegate_plan.start_epoch_index;
     if (undelegate_plan.has_unbonded_amount) {
         undelegate->unbonded_amount.lo = undelegate_plan.unbonded_amount.lo;
         undelegate->unbonded_amount.hi = undelegate_plan.unbonded_amount.hi;
@@ -125,9 +124,17 @@ parser_error_t undelegate_printValue(const parser_context_t *ctx, const undelega
     written_value = strlen(outVal);
 
     // add unbonded amount
-    snprintf((char *)metadata_buffer, sizeof(metadata_buffer), "uunbonding_start_at_%llu_%s", undelegate->from_epoch.index,
+    snprintf((char *)metadata_buffer, sizeof(metadata_buffer), "uunbonding_start_at_");
+    uint16_t written_value_metadata = strlen((char *)metadata_buffer);
+    uint64_to_str((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata,
+                  undelegate->from_epoch.index);
+    written_value_metadata = strlen((char *)metadata_buffer);
+    snprintf((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata, "_");
+    written_value_metadata = strlen((char *)metadata_buffer);
+    snprintf((char *)metadata_buffer + written_value_metadata, sizeof(metadata_buffer) - written_value_metadata, "%s",
              validator_identity_bytes);
-    metadata.len = strlen((char *)metadata_buffer);
+    written_value_metadata = strlen((char *)metadata_buffer);
+    metadata.len = written_value_metadata;
     rs_get_asset_id_from_metadata(&metadata, asset_id_bytes, ASSET_ID_LEN);
 
     value_t local_unbonded_amount = {.amount = undelegate->unbonded_amount,

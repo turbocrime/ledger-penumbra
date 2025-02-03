@@ -138,7 +138,7 @@ parser_error_t position_withdraw_printValue(const parser_context_t *ctx, const p
     // add sequence number
     snprintf(outVal + written_value, outValLen - written_value, " Sequence number ");
     written_value = strlen(outVal);
-    snprintf(outVal + written_value, outValLen - written_value, "%llu", position_withdraw->sequence);
+    uint64_to_str(outVal + written_value, outValLen - written_value, position_withdraw->sequence);
 
     return parser_ok;
 }

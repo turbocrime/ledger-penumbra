@@ -49,8 +49,6 @@ pub struct OutputPlanC {
     pub dest_address: AddressC,
     pub rseed: BytesC,
     pub value_blinding: BytesC,
-    pub proof_blinding_r: BytesC,
-    pub proof_blinding_s: BytesC,
 }
 
 impl OutputPlanC {
@@ -71,8 +69,7 @@ impl OutputPlanC {
             state.update(&body.wrapped_memo_key.to_proto());
             state.update(&body.ovk_wrapped_key.to_proto());
 
-            let hash = state.finalize();
-            Ok(EffectHash(*hash.as_array()))
+            Ok(EffectHash(*state.finalize().as_array()))
         } else {
             Err(ParserError::InvalidLength)
         }

@@ -42,8 +42,6 @@ pub struct SpendPlanC {
     pub position: u64,
     pub randomizer: BytesC,
     pub value_blinding: BytesC,
-    pub proof_blinding_r: BytesC,
-    pub proof_blinding_s: BytesC,
 }
 
 impl SpendPlanC {
@@ -60,8 +58,7 @@ impl SpendPlanC {
 
         state.update(&body.nullifier.to_proto());
 
-        let hash = state.finalize();
-        Ok(EffectHash(*hash.as_array()))
+        Ok(EffectHash(*state.finalize().as_array()))
     }
 
     pub fn spend_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {

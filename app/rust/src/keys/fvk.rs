@@ -1,5 +1,5 @@
 use crate::{
-    address::{address_view::AddressView, Address, AddressIndex},
+    address::{Address, AddressIndex},
     utils::prf,
     wallet_id::WalletId,
     ParserError,
@@ -39,19 +39,6 @@ impl FullViewingKey {
         index: AddressIndex,
     ) -> Result<(Address, DetectionKey), ParserError> {
         self.ivk().payment_address(index)
-    }
-
-    /// Views the structure of the supplied address with this viewing key.
-    pub fn view_address(&self, address: Address) -> Result<AddressView, ParserError> {
-        if self.ivk().views_address(&address) {
-            Ok(AddressView::Visible {
-                index: self.ivk().index_for_diversifier(address.diversifier()),
-                wallet_id: self.wallet_id()?,
-                address,
-            })
-        } else {
-            Ok(AddressView::Opaque { address })
-        }
     }
 
     /// Returns the index of the given address, if the address is viewed by this

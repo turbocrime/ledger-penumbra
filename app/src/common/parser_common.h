@@ -76,6 +76,8 @@ typedef enum {
     parser_effect_hash_error,
     parser_undelegate_claim_plan_error,
     parser_delegator_vote_plan_error,
+    parser_position_close_plan_error,
+    parser_position_open_plan_error,
     parser_position_withdraw_plan_error,
     parser_action_dutch_auction_schedule_plan_error,
     parser_action_dutch_auction_end_plan_error,

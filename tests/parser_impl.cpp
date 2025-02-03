@@ -38,33 +38,23 @@ TEST(SCALE, ReadBytes) {
     uint8_t buffer[6000];
     auto bufferLen = parseHexString(
         buffer, sizeof(buffer),
-        "0a9201ba038e010a220a20c2ccae788b3e9972476a483dbff593a0739f64e2f45ee623fe72d0999224ce4310daa59499021a300a0a08eba1cca"
-        "fbcfea4f20812220a2029ea9c2f3371f6a487e7e95c247041f4a356f983eb064e5d2b3bcf322ca96a1022300a0a08faf9adeaae96c5c40d1222"
-        "0a2029ea9c2f3371f6a487e7e95c247041f4a356f983eb064e5d2b3bcf322ca96a10122708f8d50b1213656e77747372662d363739383432323"
-        "03230331a0c0a0a08e38f8c88c5c6a68c0b2a84010a600a520a50db52e218d7e10ab883b535d7f8989b1d75218ce9bdcb537adbff9da1ca60e2"
-        "c9e7bcbfde9dc8a4c119bae69aaedbfa17a4f5cf96a27453a2caec233e43e9a54e6db3abe48dff5c93b82b657052146d32120a764a43664b362"
-        "0612036122075726816d27699ac44b50fd78da53137b9ffa403c0000e6b3908f46b62d9b992");
+        "0abe020abb020aa8010a300a0a08caedc786f98cc3e50312220a2029ea9c2f3371f6a487e7e95c247041f4a356f983eb064e5d2b3bcf322ca96"
+        "a10122042b70d0c3e32c65670ca200dbd3c3a9a9dd59ef896fee3579025b841050359431a520a50890bc98e3698aa4578e419b028da5672e627"
+        "c280d8b06166f4c42d5366bccf1fcf3b296cd61e8d744a21f75f2fb697183e18595d8a79008539d8fb138b405db09db65cc42d54c0e772e5d42"
+        "d5f20b52f109d94b78f8798391a20e5a37679976d378f1dabe0fd608211081bb9c43b1f53978f9cef43dbf7a3d0012220f229ec5a96f4445a12"
+        "f4c314b6a789bb99391fecb49c9b91800c7c5c94ccb6012a20a9a2cf11e230952ddbf772551a29786b2d4fef65388b2f3ea22cec9efc0f54013"
+        "220dfb0cd1034c290a673a6825cc6771d1c7b97c063b429ff089e890cb85175320c121f120f6b696b7a7262762d373935363239341a0c0a0a08"
+        "9ff59eb6b88a838f0b");
 
     err = parser_parse(&ctx, buffer, bufferLen, &tx_obj);
     ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);
 
-    // compute parameters hash
-    zxerr = compute_parameters_hash(&tx_obj.parameters_plan.data_bytes, &tx_obj.plan.parameters_hash);
-    ASSERT_EQ(zxerr, zxerr_ok);
-
-    // compute action hashes
-    for (uint16_t i = 0; i < tx_obj.plan.actions.qty; i++) {
-        zxerr = compute_action_hash(&tx_obj.actions_plan[i], &tx_obj.plan.memo.key, &tx_obj.plan.actions.hashes[i]);
-        ASSERT_EQ(zxerr, zxerr_ok);
-    }
-
-    // compute effect hash
-    zxerr = compute_effect_hash(&tx_obj.plan, tx_obj.effect_hash, sizeof(tx_obj.effect_hash));
-    ASSERT_EQ(zxerr, zxerr_ok);
+    err = parser_computeEffectHash(&ctx);
+    ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);
 
     std::string expected =
-        "91b5af928d5d5ac18f3b107eecd01daa6f5216576383ca0c2d245d604648365fa69aeb253e88bcee9b3228e5f7a63c78df2edfd4a3b61cfb0c6"
-        "2c6b77732b359";
+        "0e9fd733a3724555dd48a8ca91010b8d57b1291ee90784fc8cbfb2c152b1e762065a01b4fa9af5f0ee510ffcc2cb07987b2a4983e9481e6341e"
+        "e94ddec213b4f";
     char actual[129];
     array_to_hexstr(actual, sizeof(actual), tx_obj.effect_hash, sizeof(tx_obj.effect_hash));
 

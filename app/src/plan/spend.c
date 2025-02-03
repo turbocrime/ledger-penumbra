@@ -27,12 +27,10 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
-    fixed_size_field_t randomizer_arg, value_blinding_arg, proof_blinding_r_arg, proof_blinding_s_arg;
+    fixed_size_field_t randomizer_arg, value_blinding_arg;
 
     setup_decode_fixed_field(&spend_plan.randomizer, &randomizer_arg, &output->randomizer, 32);
     setup_decode_fixed_field(&spend_plan.value_blinding, &value_blinding_arg, &output->value_blinding, 32);
-    setup_decode_fixed_field(&spend_plan.proof_blinding_r, &proof_blinding_r_arg, &output->proof_blinding_r, 32);
-    setup_decode_fixed_field(&spend_plan.proof_blinding_s, &proof_blinding_s_arg, &output->proof_blinding_s, 32);
 
     // inner in address
     fixed_size_field_t address_inner_arg;
@@ -79,7 +77,7 @@ parser_error_t spend_printValue(const parser_context_t *ctx, const spend_plan_t 
     // example: Spend 100 USDC to penumbra1k0zzug62gpz60sejdvu9q7mq…
 
     // add action title
-    snprintf(outVal, outValLen, "%s", "Spend ");
+    snprintf(outVal, outValLen, "Spend ");
     uint16_t written_value = strlen(outVal);
 
     // add value

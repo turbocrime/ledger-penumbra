@@ -29,10 +29,8 @@ parser_error_t decode_action_dutch_auction_schedule_plan(
     CHECK_APP_CANARY()
 
     // Set up fixed size fields
-    fixed_size_field_t nonce_arg, input_asset_id_arg, output_asset_id_arg;
+    fixed_size_field_t input_asset_id_arg, output_asset_id_arg;
 
-    setup_decode_fixed_field(&action_dutch_auction_schedule_pb.description.nonce, &nonce_arg,
-                             &action_dutch_auction_schedule->description.nonce, 32);
     setup_decode_fixed_field(&action_dutch_auction_schedule_pb.description.input.asset_id.inner, &input_asset_id_arg,
                              &action_dutch_auction_schedule->description.input.asset_id.inner, ASSET_ID_LEN);
     setup_decode_fixed_field(&action_dutch_auction_schedule_pb.description.output_id.inner, &output_asset_id_arg,
@@ -186,22 +184,20 @@ parser_error_t action_dutch_auction_schedule_printValue(
     // Start block height
     snprintf(outVal + written_value, outValLen - written_value, " Start block height: ");
     written_value = strlen(outVal);
-    snprintf(outVal + written_value, outValLen - written_value, "%llu",
-             action_dutch_auction_schedule->description.start_height);
+    uint64_to_str(outVal + written_value, outValLen - written_value,
+                  action_dutch_auction_schedule->description.start_height);
     written_value = strlen(outVal);
 
     // End block height
     snprintf(outVal + written_value, outValLen - written_value, " End block height: ");
     written_value = strlen(outVal);
-    snprintf(outVal + written_value, outValLen - written_value, "%llu",
-             action_dutch_auction_schedule->description.end_height);
+    uint64_to_str(outVal + written_value, outValLen - written_value, action_dutch_auction_schedule->description.end_height);
     written_value = strlen(outVal);
 
     // Step count
     snprintf(outVal + written_value, outValLen - written_value, " Steps: ");
     written_value = strlen(outVal);
-    snprintf(outVal + written_value, outValLen - written_value, "%llu",
-             action_dutch_auction_schedule->description.step_count);
+    uint64_to_str(outVal + written_value, outValLen - written_value, action_dutch_auction_schedule->description.step_count);
 
     return parser_ok;
 }

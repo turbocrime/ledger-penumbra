@@ -28,6 +28,9 @@ const char *parser_getMsgPackTypeDescription(uint8_t type);
 //// parses a tx buffer
 parser_error_t parser_parse(parser_context_t *ctx, const uint8_t *data, size_t dataLen, parser_tx_t *tx_obj);
 
+//// computes the effect hash
+parser_error_t parser_computeEffectHash(parser_context_t *ctx);
+
 //// verifies tx fields
 parser_error_t parser_validate(parser_context_t *ctx);
 

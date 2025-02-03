@@ -78,8 +78,7 @@ impl PositionWithdrawPlanC {
         let len = encode_varint(position_withdraw.sequence, &mut encoded[pos..]);
         state.update(&encoded[..len + 1]);
 
-        let hash = state.finalize();
-        Ok(EffectHash(*hash.as_array()))
+        Ok(EffectHash(*state.finalize().as_array()))
     }
 
     pub fn position_withdraw(&self) -> Result<PositionWithdraw, ParserError> {

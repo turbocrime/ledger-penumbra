@@ -70,8 +70,7 @@ impl ActionDutchAuctionWithdrawPlanC {
                 .to_proto_action_dutch_auction_withdraw(),
         );
 
-        let hash = state.finalize();
-        Ok(EffectHash(*hash.as_array()))
+        Ok(EffectHash(*state.finalize().as_array()))
     }
 
     pub fn to_action(&self) -> Result<ActionDutchAuctionWithdraw, ParserError> {

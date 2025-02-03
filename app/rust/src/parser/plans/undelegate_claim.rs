@@ -48,14 +48,11 @@ pub struct Body {
 pub struct UndelegateClaimPlanC {
     pub has_validator_identity: bool,
     pub validator_identity: IdentityKeyC,
-    pub start_epoch_index: u64,
     pub has_penalty: bool,
     pub penalty: PenaltyC,
     pub has_unbonding_amount: bool,
     pub unbonding_amount: AmountC,
     pub balance_blinding: BytesC,
-    pub proof_blinding_r: BytesC,
-    pub proof_blinding_s: BytesC,
     pub unbonding_start_height: u64,
 }
 
@@ -80,8 +77,7 @@ impl UndelegateClaimPlanC {
         let len = encode_varint(body.unbonding_start_height, &mut encoded[pos..]);
         state.update(&encoded[..len + 1]);
 
-        let hash = state.finalize();
-        Ok(EffectHash(*hash.as_array()))
+        Ok(EffectHash(*state.finalize().as_array()))
     }
 
     pub fn undelegate_claim_body(&self) -> Result<Body, ParserError> {
