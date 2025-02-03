@@ -73,7 +73,7 @@ parser_error_t output_getItem(const parser_context_t *ctx, const output_plan_t *
 
     char bufferUI[OUTPUT_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(output_printValue(ctx, output, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 
@@ -108,7 +108,7 @@ parser_error_t output_printValue(const parser_context_t *ctx, const output_plan_
     written_value = strlen(outVal);
 
     // add address
-    CHECK_ERROR(printTxAddress(&output->dest_address.inner, outVal + written_value, outValLen - written_value));
+    MEMCPY(outVal + written_value, &output->ui_address, SHORT_ADDRESS_LEN);
 
     return parser_ok;
 }

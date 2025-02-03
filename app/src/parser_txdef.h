@@ -212,6 +212,7 @@ typedef struct {
     uint64_t position;
     bytes_t randomizer;
     bytes_t value_blinding;
+    uint8_t ui_address[SHORT_ADDRESS_LEN];
 } spend_plan_t;
 
 typedef struct {
@@ -219,6 +220,7 @@ typedef struct {
     address_plan_t dest_address;
     bytes_t rseed;
     bytes_t value_blinding;
+    uint8_t ui_address[SHORT_ADDRESS_LEN];
 } output_plan_t;
 
 typedef struct {
@@ -328,6 +330,7 @@ typedef struct {
 typedef struct {
     memo_plain_text_t plaintext;
     bytes_t key;
+    uint8_t ui_address[SHORT_ADDRESS_LEN];
 } memo_plan_t;
 
 typedef struct {

@@ -91,7 +91,7 @@ parser_error_t action_dutch_auction_withdraw_getItem(
 
     char bufferUI[DUTCH_AUCTION_WITHDRAW_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(action_dutch_auction_withdraw_printValue(ctx, action_dutch_auction_withdraw, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

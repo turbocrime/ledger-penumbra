@@ -69,7 +69,7 @@ parser_error_t undelegate_getItem(const parser_context_t *ctx, const undelegate_
 
     char bufferUI[UNDELEGATE_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(undelegate_printValue(ctx, undelegate, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

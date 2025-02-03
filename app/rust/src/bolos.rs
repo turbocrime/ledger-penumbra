@@ -55,7 +55,7 @@ impl RngCore for Trng {
 
     #[cfg(not(test))]
     fn fill_bytes(&mut self, dest: &mut [u8]) {
-        zlog("fill_bytes\x00".as_ref());
+        zlog("fill_bytes\x00");
 
         unsafe {
             cx_rng(dest.as_mut_ptr(), dest.len() as u32);

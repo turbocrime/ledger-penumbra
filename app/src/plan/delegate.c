@@ -62,7 +62,7 @@ parser_error_t delegate_getItem(const parser_context_t *ctx, const delegate_plan
 
     char bufferUI[DELEGATE_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(delegate_printValue(ctx, delegate, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

@@ -100,17 +100,11 @@ parser_error_t printShortAddress(const uint8_t *address, uint16_t address_len, c
         return err;
     }
 
-    // Calculate required length for short form
-    uint16_t prefix_and_sep_len = sizeof(ADDR_BECH32_PREFIX);  // prefix + separator
-    uint16_t required_len = prefix_and_sep_len + SHORT_ADDRESS_VISIBLE_CHARS;
-
-    // + ellipsis + null
-    if (out_len < required_len + sizeof(ELLIPSIS)) {
+    if (out_len < SHORT_ADDRESS_LEN) {
         return parser_unexpected_buffer_end;
     }
 
-    // Copy prefix + separator + visible chars
-    uint16_t truncate_pos = prefix_and_sep_len + SHORT_ADDRESS_VISIBLE_CHARS;
+    uint16_t truncate_pos = SHORT_ADDRESS_LEN - sizeof(ELLIPSIS);
     MEMZERO(out, out_len);
     MEMCPY(out, full_address, truncate_pos);
 

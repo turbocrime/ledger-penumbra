@@ -22,14 +22,8 @@ endif
 
 MY_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.installer_script
-
-include $(BOLOS_SDK)/Makefile.defines
-
 # Set the default value for PRODUCTION_BUILD to 0 if not already defined
 PRODUCTION_BUILD ?= 1
-
-$(info ************ PENUMBRA_NAME  = [$(TARGET_NAME)])
 
 # Display whether this is a production build or for internal use
 ifeq ($(PRODUCTION_BUILD), 1)
@@ -39,9 +33,8 @@ else
 endif
 
 # Display whether swap functionality is enabled or not
-ifdef HAVE_SWAP
+ifeq ($(ENABLE_SWAP), 1)
     $(info ************ HAVE_SWAP  = [ENABLED])
-    DEFINES += HAVE_SWAP=$(HAVE_SWAP)
 else
     $(info ************ HAVE_SWAP  = [DISABLED])
 endif
@@ -54,6 +47,9 @@ include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.app_testing
 ifndef COIN
 COIN=UM
 endif
+
+VARIANT_PARAM=COIN
+VARIANT_VALUES=$(COIN)
 
 include $(CURDIR)/Makefile.version
 
@@ -78,12 +74,7 @@ $(info PATHS LIST = $(APPPATH))
 
 APP_LOAD_PARAMS = --curve secp256k1 $(COMMON_LOAD_PARAMS) --path $(APPPATH)
 INCLUDES_PATH += $(CURDIR)/src/protobuf
-
-ifeq ($(TARGET_NAME),TARGET_NANOS)
-	APP_STACK_MIN_SIZE := 1600
-else
-	APP_STACK_MIN_SIZE := 1752
-endif
+INCLUDES_PATH += $(CURDIR)/src/common
 
 # Flag to compile all Penumbra actions
 FULL_APP ?= 0
@@ -92,7 +83,23 @@ DEFINES += FULL_APP
 $(info ************ FULL APP ENABLED ************)
 endif
 
+RUST_TARGET:=thumbv6m-none-eabi
+
+$(info ************ RUST_TARGET  = [$(RUST_TARGET)])
+
+include $(BOLOS_SDK)/Makefile.target
+
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.devices
+
+include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.platform
+
+APP_SOURCE_PATH += $(CURDIR)/rust/include
+CFLAGS += -Wvla
+LDFLAGS += -z muldefs
+LDLIBS   += -lm -lgcc -lc
+LDLIBS += -L$(MY_DIR)rust/target/$(RUST_TARGET)/release -lrslib
+
+include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.installer_script
 
 $(info TARGET_NAME  = [$(TARGET_NAME)])
 $(info ICONNAME  = [$(ICONNAME)])
@@ -101,44 +108,14 @@ ifndef ICONNAME
 $(error ICONNAME is not set)
 endif
 
-ifeq ($(TARGET_NAME),TARGET_NANOS)
-RUST_TARGET:=thumbv6m-none-eabi
-endif
-
-ifeq ($(TARGET_NAME),TARGET_NANOX)
-RUST_TARGET:=thumbv6m-none-eabi
-endif
-
-ifeq ($(TARGET_NAME),TARGET_NANOS2)
-#RUST_TARGET:=thumbv8m.main-none-eabi
-RUST_TARGET:=thumbv6m-none-eabi
-endif
-
-ifeq ($(TARGET_NAME),TARGET_STAX)
-RUST_TARGET:=thumbv6m-none-eabi
-endif
-
-ifeq ($(TARGET_NAME),TARGET_FLEX)
-RUST_TARGET:=thumbv6m-none-eabi
-endif
-
-$(info ************ RUST_TARGET  = [$(RUST_TARGET)])
-
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.platform
-APP_SOURCE_PATH += $(CURDIR)/rust/include
-CFLAGS += -Wvla
-LDFLAGS += -z muldefs
-LDLIBS   += -lm -lgcc -lc
-LDLIBS += -L$(MY_DIR)rust/target/$(RUST_TARGET)/release -lrslib
-
-
 ifeq ($(DEBUG), 1)
 CFLAGS += -O3 -Os -Wno-unknown-pragmas -Wno-unused-parameter -g
 else
 CFLAGS += -O3 -Os -Wno-unknown-pragmas -Wno-unused-parameter
 endif
 
-APP_CUSTOM_LINK_DEPENDENCIES = rust
+# make rust a prerequisite for all object files
+$(OBJECT_FILES): rust
 
 .PHONY: rust
 rust:
@@ -157,17 +134,8 @@ rust_clean:
 
 clean: rust_clean
 
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.side_loading
-
-# Import generic rules from the SDK
-include $(BOLOS_SDK)/Makefile.rules
-
 #add dependency on custom makefile filename
 dep/%.d: %.c Makefile
-
-.PHONY: listvariants
-listvariants:
-	@echo VARIANTS COIN UM
 
 .PHONY: version
 version:

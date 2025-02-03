@@ -88,6 +88,8 @@
 
 #define DEFAULT_CHAIN_ID "penumbra-1"
 
+#define SHORT_ADDRESS_LEN sizeof(ADDR_BECH32_PREFIX) + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS)
+
 // Constant to use to allocate a buffer on the stack to hold the formatting of an output action
 #define OUTPUT_DISPLAY_MAX_LEN \
     (VALUE_DISPLAY_MAX_LEN + SHORT_ADDRESS_VISIBLE_CHARS + sizeof(ELLIPSIS) + sizeof(ADDR_BECH32_PREFIX) + 6)  // = 202

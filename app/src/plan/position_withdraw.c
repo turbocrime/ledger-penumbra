@@ -106,7 +106,7 @@ parser_error_t position_withdraw_getItem(const parser_context_t *ctx, const posi
 
     char bufferUI[POSITION_WITHDRAW_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(position_withdraw_printValue(ctx, position_withdraw, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

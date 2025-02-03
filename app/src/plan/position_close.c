@@ -57,7 +57,7 @@ parser_error_t position_close_getItem(const parser_context_t *ctx, const positio
 
     char bufferUI[POSITION_CLOSE_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(position_close_printValue(ctx, position_close, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

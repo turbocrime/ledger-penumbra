@@ -65,7 +65,7 @@ parser_error_t ics20_withdrawal_getItem(const parser_context_t *ctx, const ics20
 
     char bufferUI[ICS20_WITHDRAWAL_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(ics20_withdrawal_printValue(ctx, ics20_withdrawal, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

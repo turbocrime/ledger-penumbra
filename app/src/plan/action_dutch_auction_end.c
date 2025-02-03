@@ -59,7 +59,7 @@ parser_error_t action_dutch_auction_end_getItem(const parser_context_t *ctx,
 
     char bufferUI[DUTCH_AUCTION_END_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(action_dutch_auction_end_printValue(ctx, action_dutch_auction_end, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

@@ -183,7 +183,7 @@ pub unsafe extern "C" fn rs_output_action_hash(
         Ok(body_hash_bytes) => {
             let body_hash_array = body_hash_bytes.as_array();
             let copy_len: usize = core::cmp::min(output.len(), body_hash_array.len());
-        output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
+            output[..copy_len].copy_from_slice(&body_hash_array[..copy_len]);
         }
         Err(err) => return err as u32,
     }
@@ -453,6 +453,7 @@ mod tests {
                 text: BytesC::default(),
             },
             key: BytesC::from_slice(&memo_key_bytes),
+            ui_address: [0u8; 37],
         };
 
         // Create dummy DetectionDataPlanC
@@ -747,6 +748,7 @@ mod tests {
                 text: BytesC::from_slice(&memo_plaintext),
             },
             key: BytesC::from_slice(&memo_key_bytes),
+            ui_address: [0u8; 37],
         };
 
         let memo_hash = dummy_memo_plan.effect_hash();

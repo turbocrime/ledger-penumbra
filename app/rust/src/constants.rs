@@ -31,6 +31,7 @@ pub const MAX_CLUE_SUBKEYS: usize = 10;
 pub const MAX_REWARDS: usize = 5;
 
 pub const EFFECT_HASH_LEN: usize = 64;
+pub const UI_ADDRESS_LEN: usize = 37;
 
 // Nonces:
 pub const NONCE_LEN: usize = 12;

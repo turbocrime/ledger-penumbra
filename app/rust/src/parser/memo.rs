@@ -16,18 +16,18 @@
 
 use super::memo_plain_text::MemoPlaintextC;
 use super::symmetric::{PayloadKey, PayloadKind};
-use crate::constants::{MEMO_CIPHERTEXT_LEN_BYTES, MEMO_LEN_BYTES};
+use crate::constants::{MEMO_CIPHERTEXT_LEN_BYTES, MEMO_LEN_BYTES, UI_ADDRESS_LEN};
 use crate::parser::bytes::BytesC;
 use crate::parser::effect_hash::{create_personalized_state, EffectHash};
 use crate::utils::protobuf::encode_varint;
 use crate::ParserError;
 
 #[repr(C)]
-#[derive(Default)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct MemoPlanC {
     pub plaintext: MemoPlaintextC,
     pub key: BytesC,
+    pub ui_address: [u8; UI_ADDRESS_LEN],
 }
 
 impl MemoPlanC {

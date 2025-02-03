@@ -98,7 +98,7 @@ parser_error_t position_open_getItem(const parser_context_t *ctx, const position
 
     char bufferUI[POSITION_OPEN_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(position_open_printValue(ctx, position_open, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

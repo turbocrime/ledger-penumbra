@@ -108,7 +108,7 @@ parser_error_t swap_getItem(const parser_context_t *ctx, const swap_plan_t *swap
 
     char bufferUI[SWAP_DISPLAY_MAX_LEN] = {0};
 
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
     CHECK_ERROR(swap_printValue(ctx, swap, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 

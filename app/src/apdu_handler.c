@@ -28,7 +28,6 @@
 #include "parser_common.h"
 #include "tx.h"
 #include "view.h"
-#include "view_internal.h"
 #include "zxformat.h"
 #include "zxmacros.h"
 
@@ -110,12 +109,6 @@ __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx, boo
 __Z_INLINE void handleGetAddr(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleGetAddr\n");
 
-    // TODO: Check size for nanos
-#if defined(TARGET_NANOS)
-    *tx = 0;
-    THROW(APDU_CODE_DATA_INVALID);
-#endif
-
     extractHDPath(rx, OFFSET_DATA);
 
     const uint8_t requireConfirmation = G_io_apdu_buffer[OFFSET_P1];
@@ -144,12 +137,6 @@ __Z_INLINE void handleGetAddr(volatile uint32_t *flags, volatile uint32_t *tx, u
 
 __Z_INLINE void handleGetFVK(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleGetFVK\n");
-
-    // TODO: Check size for nanos
-#if defined(TARGET_NANOS)
-    *tx = 0;
-    THROW(APDU_CODE_DATA_INVALID);
-#endif
 
     extractHDPath(rx, OFFSET_DATA);
 
@@ -190,6 +177,7 @@ __Z_INLINE void handleSign(volatile uint32_t *flags, volatile uint32_t *tx, uint
         THROW(APDU_CODE_OK);
     }
 
+    view_spinner_show("Processing...");
     __Z_UNUSED const char *error_msg = tx_parse();
     CHECK_APP_CANARY()
     if (error_msg != NULL) {
@@ -211,14 +199,14 @@ __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile 
     G_io_apdu_buffer[0] = 0x01;
 #endif
 
-    G_io_apdu_buffer[1] = (LEDGER_MAJOR_VERSION >> 8) & 0xFF;
-    G_io_apdu_buffer[2] = (LEDGER_MAJOR_VERSION >> 0) & 0xFF;
+    G_io_apdu_buffer[1] = (MAJOR_VERSION >> 8) & 0xFF;
+    G_io_apdu_buffer[2] = (MAJOR_VERSION >> 0) & 0xFF;
 
-    G_io_apdu_buffer[3] = (LEDGER_MINOR_VERSION >> 8) & 0xFF;
-    G_io_apdu_buffer[4] = (LEDGER_MINOR_VERSION >> 0) & 0xFF;
+    G_io_apdu_buffer[3] = (MINOR_VERSION >> 8) & 0xFF;
+    G_io_apdu_buffer[4] = (MINOR_VERSION >> 0) & 0xFF;
 
-    G_io_apdu_buffer[5] = (LEDGER_PATCH_VERSION >> 8) & 0xFF;
-    G_io_apdu_buffer[6] = (LEDGER_PATCH_VERSION >> 0) & 0xFF;
+    G_io_apdu_buffer[5] = (PATCH_VERSION >> 8) & 0xFF;
+    G_io_apdu_buffer[6] = (PATCH_VERSION >> 0) & 0xFF;
 
     G_io_apdu_buffer[7] = !IS_UX_ALLOWED;
 

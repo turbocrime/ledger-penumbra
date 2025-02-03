@@ -13,6 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
+#include "spend.h"
 
 #include "note.h"
 #include "parser_pb_utils.h"
@@ -63,6 +64,33 @@ parser_error_t decode_spend_plan(const bytes_t *data, spend_plan_t *output) {
     return parser_ok;
 }
 
+parser_error_t spend_getNumItems(const parser_context_t *ctx, uint8_t *num_items) {
+    UNUSED(ctx);
+    // from spends we display only two items:
+    // - Spend 100 USDC
+    // - From Main Account
+    // all concatenated in a single string
+    *num_items = 1;
+    return parser_ok;
+}
+
+parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *spend, uint8_t actionIdx, char *outKey,
+                             uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
+    parser_error_t err = parser_no_data;
+
+    if (spend == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
+        return err;
+    }
+
+    char bufferUI[SPEND_DISPLAY_MAX_LEN] = {0};
+
+    snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
+    CHECK_ERROR(spend_printValue(ctx, spend, bufferUI, sizeof(bufferUI)));
+    pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
+
+    return parser_ok;
+}
+
 parser_error_t spend_printValue(const parser_context_t *ctx, const spend_plan_t *spend, char *outVal, uint16_t outValLen) {
     if (ctx == NULL || spend == NULL || outVal == NULL) {
         return parser_no_data;
@@ -90,34 +118,7 @@ parser_error_t spend_printValue(const parser_context_t *ctx, const spend_plan_t 
     written_value = strlen(outVal);
 
     // add address
-    CHECK_ERROR(printTxAddress(&spend->note.address.inner, outVal + written_value, outValLen - written_value));
-
-    return parser_ok;
-}
-
-parser_error_t spend_getNumItems(const parser_context_t *ctx, uint8_t *num_items) {
-    UNUSED(ctx);
-    // from spends we display only two items:
-    // - Spend 100 USDC
-    // - From Main Account
-    // all concatenated in a single string
-    *num_items = 1;
-    return parser_ok;
-}
-
-parser_error_t spend_getItem(const parser_context_t *ctx, const spend_plan_t *spend, uint8_t actionIdx, char *outKey,
-                             uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
-    parser_error_t err = parser_no_data;
-
-    if (spend == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
-        return err;
-    }
-
-    char bufferUI[SPEND_DISPLAY_MAX_LEN] = {0};
-
-    snprintf(outKey, outKeyLen, "Action_%d", actionIdx);
-    CHECK_ERROR(spend_printValue(ctx, spend, bufferUI, sizeof(bufferUI)));
-    pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
+    MEMCPY(outVal + written_value, &spend->ui_address, SHORT_ADDRESS_LEN);
 
     return parser_ok;
 }

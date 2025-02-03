@@ -34,6 +34,7 @@
 #include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "spend.h"
 #include "swap.h"
+#include "ui_utils.h"
 #include "undelegate.h"
 #include "undelegate_claim.h"
 #include "zxformat.h"
@@ -244,6 +245,30 @@ parser_error_t _read(parser_context_t *c, parser_tx_t *v) {
     v->plan.has_memo = request.has_memo;
     v->plan.has_detection_data = request.has_detection_data;
     v->plan.actions.qty = actions_qty;
+
+    if (v->plan.has_memo) {
+        // Calculate UI memo address now to avoid delay in display
+        CHECK_ERROR(printTxAddress(&v->plan.memo.plaintext.return_address.inner, (char *)v->plan.memo.ui_address,
+                                   sizeof(v->plan.memo.ui_address)));
+    }
+
+    // Calculate action addresses now to avoid delay in display
+    for (uint16_t i = 0; i < actions_qty; i++) {
+        switch (v->actions_plan[i].action_type) {
+            case penumbra_core_transaction_v1_ActionPlan_spend_tag:
+                CHECK_ERROR(printTxAddress(&v->actions_plan[i].action.spend.note.address.inner,
+                                           (char *)v->actions_plan[i].action.spend.ui_address,
+                                           sizeof(v->actions_plan[i].action.spend.ui_address)));
+                break;
+            case penumbra_core_transaction_v1_ActionPlan_output_tag:
+                CHECK_ERROR(printTxAddress(&v->actions_plan[i].action.output.dest_address.inner,
+                                           (char *)v->actions_plan[i].action.output.ui_address,
+                                           sizeof(v->actions_plan[i].action.output.ui_address)));
+                break;
+            default:
+                break;
+        }
+    }
 
     return parser_ok;
 }
