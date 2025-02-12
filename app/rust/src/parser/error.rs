@@ -18,7 +18,8 @@ use arrayvec::CapacityError;
 use nom::error::ErrorKind;
 
 #[repr(u32)]
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub enum ParserError {
     Ok = 0,
 
@@ -107,6 +108,7 @@ pub enum ParserError {
     Overflow,
     NonIntegral,
     UnexpectedValue,
+    InvalidUtf8,
 }
 
 impl From<ErrorKind> for ParserError {

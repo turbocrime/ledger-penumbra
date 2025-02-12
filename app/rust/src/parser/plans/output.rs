@@ -15,6 +15,7 @@
 ********************************************************************************/
 
 use crate::address::Address;
+use crate::constants::OUTPUT_PERSONALIZED;
 use crate::keys::FullViewingKey;
 use crate::parser::note::Note;
 use crate::parser::{
@@ -29,6 +30,13 @@ use crate::parser::{
     symmetric::{OvkWrappedKey, WrappedMemoKey},
     value::{Imbalance, Sign, Value, ValueC},
 };
+use crate::protobuf_h::shielded_pool_pb::{
+    penumbra_core_component_shielded_pool_v1_OutputBody_balance_commitment_tag,
+    penumbra_core_component_shielded_pool_v1_OutputBody_note_payload_tag,
+    penumbra_core_component_shielded_pool_v1_OutputBody_ovk_wrapped_key_tag,
+    penumbra_core_component_shielded_pool_v1_OutputBody_wrapped_memo_key_tag, PB_LTYPE_UVARINT,
+};
+use crate::utils::protobuf::encode_and_update_proto_field;
 use crate::ParserError;
 use decaf377::Fr;
 
@@ -61,13 +69,47 @@ impl OutputPlanC {
         let body = self.body(fvk, &memo_payload_key);
 
         if let Ok(body) = body {
-            let mut state =
-                create_personalized_state("/penumbra.core.component.shielded_pool.v1.OutputBody");
+            let mut state = create_personalized_state(
+                std::str::from_utf8(OUTPUT_PERSONALIZED).map_err(|_| ParserError::InvalidUtf8)?,
+            );
 
-            state.update(&body.note_payload.to_proto());
-            state.update(&body.balance_commitment.to_proto_output());
-            state.update(&body.wrapped_memo_key.to_proto());
-            state.update(&body.ovk_wrapped_key.to_proto());
+            // Encode note payload
+            let note_payload = body.note_payload.to_proto()?;
+            encode_and_update_proto_field(
+                &mut state,
+                penumbra_core_component_shielded_pool_v1_OutputBody_note_payload_tag as u64,
+                PB_LTYPE_UVARINT as u64,
+                &note_payload,
+                note_payload.len(),
+            )?;
+
+            // Encode balance commitment
+            let balance_commitment = body.balance_commitment.to_proto()?;
+            encode_and_update_proto_field(
+                &mut state,
+                penumbra_core_component_shielded_pool_v1_OutputBody_balance_commitment_tag as u64,
+                PB_LTYPE_UVARINT as u64,
+                &balance_commitment,
+                balance_commitment.len(),
+            )?;
+
+            // Encode wrapped memo key
+            encode_and_update_proto_field(
+                &mut state,
+                penumbra_core_component_shielded_pool_v1_OutputBody_wrapped_memo_key_tag as u64,
+                PB_LTYPE_UVARINT as u64,
+                &body.wrapped_memo_key.0,
+                body.wrapped_memo_key.0.len(),
+            )?;
+
+            // Encode ovk wrapped key
+            encode_and_update_proto_field(
+                &mut state,
+                penumbra_core_component_shielded_pool_v1_OutputBody_ovk_wrapped_key_tag as u64,
+                PB_LTYPE_UVARINT as u64,
+                &body.ovk_wrapped_key.0,
+                body.ovk_wrapped_key.0.len(),
+            )?;
 
             Ok(EffectHash(*state.finalize().as_array()))
         } else {

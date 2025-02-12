@@ -60,7 +60,8 @@ proto:
 		--nanopb_out=$(OUTPUT_PATH)
 	@echo "C protobuf files generated in $(OUTPUT_PATH)"
 	make format
-
+	cd tools/proto-bindgen && cargo run
+	
 test_ledger_try:
 	make zemu_install
 	cd tests_zemu && yarn try

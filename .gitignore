@@ -73,6 +73,7 @@ app/build/*
 
 tests_zemu/snapshots-tmp
 tests_zemu/yarn.lock
+tests_zemu/tests/.DS_Store
 tests_tools/target
 fuzz-*.log
 /scan-build
@@ -81,3 +82,5 @@ app/rust/.cargo/.package-cache
 app/rust/.cargo/.global-cache
 app/rust/.cargo/git
 app/rust/target
+
+tools/proto-bindgen/target

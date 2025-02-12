@@ -42,12 +42,14 @@ mod parameters;
 pub mod penalty;
 mod plans;
 pub mod reserves;
+pub mod rk;
 pub mod rseed;
 pub mod swap_ciphertext;
 pub mod swap_payload;
 pub mod swap_plaintext;
 pub mod symmetric;
 pub mod trading_pair;
+pub mod validator_identity;
 pub mod value;
 
 pub use bytes::BytesC;

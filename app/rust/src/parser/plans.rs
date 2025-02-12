@@ -18,7 +18,11 @@ use crate::parser::{
     action::ActionPlan, action::ActionsHashC, detection::DetectionDataPlanC, memo::MemoPlanC,
 };
 
-use crate::constants::EFFECT_HASH_LEN;
+use crate::constants::{
+    ACTION_DUTCH_AUCTION_END_PERSONALIZED, ACTION_DUTCH_AUCTION_SCHEDULE_PERSONALIZED,
+    DELEGATE_PERSONALIZED, EFFECT_HASH_LEN, ICS20_WITHDRAWAL_PERSONALIZED,
+    POSITION_CLOSE_PERSONALIZED, POSITION_OPEN_PERSONALIZED, UNDELEGATE_PERSONALIZED,
+};
 use crate::ffi::c_api::c_fvk_bytes;
 use crate::parser::bytes::BytesC;
 use crate::parser::effect_hash::EffectHash;
@@ -355,46 +359,46 @@ pub unsafe extern "C" fn rs_generic_action_hash(
     if let Ok(data_to_hash) = data.get_bytes() {
         match action_type {
             ActionPlan::Delegate => {
-                effect_hash = EffectHash::from_proto_effecting_data(
-                    "/penumbra.core.component.stake.v1.Delegate",
-                    data_to_hash,
-                );
+                let Ok(personalized) = std::str::from_utf8(DELEGATE_PERSONALIZED) else {
+                    return ParserError::InvalidUtf8 as u32;
+                };
+                effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             ActionPlan::Undelegate => {
-                effect_hash = EffectHash::from_proto_effecting_data(
-                    "/penumbra.core.component.stake.v1.Undelegate",
-                    data_to_hash,
-                );
+                let Ok(personalized) = std::str::from_utf8(UNDELEGATE_PERSONALIZED) else {
+                    return ParserError::InvalidUtf8 as u32;
+                };
+                effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             ActionPlan::Ics20Withdrawal => {
-                effect_hash = EffectHash::from_proto_effecting_data(
-                    "/penumbra.core.component.ibc.v1.Ics20Withdrawal",
-                    data_to_hash,
-                );
+                let Ok(personalized) = std::str::from_utf8(ICS20_WITHDRAWAL_PERSONALIZED) else {
+                    return ParserError::InvalidUtf8 as u32;
+                };
+                effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             ActionPlan::PositionOpen => {
-                effect_hash = EffectHash::from_proto_effecting_data(
-                    "/penumbra.core.component.dex.v1.PositionOpen",
-                    data_to_hash,
-                );
+                let Ok(personalized) = std::str::from_utf8(POSITION_OPEN_PERSONALIZED) else {
+                    return ParserError::InvalidUtf8 as u32;
+                };
+                effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             ActionPlan::PositionClose => {
-                effect_hash = EffectHash::from_proto_effecting_data(
-                    "/penumbra.core.component.dex.v1.PositionClose",
-                    data_to_hash,
-                );
+                let Ok(personalized) = std::str::from_utf8(POSITION_CLOSE_PERSONALIZED) else {
+                    return ParserError::InvalidUtf8 as u32;
+                };
+                effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             ActionPlan::ActionDutchAuctionSchedule => {
-                effect_hash = EffectHash::from_proto_effecting_data(
-                    "/penumbra.core.component.auction.v1.ActionDutchAuctionSchedule",
-                    data_to_hash,
-                );
+                let Ok(personalized) = std::str::from_utf8(ACTION_DUTCH_AUCTION_SCHEDULE_PERSONALIZED) else {
+                    return ParserError::InvalidUtf8 as u32;
+                };
+                effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             ActionPlan::ActionDutchAuctionEnd => {
-                effect_hash = EffectHash::from_proto_effecting_data(
-                    "/penumbra.core.component.auction.v1.ActionDutchAuctionEnd",
-                    data_to_hash,
-                );
+                let Ok(personalized) = std::str::from_utf8(ACTION_DUTCH_AUCTION_END_PERSONALIZED) else {
+                    return ParserError::InvalidUtf8 as u32;
+                };
+                effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             _ => {
                 return ParserError::InvalidActionType as u32;

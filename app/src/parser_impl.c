@@ -430,6 +430,8 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Non-integral value error";
         case parser_unexpected_value:
             return "Unexpected value";
+        case parser_invalid_utf8:
+            return "Invalid UTF-8";
 
         default:
             return "Unrecognized error code";

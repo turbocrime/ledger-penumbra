@@ -139,10 +139,7 @@ impl SwapPlaintext {
         let mut offset = 0;
 
         // Write trading pair bytes
-        let trading_pair_bytes = self
-            .trading_pair
-            .to_bytes()
-            .expect("trading pair conversion failed");
+        let trading_pair_bytes = self.trading_pair.to_bytes()?;
         bytes[offset..offset + trading_pair_bytes.len()].copy_from_slice(&trading_pair_bytes);
         offset += trading_pair_bytes.len();
 
@@ -157,20 +154,17 @@ impl SwapPlaintext {
         offset += delta_2_bytes.len();
 
         // Write claim fee bytes
-        let fee_bytes = self.claim_fee.to_bytes().expect("fee conversion failed");
+        let fee_bytes = self.claim_fee.to_bytes()?;
         bytes[offset..offset + fee_bytes.len()].copy_from_slice(&fee_bytes);
         offset += fee_bytes.len();
 
         // Write claim address bytes
-        let addr_bytes = self
-            .claim_address
-            .to_bytes()
-            .expect("address conversion failed");
+        let addr_bytes = self.claim_address.to_bytes()?;
         bytes[offset..offset + addr_bytes.len()].copy_from_slice(&addr_bytes);
         offset += addr_bytes.len();
 
         // Write rseed bytes
-        let rseed_bytes = self.rseed.to_bytes().expect("rseed conversion failed");
+        let rseed_bytes = self.rseed.to_bytes()?;
         bytes[offset..offset + rseed_bytes.len()].copy_from_slice(&rseed_bytes);
         Ok(bytes)
     }

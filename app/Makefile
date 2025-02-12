@@ -57,7 +57,6 @@ $(info COIN  = [$(COIN)])
 
 ifeq ($(COIN), UM)
 # Main app configuration
-DEFINES += APP_STANDARD
 APPNAME = "Penumbra"
 APPPATH = "44'/6532'"
 
@@ -82,6 +81,9 @@ ifeq ($(FULL_APP),1)
 DEFINES += FULL_APP
 $(info ************ FULL APP ENABLED ************)
 endif
+
+# Enable QR code display for all devices
+ENABLE_NBGL_QRCODE ?= 1
 
 RUST_TARGET:=thumbv6m-none-eabi
 
@@ -115,7 +117,7 @@ CFLAGS += -O3 -Os -Wno-unknown-pragmas -Wno-unused-parameter
 endif
 
 # make rust a prerequisite for all object files
-$(OBJECT_FILES): rust
+$(OBJECT_FILES): | rust
 
 .PHONY: rust
 rust:

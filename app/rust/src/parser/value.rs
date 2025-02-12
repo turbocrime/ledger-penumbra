@@ -21,7 +21,11 @@ use crate::parser::{
     id::{Id, IdC},
     ParserError,
 };
-use crate::utils::protobuf::encode_varint;
+use crate::protobuf_h::asset_pb::{
+    penumbra_core_asset_v1_Value_amount_tag, penumbra_core_asset_v1_Value_asset_id_tag,
+    PB_LTYPE_UVARINT,
+};
+use crate::utils::protobuf::{encode_proto_field, encode_varint};
 
 #[derive(Clone)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
@@ -56,6 +60,7 @@ pub struct Imbalance {
 
 impl Value {
     pub const LEN: usize = AMOUNT_LEN_BYTES + ID_LEN_BYTES;
+    pub const PROTO_LEN: usize = Amount::PROTO_LEN + Id::PROTO_LEN + 1;
 
     pub fn to_bytes(&self) -> Result<[u8; Self::LEN], ParserError> {
         let mut bytes = [0; Self::LEN];
@@ -65,34 +70,37 @@ impl Value {
         Ok(bytes)
     }
 
-    pub fn to_proto(&self) -> ([u8; 62], usize) {
-        let (value_amount, value_amount_len) = self.amount.to_proto();
+    pub fn to_proto(&self) -> Result<([u8; Self::PROTO_LEN], usize), ParserError> {
+        let (value_amount, value_amount_len) = self.amount.to_proto()?;
+        let mut proto = [0u8; Self::PROTO_LEN];
+        let mut offset = 0;
 
-        // Calculate the total length of the value
-        let value_len = 1 + value_amount_len + Id::PROTO_LEN;
+        // Encode the amount
+        let amount_tag = (penumbra_core_asset_v1_Value_amount_tag << 3 | PB_LTYPE_UVARINT) as u64;
+        let mut tag_buf = [0u8; 10];
+        offset += encode_varint(amount_tag, &mut tag_buf)?;
+        if offset + value_amount_len > proto.len() {
+            return Err(ParserError::InvalidLength);
+        }
+        proto[..offset].copy_from_slice(&tag_buf[..offset]);
+        proto[offset..offset + value_amount_len].copy_from_slice(&value_amount[..value_amount_len]);
+        offset += value_amount_len;
 
-        // Encode the length as a varint
-        let mut value_len_encoded = [0u8; 10];
-        let len = encode_varint(value_len as u64, &mut value_len_encoded);
+        // Encode the asset ID into the proto buffer
+        let asset_id_proto = self.asset_id.to_proto()?;
+        offset += encode_proto_field(
+            penumbra_core_asset_v1_Value_asset_id_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            asset_id_proto.len(),
+            &mut proto[offset..],
+        )?;
 
-        // Initialize the proto buffer
-        let mut proto = [0u8; 62];
+        if offset + Id::PROTO_LEN > proto.len() {
+            return Err(ParserError::InvalidLength);
+        }
+        proto[offset..offset + Id::PROTO_LEN].copy_from_slice(&asset_id_proto);
 
-        // Copy the encoded length into the proto buffer
-        proto[..len].copy_from_slice(&value_len_encoded[..len]);
-
-        // Add the tag
-        proto[len] = 0x0a;
-
-        // Copy the value amount into the proto buffer
-        proto[len + 1..len + 1 + value_amount_len]
-            .copy_from_slice(&value_amount[..value_amount_len]);
-
-        // Copy the asset ID into the proto buffer
-        proto[len + 1 + value_amount_len..len + 1 + value_amount_len + Id::PROTO_LEN]
-            .copy_from_slice(&self.asset_id.to_proto());
-
-        (proto, len + 1 + value_amount_len + Id::PROTO_LEN)
+        Ok((proto, offset + Id::PROTO_LEN))
     }
 }
 

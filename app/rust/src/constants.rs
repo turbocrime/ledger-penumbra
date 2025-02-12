@@ -24,6 +24,10 @@ pub const PAYLOAD_KEY_LEN_BYTES: usize = 32;
 pub const RSEED_LEN_BYTES: usize = 32;
 pub const ID_LEN_BYTES: usize = 32;
 pub const AMOUNT_LEN_BYTES: usize = 16;
+pub const VALIDATOR_IDENTITY_BYTES: usize = 32;
+pub const PENALTY_BYTES: usize = 32;
+pub const RK_LEN_BYTES: usize = 32;
+pub const CLUE_LEN_BYTES: usize = 68;
 
 pub const DETECTION_DATA_QTY: usize = 16;
 pub const ACTION_DATA_QTY: usize = 16;
@@ -50,3 +54,24 @@ pub const MAX_TEXT_LEN: usize = MEMO_LEN_BYTES - ADDRESS_LEN;
 pub const SWAP_CIPHERTEXT_BYTES: usize = 272;
 // Swap plaintext byte length.
 pub const SWAP_LEN_BYTES: usize = 256;
+
+pub const SPEND_PERSONALIZED: &[u8] = b"/penumbra.core.component.shielded_pool.v1.SpendBody";
+pub const OUTPUT_PERSONALIZED: &[u8] = b"/penumbra.core.component.shielded_pool.v1.OutputBody";
+pub const SWAP_PERSONALIZED: &[u8] = b"/penumbra.core.component.dex.v1.SwapBody";
+pub const ICS20_WITHDRAWAL_PERSONALIZED: &[u8] = b"/penumbra.core.component.ibc.v1.Ics20Withdrawal";
+pub const DELEGATE_PERSONALIZED: &[u8] = b"/penumbra.core.component.stake.v1.Delegate";
+pub const UNDELEGATE_PERSONALIZED: &[u8] = b"/penumbra.core.component.stake.v1.Undelegate";
+pub const DELEGATOR_VOTE_PERSONALIZED: &[u8] =
+    b"/penumbra.core.component.governance.v1.DelegatorVoteBody";
+pub const UNDELEGATE_CLAIM_PERSONALIZED: &[u8] =
+    b"/penumbra.core.component.stake.v1.UndelegateClaimBody";
+pub const POSITION_WITHDRAWAL_PERSONALIZED: &[u8] =
+    b"/penumbra.core.component.dex.v1.PositionWithdraw";
+pub const POSITION_OPEN_PERSONALIZED: &[u8] = b"/penumbra.core.component.dex.v1.PositionOpen";
+pub const POSITION_CLOSE_PERSONALIZED: &[u8] = b"/penumbra.core.component.dex.v1.PositionClose";
+pub const ACTION_DUTCH_AUCTION_SCHEDULE_PERSONALIZED: &[u8] =
+    b"/penumbra.core.component.auction.v1.ActionDutchAuctionSchedule";
+pub const ACTION_DUTCH_AUCTION_END_PERSONALIZED: &[u8] =
+    b"/penumbra.core.component.auction.v1.ActionDutchAuctionEnd";
+pub const ACTION_DUTCH_AUCTION_WITHDRAWAL_PERSONALIZED: &[u8] =
+    b"/penumbra.core.component.auction.v1.ActionDutchAuctionWithdraw";

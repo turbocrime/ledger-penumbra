@@ -1,0 +1,9 @@
+[package]
+name = "proto-bindgen"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+bindgen = "0.69"
+walkdir = "2.3"

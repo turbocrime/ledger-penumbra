@@ -14,6 +14,12 @@
 *  limitations under the License.
 ********************************************************************************/
 
+use crate::protobuf_h::asset_pb::{
+    penumbra_core_asset_v1_BalanceCommitment_inner_tag, PB_LTYPE_UVARINT,
+};
+use crate::protobuf_h::tct_pb::penumbra_crypto_tct_v1_StateCommitment_inner_tag;
+use crate::utils::protobuf::encode_proto_field;
+use crate::ParserError;
 use decaf377::{Element, Encoding, Fq};
 
 #[derive(Clone)]
@@ -33,7 +39,7 @@ pub struct StateCommitment(pub Fq);
 
 impl Commitment {
     pub const LEN: usize = 32;
-    pub const PROTO_LEN: usize = Self::LEN + 4;
+    pub const PROTO_LEN: usize = Self::LEN + 2;
 
     pub fn value_blinding_generator() -> decaf377::Element {
         let s =
@@ -41,48 +47,23 @@ impl Commitment {
         decaf377::Element::encode_to_curve(&s)
     }
 
-    pub fn to_proto_spend(&self) -> [u8; Self::PROTO_LEN] {
-        // let x = self.0.to_bytes();
+    pub fn to_proto(&self) -> Result<[u8; Self::PROTO_LEN], ParserError> {
         let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x0a, 0x22, 0x0a, 0x20]);
-        proto[4..].copy_from_slice(&self.bytes_compress());
-        proto
-    }
 
-    pub fn to_proto_output(&self) -> [u8; Self::PROTO_LEN] {
-        let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x12, 0x22, 0x0a, 0x20]);
-        // proto[4..].copy_from_slice(&self.0.vartime_compress().0);
-        proto[4..].copy_from_slice(&self.bytes_compress());
-        proto
-    }
+        let bytes = self.bytes_compress();
+        let len = encode_proto_field(
+            penumbra_core_asset_v1_BalanceCommitment_inner_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            bytes.len(),
+            &mut proto,
+        )?;
 
-    pub fn to_proto_swap(&self) -> [u8; Self::PROTO_LEN] {
-        let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x22, 0x22, 0x0a, 0x20]);
-        proto[4..].copy_from_slice(&self.0 .0);
-        proto
-    }
+        if len + bytes.len() != Self::PROTO_LEN {
+            return Err(ParserError::InvalidLength);
+        }
 
-    pub fn to_proto_unbonding_claim(&self) -> [u8; Self::PROTO_LEN] {
-        let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x22, 0x22, 0x0a, 0x20]);
-        proto[4..].copy_from_slice(&self.0 .0);
-        proto
-    }
-
-    pub fn to_proto_position_withdraw(&self) -> [u8; Self::PROTO_LEN] {
-        let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x12, 0x22, 0x0a, 0x20]);
-        proto[4..].copy_from_slice(&self.0 .0);
-        proto
-    }
-
-    pub fn to_proto_action_dutch_auction_withdraw(&self) -> [u8; Self::PROTO_LEN] {
-        let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x1a, 0x22, 0x0a, 0x20]);
-        proto[4..].copy_from_slice(&self.0 .0);
-        proto
+        proto[len..].copy_from_slice(&bytes);
+        Ok(proto)
     }
 
     /// Returns the vartime_compress byte representation
@@ -100,12 +81,24 @@ impl From<Element> for Commitment {
 
 impl StateCommitment {
     pub const LEN: usize = 32;
-    pub const PROTO_LEN: usize = Self::LEN + 4;
+    pub const PROTO_LEN: usize = Self::LEN + 2;
 
-    pub fn to_proto_swap(&self) -> [u8; Self::PROTO_LEN] {
+    pub fn to_proto(&self) -> Result<[u8; Self::PROTO_LEN], ParserError> {
         let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x0a, 0x22, 0x0a, 0x20]);
-        proto[4..].copy_from_slice(&self.0.to_bytes());
-        proto
+
+        let bytes = self.0.to_bytes();
+        let len = encode_proto_field(
+            penumbra_crypto_tct_v1_StateCommitment_inner_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            bytes.len(),
+            &mut proto,
+        )?;
+
+        if len + bytes.len() != Self::PROTO_LEN {
+            return Err(ParserError::InvalidLength);
+        }
+
+        proto[len..].copy_from_slice(&bytes);
+        Ok(proto)
     }
 }

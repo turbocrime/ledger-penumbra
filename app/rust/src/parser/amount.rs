@@ -16,6 +16,9 @@
 
 use crate::constants::AMOUNT_LEN_BYTES;
 use crate::parser::fixpoint::U128x128;
+use crate::protobuf_h::num_pb::{
+    penumbra_core_num_v1_Amount_hi_tag, penumbra_core_num_v1_Amount_lo_tag,
+};
 use crate::utils::protobuf::encode_varint;
 use crate::ParserError;
 use decaf377::{Fq, Fr};
@@ -29,38 +32,50 @@ pub struct Amount {
 
 impl Amount {
     pub const LEN: usize = AMOUNT_LEN_BYTES;
-    pub const PROTO_PREFIX_LO: [u8; 1] = [0x08]; // (1 << 3) | 0 = 8
-    pub const PROTO_PREFIX_HI: [u8; 1] = [0x10]; // (2 << 3) | 0 = 16
+    pub const PROTO_LEN: usize = 23; // 2*10 to encode the lo and hi, plus 2 for each tag plus 1 for the size
+    pub const PROTO_PREFIX_LO: [u8; 1] = [(penumbra_core_num_v1_Amount_lo_tag << 3) as u8]; // (1 << 3) | 0 = 8
+    pub const PROTO_PREFIX_HI: [u8; 1] = [(penumbra_core_num_v1_Amount_hi_tag << 3) as u8]; // (2 << 3) | 0 = 16
 
     pub fn to_le_bytes(&self) -> [u8; Self::LEN] {
         self.inner.to_le_bytes()
     }
 
-    pub fn to_proto(&self) -> ([u8; 22], usize) {
-        let mut encoded = [0u8; 22];
-        let mut pos = 1;
+    pub fn to_proto(&self) -> Result<([u8; Self::PROTO_LEN], usize), ParserError> {
+        let mut output_buffer = [0u8; Self::PROTO_LEN];
+        let mut temp_buffer = [0u8; Self::PROTO_LEN];
+        let mut pos = 0;
 
-        // Get low and high u64s from u128
+        // Split u128 into high and low u64 parts
         let lo = self.inner as u64;
         let hi = (self.inner >> 64) as u64;
 
-        // Only encode non-zero values
+        // Encode low part if non-zero
         if lo != 0 {
-            encoded[pos] = Self::PROTO_PREFIX_LO[0];
+            temp_buffer[pos] = Self::PROTO_PREFIX_LO[0];
             pos += 1;
-            pos += encode_varint(lo, &mut encoded[pos..]);
+            pos += encode_varint(lo, &mut temp_buffer[pos..])?;
         }
 
+        // Encode high part if non-zero
         if hi != 0 {
-            encoded[pos] = Self::PROTO_PREFIX_HI[0];
+            temp_buffer[pos] = Self::PROTO_PREFIX_HI[0];
             pos += 1;
-            pos += encode_varint(hi, &mut encoded[pos..]);
+            pos += encode_varint(hi, &mut temp_buffer[pos..])?;
         }
 
-        // Add the value of pos to the first byte of encoded
-        encoded[0] = (pos - 1) as u8;
+        // Encode the length prefix
+        let prefix_len = encode_varint(pos as u64, &mut output_buffer)?;
 
-        (encoded, pos)
+        // Check if the total length exceeds our buffer capacity
+        let total_length = prefix_len + pos;
+        if total_length > Self::PROTO_LEN {
+            return Err(ParserError::InvalidLength);
+        }
+
+        // Copy the encoded data to the output buffer
+        output_buffer[prefix_len..total_length].copy_from_slice(&temp_buffer[..pos]);
+
+        Ok((output_buffer, total_length))
     }
 }
 

@@ -129,6 +129,7 @@ typedef enum {
     parser_overflow,
     parser_non_integral,
     parser_unexpected_value,
+    parser_invalid_utf8,
 } parser_error_t;
 
 typedef struct {
