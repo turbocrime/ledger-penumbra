@@ -20,58 +20,61 @@ ifeq ($(BOLOS_SDK),)
 $(error BOLOS_SDK is not set)
 endif
 
-MY_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+########################################
+#        Mandatory configuration       #
+########################################
+# Upload targets to configure the devices 
+include $(BOLOS_SDK)/Makefile.defines
 
-# Set the default value for PRODUCTION_BUILD to 0 if not already defined
-PRODUCTION_BUILD ?= 1
+# Application name
+APPNAME = "Penumbra"
 
-# Display whether this is a production build or for internal use
-ifeq ($(PRODUCTION_BUILD), 1)
-    $(info ************ PRODUCTION_BUILD  = [PRODUCTION BUILD])
-else
-    $(info ************ PRODUCTION_BUILD  = [INTERNAL USE])
+# Application version
+include $(CURDIR)/Makefile.version
+APPVERSION = "$(APPVERSION_M).$(APPVERSION_N).$(APPVERSION_P)"
+
+# Application source files
+APP_SOURCE_PATH += src
+
+# Application icons following guidelines:
+# https://developers.ledger.com/docs/embedded-app/design-requirements/#device-icon
+ICON_NANOS = nanos_icon.gif
+ICON_NANOX = nanox_icon.gif
+ICON_NANOSP = nanox_icon.gif
+ICON_STAX = stax_icon.gif
+ICON_FLEX = flex_icon.gif
+
+# Application allowed derivation curves.
+# Possibles curves are: secp256k1, secp256r1, ed25519 and bls12381g1
+# If your app needs it, you can specify multiple curves by using:
+# `CURVE_APP_LOAD_PARAMS = <curve1> <curve2>`
+CURVE_APP_LOAD_PARAMS = secp256k1
+
+# Application allowed derivation paths.
+# You should request a specific path for your app.
+# This serve as an isolation mechanism.
+# Most application will have to request a path according to the BIP-0044
+# and SLIP-0044 standards.
+# If your app needs it, you can specify multiple path by using:
+# `PATH_APP_LOAD_PARAMS = "44'/1'" "45'/1'"`
+
+APPPATH = "44'/6532'"
+$(info PATHS LIST = $(APPPATH))
+PATH_APP_LOAD_PARAMS = $(APPPATH)
+
+# Setting to allow building variant applications
+# - <VARIANT_PARAM> is the name of the parameter which should be set
+#   to specify the variant that should be build.
+# - <VARIANT_VALUES> a list of variant that can be build using this app code.
+#   * It must at least contains one value.
+#   * Values can be the app ticker or anything else but should be unique.
+ifeq ($(COIN),)
+    COIN = UM
 endif
-
-# Display whether swap functionality is enabled or not
-ifeq ($(ENABLE_SWAP), 1)
-    $(info ************ HAVE_SWAP  = [ENABLED])
-else
-    $(info ************ HAVE_SWAP  = [DISABLED])
-endif
-
-# Add the PRODUCTION_BUILD definition to the compiler flags
-DEFINES += PRODUCTION_BUILD=$(PRODUCTION_BUILD)
-
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.app_testing
-
-ifndef COIN
-COIN=UM
-endif
-
+$(info COIN  = [$(COIN)])
 VARIANT_PARAM=COIN
 VARIANT_VALUES=$(COIN)
 
-include $(CURDIR)/Makefile.version
-
-$(info COIN  = [$(COIN)])
-
-ifeq ($(COIN), UM)
-# Main app configuration
-APPNAME = "Penumbra"
-APPPATH = "44'/6532'"
-
-else
-define error_message
-
-COIN value not supported: [$(COIN)]
-
-endef
-$(error "$(error_message)")
-endif
-
-$(info PATHS LIST = $(APPPATH))
-
-APP_LOAD_PARAMS = --curve secp256k1 $(COMMON_LOAD_PARAMS) --path $(APPPATH)
 INCLUDES_PATH += $(CURDIR)/src/protobuf
 INCLUDES_PATH += $(CURDIR)/src/common
 
@@ -82,62 +85,72 @@ DEFINES += FULL_APP
 $(info ************ FULL APP ENABLED ************)
 endif
 
-# Enable QR code display for all devices
-ENABLE_NBGL_QRCODE ?= 1
+########################################
+# Application communication interfaces #
+########################################
+ENABLE_BLUETOOTH = 1
+#ENABLE_NFC = 1
 
-RUST_TARGET:=thumbv6m-none-eabi
+########################################
+#         NBGL custom features         #
+########################################
+ENABLE_NBGL_QRCODE = 1
+#ENABLE_NBGL_KEYBOARD = 1
+#ENABLE_NBGL_KEYPAD = 1
 
-$(info ************ RUST_TARGET  = [$(RUST_TARGET)])
+########################################
+#          Features disablers          #
+########################################
+# These advanced settings allow to disable some feature that are by
+# default enabled in the SDK `Makefile.standard_app`.
+#DISABLE_STANDARD_APP_FILES = 1
+#DISABLE_DEFAULT_IO_SEPROXY_BUFFER_SIZE = 1 # To allow custom size declaration
+#DISABLE_STANDARD_APP_DEFINES = 1 # Will set all the following disablers
+#DISABLE_STANDARD_SNPRINTF = 1
+#DISABLE_STANDARD_USB = 1
+#DISABLE_STANDARD_WEBUSB = 1
+#DISABLE_DEBUG_LEDGER_ASSERT = 1
+#DISABLE_DEBUG_THROW = 1
 
-include $(BOLOS_SDK)/Makefile.target
+########################################
+#        Other configurations          #
+########################################
+# Set the default value for PRODUCTION_BUILD to 0 if not already defined
+PRODUCTION_BUILD ?= 1
+# Display whether this is a production build or for internal use
+ifeq ($(PRODUCTION_BUILD), 1)
+    $(info ************ PRODUCTION_BUILD  = [PRODUCTION BUILD])
+else
+    $(info ************ PRODUCTION_BUILD  = [INTERNAL USE])
+endif
+ # Add the PRODUCTION_BUILD definition to the compiler flags
+DEFINES += PRODUCTION_BUILD=$(PRODUCTION_BUILD)
 
+# Display whether swap functionality is enabled or not
+ifeq ($(ENABLE_SWAP), 1)
+    $(info ************ HAVE_SWAP  = [ENABLED])
+else
+    $(info ************ HAVE_SWAP  = [DISABLED])
+endif
+
+########################################
+
+# Configure devices and permissions
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.devices
-
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.platform
-
-APP_SOURCE_PATH += $(CURDIR)/rust/include
-CFLAGS += -Wvla
-LDFLAGS += -z muldefs
-LDLIBS   += -lm -lgcc -lc
-LDLIBS += -L$(MY_DIR)rust/target/$(RUST_TARGET)/release -lrslib
-
+# Create installer script
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.installer_script
+# Enable logging
+include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.app_testing
+# Call standard app flags
+include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.platform
+# Include Rust-specific build rules
+include $(CURDIR)/Makefile.rust
 
 $(info TARGET_NAME  = [$(TARGET_NAME)])
 $(info ICONNAME  = [$(ICONNAME)])
-
-ifndef ICONNAME
+ifeq ($(ICONNAME),)
 $(error ICONNAME is not set)
 endif
-
-ifeq ($(DEBUG), 1)
-CFLAGS += -O3 -Os -Wno-unknown-pragmas -Wno-unused-parameter -g
-else
-CFLAGS += -O3 -Os -Wno-unknown-pragmas -Wno-unused-parameter
-endif
-
-# make rust a prerequisite for all object files
-$(OBJECT_FILES): | rust
-
-.PHONY: rust
-rust:
-ifeq ($(FULL_APP), 1)
-	cd rust && RUSTC_BOOTSTRAP=1 CARGO_HOME="$(CURDIR)/rust/.cargo" cargo build --target $(RUST_TARGET) --release --features full_app
-else
-	cd rust && RUSTC_BOOTSTRAP=1 CARGO_HOME="$(CURDIR)/rust/.cargo" cargo build --target $(RUST_TARGET) --release
-endif
-
-# Before linking, we need to be sure rust lib is there
-bin/app.elf: rust
-
-.PHONY: rust_clean
-rust_clean:
-	cd rust && CARGO_HOME="$(CURDIR)/rust/.cargo" cargo clean
-
-clean: rust_clean
-
-#add dependency on custom makefile filename
-dep/%.d: %.c Makefile
 
 .PHONY: version
 version:
