@@ -76,7 +76,7 @@ impl Value {
         let mut offset = 0;
 
         // Encode the amount
-        let amount_tag = (penumbra_core_asset_v1_Value_amount_tag << 3 | PB_LTYPE_UVARINT) as u64;
+        let amount_tag = ((penumbra_core_asset_v1_Value_amount_tag << 3) | PB_LTYPE_UVARINT) as u64;
         let mut tag_buf = [0u8; 10];
         offset += encode_varint(amount_tag, &mut tag_buf)?;
         if offset + value_amount_len > proto.len() {

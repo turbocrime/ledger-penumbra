@@ -12,6 +12,11 @@ PB_BIND(penumbra_core_transaction_v1_TransactionBody, penumbra_core_transaction_
 
 PB_BIND(penumbra_core_transaction_v1_TransactionParameters, penumbra_core_transaction_v1_TransactionParameters, AUTO)
 
+PB_BIND(penumbra_core_transaction_v1_TransactionSummary, penumbra_core_transaction_v1_TransactionSummary, AUTO)
+
+PB_BIND(penumbra_core_transaction_v1_TransactionSummary_Effects, penumbra_core_transaction_v1_TransactionSummary_Effects,
+        AUTO)
+
 PB_BIND(penumbra_core_transaction_v1_DetectionData, penumbra_core_transaction_v1_DetectionData, AUTO)
 
 PB_BIND(penumbra_core_transaction_v1_Action, penumbra_core_transaction_v1_Action, 2)

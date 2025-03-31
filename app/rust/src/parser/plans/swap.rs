@@ -75,12 +75,14 @@ impl SwapPlanC {
         )?;
 
         // encode delta_1_i
-        state.update(&[(penumbra_core_component_dex_v1_SwapBody_delta_1_i_tag << 3 | 2) as u8]);
+        state.update(&[
+            ((penumbra_core_component_dex_v1_SwapBody_delta_1_i_tag << 3) | 2) as u8,
+        ]);
         let (asset_1, len_1) = body.delta_1_i.to_proto()?;
         state.update(&asset_1[..len_1]);
 
         // encode delta_2_i
-        state.update(&[(penumbra_core_component_dex_v1_SwapBody_delta_2_i_tag << 3 | 2) as u8]);
+        state.update(&[((penumbra_core_component_dex_v1_SwapBody_delta_2_i_tag << 3) | 2) as u8]);
         let (asset_2, len_2) = body.delta_2_i.to_proto()?;
         state.update(&asset_2[..len_2]);
 

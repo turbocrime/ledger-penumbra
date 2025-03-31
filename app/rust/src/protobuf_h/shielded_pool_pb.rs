@@ -629,11 +629,16 @@ pub const penumbra_core_asset_v1_Metadata_symbol_tag: u32 = 6;
 pub const penumbra_core_asset_v1_Metadata_penumbra_asset_id_tag: u32 = 1984;
 pub const penumbra_core_asset_v1_Metadata_images_tag: u32 = 1985;
 pub const penumbra_core_asset_v1_Metadata_priority_score_tag: u32 = 1986;
+pub const penumbra_core_asset_v1_Metadata_badges_tag: u32 = 1987;
+pub const penumbra_core_asset_v1_Metadata_coingecko_id_tag: u32 = 1988;
 pub const penumbra_core_asset_v1_DenomUnit_denom_tag: u32 = 1;
 pub const penumbra_core_asset_v1_DenomUnit_exponent_tag: u32 = 2;
 pub const penumbra_core_asset_v1_DenomUnit_aliases_tag: u32 = 3;
 pub const penumbra_core_asset_v1_Value_amount_tag: u32 = 1;
 pub const penumbra_core_asset_v1_Value_asset_id_tag: u32 = 2;
+pub const penumbra_core_asset_v1_Balance_values_tag: u32 = 1;
+pub const penumbra_core_asset_v1_Balance_SignedValue_value_tag: u32 = 1;
+pub const penumbra_core_asset_v1_Balance_SignedValue_negated_tag: u32 = 2;
 pub const penumbra_core_asset_v1_ValueView_KnownAssetId_amount_tag: u32 = 1;
 pub const penumbra_core_asset_v1_ValueView_KnownAssetId_metadata_tag: u32 = 2;
 pub const penumbra_core_asset_v1_ValueView_KnownAssetId_equivalent_values_tag: u32 = 3;
@@ -767,6 +772,7 @@ pub const penumbra_core_component_shielded_pool_v1_EventBroadcastClue_tx_tag: u3
 pub const penumbra_core_component_shielded_pool_v1_SpendBody_balance_commitment_tag: u32 = 1;
 pub const penumbra_core_component_shielded_pool_v1_SpendBody_rk_tag: u32 = 4;
 pub const penumbra_core_component_shielded_pool_v1_SpendBody_nullifier_tag: u32 = 6;
+pub const penumbra_core_component_shielded_pool_v1_SpendBody_encrypted_backref_tag: u32 = 7;
 pub const penumbra_core_component_shielded_pool_v1_Spend_body_tag: u32 = 1;
 pub const penumbra_core_component_shielded_pool_v1_Spend_auth_sig_tag: u32 = 2;
 pub const penumbra_core_component_shielded_pool_v1_Spend_proof_tag: u32 = 3;
@@ -805,3 +811,29 @@ pub const penumbra_core_component_shielded_pool_v1_AssetMetadataByIdResponse_den
 pub const penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest_asset_id_tag: u32 = 1;
 pub const penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_denom_metadata_tag:
     u32 = 1;
+pub const penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_channel_tag : u32 = 1 ;
+pub const penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_sequence_tag : u32 = 2 ;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_value_tag:
+    u32 = 1;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_sender_tag:
+    u32 = 2;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_receiver_tag : u32 = 3 ;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_meta_tag:
+    u32 = 4;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_value_tag: u32 =
+    1;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_sender_tag:
+    u32 = 2;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_receiver_tag:
+    u32 = 3;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_reason_tag:
+    u32 = 4;
+pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_meta_tag: u32 =
+    5;
+pub const penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_value_tag:
+    u32 = 1;
+pub const penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_sender_tag:
+    u32 = 2;
+pub const penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_receiver_tag : u32 = 3 ;
+pub const penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_meta_tag: u32 =
+    4;

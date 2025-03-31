@@ -94,3 +94,15 @@ PB_BIND(penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest,
 
 PB_BIND(penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse,
         penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse, AUTO)
+
+PB_BIND(penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata,
+        penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata, AUTO)
+
+PB_BIND(penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer,
+        penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer, AUTO)
+
+PB_BIND(penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund,
+        penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund, AUTO)
+
+PB_BIND(penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer,
+        penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer, AUTO)

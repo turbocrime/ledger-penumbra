@@ -389,13 +389,16 @@ pub unsafe extern "C" fn rs_generic_action_hash(
                 effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             ActionPlan::ActionDutchAuctionSchedule => {
-                let Ok(personalized) = std::str::from_utf8(ACTION_DUTCH_AUCTION_SCHEDULE_PERSONALIZED) else {
+                let Ok(personalized) =
+                    std::str::from_utf8(ACTION_DUTCH_AUCTION_SCHEDULE_PERSONALIZED)
+                else {
                     return ParserError::InvalidUtf8 as u32;
                 };
                 effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
             ActionPlan::ActionDutchAuctionEnd => {
-                let Ok(personalized) = std::str::from_utf8(ACTION_DUTCH_AUCTION_END_PERSONALIZED) else {
+                let Ok(personalized) = std::str::from_utf8(ACTION_DUTCH_AUCTION_END_PERSONALIZED)
+                else {
                     return ParserError::InvalidUtf8 as u32;
                 };
                 effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
@@ -524,7 +527,7 @@ mod tests {
     fn test_spend_action_hash() {
         // Create dummy ActionC
         let dummy_amount = AmountC {
-            lo: 488666442763545928,
+            lo: 334350930338573909,
             hi: 0,
         };
 
@@ -543,7 +546,7 @@ mod tests {
         };
 
         let dummy_rseed_bytes =
-            hex::decode("85197c5d60cf28b5ec756a657957b310072396577956fd5cd421ca62b4a6bc09")
+            hex::decode("6fc9aa59367788e7e704017c8eb6168bc358ce696ee65b22760c86947aaedcc8")
                 .unwrap();
         let dummy_address_inner = hex::decode("890bc98e3698aa4578e419b028da5672e627c280d8b06166f4c42d5366bccf1fcf3b296cd61e8d744a21f75f2fb697183e18595d8a79008539d8fb138b405db09db65cc42d54c0e772e5d42d5f20b52f").unwrap();
         let dummy_note = NoteC {
@@ -558,15 +561,15 @@ mod tests {
         };
 
         let dummy_randomizer_bytes =
-            hex::decode("732b53ee807140dd5672768ec1a38be09c531a0c6fc185d5f51c18f5f2261d01")
+            hex::decode("f17f6ea4c9f43535ea2b481e6ef42e652a58bf8de62a9da3a38a4b885c97b800")
                 .unwrap();
         let dummy_value_blinding_bytes =
-            hex::decode("f2e2f45f0ea734d7c11321cbf20427b379cfed6f71874ff97e8bcbbfce2d3d01")
+            hex::decode("48143f19e3837e86fb02305df5441dacf0d6fbdf5368ec0a5399466d0831cd00")
                 .unwrap();
 
         let dummy_action = spend::SpendPlanC {
             note: dummy_note,
-            position: 131414504314097,
+            position: 203995787941449,
             randomizer: BytesC::from_slice(&dummy_randomizer_bytes),
             value_blinding: BytesC::from_slice(&dummy_value_blinding_bytes),
         };
@@ -579,7 +582,7 @@ mod tests {
         let fvk = spend_key.fvk().unwrap();
 
         let spend_action_hash = dummy_action.effect_hash(&fvk);
-        let expected_hash = "c1d1826d5b769138e323498a5d26a040e2ec5b1f5fa7ade9f96d76a88896c3a3ba3a3ae5bc081c051ef48ba46973e10767f340d379553072ffdd11a4919aef1a";
+        let expected_hash = "680c9d20df7b0655ad5e87c40bb49bb1a42faa7a3b332cc0e8a0411b073f074de8067adfed8f7f6b5a123dd1ece6dbba3a201c3e164bd21971e280835779b235";
         if let Ok(spend_action_hash_bytes) = spend_action_hash {
             let computed_hash = hex::encode(spend_action_hash_bytes.as_array());
             assert_eq!(computed_hash, expected_hash);

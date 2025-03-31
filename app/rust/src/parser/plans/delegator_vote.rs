@@ -103,7 +103,7 @@ impl DelegatorVotePlanC {
 
         // vote
         state.update(&[
-            (penumbra_core_component_governance_v1_DelegatorVoteBody_vote_tag << 3 | 2) as u8,
+            ((penumbra_core_component_governance_v1_DelegatorVoteBody_vote_tag << 3) | 2) as u8,
         ]);
         let mut vote_buf = [0u8; 20];
         let len = encode_proto_number(
@@ -128,7 +128,7 @@ impl DelegatorVotePlanC {
 
         // unbonded_amount
         state.update(&[
-            (penumbra_core_component_governance_v1_DelegatorVoteBody_unbonded_amount_tag << 3 | 2)
+            ((penumbra_core_component_governance_v1_DelegatorVoteBody_unbonded_amount_tag << 3) | 2)
                 as u8,
         ]);
         let (unbonded_amount, unbonded_amount_len) = body.unbonded_amount.to_proto()?;

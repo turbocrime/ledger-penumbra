@@ -16,6 +16,7 @@
 
 use crate::constants::SPEND_PERSONALIZED;
 use crate::keys::FullViewingKey;
+use crate::parser::backref::{Backref, EncryptedBackref};
 use crate::parser::{
     balance::Balance,
     bytes::BytesC,
@@ -28,10 +29,11 @@ use crate::parser::{
 };
 use crate::protobuf_h::shielded_pool_pb::{
     penumbra_core_component_shielded_pool_v1_SpendBody_balance_commitment_tag,
+    penumbra_core_component_shielded_pool_v1_SpendBody_encrypted_backref_tag,
     penumbra_core_component_shielded_pool_v1_SpendBody_nullifier_tag,
     penumbra_core_component_shielded_pool_v1_SpendBody_rk_tag, PB_LTYPE_UVARINT,
 };
-use crate::utils::protobuf::encode_and_update_proto_field;
+use crate::utils::protobuf::{encode_and_update_proto_field, encode_proto_field};
 use crate::ParserError;
 use decaf377::Fr;
 use decaf377_rdsa::{SpendAuth, VerificationKey};
@@ -40,6 +42,7 @@ pub struct Body {
     pub balance_commitment: Commitment,
     pub nullifier: Nullifier,
     pub rk: Rk,
+    pub encrypted_backref: EncryptedBackref,
 }
 
 #[repr(C)]
@@ -92,14 +95,30 @@ impl SpendPlanC {
             nullifier.len(),
         )?;
 
+        // Encode encrypted backref
+        let mut proto = [0u8; 4];
+        let len = encode_proto_field(
+            penumbra_core_component_shielded_pool_v1_SpendBody_encrypted_backref_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            body.encrypted_backref.bytes.len(),
+            &mut proto,
+        )?;
+        state.update(&proto[..len]);
+        state.update(&body.encrypted_backref.bytes);
+
         Ok(EffectHash(*state.finalize().as_array()))
     }
 
     pub fn spend_body(&self, fvk: &FullViewingKey) -> Result<Body, ParserError> {
+        let note = Note::try_from(self.note.clone())?;
+        let backref = Backref::new(note.commit()?.0);
+        let encrypted_backref = backref.encrypt(&fvk.backref_key(), &self.nullifier(fvk)?);
+
         Ok(Body {
             balance_commitment: self.balance()?.commit(self.get_value_blinding_fr()?)?,
             nullifier: self.nullifier(fvk)?,
             rk: Rk(self.rk(fvk)?),
+            encrypted_backref: encrypted_backref?,
         })
     }
 

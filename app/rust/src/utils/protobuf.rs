@@ -70,7 +70,7 @@ pub fn encode_proto_field(
         return Err(ParserError::InvalidLength);
     }
 
-    let tag_and_type = tag << 3 | wire_type;
+    let tag_and_type = (tag << 3) | wire_type;
     let mut len = encode_varint(tag_and_type, output)?;
 
     let remaining_buf = &mut output[len..];

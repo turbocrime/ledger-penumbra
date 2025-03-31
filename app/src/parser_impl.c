@@ -432,6 +432,8 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Unexpected value";
         case parser_invalid_utf8:
             return "Invalid UTF-8";
+        case parser_encryption_error:
+            return "Encryption error";
 
         default:
             return "Unrecognized error code";

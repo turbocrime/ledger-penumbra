@@ -9,6 +9,7 @@ use super::{
     detection_key::DetectionKey, dk::DiversifierKey, ka, nk::NullifierKey,
     spend_key::SpendKeyBytes, Ivk, Ovk,
 };
+use crate::parser::symmetric::BackreferenceKey;
 use decaf377::{Fq, Fr};
 use decaf377_rdsa::{SpendAuth, VerificationKey};
 
@@ -130,6 +131,11 @@ impl FullViewingKey {
         out[32..64].copy_from_slice(&self.nk.0.to_bytes());
 
         Ok(())
+    }
+
+    /// Construct the backreference key for this full viewing key.
+    pub fn backref_key(&self) -> BackreferenceKey {
+        BackreferenceKey::derive(self.outgoing()).clone()
     }
 }
 

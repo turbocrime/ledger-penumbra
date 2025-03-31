@@ -109,6 +109,7 @@ pub enum ParserError {
     NonIntegral,
     UnexpectedValue,
     InvalidUtf8,
+    EncryptionError,
 }
 
 impl From<ErrorKind> for ParserError {

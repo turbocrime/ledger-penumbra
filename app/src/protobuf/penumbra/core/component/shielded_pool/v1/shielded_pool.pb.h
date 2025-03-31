@@ -18,6 +18,16 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
+/* Enum definitions */
+typedef enum _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason {
+    /* No particular reason. */
+    penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_REASON_UNSPECIFIED = 0,
+    /* The transfer timed out. */
+    penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_REASON_TIMEOUT = 1,
+    /* The transfer was acknowledged with an error. */
+    penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_REASON_ERROR = 2
+} penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason;
+
 /* Struct definitions */
 typedef struct _penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation {
     bool has_amount;
@@ -174,6 +184,8 @@ typedef struct _penumbra_core_component_shielded_pool_v1_SpendBody {
     /* The nullifier of the input note. */
     bool has_nullifier;
     penumbra_core_component_sct_v1_Nullifier nullifier;
+    /* An encryption of the commitment of the input note to the sender's OVK. */
+    pb_callback_t encrypted_backref;
 } penumbra_core_component_shielded_pool_v1_SpendBody;
 
 /* Spends a shielded note. */
@@ -319,9 +331,76 @@ typedef struct _penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRespo
     penumbra_core_asset_v1_Metadata denom_metadata;
 } penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse;
 
+/* Metadata about the packet associated with the transfer.
+
+ This allows identifying which specific packet is associated with the transfer.
+ Implicitly, both ports are going to be "transfer". */
+typedef struct _penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata {
+    /* The identifier for the channel on *this* chain. */
+    pb_callback_t channel;
+    /* Sequence number for the packet. */
+    uint64_t sequence;
+} penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata;
+
+typedef struct _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer {
+    /* The value being transferred out of the chain. */
+    bool has_value;
+    penumbra_core_asset_v1_Value value;
+    /* The sending address on chain. */
+    bool has_sender;
+    penumbra_core_keys_v1_Address sender;
+    /* The receiving address, which we don't assume anything about. */
+    pb_callback_t receiver;
+    bool has_meta;
+    penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata meta;
+} penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer;
+
+typedef struct _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund {
+    /* The value being refunded. */
+    bool has_value;
+    penumbra_core_asset_v1_Value value;
+    /* The sender being refunded. */
+    bool has_sender;
+    penumbra_core_keys_v1_Address sender;
+    /* The address that attempted to receive the funds. */
+    pb_callback_t receiver;
+    /* Why the refund is happening. */
+    penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason reason;
+    /* This will be the metadata for the packet for the transfer being refunded.
+
+ This allows linking a refund to the transfer. */
+    bool has_meta;
+    penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata meta;
+} penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund;
+
+typedef struct _penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer {
+    /* The value being transferred in. */
+    bool has_value;
+    penumbra_core_asset_v1_Value value;
+    /* The sender on the counterparty chain. */
+    pb_callback_t sender;
+    /* The receiver on this chain. */
+    bool has_receiver;
+    penumbra_core_keys_v1_Address receiver;
+    bool has_meta;
+    penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata meta;
+} penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* Helper constants for enums */
+#define _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_MIN \
+    penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_REASON_UNSPECIFIED
+#define _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_MAX \
+    penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_REASON_ERROR
+#define _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_ARRAYSIZE                                                                                     \
+    ((penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason)(penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_REASON_ERROR + \
+                                                                                        1))
+
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_reason_ENUMTYPE \
+    penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason
 
 /* Initializer values for message structs */
 #define penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_default       \
@@ -395,7 +474,9 @@ extern "C" {
     {                                                                                  \
         false, penumbra_core_asset_v1_BalanceCommitment_init_default, false,           \
             penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_default, false, \
-            penumbra_core_component_sct_v1_Nullifier_init_default                      \
+            penumbra_core_component_sct_v1_Nullifier_init_default, {                   \
+            {NULL}, NULL                                                               \
+        }                                                                              \
     }
 #define penumbra_core_component_shielded_pool_v1_SpendView_init_default                \
     {                                                                                  \
@@ -456,6 +537,26 @@ extern "C" {
     }
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_init_default \
     { false, penumbra_core_asset_v1_Metadata_init_default }
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default \
+    { {{NULL}, NULL}, 0 }
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_init_default             \
+    {                                                                                                        \
+        false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_keys_v1_Address_init_default, \
+            {{NULL}, NULL}, false,                                                                           \
+            penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default        \
+    }
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_init_default                            \
+    {                                                                                                                     \
+        false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_keys_v1_Address_init_default,              \
+            {{NULL}, NULL}, _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_MIN, false, \
+            penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default                     \
+    }
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_init_default       \
+    {                                                                                                 \
+        false, penumbra_core_asset_v1_Value_init_default, {{NULL}, NULL}, false,                      \
+            penumbra_core_keys_v1_Address_init_default, false,                                        \
+            penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default \
+    }
 #define penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_zero       \
     {                                                                                   \
         false, penumbra_core_component_shielded_pool_v1_FmdParameters_init_zero, false, \
@@ -524,7 +625,9 @@ extern "C" {
     {                                                                               \
         false, penumbra_core_asset_v1_BalanceCommitment_init_zero, false,           \
             penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_zero, false, \
-            penumbra_core_component_sct_v1_Nullifier_init_zero                      \
+            penumbra_core_component_sct_v1_Nullifier_init_zero, {                   \
+            {NULL}, NULL                                                            \
+        }                                                                           \
     }
 #define penumbra_core_component_shielded_pool_v1_SpendView_init_zero                \
     {                                                                               \
@@ -584,6 +687,24 @@ extern "C" {
     }
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_init_zero \
     { false, penumbra_core_asset_v1_Metadata_init_zero }
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero \
+    { {{NULL}, NULL}, 0 }
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_init_zero                          \
+    {                                                                                                                  \
+        false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_keys_v1_Address_init_zero, {{NULL}, NULL}, \
+            false, penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero              \
+    }
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_init_zero                            \
+    {                                                                                                                  \
+        false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_keys_v1_Address_init_zero, {{NULL}, NULL}, \
+            _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_MIN, false,              \
+            penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero                     \
+    }
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_init_zero                           \
+    {                                                                                                                  \
+        false, penumbra_core_asset_v1_Value_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_zero, \
+            false, penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero              \
+    }
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation_amount_tag 1
@@ -625,6 +746,7 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_SpendBody_balance_commitment_tag 1
 #define penumbra_core_component_shielded_pool_v1_SpendBody_rk_tag 4
 #define penumbra_core_component_shielded_pool_v1_SpendBody_nullifier_tag 6
+#define penumbra_core_component_shielded_pool_v1_SpendBody_encrypted_backref_tag 7
 #define penumbra_core_component_shielded_pool_v1_Spend_body_tag 1
 #define penumbra_core_component_shielded_pool_v1_Spend_auth_sig_tag 2
 #define penumbra_core_component_shielded_pool_v1_Spend_proof_tag 3
@@ -661,6 +783,21 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdResponse_denom_metadata_tag 1
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest_asset_id_tag 1
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_denom_metadata_tag 1
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_channel_tag 1
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_sequence_tag 2
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_value_tag 1
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_sender_tag 2
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_receiver_tag 3
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_meta_tag 4
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_value_tag 1
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_sender_tag 2
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_receiver_tag 3
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_reason_tag 4
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_meta_tag 5
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_value_tag 1
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_sender_tag 2
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_receiver_tag 3
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_meta_tag 4
 
 /* Struct field encoding specification for nanopb */
 #define penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_FIELDLIST(X, a) \
@@ -810,8 +947,9 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_SpendBody_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, balance_commitment, 1)                 \
     X(a, STATIC, OPTIONAL, MESSAGE, rk, 4)                                 \
-    X(a, STATIC, OPTIONAL, MESSAGE, nullifier, 6)
-#define penumbra_core_component_shielded_pool_v1_SpendBody_CALLBACK NULL
+    X(a, STATIC, OPTIONAL, MESSAGE, nullifier, 6)                          \
+    X(a, CALLBACK, SINGULAR, BYTES, encrypted_backref, 7)
+#define penumbra_core_component_shielded_pool_v1_SpendBody_CALLBACK pb_default_field_callback
 #define penumbra_core_component_shielded_pool_v1_SpendBody_DEFAULT NULL
 #define penumbra_core_component_shielded_pool_v1_SpendBody_balance_commitment_MSGTYPE \
     penumbra_core_asset_v1_BalanceCommitment
@@ -941,6 +1079,53 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_denom_metadata_MSGTYPE \
     penumbra_core_asset_v1_Metadata
 
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_FIELDLIST(X, a) \
+    X(a, CALLBACK, SINGULAR, STRING, channel, 1)                                                     \
+    X(a, STATIC, SINGULAR, UINT64, sequence, 2)
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_CALLBACK pb_default_field_callback
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_DEFAULT NULL
+
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, value, 1)                                                       \
+    X(a, STATIC, OPTIONAL, MESSAGE, sender, 2)                                                      \
+    X(a, CALLBACK, SINGULAR, STRING, receiver, 3)                                                   \
+    X(a, STATIC, OPTIONAL, MESSAGE, meta, 4)
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_CALLBACK pb_default_field_callback
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_DEFAULT NULL
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_value_MSGTYPE \
+    penumbra_core_asset_v1_Value
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_sender_MSGTYPE \
+    penumbra_core_keys_v1_Address
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_meta_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata
+
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, value, 1)                                                     \
+    X(a, STATIC, OPTIONAL, MESSAGE, sender, 2)                                                    \
+    X(a, CALLBACK, SINGULAR, STRING, receiver, 3)                                                 \
+    X(a, STATIC, SINGULAR, UENUM, reason, 4)                                                      \
+    X(a, STATIC, OPTIONAL, MESSAGE, meta, 5)
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_CALLBACK pb_default_field_callback
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_DEFAULT NULL
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_value_MSGTYPE penumbra_core_asset_v1_Value
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_sender_MSGTYPE \
+    penumbra_core_keys_v1_Address
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_meta_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata
+
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, value, 1)                                                      \
+    X(a, CALLBACK, SINGULAR, STRING, sender, 2)                                                    \
+    X(a, STATIC, OPTIONAL, MESSAGE, receiver, 3)                                                   \
+    X(a, STATIC, OPTIONAL, MESSAGE, meta, 4)
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_CALLBACK pb_default_field_callback
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_DEFAULT NULL
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_value_MSGTYPE penumbra_core_asset_v1_Value
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_receiver_MSGTYPE \
+    penumbra_core_keys_v1_Address
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_meta_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata
+
 extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_msg;
 extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_GenesisContent_msg;
 extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation_msg;
@@ -976,6 +1161,10 @@ extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_AssetMetadata
 extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_AssetMetadataByIdResponse_msg;
 extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest_msg;
 extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_msg;
+extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_msg;
+extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_msg;
+extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_msg;
+extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_fields \
@@ -1035,6 +1224,14 @@ extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_AssetMetadata
     &penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest_msg
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_fields \
     &penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_msg
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_fields \
+    &penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_msg
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_fields \
+    &penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_msg
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_fields \
+    &penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_msg
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_fields \
+    &penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_msg
 
 /* Maximum encoded size of messages (where known) */
 /* penumbra_core_component_shielded_pool_v1_GenesisContent_size depends on runtime parameters */
@@ -1047,6 +1244,7 @@ extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_AssetMetadata
 /* penumbra_core_component_shielded_pool_v1_ZKSpendProof_size depends on runtime parameters */
 /* penumbra_core_component_shielded_pool_v1_ZKNullifierDerivationProof_size depends on runtime parameters */
 /* penumbra_core_component_shielded_pool_v1_Spend_size depends on runtime parameters */
+/* penumbra_core_component_shielded_pool_v1_SpendBody_size depends on runtime parameters */
 /* penumbra_core_component_shielded_pool_v1_SpendView_size depends on runtime parameters */
 /* penumbra_core_component_shielded_pool_v1_SpendView_Visible_size depends on runtime parameters */
 /* penumbra_core_component_shielded_pool_v1_SpendView_Opaque_size depends on runtime parameters */
@@ -1058,6 +1256,10 @@ extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_AssetMetadata
 /* penumbra_core_component_shielded_pool_v1_OutputView_Opaque_size depends on runtime parameters */
 /* penumbra_core_component_shielded_pool_v1_OutputPlan_size depends on runtime parameters */
 /* penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest_size depends on runtime parameters */
+/* penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_size depends on runtime parameters */
+/* penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_size depends on runtime parameters */
+/* penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_size depends on runtime parameters */
+/* penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_size depends on runtime parameters */
 #define PENUMBRA_CORE_COMPONENT_SHIELDED_POOL_V1_PENUMBRA_CORE_COMPONENT_SHIELDED_POOL_V1_SHIELDED_POOL_PB_H_MAX_SIZE \
     penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_size
 #define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_FixedState_size 0
@@ -1076,13 +1278,6 @@ extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_AssetMetadata
 #if defined(penumbra_crypto_decaf377_fmd_v1_Clue_size) && defined(penumbra_core_txhash_v1_TransactionId_size)
 #define penumbra_core_component_shielded_pool_v1_EventBroadcastClue_size \
     (12 + penumbra_crypto_decaf377_fmd_v1_Clue_size + penumbra_core_txhash_v1_TransactionId_size)
-#endif
-#if defined(penumbra_core_asset_v1_BalanceCommitment_size) &&              \
-    defined(penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_size) && \
-    defined(penumbra_core_component_sct_v1_Nullifier_size)
-#define penumbra_core_component_shielded_pool_v1_SpendBody_size                                                        \
-    (18 + penumbra_core_asset_v1_BalanceCommitment_size + penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_size + \
-     penumbra_core_component_sct_v1_Nullifier_size)
 #endif
 #if defined(penumbra_core_asset_v1_AssetId_size)
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdRequest_size (6 + penumbra_core_asset_v1_AssetId_size)
