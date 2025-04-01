@@ -18,6 +18,10 @@ PB_BIND(penumbra_core_asset_v1_DenomUnit, penumbra_core_asset_v1_DenomUnit, AUTO
 
 PB_BIND(penumbra_core_asset_v1_Value, penumbra_core_asset_v1_Value, AUTO)
 
+PB_BIND(penumbra_core_asset_v1_Balance, penumbra_core_asset_v1_Balance, AUTO)
+
+PB_BIND(penumbra_core_asset_v1_Balance_SignedValue, penumbra_core_asset_v1_Balance_SignedValue, AUTO)
+
 PB_BIND(penumbra_core_asset_v1_ValueView, penumbra_core_asset_v1_ValueView, 2)
 
 PB_BIND(penumbra_core_asset_v1_ValueView_KnownAssetId, penumbra_core_asset_v1_ValueView_KnownAssetId, 2)
@@ -30,7 +34,7 @@ PB_BIND(penumbra_core_asset_v1_AssetImage_Theme, penumbra_core_asset_v1_AssetIma
 
 PB_BIND(penumbra_core_asset_v1_EstimatedPrice, penumbra_core_asset_v1_EstimatedPrice, AUTO)
 
-PB_BIND(penumbra_core_asset_v1_EquivalentValue, penumbra_core_asset_v1_EquivalentValue, AUTO)
+PB_BIND(penumbra_core_asset_v1_EquivalentValue, penumbra_core_asset_v1_EquivalentValue, 2)
 
 #ifndef PB_CONVERT_DOUBLE_FLOAT
 /* On some platforms (such as AVR), double is really float.

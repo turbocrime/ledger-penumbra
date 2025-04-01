@@ -99,10 +99,10 @@ impl PayloadKey {
 
         let plaintext_len = plaintext.len();
         let tag = cipher
-            .encrypt_in_place_detached(nonce, b"", &mut plaintext[..text_len])
-            .map_err(|_| ParserError::UnexpectedError)?;
+            .encrypt_in_place_detached(nonce, &[], &mut plaintext[..text_len])
+            .map_err(|_| ParserError::EncryptionError)?;
 
-        plaintext[plaintext_len - 16..].copy_from_slice(&tag);
+        plaintext[plaintext_len - tag.len()..].copy_from_slice(&tag);
 
         Ok(())
     }
@@ -131,10 +131,10 @@ impl PayloadKey {
         let plaintext_len = plaintext.len();
 
         let tag = cipher
-            .encrypt_in_place_detached(nonce, b"", &mut plaintext[..text_len])
-            .map_err(|_| ParserError::UnexpectedError)?;
+            .encrypt_in_place_detached(nonce, &[], &mut plaintext[..text_len])
+            .map_err(|_| ParserError::EncryptionError)?;
 
-        plaintext[plaintext_len - 16..].copy_from_slice(&tag);
+        plaintext[plaintext_len - tag.len()..].copy_from_slice(&tag);
 
         Ok(())
     }
@@ -144,18 +144,6 @@ impl PayloadKey {
 #[derive(Clone)]
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct OvkWrappedKey(pub [u8; OVK_WRAPPED_LEN_BYTES]);
-
-impl OvkWrappedKey {
-    pub const PROTO_LEN: usize = OVK_WRAPPED_LEN_BYTES + 2;
-    pub const PROTO_PREFIX: [u8; 2] = [0x22, 0x30];
-
-    pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
-        let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..2].copy_from_slice(&Self::PROTO_PREFIX);
-        proto[2..].copy_from_slice(&self.0);
-        proto
-    }
-}
 
 /// Represents a symmetric `ChaCha20Poly1305` key.
 ///
@@ -203,9 +191,9 @@ impl OutgoingCipherKey {
         let plaintext_len = plaintext.len();
 
         let tag = cipher
-            .encrypt_in_place_detached(nonce, b"", &mut plaintext[..32])
-            .map_err(|_| ParserError::UnexpectedError)?;
-        plaintext[plaintext_len - 16..].copy_from_slice(&tag);
+            .encrypt_in_place_detached(nonce, &[], &mut plaintext[..32])
+            .map_err(|_| ParserError::EncryptionError)?;
+        plaintext[plaintext_len - tag.len()..].copy_from_slice(&tag);
         Ok(())
     }
 }
@@ -215,9 +203,6 @@ impl OutgoingCipherKey {
 pub struct WrappedMemoKey(pub [u8; MEMOKEY_WRAPPED_LEN_BYTES]);
 
 impl WrappedMemoKey {
-    pub const PROTO_LEN: usize = MEMOKEY_WRAPPED_LEN_BYTES + 2;
-    pub const PROTO_PREFIX: [u8; 2] = [0x1a, 0x30];
-
     /// Encrypt a memo key using the action-specific `PayloadKey`.
     pub fn encrypt(
         memo_key: &PayloadKey,
@@ -244,11 +229,21 @@ impl WrappedMemoKey {
 
         Ok(WrappedMemoKey(wrapped_memo_key_bytes))
     }
+}
 
-    pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
-        let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..2].copy_from_slice(&Self::PROTO_PREFIX);
-        proto[2..].copy_from_slice(&self.0);
-        proto
+#[derive(Clone)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+pub struct BackreferenceKey(pub Key);
+
+impl BackreferenceKey {
+    pub fn derive(ovk: &Ovk) -> Self {
+        let mut kdf_params = blake2b_simd::Params::new();
+        kdf_params.personal(b"Penumbra_Backref");
+        kdf_params.hash_length(32);
+        let mut kdf = kdf_params.to_state();
+        kdf.update(&ovk.to_bytes());
+
+        let key = kdf.finalize();
+        Self(*Key::from_slice(key.as_bytes()))
     }
 }

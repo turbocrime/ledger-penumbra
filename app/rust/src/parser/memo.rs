@@ -36,9 +36,10 @@ impl MemoPlanC {
             return Ok(EffectHash::default());
         }
 
-        MemoCiphertext::encrypt(&self.key, &self.plaintext)
-            .map(|ciphertext| ciphertext.effect_hash().finalize())
-            .map(|hash| EffectHash::from_array(*hash.as_array()))
+        let ciphertext = MemoCiphertext::encrypt(&self.key, &self.plaintext)?;
+        let state = ciphertext.effect_hash()?;
+        let hash = state.finalize();
+        Ok(EffectHash::from_array(*hash.as_array()))
     }
 
     pub fn is_empty(&self) -> bool {
@@ -84,7 +85,7 @@ impl MemoCiphertext {
         Ok(MemoCiphertext(ciphertext))
     }
 
-    pub fn effect_hash(&self) -> blake2b_simd::State {
+    pub fn effect_hash(&self) -> Result<blake2b_simd::State, ParserError> {
         let mut state = create_personalized_state("/penumbra.core.transaction.v1.MemoCiphertext");
 
         // Encode the length of bytes like protobuf encoding with tag = 1
@@ -92,10 +93,10 @@ impl MemoCiphertext {
         // Max size needed for u64 varint + 1 byte tag
         let mut tag_and_len = [0u8; 11];
         tag_and_len[0] = 0x0A; // Tag
-        let varint_len = encode_varint(len as u64, &mut tag_and_len[1..]);
+        let varint_len = encode_varint(len as u64, &mut tag_and_len[1..])?;
 
         state.update(&tag_and_len[..varint_len + 1]);
         state.update(&self.0);
-        state
+        Ok(state)
     }
 }

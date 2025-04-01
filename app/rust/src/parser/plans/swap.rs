@@ -14,6 +14,7 @@
 *  limitations under the License.
 ********************************************************************************/
 
+use crate::constants::SWAP_PERSONALIZED;
 use crate::keys::FullViewingKey;
 use crate::parser::{
     amount::Amount,
@@ -26,6 +27,14 @@ use crate::parser::{
     swap_plaintext::SwapPlaintextC,
     trading_pair::TradingPair,
 };
+use crate::protobuf_h::dex_pb::{
+    penumbra_core_component_dex_v1_SwapBody_delta_1_i_tag,
+    penumbra_core_component_dex_v1_SwapBody_delta_2_i_tag,
+    penumbra_core_component_dex_v1_SwapBody_fee_commitment_tag,
+    penumbra_core_component_dex_v1_SwapBody_payload_tag,
+    penumbra_core_component_dex_v1_SwapBody_trading_pair_tag, PB_LTYPE_UVARINT,
+};
+use crate::utils::protobuf::encode_and_update_proto_field;
 use crate::ParserError;
 use decaf377::Fr;
 
@@ -51,19 +60,51 @@ impl SwapPlanC {
     pub fn effect_hash(&self, fvk: &FullViewingKey) -> Result<EffectHash, ParserError> {
         let body = self.swap_body(fvk)?;
 
-        let mut state = create_personalized_state("/penumbra.core.component.dex.v1.SwapBody");
+        let mut state = create_personalized_state(
+            std::str::from_utf8(SWAP_PERSONALIZED).map_err(|_| ParserError::InvalidUtf8)?,
+        );
 
-        state.update(&body.trading_pair.to_proto()?);
-        state.update(&[0x12]); // encode tag
-        let (asset_1, len_1) = body.delta_1_i.to_proto();
+        // encode trading pair
+        let trading_pair = body.trading_pair.to_proto()?;
+        encode_and_update_proto_field(
+            &mut state,
+            penumbra_core_component_dex_v1_SwapBody_trading_pair_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            &trading_pair,
+            trading_pair.len(),
+        )?;
+
+        // encode delta_1_i
+        state.update(&[
+            ((penumbra_core_component_dex_v1_SwapBody_delta_1_i_tag << 3) | 2) as u8,
+        ]);
+        let (asset_1, len_1) = body.delta_1_i.to_proto()?;
         state.update(&asset_1[..len_1]);
 
-        state.update(&[0x1a]); // encode tag
-        let (asset_2, len_2) = body.delta_2_i.to_proto();
+        // encode delta_2_i
+        state.update(&[((penumbra_core_component_dex_v1_SwapBody_delta_2_i_tag << 3) | 2) as u8]);
+        let (asset_2, len_2) = body.delta_2_i.to_proto()?;
         state.update(&asset_2[..len_2]);
 
-        state.update(&body.fee_commitment.to_proto_swap());
-        state.update(&body.payload.to_proto());
+        // encode fee_commitment
+        let fee_commitment = body.fee_commitment.to_proto()?;
+        encode_and_update_proto_field(
+            &mut state,
+            penumbra_core_component_dex_v1_SwapBody_fee_commitment_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            &fee_commitment,
+            fee_commitment.len(),
+        )?;
+
+        // encode payload
+        let payload = body.payload.to_proto()?;
+        encode_and_update_proto_field(
+            &mut state,
+            penumbra_core_component_dex_v1_SwapBody_payload_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            &payload,
+            payload.len(),
+        )?;
 
         Ok(EffectHash(*state.finalize().as_array()))
     }

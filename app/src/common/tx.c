@@ -24,7 +24,7 @@
 #include "zxmacros.h"
 
 #if defined(TARGET_NANOX) || defined(TARGET_NANOS2) || defined(TARGET_STAX) || defined(TARGET_FLEX)
-#define RAM_BUFFER_SIZE 4096
+#define RAM_BUFFER_SIZE 1024
 #define FLASH_BUFFER_SIZE 13312
 #elif defined(TARGET_NANOS)
 #define RAM_BUFFER_SIZE 256

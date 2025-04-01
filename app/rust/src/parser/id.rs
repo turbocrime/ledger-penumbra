@@ -16,16 +16,19 @@
 
 use crate::constants::ID_LEN_BYTES;
 use crate::parser::bytes::BytesC;
+use crate::protobuf_h::asset_pb::{penumbra_core_asset_v1_AssetId_inner_tag, PB_LTYPE_UVARINT};
 use crate::utils::prf::expand_fq;
+use crate::utils::protobuf::encode_proto_field;
 use crate::ParserError;
 use decaf377::Fq;
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Id(pub Fq);
 
 impl Id {
     pub const LEN: usize = ID_LEN_BYTES;
-    pub const PROTO_LEN: usize = Self::LEN + 4;
+    pub const PROTO_LEN: usize = Self::LEN + 2;
 
     /// Compute the value generator   for this asset, used for computing balance commitments.
     pub fn value_generator(&self) -> decaf377::Element {
@@ -45,11 +48,23 @@ impl Id {
         bytes
     }
 
-    pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
+    pub fn to_proto(&self) -> Result<[u8; Self::PROTO_LEN], ParserError> {
         let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&[0x12, 0x22, 0x0a, 0x20]);
-        proto[4..].copy_from_slice(&self.to_bytes());
-        proto
+
+        let bytes = self.to_bytes();
+        let len = encode_proto_field(
+            penumbra_core_asset_v1_AssetId_inner_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            bytes.len(),
+            &mut proto,
+        )?;
+
+        if len + bytes.len() != Self::PROTO_LEN {
+            return Err(ParserError::InvalidLength);
+        }
+
+        proto[len..].copy_from_slice(&bytes);
+        Ok(proto)
     }
 }
 
@@ -65,6 +80,7 @@ impl PartialEq for Id {
 pub struct IdC {
     pub inner: BytesC,
 }
+
 impl IdC {
     pub fn get_inner(&self) -> Result<&[u8], ParserError> {
         self.inner.get_bytes()
@@ -94,5 +110,32 @@ impl AssetId {
 
     pub fn to_bytes(&self) -> [u8; ID_LEN_BYTES] {
         self.0.to_bytes()
+    }
+}
+
+#[derive(Clone, Default)]
+#[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
+pub struct IdRaw(pub [u8; 32]);
+
+impl IdRaw {
+    pub const PROTO_LEN: usize = ID_LEN_BYTES + 2;
+
+    pub fn to_proto(&self) -> Result<[u8; Self::PROTO_LEN], ParserError> {
+        let mut proto = [0u8; Self::PROTO_LEN];
+
+        let bytes = self.0;
+        let len = encode_proto_field(
+            penumbra_core_asset_v1_AssetId_inner_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            bytes.len(),
+            &mut proto,
+        )?;
+
+        if len + bytes.len() != Self::PROTO_LEN {
+            return Err(ParserError::InvalidLength);
+        }
+
+        proto[len..].copy_from_slice(&bytes);
+        Ok(proto)
     }
 }

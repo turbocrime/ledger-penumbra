@@ -65,6 +65,11 @@ typedef struct _penumbra_core_asset_v1_Metadata {
 
  This is solely for use in client-side registries. */
     uint64_t priority_score;
+    /* Associated icons for asset.
+ For ibc assets, usually an image of the source chain. */
+    pb_callback_t badges;
+    /* Coingecko ID for the asset. */
+    pb_callback_t coingecko_id;
 } penumbra_core_asset_v1_Metadata;
 
 /* DenomUnit represents a struct that describes a given denomination unit of the basic token. */
@@ -87,6 +92,17 @@ typedef struct _penumbra_core_asset_v1_Value {
     bool has_asset_id;
     penumbra_core_asset_v1_AssetId asset_id;
 } penumbra_core_asset_v1_Value;
+
+typedef struct _penumbra_core_asset_v1_Balance {
+    /* Represents the vector of 'Value's in the balance. */
+    pb_callback_t values;
+} penumbra_core_asset_v1_Balance;
+
+typedef struct _penumbra_core_asset_v1_Balance_SignedValue {
+    bool has_value;
+    penumbra_core_asset_v1_Value value;
+    bool negated;
+} penumbra_core_asset_v1_Balance_SignedValue;
 
 /* A value whose asset ID is known and has metadata. */
 typedef struct _penumbra_core_asset_v1_ValueView_KnownAssetId {
@@ -198,7 +214,9 @@ extern "C" {
 #define penumbra_core_asset_v1_Metadata_init_default                                                           \
     {                                                                                                          \
         {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, \
-            penumbra_core_asset_v1_AssetId_init_default, {{NULL}, NULL}, 0                                     \
+            penumbra_core_asset_v1_AssetId_init_default, {{NULL}, NULL}, 0, {{NULL}, NULL}, {                  \
+            {NULL}, NULL                                                                                       \
+        }                                                                                                      \
     }
 #define penumbra_core_asset_v1_DenomUnit_init_default \
     {                                                 \
@@ -206,6 +224,12 @@ extern "C" {
     }
 #define penumbra_core_asset_v1_Value_init_default \
     { false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_AssetId_init_default }
+#define penumbra_core_asset_v1_Balance_init_default \
+    {                                               \
+        { {NULL}, NULL }                            \
+    }
+#define penumbra_core_asset_v1_Balance_SignedValue_init_default \
+    { false, penumbra_core_asset_v1_Value_init_default, 0 }
 #define penumbra_core_asset_v1_ValueView_init_default                     \
     {                                                                     \
         0, { penumbra_core_asset_v1_ValueView_KnownAssetId_init_default } \
@@ -240,7 +264,9 @@ extern "C" {
 #define penumbra_core_asset_v1_Metadata_init_zero                                                              \
     {                                                                                                          \
         {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, \
-            penumbra_core_asset_v1_AssetId_init_zero, {{NULL}, NULL}, 0                                        \
+            penumbra_core_asset_v1_AssetId_init_zero, {{NULL}, NULL}, 0, {{NULL}, NULL}, {                     \
+            {NULL}, NULL                                                                                       \
+        }                                                                                                      \
     }
 #define penumbra_core_asset_v1_DenomUnit_init_zero \
     {                                              \
@@ -248,6 +274,12 @@ extern "C" {
     }
 #define penumbra_core_asset_v1_Value_init_zero \
     { false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero }
+#define penumbra_core_asset_v1_Balance_init_zero \
+    {                                            \
+        { {NULL}, NULL }                         \
+    }
+#define penumbra_core_asset_v1_Balance_SignedValue_init_zero \
+    { false, penumbra_core_asset_v1_Value_init_zero, 0 }
 #define penumbra_core_asset_v1_ValueView_init_zero                     \
     {                                                                  \
         0, { penumbra_core_asset_v1_ValueView_KnownAssetId_init_zero } \
@@ -283,11 +315,16 @@ extern "C" {
 #define penumbra_core_asset_v1_Metadata_penumbra_asset_id_tag 1984
 #define penumbra_core_asset_v1_Metadata_images_tag 1985
 #define penumbra_core_asset_v1_Metadata_priority_score_tag 1986
+#define penumbra_core_asset_v1_Metadata_badges_tag 1987
+#define penumbra_core_asset_v1_Metadata_coingecko_id_tag 1988
 #define penumbra_core_asset_v1_DenomUnit_denom_tag 1
 #define penumbra_core_asset_v1_DenomUnit_exponent_tag 2
 #define penumbra_core_asset_v1_DenomUnit_aliases_tag 3
 #define penumbra_core_asset_v1_Value_amount_tag 1
 #define penumbra_core_asset_v1_Value_asset_id_tag 2
+#define penumbra_core_asset_v1_Balance_values_tag 1
+#define penumbra_core_asset_v1_Balance_SignedValue_value_tag 1
+#define penumbra_core_asset_v1_Balance_SignedValue_negated_tag 2
 #define penumbra_core_asset_v1_ValueView_KnownAssetId_amount_tag 1
 #define penumbra_core_asset_v1_ValueView_KnownAssetId_metadata_tag 2
 #define penumbra_core_asset_v1_ValueView_KnownAssetId_equivalent_values_tag 3
@@ -335,12 +372,15 @@ extern "C" {
     X(a, CALLBACK, SINGULAR, STRING, symbol, 6)              \
     X(a, STATIC, OPTIONAL, MESSAGE, penumbra_asset_id, 1984) \
     X(a, CALLBACK, REPEATED, MESSAGE, images, 1985)          \
-    X(a, STATIC, SINGULAR, UINT64, priority_score, 1986)
+    X(a, STATIC, SINGULAR, UINT64, priority_score, 1986)     \
+    X(a, CALLBACK, REPEATED, MESSAGE, badges, 1987)          \
+    X(a, CALLBACK, SINGULAR, STRING, coingecko_id, 1988)
 #define penumbra_core_asset_v1_Metadata_CALLBACK pb_default_field_callback
 #define penumbra_core_asset_v1_Metadata_DEFAULT NULL
 #define penumbra_core_asset_v1_Metadata_denom_units_MSGTYPE penumbra_core_asset_v1_DenomUnit
 #define penumbra_core_asset_v1_Metadata_penumbra_asset_id_MSGTYPE penumbra_core_asset_v1_AssetId
 #define penumbra_core_asset_v1_Metadata_images_MSGTYPE penumbra_core_asset_v1_AssetImage
+#define penumbra_core_asset_v1_Metadata_badges_MSGTYPE penumbra_core_asset_v1_AssetImage
 
 #define penumbra_core_asset_v1_DenomUnit_FIELDLIST(X, a) \
     X(a, CALLBACK, SINGULAR, STRING, denom, 1)           \
@@ -356,6 +396,18 @@ extern "C" {
 #define penumbra_core_asset_v1_Value_DEFAULT NULL
 #define penumbra_core_asset_v1_Value_amount_MSGTYPE penumbra_core_num_v1_Amount
 #define penumbra_core_asset_v1_Value_asset_id_MSGTYPE penumbra_core_asset_v1_AssetId
+
+#define penumbra_core_asset_v1_Balance_FIELDLIST(X, a) X(a, CALLBACK, REPEATED, MESSAGE, values, 1)
+#define penumbra_core_asset_v1_Balance_CALLBACK pb_default_field_callback
+#define penumbra_core_asset_v1_Balance_DEFAULT NULL
+#define penumbra_core_asset_v1_Balance_values_MSGTYPE penumbra_core_asset_v1_Balance_SignedValue
+
+#define penumbra_core_asset_v1_Balance_SignedValue_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, value, 1)                      \
+    X(a, STATIC, SINGULAR, BOOL, negated, 2)
+#define penumbra_core_asset_v1_Balance_SignedValue_CALLBACK NULL
+#define penumbra_core_asset_v1_Balance_SignedValue_DEFAULT NULL
+#define penumbra_core_asset_v1_Balance_SignedValue_value_MSGTYPE penumbra_core_asset_v1_Value
 
 #define penumbra_core_asset_v1_ValueView_FIELDLIST(X, a)                                     \
     X(a, STATIC, ONEOF, MESSAGE, (value_view, known_asset_id, value_view.known_asset_id), 1) \
@@ -425,6 +477,8 @@ extern const pb_msgdesc_t penumbra_core_asset_v1_Denom_msg;
 extern const pb_msgdesc_t penumbra_core_asset_v1_Metadata_msg;
 extern const pb_msgdesc_t penumbra_core_asset_v1_DenomUnit_msg;
 extern const pb_msgdesc_t penumbra_core_asset_v1_Value_msg;
+extern const pb_msgdesc_t penumbra_core_asset_v1_Balance_msg;
+extern const pb_msgdesc_t penumbra_core_asset_v1_Balance_SignedValue_msg;
 extern const pb_msgdesc_t penumbra_core_asset_v1_ValueView_msg;
 extern const pb_msgdesc_t penumbra_core_asset_v1_ValueView_KnownAssetId_msg;
 extern const pb_msgdesc_t penumbra_core_asset_v1_ValueView_UnknownAssetId_msg;
@@ -440,6 +494,8 @@ extern const pb_msgdesc_t penumbra_core_asset_v1_EquivalentValue_msg;
 #define penumbra_core_asset_v1_Metadata_fields &penumbra_core_asset_v1_Metadata_msg
 #define penumbra_core_asset_v1_DenomUnit_fields &penumbra_core_asset_v1_DenomUnit_msg
 #define penumbra_core_asset_v1_Value_fields &penumbra_core_asset_v1_Value_msg
+#define penumbra_core_asset_v1_Balance_fields &penumbra_core_asset_v1_Balance_msg
+#define penumbra_core_asset_v1_Balance_SignedValue_fields &penumbra_core_asset_v1_Balance_SignedValue_msg
 #define penumbra_core_asset_v1_ValueView_fields &penumbra_core_asset_v1_ValueView_msg
 #define penumbra_core_asset_v1_ValueView_KnownAssetId_fields &penumbra_core_asset_v1_ValueView_KnownAssetId_msg
 #define penumbra_core_asset_v1_ValueView_UnknownAssetId_fields &penumbra_core_asset_v1_ValueView_UnknownAssetId_msg
@@ -455,6 +511,8 @@ extern const pb_msgdesc_t penumbra_core_asset_v1_EquivalentValue_msg;
 /* penumbra_core_asset_v1_Metadata_size depends on runtime parameters */
 /* penumbra_core_asset_v1_DenomUnit_size depends on runtime parameters */
 /* penumbra_core_asset_v1_Value_size depends on runtime parameters */
+/* penumbra_core_asset_v1_Balance_size depends on runtime parameters */
+/* penumbra_core_asset_v1_Balance_SignedValue_size depends on runtime parameters */
 /* penumbra_core_asset_v1_ValueView_size depends on runtime parameters */
 /* penumbra_core_asset_v1_ValueView_KnownAssetId_size depends on runtime parameters */
 /* penumbra_core_asset_v1_ValueView_UnknownAssetId_size depends on runtime parameters */

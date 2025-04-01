@@ -14,19 +14,25 @@
 *  limitations under the License.
 ********************************************************************************/
 
+use crate::constants::ACTION_DUTCH_AUCTION_WITHDRAWAL_PERSONALIZED;
 use crate::parser::{
     balance::Balance,
     commitment::Commitment,
     effect_hash::{create_personalized_state, EffectHash},
-    id::IdC,
+    id::{IdC, IdRaw},
     value::{Imbalance, Sign, Value, ValueC},
 };
-use crate::utils::protobuf::encode_varint;
+use crate::protobuf_h::auction_pb::{
+    penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_auction_id_tag,
+    penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_reserves_commitment_tag,
+    penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_seq_tag, PB_LTYPE_UVARINT,
+};
+use crate::utils::protobuf::{encode_and_update_proto_field, encode_and_update_proto_number};
 use crate::ParserError;
 use decaf377::Fr;
 
 pub struct ActionDutchAuctionWithdraw {
-    pub auction_id: [u8; 32],
+    pub auction_id: IdRaw,
     pub seq: u64,
     pub reserves_commitment: Commitment,
 }
@@ -49,26 +55,39 @@ impl ActionDutchAuctionWithdrawPlanC {
         let action_dutch_auction_withdraw = self.to_action()?;
 
         let mut state = create_personalized_state(
-            "/penumbra.core.component.auction.v1.ActionDutchAuctionWithdraw",
+            std::str::from_utf8(ACTION_DUTCH_AUCTION_WITHDRAWAL_PERSONALIZED)
+                .map_err(|_| ParserError::InvalidUtf8)?,
         );
 
         // auction_id
-        state.update(&[0x0a, 0x22, 0x0a, 0x20]);
-        state.update(&action_dutch_auction_withdraw.auction_id);
+        let auction_id = action_dutch_auction_withdraw.auction_id.to_proto()?;
+        encode_and_update_proto_field(
+            &mut state,
+            penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_auction_id_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            &auction_id,
+            auction_id.len(),
+        )?;
 
         // sequence
-        let mut encoded = [0u8; 11];
-        encoded[0] = 0x10;
-        let pos = 1;
-        let len = encode_varint(action_dutch_auction_withdraw.seq, &mut encoded[pos..]);
-        state.update(&encoded[..len + 1]);
+        encode_and_update_proto_number(
+            &mut state,
+            penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_seq_tag as u64,
+            action_dutch_auction_withdraw.seq,
+        )?;
 
         // reserves_commitment
-        state.update(
-            &action_dutch_auction_withdraw
-                .reserves_commitment
-                .to_proto_action_dutch_auction_withdraw(),
-        );
+        let reserves_commitment = action_dutch_auction_withdraw
+            .reserves_commitment
+            .to_proto()?;
+        encode_and_update_proto_field(
+            &mut state,
+            penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_reserves_commitment_tag
+                as u64,
+            PB_LTYPE_UVARINT as u64,
+            &reserves_commitment,
+            reserves_commitment.len(),
+        )?;
 
         Ok(EffectHash(*state.finalize().as_array()))
     }
@@ -84,7 +103,7 @@ impl ActionDutchAuctionWithdrawPlanC {
         let reserves_commitment = self.reserves_commitment()?;
 
         let action_dutch_auction_withdraw = ActionDutchAuctionWithdraw {
-            auction_id,
+            auction_id: IdRaw(auction_id),
             seq: self.seq,
             reserves_commitment,
         };

@@ -15,15 +15,20 @@
 ********************************************************************************/
 
 use crate::keys::nk::NullifierKey;
+use crate::protobuf_h::sct_pb::{
+    penumbra_core_component_sct_v1_Nullifier_inner_tag, PB_LTYPE_UVARINT,
+};
+use crate::utils::protobuf::encode_proto_field;
+use crate::ParserError;
 use decaf377::Fq;
 use poseidon377::hash_3;
+
 #[cfg_attr(any(feature = "derive-debug", test), derive(Debug))]
 pub struct Nullifier(pub Fq);
 
 impl Nullifier {
     pub const LEN: usize = 32;
-    pub const PROTO_LEN: usize = Self::LEN + 4;
-    pub const PROTO_PREFIX: [u8; 4] = [0x32, 0x22, 0x0a, 0x20];
+    pub const PROTO_LEN: usize = Self::LEN + 2;
 
     /// Derive the [`Nullifier`] for a positioned note or swap given its [`merkle::Position`]
     /// and [`Commitment`].
@@ -38,10 +43,22 @@ impl Nullifier {
         Fq::from_le_bytes_mod_order(blake2b_simd::blake2b(b"penumbra.nullifier").as_bytes())
     }
 
-    pub fn to_proto(&self) -> [u8; Self::PROTO_LEN] {
+    pub fn to_proto(&self) -> Result<[u8; Self::PROTO_LEN], ParserError> {
         let mut proto = [0u8; Self::PROTO_LEN];
-        proto[0..4].copy_from_slice(&Self::PROTO_PREFIX);
-        proto[4..].copy_from_slice(&self.0.to_bytes());
-        proto
+
+        let bytes = self.0.to_bytes();
+        let len = encode_proto_field(
+            penumbra_core_component_sct_v1_Nullifier_inner_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            bytes.len(),
+            &mut proto,
+        )?;
+
+        if len + bytes.len() != Self::PROTO_LEN {
+            return Err(ParserError::InvalidLength);
+        }
+
+        proto[len..].copy_from_slice(&bytes);
+        Ok(proto)
     }
 }

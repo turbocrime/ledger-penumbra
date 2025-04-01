@@ -13,6 +13,7 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
+use crate::constants::PENALTY_BYTES;
 use crate::parser::bytes::BytesC;
 use crate::parser::{
     amount::Amount,
@@ -23,17 +24,21 @@ use crate::parser::{
     value::{Imbalance, Sign, Value},
     ParserError,
 };
+use crate::protobuf_h::stake_pb::{
+    penumbra_core_component_stake_v1_Penalty_inner_tag, PB_LTYPE_UVARINT,
+};
+use crate::utils::protobuf::encode_proto_field;
 use decaf377::Fq;
 
 #[derive(Copy, Clone)]
 pub struct Penalty(U128x128);
 
 impl Penalty {
+    pub const PROTO_LEN: usize = PENALTY_BYTES + 2;
+
     /// Apply this `Penalty` to an `Amount` of unbonding tokens.
-    pub fn apply_to_amount(&self, amount: Amount) -> Amount {
-        self.0
-            .apply_to_amount(&amount)
-            .expect("should not overflow, because penalty is <= 1")
+    pub fn apply_to_amount(&self, amount: Amount) -> Result<Amount, ParserError> {
+        self.0.apply_to_amount(&amount)
     }
 
     /// Helper method to compute the effect of an UndelegateClaim on the
@@ -60,12 +65,31 @@ impl Penalty {
         })?;
         balance.insert(Imbalance {
             value: Value {
-                amount: self.apply_to_amount(unbonding_amount),
+                amount: self.apply_to_amount(unbonding_amount)?,
                 asset_id: Id(Fq::from_le_bytes_mod_order(&STAKING_TOKEN_ASSET_ID_BYTES)),
             },
             sign: Sign::Provided,
         })?;
         Ok(balance)
+    }
+
+    pub fn to_proto(&self) -> Result<[u8; Self::PROTO_LEN], ParserError> {
+        let mut proto = [0u8; Self::PROTO_LEN];
+
+        let bytes = self.0.to_bytes();
+        let len = encode_proto_field(
+            penumbra_core_component_stake_v1_Penalty_inner_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            bytes.len(),
+            &mut proto,
+        )?;
+
+        if len + bytes.len() != Self::PROTO_LEN {
+            return Err(ParserError::InvalidLength);
+        }
+
+        proto[len..].copy_from_slice(&bytes);
+        Ok(proto)
     }
 }
 

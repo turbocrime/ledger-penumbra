@@ -58,7 +58,7 @@ static parser_error_t decode_error = parser_ok;
         }                                \
     }
 
-bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+bool decode_action(pb_istream_t *stream, __Z_UNUSED const pb_field_t *field, void **arg) {
     if (arg == NULL || *arg == NULL) {
         return false;
     }
@@ -161,7 +161,7 @@ bool decode_action(pb_istream_t *stream, const pb_field_t *field, void **arg) {
     return true;
 }
 
-bool decode_detection_data(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+bool decode_detection_data(pb_istream_t *stream, __Z_UNUSED const pb_field_t *field, void **arg) {
     if (stream->bytes_left == 0 || arg == NULL) return false;
 
     if (detection_data_qty >= DETECTION_DATA_QTY) {
@@ -430,6 +430,10 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Non-integral value error";
         case parser_unexpected_value:
             return "Unexpected value";
+        case parser_invalid_utf8:
+            return "Invalid UTF-8";
+        case parser_encryption_error:
+            return "Encryption error";
 
         default:
             return "Unrecognized error code";

@@ -135,7 +135,7 @@ __Z_INLINE void handleGetAddr(volatile uint32_t *flags, volatile uint32_t *tx, u
     THROW(APDU_CODE_OK);
 }
 
-__Z_INLINE void handleGetFVK(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+__Z_INLINE void handleGetFVK(volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleGetFVK\n");
 
     extractHDPath(rx, OFFSET_DATA);
@@ -151,7 +151,7 @@ __Z_INLINE void handleGetFVK(volatile uint32_t *flags, volatile uint32_t *tx, ui
     THROW(APDU_CODE_OK);
 }
 
-__Z_INLINE void handleTxMetadata(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+__Z_INLINE void handleTxMetadata(volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleTxMetadata\n");
 
     if (!process_chunk(tx, rx, false)) {
@@ -219,7 +219,7 @@ __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile 
     THROW(APDU_CODE_OK);
 }
 
-__Z_INLINE void handleGetSpendAuthSignatures(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+__Z_INLINE void handleGetSpendAuthSignatures(volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleGetSpendAuthSignatures\n");
     if (rx < OFFSET_DATA) {
         THROW(APDU_CODE_WRONG_LENGTH);
@@ -237,7 +237,7 @@ __Z_INLINE void handleGetSpendAuthSignatures(volatile uint32_t *flags, volatile 
     THROW(APDU_CODE_OK);
 }
 
-__Z_INLINE void handleGetDelegatorVoteSignatures(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+__Z_INLINE void handleGetDelegatorVoteSignatures(volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleGetDelegatorVoteSignatures\n");
     if (rx < OFFSET_DATA) {
         THROW(APDU_CODE_WRONG_LENGTH);
@@ -289,7 +289,7 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
 
                 case INS_GET_FVK: {
                     CHECK_PIN_VALIDATED()
-                    handleGetFVK(flags, tx, rx);
+                    handleGetFVK(tx, rx);
                     break;
                 }
 
@@ -300,17 +300,17 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
                 }
 
                 case INS_TX_METADATA: {
-                    handleTxMetadata(flags, tx, rx);
+                    handleTxMetadata(tx, rx);
                     break;
                 }
 
                 case INS_GET_SPEND_AUTH_SIGNATURES: {
-                    handleGetSpendAuthSignatures(flags, tx, rx);
+                    handleGetSpendAuthSignatures(tx, rx);
                     break;
                 }
 
                 case INS_GET_DELEGATOR_VOTE_SIGNATURES: {
-                    handleGetDelegatorVoteSignatures(flags, tx, rx);
+                    handleGetDelegatorVoteSignatures(tx, rx);
                     break;
                 }
 

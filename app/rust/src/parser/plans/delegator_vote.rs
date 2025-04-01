@@ -14,6 +14,7 @@
 *  limitations under the License.
 ********************************************************************************/
 
+use crate::constants::DELEGATOR_VOTE_PERSONALIZED;
 use crate::keys::FullViewingKey;
 use crate::parser::{
     amount::{Amount, AmountC},
@@ -21,9 +22,23 @@ use crate::parser::{
     effect_hash::{create_personalized_state, EffectHash},
     note::{Note, NoteC},
     nullifier::Nullifier,
+    rk::Rk,
     value::Value,
 };
-use crate::utils::protobuf::encode_varint;
+use crate::protobuf_h::governance_pb::{
+    penumbra_core_component_governance_v1_DelegatorVoteBody_nullifier_tag,
+    penumbra_core_component_governance_v1_DelegatorVoteBody_proposal_tag,
+    penumbra_core_component_governance_v1_DelegatorVoteBody_rk_tag,
+    penumbra_core_component_governance_v1_DelegatorVoteBody_start_position_tag,
+    penumbra_core_component_governance_v1_DelegatorVoteBody_unbonded_amount_tag,
+    penumbra_core_component_governance_v1_DelegatorVoteBody_value_tag,
+    penumbra_core_component_governance_v1_DelegatorVoteBody_vote_tag,
+    penumbra_core_component_governance_v1_Vote_vote_tag, PB_LTYPE_UVARINT,
+};
+use crate::utils::protobuf::{
+    encode_and_update_proto_field, encode_and_update_proto_number, encode_proto_number,
+    encode_varint,
+};
 use crate::ParserError;
 use decaf377::Fr;
 use decaf377_rdsa::{SpendAuth, VerificationKey};
@@ -42,7 +57,7 @@ pub struct Body {
     /// The nullifier of the staked note being used to vote.
     pub nullifier: Nullifier,
     /// The randomized validating key for the spend authorization signature.
-    pub rk: VerificationKey<SpendAuth>,
+    pub rk: Rk,
 }
 
 #[repr(C)]
@@ -65,47 +80,78 @@ impl DelegatorVotePlanC {
     pub fn effect_hash(&self, fvk: &FullViewingKey) -> Result<EffectHash, ParserError> {
         let body = self.delegator_vote_body(fvk)?;
 
-        let mut state =
-            create_personalized_state("/penumbra.core.component.governance.v1.DelegatorVoteBody");
+        let mut state = create_personalized_state(
+            std::str::from_utf8(DELEGATOR_VOTE_PERSONALIZED)
+                .map_err(|_| ParserError::InvalidUtf8)?,
+        );
 
         // proposal
-        let mut encoded = [0u8; 11];
-        encoded[0] = 0x08;
-        let mut pos = 1;
-        let mut len = encode_varint(body.proposal, &mut encoded[pos..]);
-        state.update(&encoded[..len + 1]);
+        encode_and_update_proto_number(
+            &mut state,
+            penumbra_core_component_governance_v1_DelegatorVoteBody_proposal_tag as u64,
+            body.proposal,
+        )?;
 
         // start_position
         if body.start_position > 0 {
-            encoded[0] = 0x10;
-            pos = 1;
-            len = encode_varint(body.start_position, &mut encoded[pos..]);
-            state.update(&encoded[..len + 1]);
+            encode_and_update_proto_number(
+                &mut state,
+                penumbra_core_component_governance_v1_DelegatorVoteBody_start_position_tag as u64,
+                body.start_position,
+            )?;
         }
 
         // vote
-        state.update(&[0x1a, 0x02]);
-        encoded[0] = 0x08;
-        pos = 1;
-        len = encode_varint(body.vote as u64, &mut encoded[pos..]);
-        state.update(&encoded[..len + 1]);
+        state.update(&[
+            ((penumbra_core_component_governance_v1_DelegatorVoteBody_vote_tag << 3) | 2) as u8,
+        ]);
+        let mut vote_buf = [0u8; 20];
+        let len = encode_proto_number(
+            penumbra_core_component_governance_v1_Vote_vote_tag as u64,
+            body.vote as u64,
+            &mut vote_buf,
+        )?;
+        let mut vote_size_buf = [0u8; 10];
+        let vote_size_buf_len = encode_varint(len as u64, &mut vote_size_buf)?;
+        state.update(&vote_size_buf[..vote_size_buf_len]);
+        state.update(&vote_buf[..len]);
 
         // value amount
-        state.update(&[0x22]);
-        let (value, value_len) = body.value.to_proto();
-        state.update(&value[..value_len]);
+        let (value, value_len) = body.value.to_proto()?;
+        encode_and_update_proto_field(
+            &mut state,
+            penumbra_core_component_governance_v1_DelegatorVoteBody_value_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            &value,
+            value_len,
+        )?;
 
         // unbonded_amount
-        state.update(&[0x2a]); // encode tag
-        let (unbonded_amount, unbonded_amount_len) = body.unbonded_amount.to_proto();
+        state.update(&[
+            ((penumbra_core_component_governance_v1_DelegatorVoteBody_unbonded_amount_tag << 3) | 2)
+                as u8,
+        ]);
+        let (unbonded_amount, unbonded_amount_len) = body.unbonded_amount.to_proto()?;
         state.update(&unbonded_amount[..unbonded_amount_len]);
 
         // nullifier
-        state.update(&body.nullifier.to_proto());
+        encode_and_update_proto_field(
+            &mut state,
+            penumbra_core_component_governance_v1_DelegatorVoteBody_nullifier_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            &body.nullifier.to_proto()?,
+            body.nullifier.to_proto()?.len(),
+        )?;
 
         // rk
-        state.update(&[0x3a, 0x22, 0x0a, 0x20]);
-        state.update(&body.rk.to_bytes());
+        let rk = body.rk.to_proto()?;
+        encode_and_update_proto_field(
+            &mut state,
+            penumbra_core_component_governance_v1_DelegatorVoteBody_rk_tag as u64,
+            PB_LTYPE_UVARINT as u64,
+            &rk,
+            rk.len(),
+        )?;
 
         Ok(EffectHash(*state.finalize().as_array()))
     }
@@ -125,7 +171,7 @@ impl DelegatorVotePlanC {
             value,
             unbonded_amount,
             nullifier,
-            rk: self.rk(fvk)?,
+            rk: Rk(self.rk(fvk)?),
         };
 
         Ok(body)

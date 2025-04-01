@@ -26,6 +26,12 @@ ifeq ($(BOLOS_SDK),)
 # When not using the SDK, we override and build the XL complete app
 
 PRODUCTION_BUILD ?= 1
+SKIP_NANOS = 1
+
+ifeq ($(SKIP_NANOS), 0)
+$(error "NanoS device is not supported")
+endif
+
 include $(CURDIR)/deps/ledger-zxlib/dockerized_build.mk
 
 else
@@ -60,7 +66,8 @@ proto:
 		--nanopb_out=$(OUTPUT_PATH)
 	@echo "C protobuf files generated in $(OUTPUT_PATH)"
 	make format
-
+	cd tools/proto-bindgen && cargo run
+	
 test_ledger_try:
 	make zemu_install
 	cd tests_zemu && yarn try

@@ -62,6 +62,12 @@ typedef struct _penumbra_core_component_ibc_v1_Ics20Withdrawal {
     /* Whether to use a "compat" (bech32, non-m) address for the return address in the withdrawal,
  for compatability with chains that expect to be able to parse the return address as bech32. */
     bool use_compat_address;
+    /* Arbitrary string data to be included in the `memo` field
+ of the ICS-20 FungibleTokenPacketData for this withdrawal.
+ Commonly used for packet forwarding support, or other protocols that may support usage of the memo field. */
+    pb_callback_t ics20_memo;
+    /* Whether to use a transparent address (bech32, 32-byte) for the return address in the withdrawal. */
+    bool use_transparent_address;
 } penumbra_core_component_ibc_v1_Ics20Withdrawal;
 
 typedef struct _penumbra_core_component_ibc_v1_ClientData {
@@ -125,7 +131,7 @@ extern "C" {
     {                                                                                                                      \
         false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_Denom_init_default, {{NULL}, NULL}, \
             false, penumbra_core_keys_v1_Address_init_default, false, ibc_core_client_v1_Height_init_default, 0,           \
-            {{NULL}, NULL}, 0                                                                                              \
+            {{NULL}, NULL}, 0, {{NULL}, NULL}, 0                                                                           \
     }
 #define penumbra_core_component_ibc_v1_ClientData_init_default \
     { {{NULL}, NULL}, false, google_protobuf_Any_init_default, {{NULL}, NULL}, 0 }
@@ -156,7 +162,8 @@ extern "C" {
 #define penumbra_core_component_ibc_v1_Ics20Withdrawal_init_zero                                                            \
     {                                                                                                                       \
         false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_Denom_init_zero, {{NULL}, NULL}, false, \
-            penumbra_core_keys_v1_Address_init_zero, false, ibc_core_client_v1_Height_init_zero, 0, {{NULL}, NULL}, 0       \
+            penumbra_core_keys_v1_Address_init_zero, false, ibc_core_client_v1_Height_init_zero, 0, {{NULL}, NULL}, 0,      \
+            {{NULL}, NULL}, 0                                                                                               \
     }
 #define penumbra_core_component_ibc_v1_ClientData_init_zero \
     { {{NULL}, NULL}, false, google_protobuf_Any_init_zero, {{NULL}, NULL}, 0 }
@@ -194,6 +201,8 @@ extern "C" {
 #define penumbra_core_component_ibc_v1_Ics20Withdrawal_timeout_time_tag 6
 #define penumbra_core_component_ibc_v1_Ics20Withdrawal_source_channel_tag 7
 #define penumbra_core_component_ibc_v1_Ics20Withdrawal_use_compat_address_tag 8
+#define penumbra_core_component_ibc_v1_Ics20Withdrawal_ics20_memo_tag 9
+#define penumbra_core_component_ibc_v1_Ics20Withdrawal_use_transparent_address_tag 10
 #define penumbra_core_component_ibc_v1_ClientData_client_id_tag 1
 #define penumbra_core_component_ibc_v1_ClientData_client_state_tag 2
 #define penumbra_core_component_ibc_v1_ClientData_processed_time_tag 3
@@ -231,7 +240,9 @@ extern "C" {
     X(a, STATIC, OPTIONAL, MESSAGE, timeout_height, 5)                 \
     X(a, STATIC, SINGULAR, UINT64, timeout_time, 6)                    \
     X(a, CALLBACK, SINGULAR, STRING, source_channel, 7)                \
-    X(a, STATIC, SINGULAR, BOOL, use_compat_address, 8)
+    X(a, STATIC, SINGULAR, BOOL, use_compat_address, 8)                \
+    X(a, CALLBACK, SINGULAR, STRING, ics20_memo, 9)                    \
+    X(a, STATIC, SINGULAR, BOOL, use_transparent_address, 10)
 #define penumbra_core_component_ibc_v1_Ics20Withdrawal_CALLBACK pb_default_field_callback
 #define penumbra_core_component_ibc_v1_Ics20Withdrawal_DEFAULT NULL
 #define penumbra_core_component_ibc_v1_Ics20Withdrawal_amount_MSGTYPE penumbra_core_num_v1_Amount

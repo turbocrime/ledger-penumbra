@@ -15,9 +15,14 @@
 ********************************************************************************/
 
 use crate::address::Address;
-use crate::constants::DETECTION_DATA_QTY;
+use crate::constants::{CLUE_LEN_BYTES, DETECTION_DATA_QTY, RSEED_LEN_BYTES};
 use crate::parser::clue_plan::CluePlanC;
 use crate::parser::effect_hash::{create_personalized_state, EffectHash};
+use crate::protobuf_h::transaction_pb::{
+    penumbra_core_transaction_v1_CluePlan_address_tag,
+    penumbra_core_transaction_v1_DetectionData_fmd_clues_tag, PB_LTYPE_UVARINT,
+};
+use crate::utils::protobuf::encode_proto_field;
 use crate::ParserError;
 
 #[repr(C)]
@@ -41,7 +46,6 @@ impl DetectionDataPlanC {
         }
 
         let mut state = create_personalized_state("/penumbra.core.transaction.v1.DetectionData");
-        let proto_header = [0x22, 0x46, 0x0a, 0x44];
 
         for clue_plan in self.clue_plans.iter() {
             if clue_plan.address.inner.ptr.is_null() || clue_plan.rseed.ptr.is_null() {
@@ -61,7 +65,7 @@ impl DetectionDataPlanC {
 
             let rseed_array = unsafe {
                 let rseed_slice = core::slice::from_raw_parts(clue_plan.rseed.ptr, 32);
-                let mut array = [0u8; 32];
+                let mut array = [0u8; RSEED_LEN_BYTES];
                 array.copy_from_slice(rseed_slice);
                 array
             };
@@ -71,9 +75,26 @@ impl DetectionDataPlanC {
                 .create_clue_deterministic(precision_bits, rseed_array)
                 .map_err(|_| ParserError::ClueCreationFailed)?;
 
-            state.update(&proto_header);
+            // Encode address into protobuf
+            let mut address_tag_buf = [0u8; 10];
+            let address_tag_len = encode_proto_field(
+                penumbra_core_transaction_v1_CluePlan_address_tag as u64,
+                PB_LTYPE_UVARINT as u64,
+                CLUE_LEN_BYTES,
+                &mut address_tag_buf,
+            )?;
+            // Encode clue into protobuf
+            let mut clue_tag_buf = [0u8; 10];
+            let clue_tag_len = encode_proto_field(
+                penumbra_core_transaction_v1_DetectionData_fmd_clues_tag as u64,
+                PB_LTYPE_UVARINT as u64,
+                CLUE_LEN_BYTES + address_tag_len,
+                &mut clue_tag_buf,
+            )?;
+            state.update(&clue_tag_buf[..clue_tag_len]);
+            state.update(&address_tag_buf[..address_tag_len]);
             unsafe {
-                let clue_bytes = core::slice::from_raw_parts(clue.0.as_ptr(), 68);
+                let clue_bytes = core::slice::from_raw_parts(clue.0.as_ptr(), CLUE_LEN_BYTES);
                 state.update(clue_bytes);
             }
         }

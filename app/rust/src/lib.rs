@@ -30,6 +30,7 @@ pub mod ffi;
 pub(crate) mod keys;
 pub mod network;
 pub mod parser;
+pub mod protobuf_h;
 mod utils;
 pub mod wallet_id;
 pub mod zxerror;

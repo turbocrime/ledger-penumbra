@@ -20,7 +20,7 @@
 #include "parser_interface.h"
 #include "zxformat.h"
 
-bool decode_fixed_field(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+bool decode_fixed_field(pb_istream_t *stream, __Z_UNUSED const pb_field_t *field, void **arg) {
     if (stream->bytes_left == 0 || arg == NULL) return false;
 
     fixed_size_field_t *decode_arg = (fixed_size_field_t *)*arg;
@@ -38,7 +38,7 @@ bool decode_fixed_field(pb_istream_t *stream, const pb_field_t *field, void **ar
     return true;
 }
 
-bool decode_variable_field(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+bool decode_variable_field(pb_istream_t *stream, __Z_UNUSED const pb_field_t *field, void **arg) {
     if (stream->bytes_left == 0 || arg == NULL) return false;
 
     variable_size_field_t *decode_arg = (variable_size_field_t *)*arg;
@@ -52,7 +52,7 @@ bool decode_variable_field(pb_istream_t *stream, const pb_field_t *field, void *
     return true;
 }
 
-bool decode_variable_field_array(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+bool decode_variable_field_array(pb_istream_t *stream, __Z_UNUSED const pb_field_t *field, void **arg) {
     if (stream->bytes_left == 0 || arg == NULL) return false;
 
     variable_size_field_array_t *decode_arg = (variable_size_field_array_t *)*arg;

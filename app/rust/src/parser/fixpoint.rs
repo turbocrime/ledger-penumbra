@@ -23,20 +23,25 @@ impl U128x128 {
     }
 
     /// Decode this number from a 32-byte array.
-    pub fn from_bytes(bytes: [u8; 32]) -> Self {
+    pub fn from_bytes(bytes: [u8; 32]) -> Result<Self, ParserError> {
         // See above.
-        let hi = u128::from_be_bytes(bytes[0..16].try_into().expect("slice is 16 bytes"));
-        let lo = u128::from_be_bytes(bytes[16..32].try_into().expect("slice is 16 bytes"));
-        Self(U256::from_words(hi, lo))
+        let hi = u128::from_be_bytes(
+            bytes[0..16]
+                .try_into()
+                .map_err(|_| ParserError::InvalidLength)?,
+        );
+        let lo = u128::from_be_bytes(
+            bytes[16..32]
+                .try_into()
+                .map_err(|_| ParserError::InvalidLength)?,
+        );
+        Ok(Self(U256::from_words(hi, lo)))
     }
 
     /// Multiply an amount by this fraction, then round down.
     pub fn apply_to_amount(self, rhs: &Amount) -> Result<Amount, ParserError> {
         let mul = (Self::from(rhs) * self)?;
-        let out = mul
-            .round_down()
-            .try_into()
-            .expect("converting integral U128xU128 into Amount will succeed");
+        let out = mul.round_down().try_into()?;
         Ok(out)
     }
 
@@ -90,8 +95,9 @@ impl U128x128 {
     }
 }
 
-impl From<[u8; 32]> for U128x128 {
-    fn from(value: [u8; 32]) -> Self {
+impl TryFrom<[u8; 32]> for U128x128 {
+    type Error = ParserError;
+    fn try_from(value: [u8; 32]) -> Result<Self, Self::Error> {
         Self::from_bytes(value)
     }
 }
@@ -99,9 +105,9 @@ impl From<[u8; 32]> for U128x128 {
 impl TryFrom<&[u8]> for U128x128 {
     type Error = ParserError;
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-        Ok(<[u8; 32]>::try_from(value)
+        <[u8; 32]>::try_from(value)
             .map_err(|_| ParserError::InvalidLength)?
-            .into())
+            .try_into()
     }
 }
 

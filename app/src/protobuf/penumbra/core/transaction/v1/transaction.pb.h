@@ -40,6 +40,19 @@ typedef struct _penumbra_core_transaction_v1_TransactionParameters {
     penumbra_core_component_fee_v1_Fee fee;
 } penumbra_core_transaction_v1_TransactionParameters;
 
+/* Represents a transaction summary containing multiple effects. */
+typedef struct _penumbra_core_transaction_v1_TransactionSummary {
+    pb_callback_t effects;
+} penumbra_core_transaction_v1_TransactionSummary;
+
+/* Represents an individual effect of a transaction. */
+typedef struct _penumbra_core_transaction_v1_TransactionSummary_Effects {
+    bool has_address;
+    penumbra_core_keys_v1_AddressView address;
+    bool has_balance;
+    penumbra_core_asset_v1_Balance balance;
+} penumbra_core_transaction_v1_TransactionSummary_Effects;
+
 /* Detection data used by a detection server performing Fuzzy Message Detection. */
 typedef struct _penumbra_core_transaction_v1_DetectionData {
     /* A list of clues for use with Fuzzy Message Detection. */
@@ -428,6 +441,12 @@ extern "C" {
     }
 #define penumbra_core_transaction_v1_TransactionParameters_init_default \
     { 0, {{NULL}, NULL}, false, penumbra_core_component_fee_v1_Fee_init_default }
+#define penumbra_core_transaction_v1_TransactionSummary_init_default \
+    {                                                                \
+        { {NULL}, NULL }                                             \
+    }
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_init_default \
+    { false, penumbra_core_keys_v1_AddressView_init_default, false, penumbra_core_asset_v1_Balance_init_default }
 #define penumbra_core_transaction_v1_DetectionData_init_default \
     {                                                           \
         { {NULL}, NULL }                                        \
@@ -540,6 +559,12 @@ extern "C" {
     }
 #define penumbra_core_transaction_v1_TransactionParameters_init_zero \
     { 0, {{NULL}, NULL}, false, penumbra_core_component_fee_v1_Fee_init_zero }
+#define penumbra_core_transaction_v1_TransactionSummary_init_zero \
+    {                                                             \
+        { {NULL}, NULL }                                          \
+    }
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_init_zero \
+    { false, penumbra_core_keys_v1_AddressView_init_zero, false, penumbra_core_asset_v1_Balance_init_zero }
 #define penumbra_core_transaction_v1_DetectionData_init_zero \
     {                                                        \
         { {NULL}, NULL }                                     \
@@ -639,6 +664,9 @@ extern "C" {
 #define penumbra_core_transaction_v1_TransactionParameters_expiry_height_tag 1
 #define penumbra_core_transaction_v1_TransactionParameters_chain_id_tag 2
 #define penumbra_core_transaction_v1_TransactionParameters_fee_tag 3
+#define penumbra_core_transaction_v1_TransactionSummary_effects_tag 1
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_address_tag 1
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_balance_tag 2
 #define penumbra_core_transaction_v1_DetectionData_fmd_clues_tag 4
 #define penumbra_core_transaction_v1_Action_spend_tag 1
 #define penumbra_core_transaction_v1_Action_output_tag 2
@@ -807,6 +835,20 @@ extern "C" {
 #define penumbra_core_transaction_v1_TransactionParameters_CALLBACK pb_default_field_callback
 #define penumbra_core_transaction_v1_TransactionParameters_DEFAULT NULL
 #define penumbra_core_transaction_v1_TransactionParameters_fee_MSGTYPE penumbra_core_component_fee_v1_Fee
+
+#define penumbra_core_transaction_v1_TransactionSummary_FIELDLIST(X, a) X(a, CALLBACK, REPEATED, MESSAGE, effects, 1)
+#define penumbra_core_transaction_v1_TransactionSummary_CALLBACK pb_default_field_callback
+#define penumbra_core_transaction_v1_TransactionSummary_DEFAULT NULL
+#define penumbra_core_transaction_v1_TransactionSummary_effects_MSGTYPE \
+    penumbra_core_transaction_v1_TransactionSummary_Effects
+
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, address, 1)                                 \
+    X(a, STATIC, OPTIONAL, MESSAGE, balance, 2)
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_CALLBACK NULL
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_DEFAULT NULL
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_address_MSGTYPE penumbra_core_keys_v1_AddressView
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_balance_MSGTYPE penumbra_core_asset_v1_Balance
 
 #define penumbra_core_transaction_v1_DetectionData_FIELDLIST(X, a) X(a, CALLBACK, REPEATED, MESSAGE, fmd_clues, 4)
 #define penumbra_core_transaction_v1_DetectionData_CALLBACK pb_default_field_callback
@@ -1219,6 +1261,8 @@ extern "C" {
 extern const pb_msgdesc_t penumbra_core_transaction_v1_Transaction_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionBody_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionParameters_msg;
+extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionSummary_msg;
+extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionSummary_Effects_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_DetectionData_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_Action_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionPerspective_msg;
@@ -1248,6 +1292,9 @@ extern const pb_msgdesc_t penumbra_core_transaction_v1_MemoView_Opaque_msg;
 #define penumbra_core_transaction_v1_Transaction_fields &penumbra_core_transaction_v1_Transaction_msg
 #define penumbra_core_transaction_v1_TransactionBody_fields &penumbra_core_transaction_v1_TransactionBody_msg
 #define penumbra_core_transaction_v1_TransactionParameters_fields &penumbra_core_transaction_v1_TransactionParameters_msg
+#define penumbra_core_transaction_v1_TransactionSummary_fields &penumbra_core_transaction_v1_TransactionSummary_msg
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_fields \
+    &penumbra_core_transaction_v1_TransactionSummary_Effects_msg
 #define penumbra_core_transaction_v1_DetectionData_fields &penumbra_core_transaction_v1_DetectionData_msg
 #define penumbra_core_transaction_v1_Action_fields &penumbra_core_transaction_v1_Action_msg
 #define penumbra_core_transaction_v1_TransactionPerspective_fields &penumbra_core_transaction_v1_TransactionPerspective_msg
@@ -1433,6 +1480,7 @@ union penumbra_core_transaction_v1_ActionPlan_action_size_union {
 /* penumbra_core_transaction_v1_Transaction_size depends on runtime parameters */
 /* penumbra_core_transaction_v1_TransactionBody_size depends on runtime parameters */
 /* penumbra_core_transaction_v1_TransactionParameters_size depends on runtime parameters */
+/* penumbra_core_transaction_v1_TransactionSummary_size depends on runtime parameters */
 /* penumbra_core_transaction_v1_DetectionData_size depends on runtime parameters */
 /* penumbra_core_transaction_v1_TransactionPerspective_size depends on runtime parameters */
 /* penumbra_core_transaction_v1_TransactionView_size depends on runtime parameters */
@@ -1449,6 +1497,12 @@ union penumbra_core_transaction_v1_ActionPlan_action_size_union {
 /* penumbra_core_transaction_v1_MemoView_size depends on runtime parameters */
 /* penumbra_core_transaction_v1_MemoView_Visible_size depends on runtime parameters */
 /* penumbra_core_transaction_v1_MemoView_Opaque_size depends on runtime parameters */
+#if defined(penumbra_core_keys_v1_AddressView_size) && defined(penumbra_core_asset_v1_Balance_size)
+#define PENUMBRA_CORE_TRANSACTION_V1_PENUMBRA_CORE_TRANSACTION_V1_TRANSACTION_PB_H_MAX_SIZE \
+    penumbra_core_transaction_v1_TransactionSummary_Effects_size
+#define penumbra_core_transaction_v1_TransactionSummary_Effects_size \
+    (12 + penumbra_core_keys_v1_AddressView_size + penumbra_core_asset_v1_Balance_size)
+#endif
 #if defined(penumbra_core_component_shielded_pool_v1_Spend_size) &&                                                         \
     defined(penumbra_core_component_shielded_pool_v1_Output_size) && defined(penumbra_core_component_dex_v1_Swap_size) &&   \
     defined(penumbra_core_component_dex_v1_SwapClaim_size) &&                                                               \
@@ -1475,8 +1529,6 @@ union penumbra_core_transaction_v1_ActionPlan_action_size_union {
 #define penumbra_core_transaction_v1_Action_size (0 + sizeof(union penumbra_core_transaction_v1_Action_action_size_union))
 #endif
 #if defined(penumbra_core_asset_v1_AssetId_size) && defined(google_protobuf_Any_size)
-#define PENUMBRA_CORE_TRANSACTION_V1_PENUMBRA_CORE_TRANSACTION_V1_TRANSACTION_PB_H_MAX_SIZE \
-    penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_size
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_size \
     (12 + penumbra_core_asset_v1_AssetId_size + google_protobuf_Any_size)
 #endif
