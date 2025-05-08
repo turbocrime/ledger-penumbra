@@ -288,19 +288,20 @@ extern "C" {
     penumbra_core_component_auction_v1_EventDutchAuctionEnded_Reason
 
 /* Initializer values for message structs */
-#define penumbra_core_component_auction_v1_AuctionParameters_init_default \
-    { 0 }
+#define penumbra_core_component_auction_v1_AuctionParameters_init_default {0}
 #define penumbra_core_component_auction_v1_GenesisContent_init_default \
-    { false, penumbra_core_component_auction_v1_AuctionParameters_init_default }
+    {false, penumbra_core_component_auction_v1_AuctionParameters_init_default}
 #define penumbra_core_component_auction_v1_AuctionStateByIdRequest_init_default \
-    { false, penumbra_core_component_auction_v1_AuctionId_init_default }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_default}
 #define penumbra_core_component_auction_v1_AuctionStateByIdResponse_init_default \
     {                                                                            \
         false, google_protobuf_Any_init_default, { {NULL}, NULL }                \
     }
 #define penumbra_core_component_auction_v1_AuctionStateByIdsRequest_init_default \
     {                                                                            \
-        { {NULL}, NULL }                                                         \
+        {                                                                        \
+            {NULL}, NULL                                                         \
+        }                                                                        \
     }
 #define penumbra_core_component_auction_v1_AuctionStateByIdsResponse_init_default \
     {                                                                             \
@@ -311,10 +312,12 @@ extern "C" {
     }
 #define penumbra_core_component_auction_v1_AuctionId_init_default \
     {                                                             \
-        { {NULL}, NULL }                                          \
+        {                                                         \
+            {NULL}, NULL                                          \
+        }                                                         \
     }
 #define penumbra_core_component_auction_v1_AuctionNft_init_default \
-    { false, penumbra_core_component_auction_v1_AuctionId_init_default, 0 }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_default, 0}
 #define penumbra_core_component_auction_v1_DutchAuctionDescription_init_default                                      \
     {                                                                                                                \
         false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_asset_v1_AssetId_init_default, false, \
@@ -322,84 +325,75 @@ extern "C" {
             {NULL}, NULL                                                                                             \
         }                                                                                                            \
     }
-#define penumbra_core_component_auction_v1_DutchAuctionState_init_default                             \
-    {                                                                                                 \
-        0, false, penumbra_core_component_dex_v1_PositionId_init_default, 0, false,                   \
-            penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default \
-    }
-#define penumbra_core_component_auction_v1_DutchAuction_init_default                           \
-    {                                                                                          \
-        false, penumbra_core_component_auction_v1_DutchAuctionDescription_init_default, false, \
-            penumbra_core_component_auction_v1_DutchAuctionState_init_default                  \
-    }
+#define penumbra_core_component_auction_v1_DutchAuctionState_init_default \
+    {0,                                                                   \
+     false,                                                               \
+     penumbra_core_component_dex_v1_PositionId_init_default,              \
+     0,                                                                   \
+     false,                                                               \
+     penumbra_core_num_v1_Amount_init_default,                            \
+     false,                                                               \
+     penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_auction_v1_DutchAuction_init_default                        \
+    {false, penumbra_core_component_auction_v1_DutchAuctionDescription_init_default, false, \
+     penumbra_core_component_auction_v1_DutchAuctionState_init_default}
 #define penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_init_default \
-    { false, penumbra_core_component_auction_v1_DutchAuctionDescription_init_default }
+    {false, penumbra_core_component_auction_v1_DutchAuctionDescription_init_default}
 #define penumbra_core_component_auction_v1_ActionDutchAuctionEnd_init_default \
-    { false, penumbra_core_component_auction_v1_AuctionId_init_default }
-#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_init_default  \
-    {                                                                               \
-        false, penumbra_core_component_auction_v1_AuctionId_init_default, 0, false, \
-            penumbra_core_asset_v1_BalanceCommitment_init_default                   \
-    }
-#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_init_default                  \
-    {                                                                                                   \
-        false, penumbra_core_component_auction_v1_AuctionId_init_default, 0, false,                     \
-            penumbra_core_asset_v1_Value_init_default, false, penumbra_core_asset_v1_Value_init_default \
-    }
-#define penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_init_default                                      \
-    {                                                                                                                       \
-        false, penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_init_default, false,                           \
-            penumbra_core_component_auction_v1_AuctionId_init_default, false, penumbra_core_asset_v1_Metadata_init_default, \
-            false, penumbra_core_asset_v1_Metadata_init_default                                                             \
-    }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_default}
+#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_init_default \
+    {false, penumbra_core_component_auction_v1_AuctionId_init_default, 0, false,   \
+     penumbra_core_asset_v1_BalanceCommitment_init_default}
+#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_init_default \
+    {false,                                                                            \
+     penumbra_core_component_auction_v1_AuctionId_init_default,                        \
+     0,                                                                                \
+     false,                                                                            \
+     penumbra_core_asset_v1_Value_init_default,                                        \
+     false,                                                                            \
+     penumbra_core_asset_v1_Value_init_default}
+#define penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_init_default  \
+    {false, penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_init_default, \
+     false, penumbra_core_component_auction_v1_AuctionId_init_default,                  \
+     false, penumbra_core_asset_v1_Metadata_init_default,                               \
+     false, penumbra_core_asset_v1_Metadata_init_default}
 #define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_init_default                      \
     {                                                                                                       \
         false, penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_init_default, { {NULL}, NULL } \
     }
-#define penumbra_core_component_auction_v1_EventDutchAuctionScheduled_init_default  \
-    {                                                                               \
-        false, penumbra_core_component_auction_v1_AuctionId_init_default, false,    \
-            penumbra_core_component_auction_v1_DutchAuctionDescription_init_default \
-    }
+#define penumbra_core_component_auction_v1_EventDutchAuctionScheduled_init_default \
+    {false, penumbra_core_component_auction_v1_AuctionId_init_default, false,      \
+     penumbra_core_component_auction_v1_DutchAuctionDescription_init_default}
 #define penumbra_core_component_auction_v1_EventDutchAuctionUpdated_init_default \
-    {                                                                            \
-        false, penumbra_core_component_auction_v1_AuctionId_init_default, false, \
-            penumbra_core_component_auction_v1_DutchAuctionState_init_default    \
-    }
-#define penumbra_core_component_auction_v1_EventDutchAuctionEnded_init_default    \
-    {                                                                             \
-        false, penumbra_core_component_auction_v1_AuctionId_init_default, false,  \
-            penumbra_core_component_auction_v1_DutchAuctionState_init_default,    \
-            _penumbra_core_component_auction_v1_EventDutchAuctionEnded_Reason_MIN \
-    }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_default, false,    \
+     penumbra_core_component_auction_v1_DutchAuctionState_init_default}
+#define penumbra_core_component_auction_v1_EventDutchAuctionEnded_init_default \
+    {false, penumbra_core_component_auction_v1_AuctionId_init_default, false,  \
+     penumbra_core_component_auction_v1_DutchAuctionState_init_default,        \
+     _penumbra_core_component_auction_v1_EventDutchAuctionEnded_Reason_MIN}
 #define penumbra_core_component_auction_v1_EventDutchAuctionWithdrawn_init_default \
-    {                                                                              \
-        false, penumbra_core_component_auction_v1_AuctionId_init_default, false,   \
-            penumbra_core_component_auction_v1_DutchAuctionState_init_default      \
-    }
-#define penumbra_core_component_auction_v1_EventValueCircuitBreakerCredit_init_default                              \
-    {                                                                                                               \
-        false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default                                                                \
-    }
-#define penumbra_core_component_auction_v1_EventValueCircuitBreakerDebit_init_default                               \
-    {                                                                                                               \
-        false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default                                                                \
-    }
-#define penumbra_core_component_auction_v1_AuctionParameters_init_zero \
-    { 0 }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_default, false,      \
+     penumbra_core_component_auction_v1_DutchAuctionState_init_default}
+#define penumbra_core_component_auction_v1_EventValueCircuitBreakerCredit_init_default                    \
+    {false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_num_v1_Amount_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_auction_v1_EventValueCircuitBreakerDebit_init_default                     \
+    {false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_num_v1_Amount_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_auction_v1_AuctionParameters_init_zero {0}
 #define penumbra_core_component_auction_v1_GenesisContent_init_zero \
-    { false, penumbra_core_component_auction_v1_AuctionParameters_init_zero }
+    {false, penumbra_core_component_auction_v1_AuctionParameters_init_zero}
 #define penumbra_core_component_auction_v1_AuctionStateByIdRequest_init_zero \
-    { false, penumbra_core_component_auction_v1_AuctionId_init_zero }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_zero}
 #define penumbra_core_component_auction_v1_AuctionStateByIdResponse_init_zero \
     {                                                                         \
         false, google_protobuf_Any_init_zero, { {NULL}, NULL }                \
     }
 #define penumbra_core_component_auction_v1_AuctionStateByIdsRequest_init_zero \
     {                                                                         \
-        { {NULL}, NULL }                                                      \
+        {                                                                     \
+            {NULL}, NULL                                                      \
+        }                                                                     \
     }
 #define penumbra_core_component_auction_v1_AuctionStateByIdsResponse_init_zero \
     {                                                                          \
@@ -410,10 +404,12 @@ extern "C" {
     }
 #define penumbra_core_component_auction_v1_AuctionId_init_zero \
     {                                                          \
-        { {NULL}, NULL }                                       \
+        {                                                      \
+            {NULL}, NULL                                       \
+        }                                                      \
     }
 #define penumbra_core_component_auction_v1_AuctionNft_init_zero \
-    { false, penumbra_core_component_auction_v1_AuctionId_init_zero, 0 }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_zero, 0}
 #define penumbra_core_component_auction_v1_DutchAuctionDescription_init_zero                                   \
     {                                                                                                          \
         false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero, false, \
@@ -421,71 +417,61 @@ extern "C" {
             {NULL}, NULL                                                                                       \
         }                                                                                                      \
     }
-#define penumbra_core_component_auction_v1_DutchAuctionState_init_zero                                                  \
-    {                                                                                                                   \
-        0, false, penumbra_core_component_dex_v1_PositionId_init_zero, 0, false, penumbra_core_num_v1_Amount_init_zero, \
-            false, penumbra_core_num_v1_Amount_init_zero                                                                \
-    }
-#define penumbra_core_component_auction_v1_DutchAuction_init_zero                           \
-    {                                                                                       \
-        false, penumbra_core_component_auction_v1_DutchAuctionDescription_init_zero, false, \
-            penumbra_core_component_auction_v1_DutchAuctionState_init_zero                  \
-    }
+#define penumbra_core_component_auction_v1_DutchAuctionState_init_zero \
+    {0,                                                                \
+     false,                                                            \
+     penumbra_core_component_dex_v1_PositionId_init_zero,              \
+     0,                                                                \
+     false,                                                            \
+     penumbra_core_num_v1_Amount_init_zero,                            \
+     false,                                                            \
+     penumbra_core_num_v1_Amount_init_zero}
+#define penumbra_core_component_auction_v1_DutchAuction_init_zero                        \
+    {false, penumbra_core_component_auction_v1_DutchAuctionDescription_init_zero, false, \
+     penumbra_core_component_auction_v1_DutchAuctionState_init_zero}
 #define penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_init_zero \
-    { false, penumbra_core_component_auction_v1_DutchAuctionDescription_init_zero }
+    {false, penumbra_core_component_auction_v1_DutchAuctionDescription_init_zero}
 #define penumbra_core_component_auction_v1_ActionDutchAuctionEnd_init_zero \
-    { false, penumbra_core_component_auction_v1_AuctionId_init_zero }
-#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_init_zero  \
-    {                                                                            \
-        false, penumbra_core_component_auction_v1_AuctionId_init_zero, 0, false, \
-            penumbra_core_asset_v1_BalanceCommitment_init_zero                   \
-    }
-#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_init_zero                                      \
-    {                                                                                                                    \
-        false, penumbra_core_component_auction_v1_AuctionId_init_zero, 0, false, penumbra_core_asset_v1_Value_init_zero, \
-            false, penumbra_core_asset_v1_Value_init_zero                                                                \
-    }
-#define penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_init_zero                                   \
-    {                                                                                                                 \
-        false, penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_init_zero, false,                        \
-            penumbra_core_component_auction_v1_AuctionId_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero, \
-            false, penumbra_core_asset_v1_Metadata_init_zero                                                          \
-    }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_zero}
+#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_init_zero \
+    {false, penumbra_core_component_auction_v1_AuctionId_init_zero, 0, false,   \
+     penumbra_core_asset_v1_BalanceCommitment_init_zero}
+#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_init_zero \
+    {false,                                                                         \
+     penumbra_core_component_auction_v1_AuctionId_init_zero,                        \
+     0,                                                                             \
+     false,                                                                         \
+     penumbra_core_asset_v1_Value_init_zero,                                        \
+     false,                                                                         \
+     penumbra_core_asset_v1_Value_init_zero}
+#define penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_init_zero  \
+    {false, penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_init_zero, \
+     false, penumbra_core_component_auction_v1_AuctionId_init_zero,                  \
+     false, penumbra_core_asset_v1_Metadata_init_zero,                               \
+     false, penumbra_core_asset_v1_Metadata_init_zero}
 #define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_init_zero                      \
     {                                                                                                    \
         false, penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_init_zero, { {NULL}, NULL } \
     }
-#define penumbra_core_component_auction_v1_EventDutchAuctionScheduled_init_zero  \
-    {                                                                            \
-        false, penumbra_core_component_auction_v1_AuctionId_init_zero, false,    \
-            penumbra_core_component_auction_v1_DutchAuctionDescription_init_zero \
-    }
+#define penumbra_core_component_auction_v1_EventDutchAuctionScheduled_init_zero \
+    {false, penumbra_core_component_auction_v1_AuctionId_init_zero, false,      \
+     penumbra_core_component_auction_v1_DutchAuctionDescription_init_zero}
 #define penumbra_core_component_auction_v1_EventDutchAuctionUpdated_init_zero \
-    {                                                                         \
-        false, penumbra_core_component_auction_v1_AuctionId_init_zero, false, \
-            penumbra_core_component_auction_v1_DutchAuctionState_init_zero    \
-    }
-#define penumbra_core_component_auction_v1_EventDutchAuctionEnded_init_zero       \
-    {                                                                             \
-        false, penumbra_core_component_auction_v1_AuctionId_init_zero, false,     \
-            penumbra_core_component_auction_v1_DutchAuctionState_init_zero,       \
-            _penumbra_core_component_auction_v1_EventDutchAuctionEnded_Reason_MIN \
-    }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_zero, false,    \
+     penumbra_core_component_auction_v1_DutchAuctionState_init_zero}
+#define penumbra_core_component_auction_v1_EventDutchAuctionEnded_init_zero \
+    {false, penumbra_core_component_auction_v1_AuctionId_init_zero, false,  \
+     penumbra_core_component_auction_v1_DutchAuctionState_init_zero,        \
+     _penumbra_core_component_auction_v1_EventDutchAuctionEnded_Reason_MIN}
 #define penumbra_core_component_auction_v1_EventDutchAuctionWithdrawn_init_zero \
-    {                                                                           \
-        false, penumbra_core_component_auction_v1_AuctionId_init_zero, false,   \
-            penumbra_core_component_auction_v1_DutchAuctionState_init_zero      \
-    }
-#define penumbra_core_component_auction_v1_EventValueCircuitBreakerCredit_init_zero                           \
-    {                                                                                                         \
-        false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero                                                             \
-    }
-#define penumbra_core_component_auction_v1_EventValueCircuitBreakerDebit_init_zero                            \
-    {                                                                                                         \
-        false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero                                                             \
-    }
+    {false, penumbra_core_component_auction_v1_AuctionId_init_zero, false,      \
+     penumbra_core_component_auction_v1_DutchAuctionState_init_zero}
+#define penumbra_core_component_auction_v1_EventValueCircuitBreakerCredit_init_zero                 \
+    {false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_num_v1_Amount_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero}
+#define penumbra_core_component_auction_v1_EventValueCircuitBreakerDebit_init_zero                  \
+    {false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_num_v1_Amount_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_auction_v1_GenesisContent_params_tag 1

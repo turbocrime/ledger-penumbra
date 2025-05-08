@@ -25,10 +25,8 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define penumbra_core_num_v1_Amount_init_default \
-    { 0, 0 }
-#define penumbra_core_num_v1_Amount_init_zero \
-    { 0, 0 }
+#define penumbra_core_num_v1_Amount_init_default {0, 0}
+#define penumbra_core_num_v1_Amount_init_zero {0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_num_v1_Amount_lo_tag 1

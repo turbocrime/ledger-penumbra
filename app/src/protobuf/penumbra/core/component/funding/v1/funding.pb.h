@@ -42,18 +42,16 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define penumbra_core_component_funding_v1_FundingParameters_init_default \
-    { 0 }
+#define penumbra_core_component_funding_v1_FundingParameters_init_default {0}
 #define penumbra_core_component_funding_v1_GenesisContent_init_default \
-    { false, penumbra_core_component_funding_v1_FundingParameters_init_default }
+    {false, penumbra_core_component_funding_v1_FundingParameters_init_default}
 #define penumbra_core_component_funding_v1_EventFundingStreamReward_init_default \
-    { {{NULL}, NULL}, 0, false, penumbra_core_num_v1_Amount_init_default }
-#define penumbra_core_component_funding_v1_FundingParameters_init_zero \
-    { 0 }
+    {{{NULL}, NULL}, 0, false, penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_funding_v1_FundingParameters_init_zero {0}
 #define penumbra_core_component_funding_v1_GenesisContent_init_zero \
-    { false, penumbra_core_component_funding_v1_FundingParameters_init_zero }
+    {false, penumbra_core_component_funding_v1_FundingParameters_init_zero}
 #define penumbra_core_component_funding_v1_EventFundingStreamReward_init_zero \
-    { {{NULL}, NULL}, 0, false, penumbra_core_num_v1_Amount_init_zero }
+    {{{NULL}, NULL}, 0, false, penumbra_core_num_v1_Amount_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_funding_v1_GenesisContent_funding_params_tag 1

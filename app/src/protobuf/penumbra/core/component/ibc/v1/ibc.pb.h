@@ -121,70 +121,86 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define penumbra_core_component_ibc_v1_IbcRelay_init_default \
-    { false, google_protobuf_Any_init_default }
+#define penumbra_core_component_ibc_v1_IbcRelay_init_default {false, google_protobuf_Any_init_default}
 #define penumbra_core_component_ibc_v1_FungibleTokenPacketData_init_default              \
     {                                                                                    \
         {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, { {NULL}, NULL } \
     }
-#define penumbra_core_component_ibc_v1_Ics20Withdrawal_init_default                                                        \
-    {                                                                                                                      \
-        false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_Denom_init_default, {{NULL}, NULL}, \
-            false, penumbra_core_keys_v1_Address_init_default, false, ibc_core_client_v1_Height_init_default, 0,           \
-            {{NULL}, NULL}, 0, {{NULL}, NULL}, 0                                                                           \
-    }
+#define penumbra_core_component_ibc_v1_Ics20Withdrawal_init_default \
+    {false,                                                         \
+     penumbra_core_num_v1_Amount_init_default,                      \
+     false,                                                         \
+     penumbra_core_asset_v1_Denom_init_default,                     \
+     {{NULL}, NULL},                                                \
+     false,                                                         \
+     penumbra_core_keys_v1_Address_init_default,                    \
+     false,                                                         \
+     ibc_core_client_v1_Height_init_default,                        \
+     0,                                                             \
+     {{NULL}, NULL},                                                \
+     0,                                                             \
+     {{NULL}, NULL},                                                \
+     0}
 #define penumbra_core_component_ibc_v1_ClientData_init_default \
-    { {{NULL}, NULL}, false, google_protobuf_Any_init_default, {{NULL}, NULL}, 0 }
-#define penumbra_core_component_ibc_v1_ClientCounter_init_default \
-    { 0 }
-#define penumbra_core_component_ibc_v1_ConsensusState_init_default \
-    { false, google_protobuf_Any_init_default }
+    {{{NULL}, NULL}, false, google_protobuf_Any_init_default, {{NULL}, NULL}, 0}
+#define penumbra_core_component_ibc_v1_ClientCounter_init_default {0}
+#define penumbra_core_component_ibc_v1_ConsensusState_init_default {false, google_protobuf_Any_init_default}
 #define penumbra_core_component_ibc_v1_VerifiedHeights_init_default \
     {                                                               \
-        { {NULL}, NULL }                                            \
+        {                                                           \
+            {NULL}, NULL                                            \
+        }                                                           \
     }
-#define penumbra_core_component_ibc_v1_ConnectionCounter_init_default \
-    { 0 }
+#define penumbra_core_component_ibc_v1_ConnectionCounter_init_default {0}
 #define penumbra_core_component_ibc_v1_ClientConnections_init_default \
     {                                                                 \
-        { {NULL}, NULL }                                              \
+        {                                                             \
+            {NULL}, NULL                                              \
+        }                                                             \
     }
-#define penumbra_core_component_ibc_v1_IbcParameters_init_default \
-    { 0, 0, 0 }
+#define penumbra_core_component_ibc_v1_IbcParameters_init_default {0, 0, 0}
 #define penumbra_core_component_ibc_v1_GenesisContent_init_default \
-    { false, penumbra_core_component_ibc_v1_IbcParameters_init_default }
-#define penumbra_core_component_ibc_v1_IbcRelay_init_zero \
-    { false, google_protobuf_Any_init_zero }
+    {false, penumbra_core_component_ibc_v1_IbcParameters_init_default}
+#define penumbra_core_component_ibc_v1_IbcRelay_init_zero {false, google_protobuf_Any_init_zero}
 #define penumbra_core_component_ibc_v1_FungibleTokenPacketData_init_zero                 \
     {                                                                                    \
         {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, { {NULL}, NULL } \
     }
-#define penumbra_core_component_ibc_v1_Ics20Withdrawal_init_zero                                                            \
-    {                                                                                                                       \
-        false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_Denom_init_zero, {{NULL}, NULL}, false, \
-            penumbra_core_keys_v1_Address_init_zero, false, ibc_core_client_v1_Height_init_zero, 0, {{NULL}, NULL}, 0,      \
-            {{NULL}, NULL}, 0                                                                                               \
-    }
+#define penumbra_core_component_ibc_v1_Ics20Withdrawal_init_zero \
+    {false,                                                      \
+     penumbra_core_num_v1_Amount_init_zero,                      \
+     false,                                                      \
+     penumbra_core_asset_v1_Denom_init_zero,                     \
+     {{NULL}, NULL},                                             \
+     false,                                                      \
+     penumbra_core_keys_v1_Address_init_zero,                    \
+     false,                                                      \
+     ibc_core_client_v1_Height_init_zero,                        \
+     0,                                                          \
+     {{NULL}, NULL},                                             \
+     0,                                                          \
+     {{NULL}, NULL},                                             \
+     0}
 #define penumbra_core_component_ibc_v1_ClientData_init_zero \
-    { {{NULL}, NULL}, false, google_protobuf_Any_init_zero, {{NULL}, NULL}, 0 }
-#define penumbra_core_component_ibc_v1_ClientCounter_init_zero \
-    { 0 }
-#define penumbra_core_component_ibc_v1_ConsensusState_init_zero \
-    { false, google_protobuf_Any_init_zero }
+    {{{NULL}, NULL}, false, google_protobuf_Any_init_zero, {{NULL}, NULL}, 0}
+#define penumbra_core_component_ibc_v1_ClientCounter_init_zero {0}
+#define penumbra_core_component_ibc_v1_ConsensusState_init_zero {false, google_protobuf_Any_init_zero}
 #define penumbra_core_component_ibc_v1_VerifiedHeights_init_zero \
     {                                                            \
-        { {NULL}, NULL }                                         \
+        {                                                        \
+            {NULL}, NULL                                         \
+        }                                                        \
     }
-#define penumbra_core_component_ibc_v1_ConnectionCounter_init_zero \
-    { 0 }
+#define penumbra_core_component_ibc_v1_ConnectionCounter_init_zero {0}
 #define penumbra_core_component_ibc_v1_ClientConnections_init_zero \
     {                                                              \
-        { {NULL}, NULL }                                           \
+        {                                                          \
+            {NULL}, NULL                                           \
+        }                                                          \
     }
-#define penumbra_core_component_ibc_v1_IbcParameters_init_zero \
-    { 0, 0, 0 }
+#define penumbra_core_component_ibc_v1_IbcParameters_init_zero {0, 0, 0}
 #define penumbra_core_component_ibc_v1_GenesisContent_init_zero \
-    { false, penumbra_core_component_ibc_v1_IbcParameters_init_zero }
+    {false, penumbra_core_component_ibc_v1_IbcParameters_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_ibc_v1_IbcRelay_raw_action_tag 1

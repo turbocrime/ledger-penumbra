@@ -30,19 +30,27 @@ extern "C" {
 /* Initializer values for message structs */
 #define penumbra_core_txhash_v1_EffectHash_init_default \
     {                                                   \
-        { {NULL}, NULL }                                \
+        {                                               \
+            {NULL}, NULL                                \
+        }                                               \
     }
 #define penumbra_core_txhash_v1_TransactionId_init_default \
     {                                                      \
-        { {NULL}, NULL }                                   \
+        {                                                  \
+            {NULL}, NULL                                   \
+        }                                                  \
     }
 #define penumbra_core_txhash_v1_EffectHash_init_zero \
     {                                                \
-        { {NULL}, NULL }                             \
+        {                                            \
+            {NULL}, NULL                             \
+        }                                            \
     }
 #define penumbra_core_txhash_v1_TransactionId_init_zero \
     {                                                   \
-        { {NULL}, NULL }                                \
+        {                                               \
+            {NULL}, NULL                                \
+        }                                               \
     }
 
 /* Field tags (for use in manual encoding/decoding) */

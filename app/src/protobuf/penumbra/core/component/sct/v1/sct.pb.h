@@ -166,112 +166,95 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define penumbra_core_component_sct_v1_SctParameters_init_default \
-    { 0 }
+#define penumbra_core_component_sct_v1_SctParameters_init_default {0}
 #define penumbra_core_component_sct_v1_GenesisContent_init_default \
-    { false, penumbra_core_component_sct_v1_SctParameters_init_default }
-#define penumbra_core_component_sct_v1_Epoch_init_default \
-    { 0, 0 }
+    {false, penumbra_core_component_sct_v1_SctParameters_init_default}
+#define penumbra_core_component_sct_v1_Epoch_init_default {0, 0}
 #define penumbra_core_component_sct_v1_CommitmentSource_init_default                    \
     {                                                                                   \
         0, { penumbra_core_component_sct_v1_CommitmentSource_Transaction_init_default } \
     }
-#define penumbra_core_component_sct_v1_CommitmentSource_Genesis_init_default \
-    { 0 }
+#define penumbra_core_component_sct_v1_CommitmentSource_Genesis_init_default {0}
 #define penumbra_core_component_sct_v1_CommitmentSource_Transaction_init_default \
     {                                                                            \
-        { {NULL}, NULL }                                                         \
+        {                                                                        \
+            {NULL}, NULL                                                         \
+        }                                                                        \
     }
-#define penumbra_core_component_sct_v1_CommitmentSource_FundingStreamReward_init_default \
-    { 0 }
-#define penumbra_core_component_sct_v1_CommitmentSource_CommunityPoolOutput_init_default \
-    { 0 }
+#define penumbra_core_component_sct_v1_CommitmentSource_FundingStreamReward_init_default {0}
+#define penumbra_core_component_sct_v1_CommitmentSource_CommunityPoolOutput_init_default {0}
 #define penumbra_core_component_sct_v1_CommitmentSource_Ics20Transfer_init_default \
     {                                                                              \
         0, {{NULL}, NULL}, { {NULL}, NULL }                                        \
     }
 #define penumbra_core_component_sct_v1_Nullifier_init_default \
     {                                                         \
-        { {NULL}, NULL }                                      \
+        {                                                     \
+            {NULL}, NULL                                      \
+        }                                                     \
     }
-#define penumbra_core_component_sct_v1_NullificationInfo_init_default \
-    { {{NULL}, NULL}, 0 }
-#define penumbra_core_component_sct_v1_EventCommitment_init_default           \
-    {                                                                         \
-        false, penumbra_crypto_tct_v1_StateCommitment_init_default, 0, false, \
-            penumbra_core_component_sct_v1_CommitmentSource_init_default      \
-    }
+#define penumbra_core_component_sct_v1_NullificationInfo_init_default {{{NULL}, NULL}, 0}
+#define penumbra_core_component_sct_v1_EventCommitment_init_default        \
+    {false, penumbra_crypto_tct_v1_StateCommitment_init_default, 0, false, \
+     penumbra_core_component_sct_v1_CommitmentSource_init_default}
 #define penumbra_core_component_sct_v1_EventAnchor_init_default \
-    { false, penumbra_crypto_tct_v1_MerkleRoot_init_default, 0, false, google_protobuf_Timestamp_init_default }
+    {false, penumbra_crypto_tct_v1_MerkleRoot_init_default, 0, false, google_protobuf_Timestamp_init_default}
 #define penumbra_core_component_sct_v1_EventEpochRoot_init_default \
-    { false, penumbra_crypto_tct_v1_MerkleRoot_init_default, 0, false, google_protobuf_Timestamp_init_default }
+    {false, penumbra_crypto_tct_v1_MerkleRoot_init_default, 0, false, google_protobuf_Timestamp_init_default}
 #define penumbra_core_component_sct_v1_EventBlockRoot_init_default \
-    { false, penumbra_crypto_tct_v1_MerkleRoot_init_default, 0, false, google_protobuf_Timestamp_init_default }
-#define penumbra_core_component_sct_v1_EpochByHeightRequest_init_default \
-    { 0 }
+    {false, penumbra_crypto_tct_v1_MerkleRoot_init_default, 0, false, google_protobuf_Timestamp_init_default}
+#define penumbra_core_component_sct_v1_EpochByHeightRequest_init_default {0}
 #define penumbra_core_component_sct_v1_EpochByHeightResponse_init_default \
-    { false, penumbra_core_component_sct_v1_Epoch_init_default }
-#define penumbra_core_component_sct_v1_AnchorByHeightRequest_init_default \
-    { 0 }
+    {false, penumbra_core_component_sct_v1_Epoch_init_default}
+#define penumbra_core_component_sct_v1_AnchorByHeightRequest_init_default {0}
 #define penumbra_core_component_sct_v1_AnchorByHeightResponse_init_default \
-    { false, penumbra_crypto_tct_v1_MerkleRoot_init_default }
-#define penumbra_core_component_sct_v1_TimestampByHeightRequest_init_default \
-    { 0 }
-#define penumbra_core_component_sct_v1_TimestampByHeightResponse_init_default \
-    { false, google_protobuf_Timestamp_init_default }
-#define penumbra_core_component_sct_v1_SctParameters_init_zero \
-    { 0 }
+    {false, penumbra_crypto_tct_v1_MerkleRoot_init_default}
+#define penumbra_core_component_sct_v1_TimestampByHeightRequest_init_default {0}
+#define penumbra_core_component_sct_v1_TimestampByHeightResponse_init_default {false, google_protobuf_Timestamp_init_default}
+#define penumbra_core_component_sct_v1_SctParameters_init_zero {0}
 #define penumbra_core_component_sct_v1_GenesisContent_init_zero \
-    { false, penumbra_core_component_sct_v1_SctParameters_init_zero }
-#define penumbra_core_component_sct_v1_Epoch_init_zero \
-    { 0, 0 }
+    {false, penumbra_core_component_sct_v1_SctParameters_init_zero}
+#define penumbra_core_component_sct_v1_Epoch_init_zero {0, 0}
 #define penumbra_core_component_sct_v1_CommitmentSource_init_zero                    \
     {                                                                                \
         0, { penumbra_core_component_sct_v1_CommitmentSource_Transaction_init_zero } \
     }
-#define penumbra_core_component_sct_v1_CommitmentSource_Genesis_init_zero \
-    { 0 }
+#define penumbra_core_component_sct_v1_CommitmentSource_Genesis_init_zero {0}
 #define penumbra_core_component_sct_v1_CommitmentSource_Transaction_init_zero \
     {                                                                         \
-        { {NULL}, NULL }                                                      \
+        {                                                                     \
+            {NULL}, NULL                                                      \
+        }                                                                     \
     }
-#define penumbra_core_component_sct_v1_CommitmentSource_FundingStreamReward_init_zero \
-    { 0 }
-#define penumbra_core_component_sct_v1_CommitmentSource_CommunityPoolOutput_init_zero \
-    { 0 }
+#define penumbra_core_component_sct_v1_CommitmentSource_FundingStreamReward_init_zero {0}
+#define penumbra_core_component_sct_v1_CommitmentSource_CommunityPoolOutput_init_zero {0}
 #define penumbra_core_component_sct_v1_CommitmentSource_Ics20Transfer_init_zero \
     {                                                                           \
         0, {{NULL}, NULL}, { {NULL}, NULL }                                     \
     }
 #define penumbra_core_component_sct_v1_Nullifier_init_zero \
     {                                                      \
-        { {NULL}, NULL }                                   \
+        {                                                  \
+            {NULL}, NULL                                   \
+        }                                                  \
     }
-#define penumbra_core_component_sct_v1_NullificationInfo_init_zero \
-    { {{NULL}, NULL}, 0 }
-#define penumbra_core_component_sct_v1_EventCommitment_init_zero           \
-    {                                                                      \
-        false, penumbra_crypto_tct_v1_StateCommitment_init_zero, 0, false, \
-            penumbra_core_component_sct_v1_CommitmentSource_init_zero      \
-    }
+#define penumbra_core_component_sct_v1_NullificationInfo_init_zero {{{NULL}, NULL}, 0}
+#define penumbra_core_component_sct_v1_EventCommitment_init_zero        \
+    {false, penumbra_crypto_tct_v1_StateCommitment_init_zero, 0, false, \
+     penumbra_core_component_sct_v1_CommitmentSource_init_zero}
 #define penumbra_core_component_sct_v1_EventAnchor_init_zero \
-    { false, penumbra_crypto_tct_v1_MerkleRoot_init_zero, 0, false, google_protobuf_Timestamp_init_zero }
+    {false, penumbra_crypto_tct_v1_MerkleRoot_init_zero, 0, false, google_protobuf_Timestamp_init_zero}
 #define penumbra_core_component_sct_v1_EventEpochRoot_init_zero \
-    { false, penumbra_crypto_tct_v1_MerkleRoot_init_zero, 0, false, google_protobuf_Timestamp_init_zero }
+    {false, penumbra_crypto_tct_v1_MerkleRoot_init_zero, 0, false, google_protobuf_Timestamp_init_zero}
 #define penumbra_core_component_sct_v1_EventBlockRoot_init_zero \
-    { false, penumbra_crypto_tct_v1_MerkleRoot_init_zero, 0, false, google_protobuf_Timestamp_init_zero }
-#define penumbra_core_component_sct_v1_EpochByHeightRequest_init_zero \
-    { 0 }
+    {false, penumbra_crypto_tct_v1_MerkleRoot_init_zero, 0, false, google_protobuf_Timestamp_init_zero}
+#define penumbra_core_component_sct_v1_EpochByHeightRequest_init_zero {0}
 #define penumbra_core_component_sct_v1_EpochByHeightResponse_init_zero \
-    { false, penumbra_core_component_sct_v1_Epoch_init_zero }
-#define penumbra_core_component_sct_v1_AnchorByHeightRequest_init_zero \
-    { 0 }
-#define penumbra_core_component_sct_v1_AnchorByHeightResponse_init_zero \
-    { false, penumbra_crypto_tct_v1_MerkleRoot_init_zero }
-#define penumbra_core_component_sct_v1_TimestampByHeightRequest_init_zero \
-    { 0 }
-#define penumbra_core_component_sct_v1_TimestampByHeightResponse_init_zero \
-    { false, google_protobuf_Timestamp_init_zero }
+    {false, penumbra_core_component_sct_v1_Epoch_init_zero}
+#define penumbra_core_component_sct_v1_AnchorByHeightRequest_init_zero {0}
+#define penumbra_core_component_sct_v1_AnchorByHeightResponse_init_zero {false, penumbra_crypto_tct_v1_MerkleRoot_init_zero}
+#define penumbra_core_component_sct_v1_TimestampByHeightRequest_init_zero {0}
+#define penumbra_core_component_sct_v1_TimestampByHeightResponse_init_zero {false, google_protobuf_Timestamp_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_sct_v1_SctParameters_epoch_duration_tag 1

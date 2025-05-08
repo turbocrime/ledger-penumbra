@@ -682,58 +682,58 @@ extern "C" {
 /* Initializer values for message structs */
 #define penumbra_core_component_governance_v1_ZKDelegatorVoteProof_init_default \
     {                                                                           \
-        { {NULL}, NULL }                                                        \
+        {                                                                       \
+            {NULL}, NULL                                                        \
+        }                                                                       \
     }
 #define penumbra_core_component_governance_v1_ProposalSubmit_init_default \
-    { false, penumbra_core_component_governance_v1_Proposal_init_default, false, penumbra_core_num_v1_Amount_init_default }
+    {false, penumbra_core_component_governance_v1_Proposal_init_default, false, penumbra_core_num_v1_Amount_init_default}
 #define penumbra_core_component_governance_v1_ProposalWithdraw_init_default \
     {                                                                       \
         0, { {NULL}, NULL }                                                 \
     }
 #define penumbra_core_component_governance_v1_ProposalDepositClaim_init_default \
-    {                                                                           \
-        0, false, penumbra_core_num_v1_Amount_init_default, false,              \
-            penumbra_core_component_governance_v1_ProposalOutcome_init_default  \
-    }
-#define penumbra_core_component_governance_v1_ValidatorVote_init_default                    \
-    {                                                                                       \
-        false, penumbra_core_component_governance_v1_ValidatorVoteBody_init_default, false, \
-            penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_default                \
-    }
+    {0, false, penumbra_core_num_v1_Amount_init_default, false,                 \
+     penumbra_core_component_governance_v1_ProposalOutcome_init_default}
+#define penumbra_core_component_governance_v1_ValidatorVote_init_default                 \
+    {false, penumbra_core_component_governance_v1_ValidatorVoteBody_init_default, false, \
+     penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_default}
 #define penumbra_core_component_governance_v1_ValidatorVoteReason_init_default \
     {                                                                          \
-        { {NULL}, NULL }                                                       \
+        {                                                                      \
+            {NULL}, NULL                                                       \
+        }                                                                      \
     }
-#define penumbra_core_component_governance_v1_ValidatorVoteBody_init_default                                                \
-    {                                                                                                                       \
-        0, false, penumbra_core_component_governance_v1_Vote_init_default, false,                                           \
-            penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_keys_v1_GovernanceKey_init_default, false, \
-            penumbra_core_component_governance_v1_ValidatorVoteReason_init_default                                          \
-    }
-#define penumbra_core_component_governance_v1_DelegatorVote_init_default                    \
-    {                                                                                       \
-        false, penumbra_core_component_governance_v1_DelegatorVoteBody_init_default, false, \
-            penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_default, false,        \
-            penumbra_core_component_governance_v1_ZKDelegatorVoteProof_init_default         \
-    }
-#define penumbra_core_component_governance_v1_DelegatorVoteBody_init_default                                   \
-    {                                                                                                          \
-        0, 0, false, penumbra_core_component_governance_v1_Vote_init_default, false,                           \
-            penumbra_core_asset_v1_Value_init_default, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_component_sct_v1_Nullifier_init_default, false,                                      \
-            penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_default                                 \
-    }
+#define penumbra_core_component_governance_v1_ValidatorVoteBody_init_default \
+    {0,                                                                      \
+     false,                                                                  \
+     penumbra_core_component_governance_v1_Vote_init_default,                \
+     false,                                                                  \
+     penumbra_core_keys_v1_IdentityKey_init_default,                         \
+     false,                                                                  \
+     penumbra_core_keys_v1_GovernanceKey_init_default,                       \
+     false,                                                                  \
+     penumbra_core_component_governance_v1_ValidatorVoteReason_init_default}
+#define penumbra_core_component_governance_v1_DelegatorVote_init_default          \
+    {false, penumbra_core_component_governance_v1_DelegatorVoteBody_init_default, \
+     false, penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_default,     \
+     false, penumbra_core_component_governance_v1_ZKDelegatorVoteProof_init_default}
+#define penumbra_core_component_governance_v1_DelegatorVoteBody_init_default \
+    {0,     0,                                                               \
+     false, penumbra_core_component_governance_v1_Vote_init_default,         \
+     false, penumbra_core_asset_v1_Value_init_default,                       \
+     false, penumbra_core_num_v1_Amount_init_default,                        \
+     false, penumbra_core_component_sct_v1_Nullifier_init_default,           \
+     false, penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_default}
 #define penumbra_core_component_governance_v1_DelegatorVoteView_init_default                \
     {                                                                                       \
         0, { penumbra_core_component_governance_v1_DelegatorVoteView_Visible_init_default } \
     }
-#define penumbra_core_component_governance_v1_DelegatorVoteView_Visible_init_default    \
-    {                                                                                   \
-        false, penumbra_core_component_governance_v1_DelegatorVote_init_default, false, \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_default              \
-    }
+#define penumbra_core_component_governance_v1_DelegatorVoteView_Visible_init_default \
+    {false, penumbra_core_component_governance_v1_DelegatorVote_init_default, false, \
+     penumbra_core_component_shielded_pool_v1_NoteView_init_default}
 #define penumbra_core_component_governance_v1_DelegatorVoteView_Opaque_init_default \
-    { false, penumbra_core_component_governance_v1_DelegatorVote_init_default }
+    {false, penumbra_core_component_governance_v1_DelegatorVote_init_default}
 #define penumbra_core_component_governance_v1_DelegatorVotePlan_init_default                                                \
     {                                                                                                                       \
         0, 0, false, penumbra_core_component_governance_v1_Vote_init_default, false,                                        \
@@ -743,53 +743,54 @@ extern "C" {
         }                                                                                                                   \
     }
 #define penumbra_core_component_governance_v1_CommunityPoolDeposit_init_default \
-    { false, penumbra_core_asset_v1_Value_init_default }
+    {false, penumbra_core_asset_v1_Value_init_default}
 #define penumbra_core_component_governance_v1_CommunityPoolSpend_init_default \
-    { false, penumbra_core_asset_v1_Value_init_default }
+    {false, penumbra_core_asset_v1_Value_init_default}
 #define penumbra_core_component_governance_v1_CommunityPoolOutput_init_default \
-    { false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_keys_v1_Address_init_default }
-#define penumbra_core_component_governance_v1_Vote_init_default \
-    { _penumbra_core_component_governance_v1_Vote_Vote_MIN }
+    {false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_keys_v1_Address_init_default}
+#define penumbra_core_component_governance_v1_Vote_init_default {_penumbra_core_component_governance_v1_Vote_Vote_MIN}
 #define penumbra_core_component_governance_v1_ProposalState_init_default               \
     {                                                                                  \
         0, { penumbra_core_component_governance_v1_ProposalState_Voting_init_default } \
     }
-#define penumbra_core_component_governance_v1_ProposalState_Voting_init_default \
-    { 0 }
+#define penumbra_core_component_governance_v1_ProposalState_Voting_init_default {0}
 #define penumbra_core_component_governance_v1_ProposalState_Withdrawn_init_default \
     {                                                                              \
-        { {NULL}, NULL }                                                           \
+        {                                                                          \
+            {NULL}, NULL                                                           \
+        }                                                                          \
     }
 #define penumbra_core_component_governance_v1_ProposalState_Finished_init_default \
-    { false, penumbra_core_component_governance_v1_ProposalOutcome_init_default }
+    {false, penumbra_core_component_governance_v1_ProposalOutcome_init_default}
 #define penumbra_core_component_governance_v1_ProposalState_Claimed_init_default \
-    { false, penumbra_core_component_governance_v1_ProposalOutcome_init_default }
+    {false, penumbra_core_component_governance_v1_ProposalOutcome_init_default}
 #define penumbra_core_component_governance_v1_ProposalOutcome_init_default               \
     {                                                                                    \
         0, { penumbra_core_component_governance_v1_ProposalOutcome_Passed_init_default } \
     }
 #define penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_default \
     {                                                                                \
-        { {NULL}, NULL }                                                             \
+        {                                                                            \
+            {NULL}, NULL                                                             \
+        }                                                                            \
     }
-#define penumbra_core_component_governance_v1_ProposalOutcome_Passed_init_default \
-    { 0 }
+#define penumbra_core_component_governance_v1_ProposalOutcome_Passed_init_default {0}
 #define penumbra_core_component_governance_v1_ProposalOutcome_Failed_init_default \
-    { false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_default }
+    {false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_default}
 #define penumbra_core_component_governance_v1_ProposalOutcome_Slashed_init_default \
-    { false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_default }
-#define penumbra_core_component_governance_v1_Tally_init_default \
-    { 0, 0, 0 }
+    {false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_default}
+#define penumbra_core_component_governance_v1_Tally_init_default {0, 0, 0}
 #define penumbra_core_component_governance_v1_Proposal_init_default                                                     \
     {                                                                                                                   \
         {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, { penumbra_core_component_governance_v1_Proposal_Signaling_init_default } \
     }
 #define penumbra_core_component_governance_v1_Proposal_Signaling_init_default \
     {                                                                         \
-        { {NULL}, NULL }                                                      \
+        {                                                                     \
+            {NULL}, NULL                                                      \
+        }                                                                     \
     }
-#define penumbra_core_component_governance_v1_Proposal_Emergency_init_default \
-    { 0 }
+#define penumbra_core_component_governance_v1_Proposal_Emergency_init_default {0}
 #define penumbra_core_component_governance_v1_Proposal_ParameterChange_init_default                    \
     {                                                                                                  \
         false, penumbra_core_component_governance_v1_ChangedAppParameters_init_default, false,         \
@@ -798,162 +799,147 @@ extern "C" {
         }                                                                                              \
     }
 #define penumbra_core_component_governance_v1_Proposal_CommunityPoolSpend_init_default \
-    { false, google_protobuf_Any_init_default }
-#define penumbra_core_component_governance_v1_Proposal_UpgradePlan_init_default \
-    { 0 }
+    {false, google_protobuf_Any_init_default}
+#define penumbra_core_component_governance_v1_Proposal_UpgradePlan_init_default {0}
 #define penumbra_core_component_governance_v1_Proposal_FreezeIbcClient_init_default \
     {                                                                               \
-        { {NULL}, NULL }                                                            \
+        {                                                                           \
+            {NULL}, NULL                                                            \
+        }                                                                           \
     }
 #define penumbra_core_component_governance_v1_Proposal_UnfreezeIbcClient_init_default \
     {                                                                                 \
-        { {NULL}, NULL }                                                              \
+        {                                                                             \
+            {NULL}, NULL                                                              \
+        }                                                                             \
     }
-#define penumbra_core_component_governance_v1_ProposalInfoRequest_init_default \
-    { 0 }
-#define penumbra_core_component_governance_v1_ProposalInfoResponse_init_default \
-    { 0, 0 }
-#define penumbra_core_component_governance_v1_ProposalDataRequest_init_default \
-    { 0 }
-#define penumbra_core_component_governance_v1_ProposalDataResponse_init_default             \
-    {                                                                                       \
-        false, penumbra_core_component_governance_v1_Proposal_init_default, 0, 0, 0, false, \
-            penumbra_core_component_governance_v1_ProposalState_init_default, false,        \
-            penumbra_core_num_v1_Amount_init_default                                        \
-    }
-#define penumbra_core_component_governance_v1_ProposalRateDataRequest_init_default \
-    { 0 }
+#define penumbra_core_component_governance_v1_ProposalInfoRequest_init_default {0}
+#define penumbra_core_component_governance_v1_ProposalInfoResponse_init_default {0, 0}
+#define penumbra_core_component_governance_v1_ProposalDataRequest_init_default {0}
+#define penumbra_core_component_governance_v1_ProposalDataResponse_init_default \
+    {false,                                                                     \
+     penumbra_core_component_governance_v1_Proposal_init_default,               \
+     0,                                                                         \
+     0,                                                                         \
+     0,                                                                         \
+     false,                                                                     \
+     penumbra_core_component_governance_v1_ProposalState_init_default,          \
+     false,                                                                     \
+     penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_governance_v1_ProposalRateDataRequest_init_default {0}
 #define penumbra_core_component_governance_v1_ProposalRateDataResponse_init_default \
-    { false, penumbra_core_component_stake_v1_RateData_init_default }
-#define penumbra_core_component_governance_v1_ProposalListRequest_init_default \
-    { 0 }
-#define penumbra_core_component_governance_v1_ProposalListResponse_init_default             \
-    {                                                                                       \
-        false, penumbra_core_component_governance_v1_Proposal_init_default, 0, 0, 0, false, \
-            penumbra_core_component_governance_v1_ProposalState_init_default                \
-    }
-#define penumbra_core_component_governance_v1_ValidatorVotesRequest_init_default \
-    { 0 }
+    {false, penumbra_core_component_stake_v1_RateData_init_default}
+#define penumbra_core_component_governance_v1_ProposalListRequest_init_default {0}
+#define penumbra_core_component_governance_v1_ProposalListResponse_init_default       \
+    {false, penumbra_core_component_governance_v1_Proposal_init_default,     0, 0, 0, \
+     false, penumbra_core_component_governance_v1_ProposalState_init_default}
+#define penumbra_core_component_governance_v1_ValidatorVotesRequest_init_default {0}
 #define penumbra_core_component_governance_v1_ValidatorVotesResponse_init_default \
-    { false, penumbra_core_component_governance_v1_Vote_init_default, false, penumbra_core_keys_v1_IdentityKey_init_default }
+    {false, penumbra_core_component_governance_v1_Vote_init_default, false, penumbra_core_keys_v1_IdentityKey_init_default}
 #define penumbra_core_component_governance_v1_GovernanceParameters_init_default                              \
     {                                                                                                        \
         0, false, penumbra_core_num_v1_Amount_init_default, {{NULL}, NULL}, {{NULL}, NULL}, { {NULL}, NULL } \
     }
 #define penumbra_core_component_governance_v1_GenesisContent_init_default \
-    { false, penumbra_core_component_governance_v1_GovernanceParameters_init_default }
+    {false, penumbra_core_component_governance_v1_GovernanceParameters_init_default}
 #define penumbra_core_component_governance_v1_EncodedParameter_init_default \
     {                                                                       \
         {{NULL}, NULL}, {{NULL}, NULL}, { {NULL}, NULL }                    \
     }
-#define penumbra_core_component_governance_v1_ChangedAppParameters_init_default                    \
-    {                                                                                              \
-        false, penumbra_core_component_sct_v1_SctParameters_init_default, false,                   \
-            penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_default, false, \
-            penumbra_core_component_governance_v1_GovernanceParameters_init_default, false,        \
-            penumbra_core_component_ibc_v1_IbcParameters_init_default, false,                      \
-            penumbra_core_component_stake_v1_StakeParameters_init_default, false,                  \
-            penumbra_core_component_fee_v1_FeeParameters_init_default, false,                      \
-            penumbra_core_component_distributions_v1_DistributionsParameters_init_default, false,  \
-            penumbra_core_component_funding_v1_FundingParameters_init_default, false,              \
-            penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_default, false,   \
-            penumbra_core_component_dex_v1_DexParameters_init_default, false,                      \
-            penumbra_core_component_auction_v1_AuctionParameters_init_default                      \
-    }
-#define penumbra_core_component_governance_v1_ChangedAppParametersSet_init_default             \
-    {                                                                                          \
-        false, penumbra_core_component_governance_v1_ChangedAppParameters_init_default, false, \
-            penumbra_core_component_governance_v1_ChangedAppParameters_init_default            \
-    }
+#define penumbra_core_component_governance_v1_ChangedAppParameters_init_default             \
+    {false, penumbra_core_component_sct_v1_SctParameters_init_default,                      \
+     false, penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_default, \
+     false, penumbra_core_component_governance_v1_GovernanceParameters_init_default,        \
+     false, penumbra_core_component_ibc_v1_IbcParameters_init_default,                      \
+     false, penumbra_core_component_stake_v1_StakeParameters_init_default,                  \
+     false, penumbra_core_component_fee_v1_FeeParameters_init_default,                      \
+     false, penumbra_core_component_distributions_v1_DistributionsParameters_init_default,  \
+     false, penumbra_core_component_funding_v1_FundingParameters_init_default,              \
+     false, penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_default,   \
+     false, penumbra_core_component_dex_v1_DexParameters_init_default,                      \
+     false, penumbra_core_component_auction_v1_AuctionParameters_init_default}
+#define penumbra_core_component_governance_v1_ChangedAppParametersSet_init_default          \
+    {false, penumbra_core_component_governance_v1_ChangedAppParameters_init_default, false, \
+     penumbra_core_component_governance_v1_ChangedAppParameters_init_default}
 #define penumbra_core_component_governance_v1_VotingPowerAtProposalStartRequest_init_default \
-    { 0, false, penumbra_core_keys_v1_IdentityKey_init_default }
-#define penumbra_core_component_governance_v1_VotingPowerAtProposalStartResponse_init_default \
-    { 0 }
-#define penumbra_core_component_governance_v1_AllTalliedDelegatorVotesForProposalRequest_init_default \
-    { 0 }
+    {0, false, penumbra_core_keys_v1_IdentityKey_init_default}
+#define penumbra_core_component_governance_v1_VotingPowerAtProposalStartResponse_init_default {0}
+#define penumbra_core_component_governance_v1_AllTalliedDelegatorVotesForProposalRequest_init_default {0}
 #define penumbra_core_component_governance_v1_AllTalliedDelegatorVotesForProposalResponse_init_default \
-    {                                                                                                  \
-        false, penumbra_core_component_governance_v1_Tally_init_default, false,                        \
-            penumbra_core_keys_v1_IdentityKey_init_default                                             \
-    }
-#define penumbra_core_component_governance_v1_NextProposalIdRequest_init_default \
-    { 0 }
-#define penumbra_core_component_governance_v1_NextProposalIdResponse_init_default \
-    { 0 }
-#define penumbra_core_component_governance_v1_Ratio_init_default \
-    { 0, 0 }
-#define penumbra_core_component_governance_v1_EventDelegatorVote_init_default           \
-    {                                                                                   \
-        false, penumbra_core_component_governance_v1_DelegatorVote_init_default, false, \
-            penumbra_core_keys_v1_IdentityKey_init_default                              \
-    }
+    {false, penumbra_core_component_governance_v1_Tally_init_default, false, penumbra_core_keys_v1_IdentityKey_init_default}
+#define penumbra_core_component_governance_v1_NextProposalIdRequest_init_default {0}
+#define penumbra_core_component_governance_v1_NextProposalIdResponse_init_default {0}
+#define penumbra_core_component_governance_v1_Ratio_init_default {0, 0}
+#define penumbra_core_component_governance_v1_EventDelegatorVote_init_default        \
+    {false, penumbra_core_component_governance_v1_DelegatorVote_init_default, false, \
+     penumbra_core_keys_v1_IdentityKey_init_default}
 #define penumbra_core_component_governance_v1_EventProposalDepositClaim_init_default \
-    { false, penumbra_core_component_governance_v1_ProposalDepositClaim_init_default }
+    {false, penumbra_core_component_governance_v1_ProposalDepositClaim_init_default}
 #define penumbra_core_component_governance_v1_EventValidatorVote_init_default \
-    { false, penumbra_core_component_governance_v1_ValidatorVote_init_default, 0 }
+    {false, penumbra_core_component_governance_v1_ValidatorVote_init_default, 0}
 #define penumbra_core_component_governance_v1_EventProposalWithdraw_init_default \
-    { false, penumbra_core_component_governance_v1_ProposalWithdraw_init_default }
+    {false, penumbra_core_component_governance_v1_ProposalWithdraw_init_default}
 #define penumbra_core_component_governance_v1_EventProposalSubmit_init_default \
-    { false, penumbra_core_component_governance_v1_ProposalSubmit_init_default, 0, 0 }
+    {false, penumbra_core_component_governance_v1_ProposalSubmit_init_default, 0, 0}
 #define penumbra_core_component_governance_v1_EventProposalPassed_init_default \
-    { false, penumbra_core_component_governance_v1_Proposal_init_default }
+    {false, penumbra_core_component_governance_v1_Proposal_init_default}
 #define penumbra_core_component_governance_v1_EventProposalFailed_init_default \
-    { false, penumbra_core_component_governance_v1_Proposal_init_default }
+    {false, penumbra_core_component_governance_v1_Proposal_init_default}
 #define penumbra_core_component_governance_v1_EventProposalSlashed_init_default \
-    { false, penumbra_core_component_governance_v1_Proposal_init_default }
+    {false, penumbra_core_component_governance_v1_Proposal_init_default}
 #define penumbra_core_component_governance_v1_ZKDelegatorVoteProof_init_zero \
     {                                                                        \
-        { {NULL}, NULL }                                                     \
+        {                                                                    \
+            {NULL}, NULL                                                     \
+        }                                                                    \
     }
 #define penumbra_core_component_governance_v1_ProposalSubmit_init_zero \
-    { false, penumbra_core_component_governance_v1_Proposal_init_zero, false, penumbra_core_num_v1_Amount_init_zero }
+    {false, penumbra_core_component_governance_v1_Proposal_init_zero, false, penumbra_core_num_v1_Amount_init_zero}
 #define penumbra_core_component_governance_v1_ProposalWithdraw_init_zero \
     {                                                                    \
         0, { {NULL}, NULL }                                              \
     }
 #define penumbra_core_component_governance_v1_ProposalDepositClaim_init_zero \
-    {                                                                        \
-        0, false, penumbra_core_num_v1_Amount_init_zero, false,              \
-            penumbra_core_component_governance_v1_ProposalOutcome_init_zero  \
-    }
-#define penumbra_core_component_governance_v1_ValidatorVote_init_zero                    \
-    {                                                                                    \
-        false, penumbra_core_component_governance_v1_ValidatorVoteBody_init_zero, false, \
-            penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero                \
-    }
+    {0, false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_component_governance_v1_ProposalOutcome_init_zero}
+#define penumbra_core_component_governance_v1_ValidatorVote_init_zero                 \
+    {false, penumbra_core_component_governance_v1_ValidatorVoteBody_init_zero, false, \
+     penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero}
 #define penumbra_core_component_governance_v1_ValidatorVoteReason_init_zero \
     {                                                                       \
-        { {NULL}, NULL }                                                    \
+        {                                                                   \
+            {NULL}, NULL                                                    \
+        }                                                                   \
     }
-#define penumbra_core_component_governance_v1_ValidatorVoteBody_init_zero                                                   \
-    {                                                                                                                       \
-        0, false, penumbra_core_component_governance_v1_Vote_init_zero, false, penumbra_core_keys_v1_IdentityKey_init_zero, \
-            false, penumbra_core_keys_v1_GovernanceKey_init_zero, false,                                                    \
-            penumbra_core_component_governance_v1_ValidatorVoteReason_init_zero                                             \
-    }
-#define penumbra_core_component_governance_v1_DelegatorVote_init_zero                    \
-    {                                                                                    \
-        false, penumbra_core_component_governance_v1_DelegatorVoteBody_init_zero, false, \
-            penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero, false,        \
-            penumbra_core_component_governance_v1_ZKDelegatorVoteProof_init_zero         \
-    }
-#define penumbra_core_component_governance_v1_DelegatorVoteBody_init_zero                                                   \
-    {                                                                                                                       \
-        0, 0, false, penumbra_core_component_governance_v1_Vote_init_zero, false, penumbra_core_asset_v1_Value_init_zero,   \
-            false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, \
-            penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_zero                                                 \
-    }
+#define penumbra_core_component_governance_v1_ValidatorVoteBody_init_zero \
+    {0,                                                                   \
+     false,                                                               \
+     penumbra_core_component_governance_v1_Vote_init_zero,                \
+     false,                                                               \
+     penumbra_core_keys_v1_IdentityKey_init_zero,                         \
+     false,                                                               \
+     penumbra_core_keys_v1_GovernanceKey_init_zero,                       \
+     false,                                                               \
+     penumbra_core_component_governance_v1_ValidatorVoteReason_init_zero}
+#define penumbra_core_component_governance_v1_DelegatorVote_init_zero          \
+    {false, penumbra_core_component_governance_v1_DelegatorVoteBody_init_zero, \
+     false, penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero,     \
+     false, penumbra_core_component_governance_v1_ZKDelegatorVoteProof_init_zero}
+#define penumbra_core_component_governance_v1_DelegatorVoteBody_init_zero \
+    {0,     0,                                                            \
+     false, penumbra_core_component_governance_v1_Vote_init_zero,         \
+     false, penumbra_core_asset_v1_Value_init_zero,                       \
+     false, penumbra_core_num_v1_Amount_init_zero,                        \
+     false, penumbra_core_component_sct_v1_Nullifier_init_zero,           \
+     false, penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_zero}
 #define penumbra_core_component_governance_v1_DelegatorVoteView_init_zero                \
     {                                                                                    \
         0, { penumbra_core_component_governance_v1_DelegatorVoteView_Visible_init_zero } \
     }
-#define penumbra_core_component_governance_v1_DelegatorVoteView_Visible_init_zero    \
-    {                                                                                \
-        false, penumbra_core_component_governance_v1_DelegatorVote_init_zero, false, \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero              \
-    }
+#define penumbra_core_component_governance_v1_DelegatorVoteView_Visible_init_zero \
+    {false, penumbra_core_component_governance_v1_DelegatorVote_init_zero, false, \
+     penumbra_core_component_shielded_pool_v1_NoteView_init_zero}
 #define penumbra_core_component_governance_v1_DelegatorVoteView_Opaque_init_zero \
-    { false, penumbra_core_component_governance_v1_DelegatorVote_init_zero }
+    {false, penumbra_core_component_governance_v1_DelegatorVote_init_zero}
 #define penumbra_core_component_governance_v1_DelegatorVotePlan_init_zero                                             \
     {                                                                                                                 \
         0, 0, false, penumbra_core_component_governance_v1_Vote_init_zero, false,                                     \
@@ -962,54 +948,53 @@ extern "C" {
             {NULL}, NULL                                                                                              \
         }                                                                                                             \
     }
-#define penumbra_core_component_governance_v1_CommunityPoolDeposit_init_zero \
-    { false, penumbra_core_asset_v1_Value_init_zero }
-#define penumbra_core_component_governance_v1_CommunityPoolSpend_init_zero \
-    { false, penumbra_core_asset_v1_Value_init_zero }
+#define penumbra_core_component_governance_v1_CommunityPoolDeposit_init_zero {false, penumbra_core_asset_v1_Value_init_zero}
+#define penumbra_core_component_governance_v1_CommunityPoolSpend_init_zero {false, penumbra_core_asset_v1_Value_init_zero}
 #define penumbra_core_component_governance_v1_CommunityPoolOutput_init_zero \
-    { false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_keys_v1_Address_init_zero }
-#define penumbra_core_component_governance_v1_Vote_init_zero \
-    { _penumbra_core_component_governance_v1_Vote_Vote_MIN }
+    {false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_keys_v1_Address_init_zero}
+#define penumbra_core_component_governance_v1_Vote_init_zero {_penumbra_core_component_governance_v1_Vote_Vote_MIN}
 #define penumbra_core_component_governance_v1_ProposalState_init_zero               \
     {                                                                               \
         0, { penumbra_core_component_governance_v1_ProposalState_Voting_init_zero } \
     }
-#define penumbra_core_component_governance_v1_ProposalState_Voting_init_zero \
-    { 0 }
+#define penumbra_core_component_governance_v1_ProposalState_Voting_init_zero {0}
 #define penumbra_core_component_governance_v1_ProposalState_Withdrawn_init_zero \
     {                                                                           \
-        { {NULL}, NULL }                                                        \
+        {                                                                       \
+            {NULL}, NULL                                                        \
+        }                                                                       \
     }
 #define penumbra_core_component_governance_v1_ProposalState_Finished_init_zero \
-    { false, penumbra_core_component_governance_v1_ProposalOutcome_init_zero }
+    {false, penumbra_core_component_governance_v1_ProposalOutcome_init_zero}
 #define penumbra_core_component_governance_v1_ProposalState_Claimed_init_zero \
-    { false, penumbra_core_component_governance_v1_ProposalOutcome_init_zero }
+    {false, penumbra_core_component_governance_v1_ProposalOutcome_init_zero}
 #define penumbra_core_component_governance_v1_ProposalOutcome_init_zero               \
     {                                                                                 \
         0, { penumbra_core_component_governance_v1_ProposalOutcome_Passed_init_zero } \
     }
 #define penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_zero \
     {                                                                             \
-        { {NULL}, NULL }                                                          \
+        {                                                                         \
+            {NULL}, NULL                                                          \
+        }                                                                         \
     }
-#define penumbra_core_component_governance_v1_ProposalOutcome_Passed_init_zero \
-    { 0 }
+#define penumbra_core_component_governance_v1_ProposalOutcome_Passed_init_zero {0}
 #define penumbra_core_component_governance_v1_ProposalOutcome_Failed_init_zero \
-    { false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_zero }
+    {false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_zero}
 #define penumbra_core_component_governance_v1_ProposalOutcome_Slashed_init_zero \
-    { false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_zero }
-#define penumbra_core_component_governance_v1_Tally_init_zero \
-    { 0, 0, 0 }
+    {false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_zero}
+#define penumbra_core_component_governance_v1_Tally_init_zero {0, 0, 0}
 #define penumbra_core_component_governance_v1_Proposal_init_zero                                                     \
     {                                                                                                                \
         {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, { penumbra_core_component_governance_v1_Proposal_Signaling_init_zero } \
     }
 #define penumbra_core_component_governance_v1_Proposal_Signaling_init_zero \
     {                                                                      \
-        { {NULL}, NULL }                                                   \
+        {                                                                  \
+            {NULL}, NULL                                                   \
+        }                                                                  \
     }
-#define penumbra_core_component_governance_v1_Proposal_Emergency_init_zero \
-    { 0 }
+#define penumbra_core_component_governance_v1_Proposal_Emergency_init_zero {0}
 #define penumbra_core_component_governance_v1_Proposal_ParameterChange_init_zero                    \
     {                                                                                               \
         false, penumbra_core_component_governance_v1_ChangedAppParameters_init_zero, false,         \
@@ -1017,106 +1002,94 @@ extern "C" {
             {NULL}, NULL                                                                            \
         }                                                                                           \
     }
-#define penumbra_core_component_governance_v1_Proposal_CommunityPoolSpend_init_zero \
-    { false, google_protobuf_Any_init_zero }
-#define penumbra_core_component_governance_v1_Proposal_UpgradePlan_init_zero \
-    { 0 }
+#define penumbra_core_component_governance_v1_Proposal_CommunityPoolSpend_init_zero {false, google_protobuf_Any_init_zero}
+#define penumbra_core_component_governance_v1_Proposal_UpgradePlan_init_zero {0}
 #define penumbra_core_component_governance_v1_Proposal_FreezeIbcClient_init_zero \
     {                                                                            \
-        { {NULL}, NULL }                                                         \
+        {                                                                        \
+            {NULL}, NULL                                                         \
+        }                                                                        \
     }
 #define penumbra_core_component_governance_v1_Proposal_UnfreezeIbcClient_init_zero \
     {                                                                              \
-        { {NULL}, NULL }                                                           \
+        {                                                                          \
+            {NULL}, NULL                                                           \
+        }                                                                          \
     }
-#define penumbra_core_component_governance_v1_ProposalInfoRequest_init_zero \
-    { 0 }
-#define penumbra_core_component_governance_v1_ProposalInfoResponse_init_zero \
-    { 0, 0 }
-#define penumbra_core_component_governance_v1_ProposalDataRequest_init_zero \
-    { 0 }
-#define penumbra_core_component_governance_v1_ProposalDataResponse_init_zero                                            \
-    {                                                                                                                   \
-        false, penumbra_core_component_governance_v1_Proposal_init_zero, 0, 0, 0, false,                                \
-            penumbra_core_component_governance_v1_ProposalState_init_zero, false, penumbra_core_num_v1_Amount_init_zero \
-    }
-#define penumbra_core_component_governance_v1_ProposalRateDataRequest_init_zero \
-    { 0 }
+#define penumbra_core_component_governance_v1_ProposalInfoRequest_init_zero {0}
+#define penumbra_core_component_governance_v1_ProposalInfoResponse_init_zero {0, 0}
+#define penumbra_core_component_governance_v1_ProposalDataRequest_init_zero {0}
+#define penumbra_core_component_governance_v1_ProposalDataResponse_init_zero \
+    {false,                                                                  \
+     penumbra_core_component_governance_v1_Proposal_init_zero,               \
+     0,                                                                      \
+     0,                                                                      \
+     0,                                                                      \
+     false,                                                                  \
+     penumbra_core_component_governance_v1_ProposalState_init_zero,          \
+     false,                                                                  \
+     penumbra_core_num_v1_Amount_init_zero}
+#define penumbra_core_component_governance_v1_ProposalRateDataRequest_init_zero {0}
 #define penumbra_core_component_governance_v1_ProposalRateDataResponse_init_zero \
-    { false, penumbra_core_component_stake_v1_RateData_init_zero }
-#define penumbra_core_component_governance_v1_ProposalListRequest_init_zero \
-    { 0 }
-#define penumbra_core_component_governance_v1_ProposalListResponse_init_zero             \
-    {                                                                                    \
-        false, penumbra_core_component_governance_v1_Proposal_init_zero, 0, 0, 0, false, \
-            penumbra_core_component_governance_v1_ProposalState_init_zero                \
-    }
-#define penumbra_core_component_governance_v1_ValidatorVotesRequest_init_zero \
-    { 0 }
+    {false, penumbra_core_component_stake_v1_RateData_init_zero}
+#define penumbra_core_component_governance_v1_ProposalListRequest_init_zero {0}
+#define penumbra_core_component_governance_v1_ProposalListResponse_init_zero       \
+    {false, penumbra_core_component_governance_v1_Proposal_init_zero,     0, 0, 0, \
+     false, penumbra_core_component_governance_v1_ProposalState_init_zero}
+#define penumbra_core_component_governance_v1_ValidatorVotesRequest_init_zero {0}
 #define penumbra_core_component_governance_v1_ValidatorVotesResponse_init_zero \
-    { false, penumbra_core_component_governance_v1_Vote_init_zero, false, penumbra_core_keys_v1_IdentityKey_init_zero }
+    {false, penumbra_core_component_governance_v1_Vote_init_zero, false, penumbra_core_keys_v1_IdentityKey_init_zero}
 #define penumbra_core_component_governance_v1_GovernanceParameters_init_zero                              \
     {                                                                                                     \
         0, false, penumbra_core_num_v1_Amount_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, { {NULL}, NULL } \
     }
 #define penumbra_core_component_governance_v1_GenesisContent_init_zero \
-    { false, penumbra_core_component_governance_v1_GovernanceParameters_init_zero }
+    {false, penumbra_core_component_governance_v1_GovernanceParameters_init_zero}
 #define penumbra_core_component_governance_v1_EncodedParameter_init_zero \
     {                                                                    \
         {{NULL}, NULL}, {{NULL}, NULL}, { {NULL}, NULL }                 \
     }
-#define penumbra_core_component_governance_v1_ChangedAppParameters_init_zero                    \
-    {                                                                                           \
-        false, penumbra_core_component_sct_v1_SctParameters_init_zero, false,                   \
-            penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_zero, false, \
-            penumbra_core_component_governance_v1_GovernanceParameters_init_zero, false,        \
-            penumbra_core_component_ibc_v1_IbcParameters_init_zero, false,                      \
-            penumbra_core_component_stake_v1_StakeParameters_init_zero, false,                  \
-            penumbra_core_component_fee_v1_FeeParameters_init_zero, false,                      \
-            penumbra_core_component_distributions_v1_DistributionsParameters_init_zero, false,  \
-            penumbra_core_component_funding_v1_FundingParameters_init_zero, false,              \
-            penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_zero, false,   \
-            penumbra_core_component_dex_v1_DexParameters_init_zero, false,                      \
-            penumbra_core_component_auction_v1_AuctionParameters_init_zero                      \
-    }
-#define penumbra_core_component_governance_v1_ChangedAppParametersSet_init_zero             \
-    {                                                                                       \
-        false, penumbra_core_component_governance_v1_ChangedAppParameters_init_zero, false, \
-            penumbra_core_component_governance_v1_ChangedAppParameters_init_zero            \
-    }
+#define penumbra_core_component_governance_v1_ChangedAppParameters_init_zero             \
+    {false, penumbra_core_component_sct_v1_SctParameters_init_zero,                      \
+     false, penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_zero, \
+     false, penumbra_core_component_governance_v1_GovernanceParameters_init_zero,        \
+     false, penumbra_core_component_ibc_v1_IbcParameters_init_zero,                      \
+     false, penumbra_core_component_stake_v1_StakeParameters_init_zero,                  \
+     false, penumbra_core_component_fee_v1_FeeParameters_init_zero,                      \
+     false, penumbra_core_component_distributions_v1_DistributionsParameters_init_zero,  \
+     false, penumbra_core_component_funding_v1_FundingParameters_init_zero,              \
+     false, penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_zero,   \
+     false, penumbra_core_component_dex_v1_DexParameters_init_zero,                      \
+     false, penumbra_core_component_auction_v1_AuctionParameters_init_zero}
+#define penumbra_core_component_governance_v1_ChangedAppParametersSet_init_zero          \
+    {false, penumbra_core_component_governance_v1_ChangedAppParameters_init_zero, false, \
+     penumbra_core_component_governance_v1_ChangedAppParameters_init_zero}
 #define penumbra_core_component_governance_v1_VotingPowerAtProposalStartRequest_init_zero \
-    { 0, false, penumbra_core_keys_v1_IdentityKey_init_zero }
-#define penumbra_core_component_governance_v1_VotingPowerAtProposalStartResponse_init_zero \
-    { 0 }
-#define penumbra_core_component_governance_v1_AllTalliedDelegatorVotesForProposalRequest_init_zero \
-    { 0 }
+    {0, false, penumbra_core_keys_v1_IdentityKey_init_zero}
+#define penumbra_core_component_governance_v1_VotingPowerAtProposalStartResponse_init_zero {0}
+#define penumbra_core_component_governance_v1_AllTalliedDelegatorVotesForProposalRequest_init_zero {0}
 #define penumbra_core_component_governance_v1_AllTalliedDelegatorVotesForProposalResponse_init_zero \
-    { false, penumbra_core_component_governance_v1_Tally_init_zero, false, penumbra_core_keys_v1_IdentityKey_init_zero }
-#define penumbra_core_component_governance_v1_NextProposalIdRequest_init_zero \
-    { 0 }
-#define penumbra_core_component_governance_v1_NextProposalIdResponse_init_zero \
-    { 0 }
-#define penumbra_core_component_governance_v1_Ratio_init_zero \
-    { 0, 0 }
-#define penumbra_core_component_governance_v1_EventDelegatorVote_init_zero           \
-    {                                                                                \
-        false, penumbra_core_component_governance_v1_DelegatorVote_init_zero, false, \
-            penumbra_core_keys_v1_IdentityKey_init_zero                              \
-    }
+    {false, penumbra_core_component_governance_v1_Tally_init_zero, false, penumbra_core_keys_v1_IdentityKey_init_zero}
+#define penumbra_core_component_governance_v1_NextProposalIdRequest_init_zero {0}
+#define penumbra_core_component_governance_v1_NextProposalIdResponse_init_zero {0}
+#define penumbra_core_component_governance_v1_Ratio_init_zero {0, 0}
+#define penumbra_core_component_governance_v1_EventDelegatorVote_init_zero        \
+    {false, penumbra_core_component_governance_v1_DelegatorVote_init_zero, false, \
+     penumbra_core_keys_v1_IdentityKey_init_zero}
 #define penumbra_core_component_governance_v1_EventProposalDepositClaim_init_zero \
-    { false, penumbra_core_component_governance_v1_ProposalDepositClaim_init_zero }
+    {false, penumbra_core_component_governance_v1_ProposalDepositClaim_init_zero}
 #define penumbra_core_component_governance_v1_EventValidatorVote_init_zero \
-    { false, penumbra_core_component_governance_v1_ValidatorVote_init_zero, 0 }
+    {false, penumbra_core_component_governance_v1_ValidatorVote_init_zero, 0}
 #define penumbra_core_component_governance_v1_EventProposalWithdraw_init_zero \
-    { false, penumbra_core_component_governance_v1_ProposalWithdraw_init_zero }
+    {false, penumbra_core_component_governance_v1_ProposalWithdraw_init_zero}
 #define penumbra_core_component_governance_v1_EventProposalSubmit_init_zero \
-    { false, penumbra_core_component_governance_v1_ProposalSubmit_init_zero, 0, 0 }
+    {false, penumbra_core_component_governance_v1_ProposalSubmit_init_zero, 0, 0}
 #define penumbra_core_component_governance_v1_EventProposalPassed_init_zero \
-    { false, penumbra_core_component_governance_v1_Proposal_init_zero }
+    {false, penumbra_core_component_governance_v1_Proposal_init_zero}
 #define penumbra_core_component_governance_v1_EventProposalFailed_init_zero \
-    { false, penumbra_core_component_governance_v1_Proposal_init_zero }
+    {false, penumbra_core_component_governance_v1_Proposal_init_zero}
 #define penumbra_core_component_governance_v1_EventProposalSlashed_init_zero \
-    { false, penumbra_core_component_governance_v1_Proposal_init_zero }
+    {false, penumbra_core_component_governance_v1_Proposal_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_governance_v1_ZKDelegatorVoteProof_inner_tag 1

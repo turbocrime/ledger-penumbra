@@ -47,11 +47,9 @@ struct pb_istream_s {
 };
 
 #ifndef PB_NO_ERRMSG
-#define PB_ISTREAM_EMPTY \
-    { 0, 0, 0, 0 }
+#define PB_ISTREAM_EMPTY {0, 0, 0, 0}
 #else
-#define PB_ISTREAM_EMPTY \
-    { 0, 0, 0 }
+#define PB_ISTREAM_EMPTY {0, 0, 0}
 #endif
 
 /***************************

@@ -73,33 +73,33 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define ibc_core_client_v1_IdentifiedClientState_init_default \
-    { {{NULL}, NULL}, false, google_protobuf_Any_init_default }
+#define ibc_core_client_v1_IdentifiedClientState_init_default {{{NULL}, NULL}, false, google_protobuf_Any_init_default}
 #define ibc_core_client_v1_ConsensusStateWithHeight_init_default \
-    { false, ibc_core_client_v1_Height_init_default, false, google_protobuf_Any_init_default }
+    {false, ibc_core_client_v1_Height_init_default, false, google_protobuf_Any_init_default}
 #define ibc_core_client_v1_ClientConsensusStates_init_default \
     {                                                         \
         {{NULL}, NULL}, { {NULL}, NULL }                      \
     }
-#define ibc_core_client_v1_Height_init_default \
-    { 0, 0 }
+#define ibc_core_client_v1_Height_init_default {0, 0}
 #define ibc_core_client_v1_Params_init_default \
     {                                          \
-        { {NULL}, NULL }                       \
+        {                                      \
+            {NULL}, NULL                       \
+        }                                      \
     }
-#define ibc_core_client_v1_IdentifiedClientState_init_zero \
-    { {{NULL}, NULL}, false, google_protobuf_Any_init_zero }
+#define ibc_core_client_v1_IdentifiedClientState_init_zero {{{NULL}, NULL}, false, google_protobuf_Any_init_zero}
 #define ibc_core_client_v1_ConsensusStateWithHeight_init_zero \
-    { false, ibc_core_client_v1_Height_init_zero, false, google_protobuf_Any_init_zero }
+    {false, ibc_core_client_v1_Height_init_zero, false, google_protobuf_Any_init_zero}
 #define ibc_core_client_v1_ClientConsensusStates_init_zero \
     {                                                      \
         {{NULL}, NULL}, { {NULL}, NULL }                   \
     }
-#define ibc_core_client_v1_Height_init_zero \
-    { 0, 0 }
+#define ibc_core_client_v1_Height_init_zero {0, 0}
 #define ibc_core_client_v1_Params_init_zero \
     {                                       \
-        { {NULL}, NULL }                    \
+        {                                   \
+            {NULL}, NULL                    \
+        }                                   \
     }
 
 /* Field tags (for use in manual encoding/decoding) */

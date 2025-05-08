@@ -29,27 +29,39 @@ extern "C" {
 /* Initializer values for message structs */
 #define penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_default \
     {                                                                    \
-        { {NULL}, NULL }                                                 \
+        {                                                                \
+            {NULL}, NULL                                                 \
+        }                                                                \
     }
 #define penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_default \
     {                                                                  \
-        { {NULL}, NULL }                                               \
+        {                                                              \
+            {NULL}, NULL                                               \
+        }                                                              \
     }
 #define penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_default \
     {                                                                      \
-        { {NULL}, NULL }                                                   \
+        {                                                                  \
+            {NULL}, NULL                                                   \
+        }                                                                  \
     }
 #define penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero \
     {                                                                 \
-        { {NULL}, NULL }                                              \
+        {                                                             \
+            {NULL}, NULL                                              \
+        }                                                             \
     }
 #define penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero \
     {                                                               \
-        { {NULL}, NULL }                                            \
+        {                                                           \
+            {NULL}, NULL                                            \
+        }                                                           \
     }
 #define penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_zero \
     {                                                                   \
-        { {NULL}, NULL }                                                \
+        {                                                               \
+            {NULL}, NULL                                                \
+        }                                                               \
     }
 
 /* Field tags (for use in manual encoding/decoding) */

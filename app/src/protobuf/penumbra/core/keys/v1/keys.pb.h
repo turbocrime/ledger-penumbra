@@ -102,32 +102,39 @@ extern "C" {
     {                                                                 \
         0, { penumbra_core_keys_v1_AddressView_Decoded_init_default } \
     }
-#define penumbra_core_keys_v1_AddressView_Decoded_init_default                                                            \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_Address_init_default, false, penumbra_core_keys_v1_AddressIndex_init_default, false, \
-            penumbra_core_keys_v1_WalletId_init_default                                                                   \
-    }
-#define penumbra_core_keys_v1_AddressView_Opaque_init_default \
-    { false, penumbra_core_keys_v1_Address_init_default }
+#define penumbra_core_keys_v1_AddressView_Decoded_init_default                                                  \
+    {false, penumbra_core_keys_v1_Address_init_default, false, penumbra_core_keys_v1_AddressIndex_init_default, \
+     false, penumbra_core_keys_v1_WalletId_init_default}
+#define penumbra_core_keys_v1_AddressView_Opaque_init_default {false, penumbra_core_keys_v1_Address_init_default}
 #define penumbra_core_keys_v1_PayloadKey_init_default \
     {                                                 \
-        { {NULL}, NULL }                              \
+        {                                             \
+            {NULL}, NULL                              \
+        }                                             \
     }
 #define penumbra_core_keys_v1_SpendKey_init_default \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
 #define penumbra_core_keys_v1_FullViewingKey_init_default \
     {                                                     \
-        { {NULL}, NULL }                                  \
+        {                                                 \
+            {NULL}, NULL                                  \
+        }                                                 \
     }
 #define penumbra_core_keys_v1_WalletId_init_default \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
 #define penumbra_core_keys_v1_Diversifier_init_default \
     {                                                  \
-        { {NULL}, NULL }                               \
+        {                                              \
+            {NULL}, NULL                               \
+        }                                              \
     }
 #define penumbra_core_keys_v1_AddressIndex_init_default \
     {                                                   \
@@ -135,15 +142,21 @@ extern "C" {
     }
 #define penumbra_core_keys_v1_IdentityKey_init_default \
     {                                                  \
-        { {NULL}, NULL }                               \
+        {                                              \
+            {NULL}, NULL                               \
+        }                                              \
     }
 #define penumbra_core_keys_v1_GovernanceKey_init_default \
     {                                                    \
-        { {NULL}, NULL }                                 \
+        {                                                \
+            {NULL}, NULL                                 \
+        }                                                \
     }
 #define penumbra_core_keys_v1_ConsensusKey_init_default \
     {                                                   \
-        { {NULL}, NULL }                                \
+        {                                               \
+            {NULL}, NULL                                \
+        }                                               \
     }
 #define penumbra_core_keys_v1_Address_init_zero \
     {                                           \
@@ -153,32 +166,39 @@ extern "C" {
     {                                                              \
         0, { penumbra_core_keys_v1_AddressView_Decoded_init_zero } \
     }
-#define penumbra_core_keys_v1_AddressView_Decoded_init_zero                                                         \
-    {                                                                                                               \
-        false, penumbra_core_keys_v1_Address_init_zero, false, penumbra_core_keys_v1_AddressIndex_init_zero, false, \
-            penumbra_core_keys_v1_WalletId_init_zero                                                                \
-    }
-#define penumbra_core_keys_v1_AddressView_Opaque_init_zero \
-    { false, penumbra_core_keys_v1_Address_init_zero }
+#define penumbra_core_keys_v1_AddressView_Decoded_init_zero                                               \
+    {false, penumbra_core_keys_v1_Address_init_zero, false, penumbra_core_keys_v1_AddressIndex_init_zero, \
+     false, penumbra_core_keys_v1_WalletId_init_zero}
+#define penumbra_core_keys_v1_AddressView_Opaque_init_zero {false, penumbra_core_keys_v1_Address_init_zero}
 #define penumbra_core_keys_v1_PayloadKey_init_zero \
     {                                              \
-        { {NULL}, NULL }                           \
+        {                                          \
+            {NULL}, NULL                           \
+        }                                          \
     }
 #define penumbra_core_keys_v1_SpendKey_init_zero \
     {                                            \
-        { {NULL}, NULL }                         \
+        {                                        \
+            {NULL}, NULL                         \
+        }                                        \
     }
 #define penumbra_core_keys_v1_FullViewingKey_init_zero \
     {                                                  \
-        { {NULL}, NULL }                               \
+        {                                              \
+            {NULL}, NULL                               \
+        }                                              \
     }
 #define penumbra_core_keys_v1_WalletId_init_zero \
     {                                            \
-        { {NULL}, NULL }                         \
+        {                                        \
+            {NULL}, NULL                         \
+        }                                        \
     }
 #define penumbra_core_keys_v1_Diversifier_init_zero \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
 #define penumbra_core_keys_v1_AddressIndex_init_zero \
     {                                                \
@@ -186,15 +206,21 @@ extern "C" {
     }
 #define penumbra_core_keys_v1_IdentityKey_init_zero \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
 #define penumbra_core_keys_v1_GovernanceKey_init_zero \
     {                                                 \
-        { {NULL}, NULL }                              \
+        {                                             \
+            {NULL}, NULL                              \
+        }                                             \
     }
 #define penumbra_core_keys_v1_ConsensusKey_init_zero \
     {                                                \
-        { {NULL}, NULL }                             \
+        {                                            \
+            {NULL}, NULL                             \
+        }                                            \
     }
 
 /* Field tags (for use in manual encoding/decoding) */

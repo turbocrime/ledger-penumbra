@@ -427,29 +427,33 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define penumbra_core_transaction_v1_Transaction_init_default                      \
-    {                                                                              \
-        false, penumbra_core_transaction_v1_TransactionBody_init_default, false,   \
-            penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_default, false, \
-            penumbra_crypto_tct_v1_MerkleRoot_init_default                         \
-    }
-#define penumbra_core_transaction_v1_TransactionBody_init_default                                      \
-    {                                                                                                  \
-        {{NULL}, NULL}, false, penumbra_core_transaction_v1_TransactionParameters_init_default, false, \
-            penumbra_core_transaction_v1_DetectionData_init_default, false,                            \
-            penumbra_core_transaction_v1_MemoCiphertext_init_default                                   \
-    }
+#define penumbra_core_transaction_v1_Transaction_init_default               \
+    {false, penumbra_core_transaction_v1_TransactionBody_init_default,      \
+     false, penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_default, \
+     false, penumbra_crypto_tct_v1_MerkleRoot_init_default}
+#define penumbra_core_transaction_v1_TransactionBody_init_default     \
+    {{{NULL}, NULL},                                                  \
+     false,                                                           \
+     penumbra_core_transaction_v1_TransactionParameters_init_default, \
+     false,                                                           \
+     penumbra_core_transaction_v1_DetectionData_init_default,         \
+     false,                                                           \
+     penumbra_core_transaction_v1_MemoCiphertext_init_default}
 #define penumbra_core_transaction_v1_TransactionParameters_init_default \
-    { 0, {{NULL}, NULL}, false, penumbra_core_component_fee_v1_Fee_init_default }
+    {0, {{NULL}, NULL}, false, penumbra_core_component_fee_v1_Fee_init_default}
 #define penumbra_core_transaction_v1_TransactionSummary_init_default \
     {                                                                \
-        { {NULL}, NULL }                                             \
+        {                                                            \
+            {NULL}, NULL                                             \
+        }                                                            \
     }
 #define penumbra_core_transaction_v1_TransactionSummary_Effects_init_default \
-    { false, penumbra_core_keys_v1_AddressView_init_default, false, penumbra_core_asset_v1_Balance_init_default }
+    {false, penumbra_core_keys_v1_AddressView_init_default, false, penumbra_core_asset_v1_Balance_init_default}
 #define penumbra_core_transaction_v1_DetectionData_init_default \
     {                                                           \
-        { {NULL}, NULL }                                        \
+        {                                                       \
+            {NULL}, NULL                                        \
+        }                                                       \
     }
 #define penumbra_core_transaction_v1_Action_init_default                   \
     {                                                                      \
@@ -464,33 +468,28 @@ extern "C" {
         }                                                                                                       \
     }
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_init_default \
-    { false, penumbra_core_asset_v1_AssetId_init_default, false, google_protobuf_Any_init_default }
+    {false, penumbra_core_asset_v1_AssetId_init_default, false, google_protobuf_Any_init_default}
 #define penumbra_core_transaction_v1_TransactionPerspective_CreationTransactionIdByNullifier_init_default \
-    {                                                                                                     \
-        false, penumbra_core_component_sct_v1_Nullifier_init_default, false,                              \
-            penumbra_core_txhash_v1_TransactionId_init_default                                            \
-    }
+    {false, penumbra_core_component_sct_v1_Nullifier_init_default, false, penumbra_core_txhash_v1_TransactionId_init_default}
 #define penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment_init_default \
-    { false, penumbra_crypto_tct_v1_StateCommitment_init_default, false, penumbra_core_txhash_v1_TransactionId_init_default }
+    {false, penumbra_crypto_tct_v1_StateCommitment_init_default, false, penumbra_core_txhash_v1_TransactionId_init_default}
 #define penumbra_core_transaction_v1_PayloadKeyWithCommitment_init_default \
-    { false, penumbra_core_keys_v1_PayloadKey_init_default, false, penumbra_crypto_tct_v1_StateCommitment_init_default }
-#define penumbra_core_transaction_v1_NullifierWithNote_init_default          \
-    {                                                                        \
-        false, penumbra_core_component_sct_v1_Nullifier_init_default, false, \
-            penumbra_core_component_shielded_pool_v1_Note_init_default       \
-    }
-#define penumbra_core_transaction_v1_TransactionView_init_default                    \
-    {                                                                                \
-        false, penumbra_core_transaction_v1_TransactionBodyView_init_default, false, \
-            penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_default, false,   \
-            penumbra_crypto_tct_v1_MerkleRoot_init_default                           \
-    }
-#define penumbra_core_transaction_v1_TransactionBodyView_init_default                                  \
-    {                                                                                                  \
-        {{NULL}, NULL}, false, penumbra_core_transaction_v1_TransactionParameters_init_default, false, \
-            penumbra_core_transaction_v1_DetectionData_init_default, false,                            \
-            penumbra_core_transaction_v1_MemoView_init_default                                         \
-    }
+    {false, penumbra_core_keys_v1_PayloadKey_init_default, false, penumbra_crypto_tct_v1_StateCommitment_init_default}
+#define penumbra_core_transaction_v1_NullifierWithNote_init_default       \
+    {false, penumbra_core_component_sct_v1_Nullifier_init_default, false, \
+     penumbra_core_component_shielded_pool_v1_Note_init_default}
+#define penumbra_core_transaction_v1_TransactionView_init_default           \
+    {false, penumbra_core_transaction_v1_TransactionBodyView_init_default,  \
+     false, penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_default, \
+     false, penumbra_crypto_tct_v1_MerkleRoot_init_default}
+#define penumbra_core_transaction_v1_TransactionBodyView_init_default \
+    {{{NULL}, NULL},                                                  \
+     false,                                                           \
+     penumbra_core_transaction_v1_TransactionParameters_init_default, \
+     false,                                                           \
+     penumbra_core_transaction_v1_DetectionData_init_default,         \
+     false,                                                           \
+     penumbra_core_transaction_v1_MemoView_init_default}
 #define penumbra_core_transaction_v1_ActionView_init_default                   \
     {                                                                          \
         0, { penumbra_core_component_shielded_pool_v1_SpendView_init_default } \
@@ -503,29 +502,35 @@ extern "C" {
     {                                                                           \
         false, penumbra_crypto_tct_v1_MerkleRoot_init_default, { {NULL}, NULL } \
     }
-#define penumbra_core_transaction_v1_TransactionPlan_init_default                                      \
-    {                                                                                                  \
-        {{NULL}, NULL}, false, penumbra_core_transaction_v1_TransactionParameters_init_default, false, \
-            penumbra_core_transaction_v1_DetectionDataPlan_init_default, false,                        \
-            penumbra_core_transaction_v1_MemoPlan_init_default                                         \
-    }
+#define penumbra_core_transaction_v1_TransactionPlan_init_default     \
+    {{{NULL}, NULL},                                                  \
+     false,                                                           \
+     penumbra_core_transaction_v1_TransactionParameters_init_default, \
+     false,                                                           \
+     penumbra_core_transaction_v1_DetectionDataPlan_init_default,     \
+     false,                                                           \
+     penumbra_core_transaction_v1_MemoPlan_init_default}
 #define penumbra_core_transaction_v1_DetectionDataPlan_init_default \
     {                                                               \
-        { {NULL}, NULL }                                            \
+        {                                                           \
+            {NULL}, NULL                                            \
+        }                                                           \
     }
 #define penumbra_core_transaction_v1_ActionPlan_init_default                   \
     {                                                                          \
         0, { penumbra_core_component_shielded_pool_v1_SpendPlan_init_default } \
     }
 #define penumbra_core_transaction_v1_CluePlan_init_default \
-    { false, penumbra_core_keys_v1_Address_init_default, {{NULL}, NULL}, 0 }
+    {false, penumbra_core_keys_v1_Address_init_default, {{NULL}, NULL}, 0}
 #define penumbra_core_transaction_v1_MemoPlan_init_default                               \
     {                                                                                    \
         false, penumbra_core_transaction_v1_MemoPlaintext_init_default, { {NULL}, NULL } \
     }
 #define penumbra_core_transaction_v1_MemoCiphertext_init_default \
     {                                                            \
-        { {NULL}, NULL }                                         \
+        {                                                        \
+            {NULL}, NULL                                         \
+        }                                                        \
     }
 #define penumbra_core_transaction_v1_MemoPlaintext_init_default             \
     {                                                                       \
@@ -539,35 +544,38 @@ extern "C" {
     {                                                                     \
         0, { penumbra_core_transaction_v1_MemoView_Visible_init_default } \
     }
-#define penumbra_core_transaction_v1_MemoView_Visible_init_default              \
-    {                                                                           \
-        false, penumbra_core_transaction_v1_MemoCiphertext_init_default, false, \
-            penumbra_core_transaction_v1_MemoPlaintextView_init_default         \
-    }
+#define penumbra_core_transaction_v1_MemoView_Visible_init_default           \
+    {false, penumbra_core_transaction_v1_MemoCiphertext_init_default, false, \
+     penumbra_core_transaction_v1_MemoPlaintextView_init_default}
 #define penumbra_core_transaction_v1_MemoView_Opaque_init_default \
-    { false, penumbra_core_transaction_v1_MemoCiphertext_init_default }
-#define penumbra_core_transaction_v1_Transaction_init_zero                                                                  \
-    {                                                                                                                       \
-        false, penumbra_core_transaction_v1_TransactionBody_init_zero, false,                                               \
-            penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero, false, penumbra_crypto_tct_v1_MerkleRoot_init_zero \
-    }
-#define penumbra_core_transaction_v1_TransactionBody_init_zero                                      \
-    {                                                                                               \
-        {{NULL}, NULL}, false, penumbra_core_transaction_v1_TransactionParameters_init_zero, false, \
-            penumbra_core_transaction_v1_DetectionData_init_zero, false,                            \
-            penumbra_core_transaction_v1_MemoCiphertext_init_zero                                   \
-    }
+    {false, penumbra_core_transaction_v1_MemoCiphertext_init_default}
+#define penumbra_core_transaction_v1_Transaction_init_zero               \
+    {false, penumbra_core_transaction_v1_TransactionBody_init_zero,      \
+     false, penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero, \
+     false, penumbra_crypto_tct_v1_MerkleRoot_init_zero}
+#define penumbra_core_transaction_v1_TransactionBody_init_zero     \
+    {{{NULL}, NULL},                                               \
+     false,                                                        \
+     penumbra_core_transaction_v1_TransactionParameters_init_zero, \
+     false,                                                        \
+     penumbra_core_transaction_v1_DetectionData_init_zero,         \
+     false,                                                        \
+     penumbra_core_transaction_v1_MemoCiphertext_init_zero}
 #define penumbra_core_transaction_v1_TransactionParameters_init_zero \
-    { 0, {{NULL}, NULL}, false, penumbra_core_component_fee_v1_Fee_init_zero }
+    {0, {{NULL}, NULL}, false, penumbra_core_component_fee_v1_Fee_init_zero}
 #define penumbra_core_transaction_v1_TransactionSummary_init_zero \
     {                                                             \
-        { {NULL}, NULL }                                          \
+        {                                                         \
+            {NULL}, NULL                                          \
+        }                                                         \
     }
 #define penumbra_core_transaction_v1_TransactionSummary_Effects_init_zero \
-    { false, penumbra_core_keys_v1_AddressView_init_zero, false, penumbra_core_asset_v1_Balance_init_zero }
+    {false, penumbra_core_keys_v1_AddressView_init_zero, false, penumbra_core_asset_v1_Balance_init_zero}
 #define penumbra_core_transaction_v1_DetectionData_init_zero \
     {                                                        \
-        { {NULL}, NULL }                                     \
+        {                                                    \
+            {NULL}, NULL                                     \
+        }                                                    \
     }
 #define penumbra_core_transaction_v1_Action_init_zero                   \
     {                                                                   \
@@ -582,28 +590,28 @@ extern "C" {
         }                                                                                                    \
     }
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_init_zero \
-    { false, penumbra_core_asset_v1_AssetId_init_zero, false, google_protobuf_Any_init_zero }
+    {false, penumbra_core_asset_v1_AssetId_init_zero, false, google_protobuf_Any_init_zero}
 #define penumbra_core_transaction_v1_TransactionPerspective_CreationTransactionIdByNullifier_init_zero \
-    { false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero }
+    {false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero}
 #define penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment_init_zero \
-    { false, penumbra_crypto_tct_v1_StateCommitment_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero }
+    {false, penumbra_crypto_tct_v1_StateCommitment_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero}
 #define penumbra_core_transaction_v1_PayloadKeyWithCommitment_init_zero \
-    { false, penumbra_core_keys_v1_PayloadKey_init_zero, false, penumbra_crypto_tct_v1_StateCommitment_init_zero }
-#define penumbra_core_transaction_v1_NullifierWithNote_init_zero          \
-    {                                                                     \
-        false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, \
-            penumbra_core_component_shielded_pool_v1_Note_init_zero       \
-    }
-#define penumbra_core_transaction_v1_TransactionView_init_zero                                                              \
-    {                                                                                                                       \
-        false, penumbra_core_transaction_v1_TransactionBodyView_init_zero, false,                                           \
-            penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero, false, penumbra_crypto_tct_v1_MerkleRoot_init_zero \
-    }
-#define penumbra_core_transaction_v1_TransactionBodyView_init_zero                                                       \
-    {                                                                                                                    \
-        {{NULL}, NULL}, false, penumbra_core_transaction_v1_TransactionParameters_init_zero, false,                      \
-            penumbra_core_transaction_v1_DetectionData_init_zero, false, penumbra_core_transaction_v1_MemoView_init_zero \
-    }
+    {false, penumbra_core_keys_v1_PayloadKey_init_zero, false, penumbra_crypto_tct_v1_StateCommitment_init_zero}
+#define penumbra_core_transaction_v1_NullifierWithNote_init_zero       \
+    {false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, \
+     penumbra_core_component_shielded_pool_v1_Note_init_zero}
+#define penumbra_core_transaction_v1_TransactionView_init_zero           \
+    {false, penumbra_core_transaction_v1_TransactionBodyView_init_zero,  \
+     false, penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero, \
+     false, penumbra_crypto_tct_v1_MerkleRoot_init_zero}
+#define penumbra_core_transaction_v1_TransactionBodyView_init_zero \
+    {{{NULL}, NULL},                                               \
+     false,                                                        \
+     penumbra_core_transaction_v1_TransactionParameters_init_zero, \
+     false,                                                        \
+     penumbra_core_transaction_v1_DetectionData_init_zero,         \
+     false,                                                        \
+     penumbra_core_transaction_v1_MemoView_init_zero}
 #define penumbra_core_transaction_v1_ActionView_init_zero                   \
     {                                                                       \
         0, { penumbra_core_component_shielded_pool_v1_SpendView_init_zero } \
@@ -616,29 +624,34 @@ extern "C" {
     {                                                                        \
         false, penumbra_crypto_tct_v1_MerkleRoot_init_zero, { {NULL}, NULL } \
     }
-#define penumbra_core_transaction_v1_TransactionPlan_init_zero                                      \
-    {                                                                                               \
-        {{NULL}, NULL}, false, penumbra_core_transaction_v1_TransactionParameters_init_zero, false, \
-            penumbra_core_transaction_v1_DetectionDataPlan_init_zero, false,                        \
-            penumbra_core_transaction_v1_MemoPlan_init_zero                                         \
-    }
+#define penumbra_core_transaction_v1_TransactionPlan_init_zero     \
+    {{{NULL}, NULL},                                               \
+     false,                                                        \
+     penumbra_core_transaction_v1_TransactionParameters_init_zero, \
+     false,                                                        \
+     penumbra_core_transaction_v1_DetectionDataPlan_init_zero,     \
+     false,                                                        \
+     penumbra_core_transaction_v1_MemoPlan_init_zero}
 #define penumbra_core_transaction_v1_DetectionDataPlan_init_zero \
     {                                                            \
-        { {NULL}, NULL }                                         \
+        {                                                        \
+            {NULL}, NULL                                         \
+        }                                                        \
     }
 #define penumbra_core_transaction_v1_ActionPlan_init_zero                   \
     {                                                                       \
         0, { penumbra_core_component_shielded_pool_v1_SpendPlan_init_zero } \
     }
-#define penumbra_core_transaction_v1_CluePlan_init_zero \
-    { false, penumbra_core_keys_v1_Address_init_zero, {{NULL}, NULL}, 0 }
+#define penumbra_core_transaction_v1_CluePlan_init_zero {false, penumbra_core_keys_v1_Address_init_zero, {{NULL}, NULL}, 0}
 #define penumbra_core_transaction_v1_MemoPlan_init_zero                               \
     {                                                                                 \
         false, penumbra_core_transaction_v1_MemoPlaintext_init_zero, { {NULL}, NULL } \
     }
 #define penumbra_core_transaction_v1_MemoCiphertext_init_zero \
     {                                                         \
-        { {NULL}, NULL }                                      \
+        {                                                     \
+            {NULL}, NULL                                      \
+        }                                                     \
     }
 #define penumbra_core_transaction_v1_MemoPlaintext_init_zero             \
     {                                                                    \
@@ -652,13 +665,10 @@ extern "C" {
     {                                                                  \
         0, { penumbra_core_transaction_v1_MemoView_Visible_init_zero } \
     }
-#define penumbra_core_transaction_v1_MemoView_Visible_init_zero              \
-    {                                                                        \
-        false, penumbra_core_transaction_v1_MemoCiphertext_init_zero, false, \
-            penumbra_core_transaction_v1_MemoPlaintextView_init_zero         \
-    }
-#define penumbra_core_transaction_v1_MemoView_Opaque_init_zero \
-    { false, penumbra_core_transaction_v1_MemoCiphertext_init_zero }
+#define penumbra_core_transaction_v1_MemoView_Visible_init_zero           \
+    {false, penumbra_core_transaction_v1_MemoCiphertext_init_zero, false, \
+     penumbra_core_transaction_v1_MemoPlaintextView_init_zero}
+#define penumbra_core_transaction_v1_MemoView_Opaque_init_zero {false, penumbra_core_transaction_v1_MemoCiphertext_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_transaction_v1_TransactionParameters_expiry_height_tag 1

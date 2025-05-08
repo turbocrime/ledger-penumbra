@@ -46,32 +46,30 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_default \
-    { 0 }
-#define penumbra_core_component_community_pool_v1_GenesisContent_init_default                         \
-    {                                                                                                 \
-        false, penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_default, false, \
-            penumbra_core_asset_v1_Value_init_default                                                 \
-    }
+#define penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_default {0}
+#define penumbra_core_component_community_pool_v1_GenesisContent_init_default                      \
+    {false, penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_default, false, \
+     penumbra_core_asset_v1_Value_init_default}
 #define penumbra_core_component_community_pool_v1_CommunityPoolAssetBalancesRequest_init_default \
     {                                                                                            \
-        { {NULL}, NULL }                                                                         \
+        {                                                                                        \
+            {NULL}, NULL                                                                         \
+        }                                                                                        \
     }
 #define penumbra_core_component_community_pool_v1_CommunityPoolAssetBalancesResponse_init_default \
-    { false, penumbra_core_asset_v1_Value_init_default }
-#define penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_zero \
-    { 0 }
-#define penumbra_core_component_community_pool_v1_GenesisContent_init_zero                         \
-    {                                                                                              \
-        false, penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_zero, false, \
-            penumbra_core_asset_v1_Value_init_zero                                                 \
-    }
+    {false, penumbra_core_asset_v1_Value_init_default}
+#define penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_zero {0}
+#define penumbra_core_component_community_pool_v1_GenesisContent_init_zero                      \
+    {false, penumbra_core_component_community_pool_v1_CommunityPoolParameters_init_zero, false, \
+     penumbra_core_asset_v1_Value_init_zero}
 #define penumbra_core_component_community_pool_v1_CommunityPoolAssetBalancesRequest_init_zero \
     {                                                                                         \
-        { {NULL}, NULL }                                                                      \
+        {                                                                                     \
+            {NULL}, NULL                                                                      \
+        }                                                                                     \
     }
 #define penumbra_core_component_community_pool_v1_CommunityPoolAssetBalancesResponse_init_zero \
-    { false, penumbra_core_asset_v1_Value_init_zero }
+    {false, penumbra_core_asset_v1_Value_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_community_pool_v1_CommunityPoolParameters_community_pool_spend_proposals_enabled_tag 1

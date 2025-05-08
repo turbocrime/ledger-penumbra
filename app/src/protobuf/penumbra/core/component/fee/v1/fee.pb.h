@@ -150,65 +150,50 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define penumbra_core_component_fee_v1_Fee_init_default \
-    { false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_AssetId_init_default }
-#define penumbra_core_component_fee_v1_Gas_init_default \
-    { 0, 0, 0, 0 }
+    {false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_AssetId_init_default}
+#define penumbra_core_component_fee_v1_Gas_init_default {0, 0, 0, 0}
 #define penumbra_core_component_fee_v1_GasPrices_init_default \
-    { 0, 0, 0, 0, false, penumbra_core_asset_v1_AssetId_init_default }
-#define penumbra_core_component_fee_v1_FeeTier_init_default \
-    { _penumbra_core_component_fee_v1_FeeTier_Tier_MIN }
+    {0, 0, 0, 0, false, penumbra_core_asset_v1_AssetId_init_default}
+#define penumbra_core_component_fee_v1_FeeTier_init_default {_penumbra_core_component_fee_v1_FeeTier_Tier_MIN}
 #define penumbra_core_component_fee_v1_FeeParameters_init_default                      \
     {                                                                                  \
         false, penumbra_core_component_fee_v1_GasPrices_init_default, { {NULL}, NULL } \
     }
 #define penumbra_core_component_fee_v1_GenesisContent_init_default \
-    { false, penumbra_core_component_fee_v1_FeeParameters_init_default }
-#define penumbra_core_component_fee_v1_CurrentGasPricesRequest_init_default \
-    { 0 }
+    {false, penumbra_core_component_fee_v1_FeeParameters_init_default}
+#define penumbra_core_component_fee_v1_CurrentGasPricesRequest_init_default {0}
 #define penumbra_core_component_fee_v1_CurrentGasPricesResponse_init_default           \
     {                                                                                  \
         false, penumbra_core_component_fee_v1_GasPrices_init_default, { {NULL}, NULL } \
     }
-#define penumbra_core_component_fee_v1_EventPaidFee_init_default                                                           \
-    {                                                                                                                      \
-        false, penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_core_component_fee_v1_Fee_init_default,    \
-            false, penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_core_component_fee_v1_Gas_init_default \
-    }
-#define penumbra_core_component_fee_v1_EventBlockFees_init_default                                                      \
-    {                                                                                                                   \
-        false, penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_core_component_fee_v1_Fee_init_default, \
-            false, penumbra_core_component_fee_v1_Fee_init_default                                                      \
-    }
+#define penumbra_core_component_fee_v1_EventPaidFee_init_default                                                     \
+    {false, penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_core_component_fee_v1_Fee_init_default, \
+     false, penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_core_component_fee_v1_Gas_init_default}
+#define penumbra_core_component_fee_v1_EventBlockFees_init_default                                                   \
+    {false, penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_core_component_fee_v1_Fee_init_default, \
+     false, penumbra_core_component_fee_v1_Fee_init_default}
 #define penumbra_core_component_fee_v1_Fee_init_zero \
-    { false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero }
-#define penumbra_core_component_fee_v1_Gas_init_zero \
-    { 0, 0, 0, 0 }
-#define penumbra_core_component_fee_v1_GasPrices_init_zero \
-    { 0, 0, 0, 0, false, penumbra_core_asset_v1_AssetId_init_zero }
-#define penumbra_core_component_fee_v1_FeeTier_init_zero \
-    { _penumbra_core_component_fee_v1_FeeTier_Tier_MIN }
+    {false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero}
+#define penumbra_core_component_fee_v1_Gas_init_zero {0, 0, 0, 0}
+#define penumbra_core_component_fee_v1_GasPrices_init_zero {0, 0, 0, 0, false, penumbra_core_asset_v1_AssetId_init_zero}
+#define penumbra_core_component_fee_v1_FeeTier_init_zero {_penumbra_core_component_fee_v1_FeeTier_Tier_MIN}
 #define penumbra_core_component_fee_v1_FeeParameters_init_zero                      \
     {                                                                               \
         false, penumbra_core_component_fee_v1_GasPrices_init_zero, { {NULL}, NULL } \
     }
 #define penumbra_core_component_fee_v1_GenesisContent_init_zero \
-    { false, penumbra_core_component_fee_v1_FeeParameters_init_zero }
-#define penumbra_core_component_fee_v1_CurrentGasPricesRequest_init_zero \
-    { 0 }
+    {false, penumbra_core_component_fee_v1_FeeParameters_init_zero}
+#define penumbra_core_component_fee_v1_CurrentGasPricesRequest_init_zero {0}
 #define penumbra_core_component_fee_v1_CurrentGasPricesResponse_init_zero           \
     {                                                                               \
         false, penumbra_core_component_fee_v1_GasPrices_init_zero, { {NULL}, NULL } \
     }
-#define penumbra_core_component_fee_v1_EventPaidFee_init_zero                                                            \
-    {                                                                                                                    \
-        false, penumbra_core_component_fee_v1_Fee_init_zero, false, penumbra_core_component_fee_v1_Fee_init_zero, false, \
-            penumbra_core_component_fee_v1_Fee_init_zero, false, penumbra_core_component_fee_v1_Gas_init_zero            \
-    }
-#define penumbra_core_component_fee_v1_EventBlockFees_init_zero                                                          \
-    {                                                                                                                    \
-        false, penumbra_core_component_fee_v1_Fee_init_zero, false, penumbra_core_component_fee_v1_Fee_init_zero, false, \
-            penumbra_core_component_fee_v1_Fee_init_zero                                                                 \
-    }
+#define penumbra_core_component_fee_v1_EventPaidFee_init_zero                                                  \
+    {false, penumbra_core_component_fee_v1_Fee_init_zero, false, penumbra_core_component_fee_v1_Fee_init_zero, \
+     false, penumbra_core_component_fee_v1_Fee_init_zero, false, penumbra_core_component_fee_v1_Gas_init_zero}
+#define penumbra_core_component_fee_v1_EventBlockFees_init_zero                                                \
+    {false, penumbra_core_component_fee_v1_Fee_init_zero, false, penumbra_core_component_fee_v1_Fee_init_zero, \
+     false, penumbra_core_component_fee_v1_Fee_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_fee_v1_Fee_amount_tag 1

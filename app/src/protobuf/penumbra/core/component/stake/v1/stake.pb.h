@@ -497,78 +497,94 @@ extern "C" {
 /* Initializer values for message structs */
 #define penumbra_core_component_stake_v1_ZKUndelegateClaimProof_init_default \
     {                                                                        \
-        { {NULL}, NULL }                                                     \
+        {                                                                    \
+            {NULL}, NULL                                                     \
+        }                                                                    \
     }
-#define penumbra_core_component_stake_v1_Validator_init_default                                                \
-    {                                                                                                          \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
-            {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, false, penumbra_core_keys_v1_GovernanceKey_init_default      \
-    }
+#define penumbra_core_component_stake_v1_Validator_init_default \
+    {false,                                                     \
+     penumbra_core_keys_v1_IdentityKey_init_default,            \
+     {{NULL}, NULL},                                            \
+     {{NULL}, NULL},                                            \
+     {{NULL}, NULL},                                            \
+     {{NULL}, NULL},                                            \
+     {{NULL}, NULL},                                            \
+     0,                                                         \
+     0,                                                         \
+     false,                                                     \
+     penumbra_core_keys_v1_GovernanceKey_init_default}
 #define penumbra_core_component_stake_v1_ValidatorList_init_default \
     {                                                               \
-        { {NULL}, NULL }                                            \
+        {                                                           \
+            {NULL}, NULL                                            \
+        }                                                           \
     }
 #define penumbra_core_component_stake_v1_FundingStream_init_default                  \
     {                                                                                \
         0, { penumbra_core_component_stake_v1_FundingStream_ToAddress_init_default } \
     }
-#define penumbra_core_component_stake_v1_FundingStream_ToAddress_init_default \
-    { {{NULL}, NULL}, 0 }
-#define penumbra_core_component_stake_v1_FundingStream_ToCommunityPool_init_default \
-    { 0 }
-#define penumbra_core_component_stake_v1_RateData_init_default                                                            \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default                                                                      \
-    }
+#define penumbra_core_component_stake_v1_FundingStream_ToAddress_init_default {{{NULL}, NULL}, 0}
+#define penumbra_core_component_stake_v1_FundingStream_ToCommunityPool_init_default {0}
+#define penumbra_core_component_stake_v1_RateData_init_default                                                  \
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default}
 #define penumbra_core_component_stake_v1_BaseRateData_init_default \
-    { 0, false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default }
-#define penumbra_core_component_stake_v1_ValidatorStatus_init_default                                                      \
-    {                                                                                                                      \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, false,                                                      \
-            penumbra_core_component_stake_v1_ValidatorState_init_default, false, penumbra_core_num_v1_Amount_init_default, \
-            false, penumbra_core_component_stake_v1_BondingState_init_default                                              \
-    }
+    {0, false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_stake_v1_ValidatorStatus_init_default     \
+    {false, penumbra_core_keys_v1_IdentityKey_init_default,               \
+     false, penumbra_core_component_stake_v1_ValidatorState_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default,                     \
+     false, penumbra_core_component_stake_v1_BondingState_init_default}
 #define penumbra_core_component_stake_v1_BondingState_init_default \
-    { _penumbra_core_component_stake_v1_BondingState_BondingStateEnum_MIN, 0, 0 }
+    {_penumbra_core_component_stake_v1_BondingState_BondingStateEnum_MIN, 0, 0}
 #define penumbra_core_component_stake_v1_ValidatorState_init_default \
-    { _penumbra_core_component_stake_v1_ValidatorState_ValidatorStateEnum_MIN }
-#define penumbra_core_component_stake_v1_ValidatorInfo_init_default               \
-    {                                                                             \
-        false, penumbra_core_component_stake_v1_Validator_init_default, false,    \
-            penumbra_core_component_stake_v1_ValidatorStatus_init_default, false, \
-            penumbra_core_component_stake_v1_RateData_init_default                \
-    }
+    {_penumbra_core_component_stake_v1_ValidatorState_ValidatorStateEnum_MIN}
+#define penumbra_core_component_stake_v1_ValidatorInfo_init_default        \
+    {false, penumbra_core_component_stake_v1_Validator_init_default,       \
+     false, penumbra_core_component_stake_v1_ValidatorStatus_init_default, \
+     false, penumbra_core_component_stake_v1_RateData_init_default}
 #define penumbra_core_component_stake_v1_ValidatorDefinition_init_default                \
     {                                                                                    \
         false, penumbra_core_component_stake_v1_Validator_init_default, { {NULL}, NULL } \
     }
-#define penumbra_core_component_stake_v1_Delegate_init_default                                                            \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default                                                                      \
-    }
-#define penumbra_core_component_stake_v1_Undelegate_init_default                                                          \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default, false, penumbra_core_component_sct_v1_Epoch_init_default            \
-    }
+#define penumbra_core_component_stake_v1_Delegate_init_default                                                  \
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_stake_v1_Undelegate_init_default \
+    {false,                                                      \
+     penumbra_core_keys_v1_IdentityKey_init_default,             \
+     0,                                                          \
+     false,                                                      \
+     penumbra_core_num_v1_Amount_init_default,                   \
+     false,                                                      \
+     penumbra_core_num_v1_Amount_init_default,                   \
+     false,                                                      \
+     penumbra_core_component_sct_v1_Epoch_init_default}
 #define penumbra_core_component_stake_v1_UndelegateClaim_init_default                              \
     {                                                                                              \
         false, penumbra_core_component_stake_v1_UndelegateClaimBody_init_default, { {NULL}, NULL } \
     }
 #define penumbra_core_component_stake_v1_UndelegateClaimBody_init_default \
-    {                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false,  \
-            penumbra_core_component_stake_v1_Penalty_init_default, false, \
-            penumbra_core_asset_v1_BalanceCommitment_init_default, 0      \
-    }
-#define penumbra_core_component_stake_v1_UndelegateClaimPlan_init_default                                           \
-    {                                                                                                               \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false,                                            \
-            penumbra_core_component_stake_v1_Penalty_init_default, false, penumbra_core_num_v1_Amount_init_default, \
-            {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0                                                       \
-    }
+    {false,                                                               \
+     penumbra_core_keys_v1_IdentityKey_init_default,                      \
+     0,                                                                   \
+     false,                                                               \
+     penumbra_core_component_stake_v1_Penalty_init_default,               \
+     false,                                                               \
+     penumbra_core_asset_v1_BalanceCommitment_init_default,               \
+     0}
+#define penumbra_core_component_stake_v1_UndelegateClaimPlan_init_default \
+    {false,                                                               \
+     penumbra_core_keys_v1_IdentityKey_init_default,                      \
+     0,                                                                   \
+     false,                                                               \
+     penumbra_core_component_stake_v1_Penalty_init_default,               \
+     false,                                                               \
+     penumbra_core_num_v1_Amount_init_default,                            \
+     {{NULL}, NULL},                                                      \
+     {{NULL}, NULL},                                                      \
+     {{NULL}, NULL},                                                      \
+     0}
 #define penumbra_core_component_stake_v1_DelegationChanges_init_default \
     {                                                                   \
         {{NULL}, NULL}, { {NULL}, NULL }                                \
@@ -579,143 +595,156 @@ extern "C" {
     }
 #define penumbra_core_component_stake_v1_CurrentConsensusKeys_init_default \
     {                                                                      \
-        { {NULL}, NULL }                                                   \
+        {                                                                  \
+            {NULL}, NULL                                                   \
+        }                                                                  \
     }
 #define penumbra_core_component_stake_v1_Penalty_init_default \
     {                                                         \
-        { {NULL}, NULL }                                      \
+        {                                                     \
+            {NULL}, NULL                                      \
+        }                                                     \
     }
 #define penumbra_core_component_stake_v1_GetValidatorInfoRequest_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default}
 #define penumbra_core_component_stake_v1_GetValidatorInfoResponse_init_default \
-    { false, penumbra_core_component_stake_v1_ValidatorInfo_init_default }
-#define penumbra_core_component_stake_v1_ValidatorInfoRequest_init_default \
-    { 0 }
+    {false, penumbra_core_component_stake_v1_ValidatorInfo_init_default}
+#define penumbra_core_component_stake_v1_ValidatorInfoRequest_init_default {0}
 #define penumbra_core_component_stake_v1_ValidatorInfoResponse_init_default \
-    { false, penumbra_core_component_stake_v1_ValidatorInfo_init_default }
+    {false, penumbra_core_component_stake_v1_ValidatorInfo_init_default}
 #define penumbra_core_component_stake_v1_ValidatorStatusRequest_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default}
 #define penumbra_core_component_stake_v1_ValidatorStatusResponse_init_default \
-    { false, penumbra_core_component_stake_v1_ValidatorStatus_init_default }
+    {false, penumbra_core_component_stake_v1_ValidatorStatus_init_default}
 #define penumbra_core_component_stake_v1_ValidatorPenaltyRequest_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default, 0, 0 }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, 0, 0}
 #define penumbra_core_component_stake_v1_ValidatorPenaltyResponse_init_default \
-    { false, penumbra_core_component_stake_v1_Penalty_init_default }
+    {false, penumbra_core_component_stake_v1_Penalty_init_default}
 #define penumbra_core_component_stake_v1_CurrentValidatorRateRequest_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default}
 #define penumbra_core_component_stake_v1_CurrentValidatorRateResponse_init_default \
-    { false, penumbra_core_component_stake_v1_RateData_init_default }
+    {false, penumbra_core_component_stake_v1_RateData_init_default}
 #define penumbra_core_component_stake_v1_ValidatorUptimeRequest_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default}
 #define penumbra_core_component_stake_v1_ValidatorUptimeResponse_init_default \
-    { false, penumbra_core_component_stake_v1_Uptime_init_default }
+    {false, penumbra_core_component_stake_v1_Uptime_init_default}
 #define penumbra_core_component_stake_v1_StakeParameters_init_default \
-    { 0, 0, 0, 0, 0, 0, 0, false, penumbra_core_num_v1_Amount_init_default, 0 }
+    {0, 0, 0, 0, 0, 0, 0, false, penumbra_core_num_v1_Amount_init_default, 0}
 #define penumbra_core_component_stake_v1_GenesisContent_init_default                           \
     {                                                                                          \
         false, penumbra_core_component_stake_v1_StakeParameters_init_default, { {NULL}, NULL } \
     }
 #define penumbra_core_component_stake_v1_EventTombstoneValidator_init_default \
-    { 0, 0, false, penumbra_core_keys_v1_IdentityKey_init_default, {{NULL}, NULL}, 0 }
+    {0, 0, false, penumbra_core_keys_v1_IdentityKey_init_default, {{NULL}, NULL}, 0}
 #define penumbra_core_component_stake_v1_EventValidatorStateChange_init_default \
-    {                                                                           \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, false,           \
-            penumbra_core_component_stake_v1_ValidatorState_init_default        \
-    }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, false,              \
+     penumbra_core_component_stake_v1_ValidatorState_init_default}
 #define penumbra_core_component_stake_v1_EventValidatorVotingPowerChange_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_num_v1_Amount_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_num_v1_Amount_init_default}
 #define penumbra_core_component_stake_v1_EventValidatorBondingStateChange_init_default \
-    {                                                                                  \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, false,                  \
-            penumbra_core_component_stake_v1_BondingState_init_default                 \
-    }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, false,                     \
+     penumbra_core_component_stake_v1_BondingState_init_default}
 #define penumbra_core_component_stake_v1_EventRateDataChange_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_component_stake_v1_RateData_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_component_stake_v1_RateData_init_default}
 #define penumbra_core_component_stake_v1_EventValidatorDefinitionUpload_init_default \
-    { false, penumbra_core_component_stake_v1_Validator_init_default }
+    {false, penumbra_core_component_stake_v1_Validator_init_default}
 #define penumbra_core_component_stake_v1_EventValidatorMissedBlock_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default}
 #define penumbra_core_component_stake_v1_EventDelegate_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_num_v1_Amount_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_num_v1_Amount_init_default}
 #define penumbra_core_component_stake_v1_EventUndelegate_init_default \
-    { false, penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_num_v1_Amount_init_default }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_num_v1_Amount_init_default}
 #define penumbra_core_component_stake_v1_EventSlashingPenaltyApplied_init_default \
-    {                                                                             \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false,          \
-            penumbra_core_component_stake_v1_Penalty_init_default                 \
-    }
+    {false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_component_stake_v1_Penalty_init_default}
 #define penumbra_core_component_stake_v1_ZKUndelegateClaimProof_init_zero \
     {                                                                     \
-        { {NULL}, NULL }                                                  \
+        {                                                                 \
+            {NULL}, NULL                                                  \
+        }                                                                 \
     }
-#define penumbra_core_component_stake_v1_Validator_init_zero                                                                \
-    {                                                                                                                       \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
-            {{NULL}, NULL}, 0, 0, false, penumbra_core_keys_v1_GovernanceKey_init_zero                                      \
-    }
+#define penumbra_core_component_stake_v1_Validator_init_zero \
+    {false,                                                  \
+     penumbra_core_keys_v1_IdentityKey_init_zero,            \
+     {{NULL}, NULL},                                         \
+     {{NULL}, NULL},                                         \
+     {{NULL}, NULL},                                         \
+     {{NULL}, NULL},                                         \
+     {{NULL}, NULL},                                         \
+     0,                                                      \
+     0,                                                      \
+     false,                                                  \
+     penumbra_core_keys_v1_GovernanceKey_init_zero}
 #define penumbra_core_component_stake_v1_ValidatorList_init_zero \
     {                                                            \
-        { {NULL}, NULL }                                         \
+        {                                                        \
+            {NULL}, NULL                                         \
+        }                                                        \
     }
 #define penumbra_core_component_stake_v1_FundingStream_init_zero                  \
     {                                                                             \
         0, { penumbra_core_component_stake_v1_FundingStream_ToAddress_init_zero } \
     }
-#define penumbra_core_component_stake_v1_FundingStream_ToAddress_init_zero \
-    { {{NULL}, NULL}, 0 }
-#define penumbra_core_component_stake_v1_FundingStream_ToCommunityPool_init_zero \
-    { 0 }
-#define penumbra_core_component_stake_v1_RateData_init_zero                                                         \
-    {                                                                                                               \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero                                                                   \
-    }
+#define penumbra_core_component_stake_v1_FundingStream_ToAddress_init_zero {{{NULL}, NULL}, 0}
+#define penumbra_core_component_stake_v1_FundingStream_ToCommunityPool_init_zero {0}
+#define penumbra_core_component_stake_v1_RateData_init_zero                                               \
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_num_v1_Amount_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero}
 #define penumbra_core_component_stake_v1_BaseRateData_init_zero \
-    { 0, false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero }
-#define penumbra_core_component_stake_v1_ValidatorStatus_init_zero                                                          \
-    {                                                                                                                       \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, false,                                                          \
-            penumbra_core_component_stake_v1_ValidatorState_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_component_stake_v1_BondingState_init_zero                                                         \
-    }
+    {0, false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero}
+#define penumbra_core_component_stake_v1_ValidatorStatus_init_zero                                                         \
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_component_stake_v1_ValidatorState_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero,       false, penumbra_core_component_stake_v1_BondingState_init_zero}
 #define penumbra_core_component_stake_v1_BondingState_init_zero \
-    { _penumbra_core_component_stake_v1_BondingState_BondingStateEnum_MIN, 0, 0 }
+    {_penumbra_core_component_stake_v1_BondingState_BondingStateEnum_MIN, 0, 0}
 #define penumbra_core_component_stake_v1_ValidatorState_init_zero \
-    { _penumbra_core_component_stake_v1_ValidatorState_ValidatorStateEnum_MIN }
-#define penumbra_core_component_stake_v1_ValidatorInfo_init_zero               \
-    {                                                                          \
-        false, penumbra_core_component_stake_v1_Validator_init_zero, false,    \
-            penumbra_core_component_stake_v1_ValidatorStatus_init_zero, false, \
-            penumbra_core_component_stake_v1_RateData_init_zero                \
-    }
+    {_penumbra_core_component_stake_v1_ValidatorState_ValidatorStateEnum_MIN}
+#define penumbra_core_component_stake_v1_ValidatorInfo_init_zero        \
+    {false, penumbra_core_component_stake_v1_Validator_init_zero,       \
+     false, penumbra_core_component_stake_v1_ValidatorStatus_init_zero, \
+     false, penumbra_core_component_stake_v1_RateData_init_zero}
 #define penumbra_core_component_stake_v1_ValidatorDefinition_init_zero                \
     {                                                                                 \
         false, penumbra_core_component_stake_v1_Validator_init_zero, { {NULL}, NULL } \
     }
-#define penumbra_core_component_stake_v1_Delegate_init_zero                                                         \
-    {                                                                                                               \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero                                                                   \
-    }
-#define penumbra_core_component_stake_v1_Undelegate_init_zero                                                       \
-    {                                                                                                               \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_component_sct_v1_Epoch_init_zero            \
-    }
+#define penumbra_core_component_stake_v1_Delegate_init_zero                                               \
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_num_v1_Amount_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero}
+#define penumbra_core_component_stake_v1_Undelegate_init_zero \
+    {false,                                                   \
+     penumbra_core_keys_v1_IdentityKey_init_zero,             \
+     0,                                                       \
+     false,                                                   \
+     penumbra_core_num_v1_Amount_init_zero,                   \
+     false,                                                   \
+     penumbra_core_num_v1_Amount_init_zero,                   \
+     false,                                                   \
+     penumbra_core_component_sct_v1_Epoch_init_zero}
 #define penumbra_core_component_stake_v1_UndelegateClaim_init_zero                              \
     {                                                                                           \
         false, penumbra_core_component_stake_v1_UndelegateClaimBody_init_zero, { {NULL}, NULL } \
     }
-#define penumbra_core_component_stake_v1_UndelegateClaimBody_init_zero                                                    \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_component_stake_v1_Penalty_init_zero, \
-            false, penumbra_core_asset_v1_BalanceCommitment_init_zero, 0                                                  \
-    }
-#define penumbra_core_component_stake_v1_UndelegateClaimPlan_init_zero                                                    \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_component_stake_v1_Penalty_init_zero, \
-            false, penumbra_core_num_v1_Amount_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0               \
-    }
+#define penumbra_core_component_stake_v1_UndelegateClaimBody_init_zero \
+    {                                                                  \
+        false,                                                         \
+        penumbra_core_keys_v1_IdentityKey_init_zero,                   \
+        0,                                                             \
+        false,                                                         \
+        penumbra_core_component_stake_v1_Penalty_init_zero,            \
+        false,                                                         \
+        penumbra_core_asset_v1_BalanceCommitment_init_zero,            \
+        0}
+#define penumbra_core_component_stake_v1_UndelegateClaimPlan_init_zero \
+    {false,                                                            \
+     penumbra_core_keys_v1_IdentityKey_init_zero,                      \
+     0,                                                                \
+     false,                                                            \
+     penumbra_core_component_stake_v1_Penalty_init_zero,               \
+     false,                                                            \
+     penumbra_core_num_v1_Amount_init_zero,                            \
+     {{NULL}, NULL},                                                   \
+     {{NULL}, NULL},                                                   \
+     {{NULL}, NULL},                                                   \
+     0}
 #define penumbra_core_component_stake_v1_DelegationChanges_init_zero \
     {                                                                \
         {{NULL}, NULL}, { {NULL}, NULL }                             \
@@ -726,62 +755,65 @@ extern "C" {
     }
 #define penumbra_core_component_stake_v1_CurrentConsensusKeys_init_zero \
     {                                                                   \
-        { {NULL}, NULL }                                                \
+        {                                                               \
+            {NULL}, NULL                                                \
+        }                                                               \
     }
 #define penumbra_core_component_stake_v1_Penalty_init_zero \
     {                                                      \
-        { {NULL}, NULL }                                   \
+        {                                                  \
+            {NULL}, NULL                                   \
+        }                                                  \
     }
 #define penumbra_core_component_stake_v1_GetValidatorInfoRequest_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero}
 #define penumbra_core_component_stake_v1_GetValidatorInfoResponse_init_zero \
-    { false, penumbra_core_component_stake_v1_ValidatorInfo_init_zero }
-#define penumbra_core_component_stake_v1_ValidatorInfoRequest_init_zero \
-    { 0 }
+    {false, penumbra_core_component_stake_v1_ValidatorInfo_init_zero}
+#define penumbra_core_component_stake_v1_ValidatorInfoRequest_init_zero {0}
 #define penumbra_core_component_stake_v1_ValidatorInfoResponse_init_zero \
-    { false, penumbra_core_component_stake_v1_ValidatorInfo_init_zero }
+    {false, penumbra_core_component_stake_v1_ValidatorInfo_init_zero}
 #define penumbra_core_component_stake_v1_ValidatorStatusRequest_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero}
 #define penumbra_core_component_stake_v1_ValidatorStatusResponse_init_zero \
-    { false, penumbra_core_component_stake_v1_ValidatorStatus_init_zero }
+    {false, penumbra_core_component_stake_v1_ValidatorStatus_init_zero}
 #define penumbra_core_component_stake_v1_ValidatorPenaltyRequest_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, 0 }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, 0}
 #define penumbra_core_component_stake_v1_ValidatorPenaltyResponse_init_zero \
-    { false, penumbra_core_component_stake_v1_Penalty_init_zero }
+    {false, penumbra_core_component_stake_v1_Penalty_init_zero}
 #define penumbra_core_component_stake_v1_CurrentValidatorRateRequest_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero}
 #define penumbra_core_component_stake_v1_CurrentValidatorRateResponse_init_zero \
-    { false, penumbra_core_component_stake_v1_RateData_init_zero }
+    {false, penumbra_core_component_stake_v1_RateData_init_zero}
 #define penumbra_core_component_stake_v1_ValidatorUptimeRequest_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero}
 #define penumbra_core_component_stake_v1_ValidatorUptimeResponse_init_zero \
-    { false, penumbra_core_component_stake_v1_Uptime_init_zero }
+    {false, penumbra_core_component_stake_v1_Uptime_init_zero}
 #define penumbra_core_component_stake_v1_StakeParameters_init_zero \
-    { 0, 0, 0, 0, 0, 0, 0, false, penumbra_core_num_v1_Amount_init_zero, 0 }
+    {0, 0, 0, 0, 0, 0, 0, false, penumbra_core_num_v1_Amount_init_zero, 0}
 #define penumbra_core_component_stake_v1_GenesisContent_init_zero                           \
     {                                                                                       \
         false, penumbra_core_component_stake_v1_StakeParameters_init_zero, { {NULL}, NULL } \
     }
 #define penumbra_core_component_stake_v1_EventTombstoneValidator_init_zero \
-    { 0, 0, false, penumbra_core_keys_v1_IdentityKey_init_zero, {{NULL}, NULL}, 0 }
+    {0, 0, false, penumbra_core_keys_v1_IdentityKey_init_zero, {{NULL}, NULL}, 0}
 #define penumbra_core_component_stake_v1_EventValidatorStateChange_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_component_stake_v1_ValidatorState_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_component_stake_v1_ValidatorState_init_zero}
 #define penumbra_core_component_stake_v1_EventValidatorVotingPowerChange_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_num_v1_Amount_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_num_v1_Amount_init_zero}
 #define penumbra_core_component_stake_v1_EventValidatorBondingStateChange_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_component_stake_v1_BondingState_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_component_stake_v1_BondingState_init_zero}
 #define penumbra_core_component_stake_v1_EventRateDataChange_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_component_stake_v1_RateData_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_component_stake_v1_RateData_init_zero}
 #define penumbra_core_component_stake_v1_EventValidatorDefinitionUpload_init_zero \
-    { false, penumbra_core_component_stake_v1_Validator_init_zero }
+    {false, penumbra_core_component_stake_v1_Validator_init_zero}
 #define penumbra_core_component_stake_v1_EventValidatorMissedBlock_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero}
 #define penumbra_core_component_stake_v1_EventDelegate_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_num_v1_Amount_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_num_v1_Amount_init_zero}
 #define penumbra_core_component_stake_v1_EventUndelegate_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_num_v1_Amount_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_num_v1_Amount_init_zero}
 #define penumbra_core_component_stake_v1_EventSlashingPenaltyApplied_init_zero \
-    { false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_component_stake_v1_Penalty_init_zero }
+    {false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_component_stake_v1_Penalty_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_stake_v1_ZKUndelegateClaimProof_inner_tag 1

@@ -403,73 +403,72 @@ extern "C" {
     penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason
 
 /* Initializer values for message structs */
-#define penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_default       \
-    {                                                                                      \
-        false, penumbra_core_component_shielded_pool_v1_FmdParameters_init_default, false, \
-            penumbra_core_component_shielded_pool_v1_FmdMetaParameters_init_default        \
-    }
+#define penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_default    \
+    {false, penumbra_core_component_shielded_pool_v1_FmdParameters_init_default, false, \
+     penumbra_core_component_shielded_pool_v1_FmdMetaParameters_init_default}
 #define penumbra_core_component_shielded_pool_v1_GenesisContent_init_default                                  \
     {                                                                                                         \
         false, penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_default, { {NULL}, NULL } \
     }
 #define penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation_init_default \
-    { false, penumbra_core_num_v1_Amount_init_default, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_default }
-#define penumbra_core_component_shielded_pool_v1_FmdMetaParameters_init_default \
-    {                                                                           \
-        0, 0, { 0 }                                                             \
-    }
-#define penumbra_core_component_shielded_pool_v1_FmdMetaParameters_AlgorithmSlidingWindow_init_default \
-    { 0, 0 }
+    {false, penumbra_core_num_v1_Amount_init_default, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_default}
+#define penumbra_core_component_shielded_pool_v1_FmdMetaParameters_init_default {0, 0, {0}}
+#define penumbra_core_component_shielded_pool_v1_FmdMetaParameters_AlgorithmSlidingWindow_init_default {0, 0}
 #define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_init_default                   \
     {                                                                                                           \
         0, { penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_FixedState_init_default } \
     }
-#define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_FixedState_init_default \
-    { 0 }
-#define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_SlidingWindowState_init_default \
-    { 0 }
-#define penumbra_core_component_shielded_pool_v1_FmdParameters_init_default \
-    { 0, 0 }
+#define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_FixedState_init_default {0}
+#define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_SlidingWindowState_init_default {0}
+#define penumbra_core_component_shielded_pool_v1_FmdParameters_init_default {0, 0}
 #define penumbra_core_component_shielded_pool_v1_Note_init_default \
-    { false, penumbra_core_asset_v1_Value_init_default, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_default }
-#define penumbra_core_component_shielded_pool_v1_NoteView_init_default               \
-    {                                                                                \
-        false, penumbra_core_asset_v1_ValueView_init_default, {{NULL}, NULL}, false, \
-            penumbra_core_keys_v1_AddressView_init_default                           \
-    }
+    {false, penumbra_core_asset_v1_Value_init_default, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_default}
+#define penumbra_core_component_shielded_pool_v1_NoteView_init_default \
+    {false,                                                            \
+     penumbra_core_asset_v1_ValueView_init_default,                    \
+     {{NULL}, NULL},                                                   \
+     false,                                                            \
+     penumbra_core_keys_v1_AddressView_init_default}
 #define penumbra_core_component_shielded_pool_v1_NoteCiphertext_init_default \
     {                                                                        \
-        { {NULL}, NULL }                                                     \
+        {                                                                    \
+            {NULL}, NULL                                                     \
+        }                                                                    \
     }
-#define penumbra_core_component_shielded_pool_v1_NotePayload_init_default                  \
-    {                                                                                      \
-        false, penumbra_crypto_tct_v1_StateCommitment_init_default, {{NULL}, NULL}, false, \
-            penumbra_core_component_shielded_pool_v1_NoteCiphertext_init_default           \
-    }
+#define penumbra_core_component_shielded_pool_v1_NotePayload_init_default \
+    {false,                                                               \
+     penumbra_crypto_tct_v1_StateCommitment_init_default,                 \
+     {{NULL}, NULL},                                                      \
+     false,                                                               \
+     penumbra_core_component_shielded_pool_v1_NoteCiphertext_init_default}
 #define penumbra_core_component_shielded_pool_v1_ZKOutputProof_init_default \
     {                                                                       \
-        { {NULL}, NULL }                                                    \
+        {                                                                   \
+            {NULL}, NULL                                                    \
+        }                                                                   \
     }
 #define penumbra_core_component_shielded_pool_v1_ZKSpendProof_init_default \
     {                                                                      \
-        { {NULL}, NULL }                                                   \
+        {                                                                  \
+            {NULL}, NULL                                                   \
+        }                                                                  \
     }
 #define penumbra_core_component_shielded_pool_v1_ZKNullifierDerivationProof_init_default \
     {                                                                                    \
-        { {NULL}, NULL }                                                                 \
+        {                                                                                \
+            {NULL}, NULL                                                                 \
+        }                                                                                \
     }
-#define penumbra_core_component_shielded_pool_v1_Spend_init_default                    \
-    {                                                                                  \
-        false, penumbra_core_component_shielded_pool_v1_SpendBody_init_default, false, \
-            penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_default, false,   \
-            penumbra_core_component_shielded_pool_v1_ZKSpendProof_init_default         \
-    }
+#define penumbra_core_component_shielded_pool_v1_Spend_init_default           \
+    {false, penumbra_core_component_shielded_pool_v1_SpendBody_init_default,  \
+     false, penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_default, \
+     false, penumbra_core_component_shielded_pool_v1_ZKSpendProof_init_default}
 #define penumbra_core_component_shielded_pool_v1_EventSpend_init_default \
-    { false, penumbra_core_component_sct_v1_Nullifier_init_default }
+    {false, penumbra_core_component_sct_v1_Nullifier_init_default}
 #define penumbra_core_component_shielded_pool_v1_EventOutput_init_default \
-    { false, penumbra_crypto_tct_v1_StateCommitment_init_default }
+    {false, penumbra_crypto_tct_v1_StateCommitment_init_default}
 #define penumbra_core_component_shielded_pool_v1_EventBroadcastClue_init_default \
-    { false, penumbra_crypto_decaf377_fmd_v1_Clue_init_default, false, penumbra_core_txhash_v1_TransactionId_init_default }
+    {false, penumbra_crypto_decaf377_fmd_v1_Clue_init_default, false, penumbra_core_txhash_v1_TransactionId_init_default}
 #define penumbra_core_component_shielded_pool_v1_SpendBody_init_default                \
     {                                                                                  \
         false, penumbra_core_asset_v1_BalanceCommitment_init_default, false,           \
@@ -482,13 +481,11 @@ extern "C" {
     {                                                                                  \
         0, { penumbra_core_component_shielded_pool_v1_SpendView_Visible_init_default } \
     }
-#define penumbra_core_component_shielded_pool_v1_SpendView_Visible_init_default    \
-    {                                                                              \
-        false, penumbra_core_component_shielded_pool_v1_Spend_init_default, false, \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_default         \
-    }
+#define penumbra_core_component_shielded_pool_v1_SpendView_Visible_init_default \
+    {false, penumbra_core_component_shielded_pool_v1_Spend_init_default, false, \
+     penumbra_core_component_shielded_pool_v1_NoteView_init_default}
 #define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_init_default \
-    { false, penumbra_core_component_shielded_pool_v1_Spend_init_default }
+    {false, penumbra_core_component_shielded_pool_v1_Spend_init_default}
 #define penumbra_core_component_shielded_pool_v1_SpendPlan_init_default                                       \
     {                                                                                                         \
         false, penumbra_core_component_shielded_pool_v1_Note_init_default, 0, {{NULL}, NULL}, {{NULL}, NULL}, \
@@ -496,11 +493,9 @@ extern "C" {
             {NULL}, NULL                                                                                      \
         }                                                                                                     \
     }
-#define penumbra_core_component_shielded_pool_v1_Output_init_default                    \
-    {                                                                                   \
-        false, penumbra_core_component_shielded_pool_v1_OutputBody_init_default, false, \
-            penumbra_core_component_shielded_pool_v1_ZKOutputProof_init_default         \
-    }
+#define penumbra_core_component_shielded_pool_v1_Output_init_default                 \
+    {false, penumbra_core_component_shielded_pool_v1_OutputBody_init_default, false, \
+     penumbra_core_component_shielded_pool_v1_ZKOutputProof_init_default}
 #define penumbra_core_component_shielded_pool_v1_OutputBody_init_default                 \
     {                                                                                    \
         false, penumbra_core_component_shielded_pool_v1_NotePayload_init_default, false, \
@@ -512,14 +507,12 @@ extern "C" {
     {                                                                                   \
         0, { penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_default } \
     }
-#define penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_default    \
-    {                                                                               \
-        false, penumbra_core_component_shielded_pool_v1_Output_init_default, false, \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_default, false,  \
-            penumbra_core_keys_v1_PayloadKey_init_default                           \
-    }
+#define penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_default \
+    {false, penumbra_core_component_shielded_pool_v1_Output_init_default,        \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_default,      \
+     false, penumbra_core_keys_v1_PayloadKey_init_default}
 #define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_init_default \
-    { false, penumbra_core_component_shielded_pool_v1_Output_init_default }
+    {false, penumbra_core_component_shielded_pool_v1_Output_init_default}
 #define penumbra_core_component_shielded_pool_v1_OutputPlan_init_default                                     \
     {                                                                                                        \
         false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_keys_v1_Address_init_default, \
@@ -528,99 +521,101 @@ extern "C" {
         }                                                                                                    \
     }
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdRequest_init_default \
-    { false, penumbra_core_asset_v1_AssetId_init_default }
+    {false, penumbra_core_asset_v1_AssetId_init_default}
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdResponse_init_default \
-    { false, penumbra_core_asset_v1_Metadata_init_default }
+    {false, penumbra_core_asset_v1_Metadata_init_default}
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest_init_default \
     {                                                                                   \
-        { {NULL}, NULL }                                                                \
+        {                                                                               \
+            {NULL}, NULL                                                                \
+        }                                                                               \
     }
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_init_default \
-    { false, penumbra_core_asset_v1_Metadata_init_default }
-#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default \
-    { {{NULL}, NULL}, 0 }
-#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_init_default             \
-    {                                                                                                        \
-        false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_keys_v1_Address_init_default, \
-            {{NULL}, NULL}, false,                                                                           \
-            penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default        \
-    }
-#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_init_default                            \
-    {                                                                                                                     \
-        false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_keys_v1_Address_init_default,              \
-            {{NULL}, NULL}, _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_MIN, false, \
-            penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default                     \
-    }
-#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_init_default       \
-    {                                                                                                 \
-        false, penumbra_core_asset_v1_Value_init_default, {{NULL}, NULL}, false,                      \
-            penumbra_core_keys_v1_Address_init_default, false,                                        \
-            penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default \
-    }
-#define penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_zero       \
-    {                                                                                   \
-        false, penumbra_core_component_shielded_pool_v1_FmdParameters_init_zero, false, \
-            penumbra_core_component_shielded_pool_v1_FmdMetaParameters_init_zero        \
-    }
+    {false, penumbra_core_asset_v1_Metadata_init_default}
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default {{{NULL}, NULL}, 0}
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_init_default \
+    {false,                                                                                      \
+     penumbra_core_asset_v1_Value_init_default,                                                  \
+     false,                                                                                      \
+     penumbra_core_keys_v1_Address_init_default,                                                 \
+     {{NULL}, NULL},                                                                             \
+     false,                                                                                      \
+     penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default}
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_init_default              \
+    {false,          penumbra_core_asset_v1_Value_init_default,                                             \
+     false,          penumbra_core_keys_v1_Address_init_default,                                            \
+     {{NULL}, NULL}, _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_MIN, \
+     false,          penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default}
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_init_default \
+    {false,                                                                                     \
+     penumbra_core_asset_v1_Value_init_default,                                                 \
+     {{NULL}, NULL},                                                                            \
+     false,                                                                                     \
+     penumbra_core_keys_v1_Address_init_default,                                                \
+     false,                                                                                     \
+     penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_default}
+#define penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_zero    \
+    {false, penumbra_core_component_shielded_pool_v1_FmdParameters_init_zero, false, \
+     penumbra_core_component_shielded_pool_v1_FmdMetaParameters_init_zero}
 #define penumbra_core_component_shielded_pool_v1_GenesisContent_init_zero                                  \
     {                                                                                                      \
         false, penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_init_zero, { {NULL}, NULL } \
     }
 #define penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation_init_zero \
-    { false, penumbra_core_num_v1_Amount_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_zero }
-#define penumbra_core_component_shielded_pool_v1_FmdMetaParameters_init_zero \
-    {                                                                        \
-        0, 0, { 0 }                                                          \
-    }
-#define penumbra_core_component_shielded_pool_v1_FmdMetaParameters_AlgorithmSlidingWindow_init_zero \
-    { 0, 0 }
+    {false, penumbra_core_num_v1_Amount_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_zero}
+#define penumbra_core_component_shielded_pool_v1_FmdMetaParameters_init_zero {0, 0, {0}}
+#define penumbra_core_component_shielded_pool_v1_FmdMetaParameters_AlgorithmSlidingWindow_init_zero {0, 0}
 #define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_init_zero                   \
     {                                                                                                        \
         0, { penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_FixedState_init_zero } \
     }
-#define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_FixedState_init_zero \
-    { 0 }
-#define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_SlidingWindowState_init_zero \
-    { 0 }
-#define penumbra_core_component_shielded_pool_v1_FmdParameters_init_zero \
-    { 0, 0 }
+#define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_FixedState_init_zero {0}
+#define penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_SlidingWindowState_init_zero {0}
+#define penumbra_core_component_shielded_pool_v1_FmdParameters_init_zero {0, 0}
 #define penumbra_core_component_shielded_pool_v1_Note_init_zero \
-    { false, penumbra_core_asset_v1_Value_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_zero }
+    {false, penumbra_core_asset_v1_Value_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_zero}
 #define penumbra_core_component_shielded_pool_v1_NoteView_init_zero \
-    { false, penumbra_core_asset_v1_ValueView_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_AddressView_init_zero }
+    {false, penumbra_core_asset_v1_ValueView_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_AddressView_init_zero}
 #define penumbra_core_component_shielded_pool_v1_NoteCiphertext_init_zero \
     {                                                                     \
-        { {NULL}, NULL }                                                  \
+        {                                                                 \
+            {NULL}, NULL                                                  \
+        }                                                                 \
     }
-#define penumbra_core_component_shielded_pool_v1_NotePayload_init_zero                  \
-    {                                                                                   \
-        false, penumbra_crypto_tct_v1_StateCommitment_init_zero, {{NULL}, NULL}, false, \
-            penumbra_core_component_shielded_pool_v1_NoteCiphertext_init_zero           \
-    }
+#define penumbra_core_component_shielded_pool_v1_NotePayload_init_zero \
+    {false,                                                            \
+     penumbra_crypto_tct_v1_StateCommitment_init_zero,                 \
+     {{NULL}, NULL},                                                   \
+     false,                                                            \
+     penumbra_core_component_shielded_pool_v1_NoteCiphertext_init_zero}
 #define penumbra_core_component_shielded_pool_v1_ZKOutputProof_init_zero \
     {                                                                    \
-        { {NULL}, NULL }                                                 \
+        {                                                                \
+            {NULL}, NULL                                                 \
+        }                                                                \
     }
 #define penumbra_core_component_shielded_pool_v1_ZKSpendProof_init_zero \
     {                                                                   \
-        { {NULL}, NULL }                                                \
+        {                                                               \
+            {NULL}, NULL                                                \
+        }                                                               \
     }
 #define penumbra_core_component_shielded_pool_v1_ZKNullifierDerivationProof_init_zero \
     {                                                                                 \
-        { {NULL}, NULL }                                                              \
+        {                                                                             \
+            {NULL}, NULL                                                              \
+        }                                                                             \
     }
-#define penumbra_core_component_shielded_pool_v1_Spend_init_zero                    \
-    {                                                                               \
-        false, penumbra_core_component_shielded_pool_v1_SpendBody_init_zero, false, \
-            penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero, false,   \
-            penumbra_core_component_shielded_pool_v1_ZKSpendProof_init_zero         \
-    }
+#define penumbra_core_component_shielded_pool_v1_Spend_init_zero           \
+    {false, penumbra_core_component_shielded_pool_v1_SpendBody_init_zero,  \
+     false, penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero, \
+     false, penumbra_core_component_shielded_pool_v1_ZKSpendProof_init_zero}
 #define penumbra_core_component_shielded_pool_v1_EventSpend_init_zero \
-    { false, penumbra_core_component_sct_v1_Nullifier_init_zero }
+    {false, penumbra_core_component_sct_v1_Nullifier_init_zero}
 #define penumbra_core_component_shielded_pool_v1_EventOutput_init_zero \
-    { false, penumbra_crypto_tct_v1_StateCommitment_init_zero }
+    {false, penumbra_crypto_tct_v1_StateCommitment_init_zero}
 #define penumbra_core_component_shielded_pool_v1_EventBroadcastClue_init_zero \
-    { false, penumbra_crypto_decaf377_fmd_v1_Clue_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero }
+    {false, penumbra_crypto_decaf377_fmd_v1_Clue_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero}
 #define penumbra_core_component_shielded_pool_v1_SpendBody_init_zero                \
     {                                                                               \
         false, penumbra_core_asset_v1_BalanceCommitment_init_zero, false,           \
@@ -633,13 +628,11 @@ extern "C" {
     {                                                                               \
         0, { penumbra_core_component_shielded_pool_v1_SpendView_Visible_init_zero } \
     }
-#define penumbra_core_component_shielded_pool_v1_SpendView_Visible_init_zero    \
-    {                                                                           \
-        false, penumbra_core_component_shielded_pool_v1_Spend_init_zero, false, \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero         \
-    }
+#define penumbra_core_component_shielded_pool_v1_SpendView_Visible_init_zero \
+    {false, penumbra_core_component_shielded_pool_v1_Spend_init_zero, false, \
+     penumbra_core_component_shielded_pool_v1_NoteView_init_zero}
 #define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_init_zero \
-    { false, penumbra_core_component_shielded_pool_v1_Spend_init_zero }
+    {false, penumbra_core_component_shielded_pool_v1_Spend_init_zero}
 #define penumbra_core_component_shielded_pool_v1_SpendPlan_init_zero                                                       \
     {                                                                                                                      \
         false, penumbra_core_component_shielded_pool_v1_Note_init_zero, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
@@ -647,11 +640,9 @@ extern "C" {
             {NULL}, NULL                                                                                                   \
         }                                                                                                                  \
     }
-#define penumbra_core_component_shielded_pool_v1_Output_init_zero                    \
-    {                                                                                \
-        false, penumbra_core_component_shielded_pool_v1_OutputBody_init_zero, false, \
-            penumbra_core_component_shielded_pool_v1_ZKOutputProof_init_zero         \
-    }
+#define penumbra_core_component_shielded_pool_v1_Output_init_zero                 \
+    {false, penumbra_core_component_shielded_pool_v1_OutputBody_init_zero, false, \
+     penumbra_core_component_shielded_pool_v1_ZKOutputProof_init_zero}
 #define penumbra_core_component_shielded_pool_v1_OutputBody_init_zero                 \
     {                                                                                 \
         false, penumbra_core_component_shielded_pool_v1_NotePayload_init_zero, false, \
@@ -663,13 +654,12 @@ extern "C" {
     {                                                                                \
         0, { penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_zero } \
     }
-#define penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_zero                                              \
-    {                                                                                                                      \
-        false, penumbra_core_component_shielded_pool_v1_Output_init_zero, false,                                           \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false, penumbra_core_keys_v1_PayloadKey_init_zero \
-    }
+#define penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_zero \
+    {false, penumbra_core_component_shielded_pool_v1_Output_init_zero,        \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_zero,      \
+     false, penumbra_core_keys_v1_PayloadKey_init_zero}
 #define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_init_zero \
-    { false, penumbra_core_component_shielded_pool_v1_Output_init_zero }
+    {false, penumbra_core_component_shielded_pool_v1_Output_init_zero}
 #define penumbra_core_component_shielded_pool_v1_OutputPlan_init_zero                                                  \
     {                                                                                                                  \
         false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_keys_v1_Address_init_zero, {{NULL}, NULL}, \
@@ -678,33 +668,39 @@ extern "C" {
         }                                                                                                              \
     }
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdRequest_init_zero \
-    { false, penumbra_core_asset_v1_AssetId_init_zero }
+    {false, penumbra_core_asset_v1_AssetId_init_zero}
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdResponse_init_zero \
-    { false, penumbra_core_asset_v1_Metadata_init_zero }
+    {false, penumbra_core_asset_v1_Metadata_init_zero}
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest_init_zero \
     {                                                                                \
-        { {NULL}, NULL }                                                             \
+        {                                                                            \
+            {NULL}, NULL                                                             \
+        }                                                                            \
     }
 #define penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_init_zero \
-    { false, penumbra_core_asset_v1_Metadata_init_zero }
-#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero \
-    { {{NULL}, NULL}, 0 }
-#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_init_zero                          \
-    {                                                                                                                  \
-        false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_keys_v1_Address_init_zero, {{NULL}, NULL}, \
-            false, penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero              \
-    }
-#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_init_zero                            \
-    {                                                                                                                  \
-        false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_keys_v1_Address_init_zero, {{NULL}, NULL}, \
-            _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_MIN, false,              \
-            penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero                     \
-    }
-#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_init_zero                           \
-    {                                                                                                                  \
-        false, penumbra_core_asset_v1_Value_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_zero, \
-            false, penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero              \
-    }
+    {false, penumbra_core_asset_v1_Metadata_init_zero}
+#define penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero {{{NULL}, NULL}, 0}
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_init_zero \
+    {false,                                                                                   \
+     penumbra_core_asset_v1_Value_init_zero,                                                  \
+     false,                                                                                   \
+     penumbra_core_keys_v1_Address_init_zero,                                                 \
+     {{NULL}, NULL},                                                                          \
+     false,                                                                                   \
+     penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero}
+#define penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_init_zero                 \
+    {false,          penumbra_core_asset_v1_Value_init_zero,                                                \
+     false,          penumbra_core_keys_v1_Address_init_zero,                                               \
+     {{NULL}, NULL}, _penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_Reason_MIN, \
+     false,          penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero}
+#define penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_init_zero \
+    {false,                                                                                  \
+     penumbra_core_asset_v1_Value_init_zero,                                                 \
+     {{NULL}, NULL},                                                                         \
+     false,                                                                                  \
+     penumbra_core_keys_v1_Address_init_zero,                                                \
+     false,                                                                                  \
+     penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation_amount_tag 1

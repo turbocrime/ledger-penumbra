@@ -201,7 +201,9 @@ extern "C" {
 /* Initializer values for message structs */
 #define penumbra_core_asset_v1_BalanceCommitment_init_default \
     {                                                         \
-        { {NULL}, NULL }                                      \
+        {                                                     \
+            {NULL}, NULL                                      \
+        }                                                     \
     }
 #define penumbra_core_asset_v1_AssetId_init_default      \
     {                                                    \
@@ -209,7 +211,9 @@ extern "C" {
     }
 #define penumbra_core_asset_v1_Denom_init_default \
     {                                             \
-        { {NULL}, NULL }                          \
+        {                                         \
+            {NULL}, NULL                          \
+        }                                         \
     }
 #define penumbra_core_asset_v1_Metadata_init_default                                                           \
     {                                                                                                          \
@@ -223,35 +227,35 @@ extern "C" {
         {{NULL}, NULL}, 0, { {NULL}, NULL }           \
     }
 #define penumbra_core_asset_v1_Value_init_default \
-    { false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_AssetId_init_default }
+    {false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_AssetId_init_default}
 #define penumbra_core_asset_v1_Balance_init_default \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
-#define penumbra_core_asset_v1_Balance_SignedValue_init_default \
-    { false, penumbra_core_asset_v1_Value_init_default, 0 }
+#define penumbra_core_asset_v1_Balance_SignedValue_init_default {false, penumbra_core_asset_v1_Value_init_default, 0}
 #define penumbra_core_asset_v1_ValueView_init_default                     \
     {                                                                     \
         0, { penumbra_core_asset_v1_ValueView_KnownAssetId_init_default } \
     }
-#define penumbra_core_asset_v1_ValueView_KnownAssetId_init_default                                            \
-    {                                                                                                         \
-        false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_Metadata_init_default, \
-            {{NULL}, NULL}, false, google_protobuf_Any_init_default                                           \
-    }
+#define penumbra_core_asset_v1_ValueView_KnownAssetId_init_default                                                         \
+    {false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_Metadata_init_default, {{NULL}, NULL}, \
+     false, google_protobuf_Any_init_default}
 #define penumbra_core_asset_v1_ValueView_UnknownAssetId_init_default \
-    { false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_AssetId_init_default }
+    {false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_AssetId_init_default}
 #define penumbra_core_asset_v1_AssetImage_init_default \
-    { {{NULL}, NULL}, {{NULL}, NULL}, false, penumbra_core_asset_v1_AssetImage_Theme_init_default }
-#define penumbra_core_asset_v1_AssetImage_Theme_init_default \
-    { {{NULL}, NULL}, 0, 0 }
+    {{{NULL}, NULL}, {{NULL}, NULL}, false, penumbra_core_asset_v1_AssetImage_Theme_init_default}
+#define penumbra_core_asset_v1_AssetImage_Theme_init_default {{{NULL}, NULL}, 0, 0}
 #define penumbra_core_asset_v1_EstimatedPrice_init_default \
-    { false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_asset_v1_AssetId_init_default, 0, 0 }
+    {false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_asset_v1_AssetId_init_default, 0, 0}
 #define penumbra_core_asset_v1_EquivalentValue_init_default \
-    { false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_Metadata_init_default, 0 }
+    {false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_Metadata_init_default, 0}
 #define penumbra_core_asset_v1_BalanceCommitment_init_zero \
     {                                                      \
-        { {NULL}, NULL }                                   \
+        {                                                  \
+            {NULL}, NULL                                   \
+        }                                                  \
     }
 #define penumbra_core_asset_v1_AssetId_init_zero         \
     {                                                    \
@@ -259,7 +263,9 @@ extern "C" {
     }
 #define penumbra_core_asset_v1_Denom_init_zero \
     {                                          \
-        { {NULL}, NULL }                       \
+        {                                      \
+            {NULL}, NULL                       \
+        }                                      \
     }
 #define penumbra_core_asset_v1_Metadata_init_zero                                                              \
     {                                                                                                          \
@@ -273,32 +279,30 @@ extern "C" {
         {{NULL}, NULL}, 0, { {NULL}, NULL }        \
     }
 #define penumbra_core_asset_v1_Value_init_zero \
-    { false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero }
+    {false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero}
 #define penumbra_core_asset_v1_Balance_init_zero \
     {                                            \
-        { {NULL}, NULL }                         \
+        {                                        \
+            {NULL}, NULL                         \
+        }                                        \
     }
-#define penumbra_core_asset_v1_Balance_SignedValue_init_zero \
-    { false, penumbra_core_asset_v1_Value_init_zero, 0 }
+#define penumbra_core_asset_v1_Balance_SignedValue_init_zero {false, penumbra_core_asset_v1_Value_init_zero, 0}
 #define penumbra_core_asset_v1_ValueView_init_zero                     \
     {                                                                  \
         0, { penumbra_core_asset_v1_ValueView_KnownAssetId_init_zero } \
     }
-#define penumbra_core_asset_v1_ValueView_KnownAssetId_init_zero                                                         \
-    {                                                                                                                   \
-        false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero, {{NULL}, NULL}, \
-            false, google_protobuf_Any_init_zero                                                                        \
-    }
+#define penumbra_core_asset_v1_ValueView_KnownAssetId_init_zero                                                      \
+    {false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero, {{NULL}, NULL}, \
+     false, google_protobuf_Any_init_zero}
 #define penumbra_core_asset_v1_ValueView_UnknownAssetId_init_zero \
-    { false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero }
+    {false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero}
 #define penumbra_core_asset_v1_AssetImage_init_zero \
-    { {{NULL}, NULL}, {{NULL}, NULL}, false, penumbra_core_asset_v1_AssetImage_Theme_init_zero }
-#define penumbra_core_asset_v1_AssetImage_Theme_init_zero \
-    { {{NULL}, NULL}, 0, 0 }
+    {{{NULL}, NULL}, {{NULL}, NULL}, false, penumbra_core_asset_v1_AssetImage_Theme_init_zero}
+#define penumbra_core_asset_v1_AssetImage_Theme_init_zero {{{NULL}, NULL}, 0, 0}
 #define penumbra_core_asset_v1_EstimatedPrice_init_zero \
-    { false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero, 0, 0 }
+    {false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero, 0, 0}
 #define penumbra_core_asset_v1_EquivalentValue_init_zero \
-    { false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero, 0 }
+    {false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_asset_v1_BalanceCommitment_inner_tag 1

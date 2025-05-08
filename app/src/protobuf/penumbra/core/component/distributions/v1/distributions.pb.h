@@ -27,14 +27,12 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define penumbra_core_component_distributions_v1_DistributionsParameters_init_default \
-    { 0 }
+#define penumbra_core_component_distributions_v1_DistributionsParameters_init_default {0}
 #define penumbra_core_component_distributions_v1_GenesisContent_init_default \
-    { false, penumbra_core_component_distributions_v1_DistributionsParameters_init_default }
-#define penumbra_core_component_distributions_v1_DistributionsParameters_init_zero \
-    { 0 }
+    {false, penumbra_core_component_distributions_v1_DistributionsParameters_init_default}
+#define penumbra_core_component_distributions_v1_DistributionsParameters_init_zero {0}
 #define penumbra_core_component_distributions_v1_GenesisContent_init_zero \
-    { false, penumbra_core_component_distributions_v1_DistributionsParameters_init_zero }
+    {false, penumbra_core_component_distributions_v1_DistributionsParameters_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_distributions_v1_DistributionsParameters_staking_issuance_per_block_tag 1

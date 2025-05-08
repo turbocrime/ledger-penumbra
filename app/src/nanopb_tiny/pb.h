@@ -245,9 +245,9 @@ typedef uint_least8_t pb_type_t;
 #define PB_ATYPE_CALLBACK 0x40U
 #define PB_ATYPE_MASK 0xC0U
 
-#define PB_ATYPE(x) ((x)&PB_ATYPE_MASK)
-#define PB_HTYPE(x) ((x)&PB_HTYPE_MASK)
-#define PB_LTYPE(x) ((x)&PB_LTYPE_MASK)
+#define PB_ATYPE(x) ((x) & PB_ATYPE_MASK)
+#define PB_HTYPE(x) ((x) & PB_HTYPE_MASK)
+#define PB_LTYPE(x) ((x) & PB_LTYPE_MASK)
 #define PB_LTYPE_IS_SUBMSG(x) (PB_LTYPE(x) == PB_LTYPE_SUBMESSAGE || PB_LTYPE(x) == PB_LTYPE_SUBMSG_W_CB)
 
 /* Data type used for storing sizes of struct fields
@@ -260,7 +260,7 @@ typedef int32_t pb_ssize_t;
 typedef uint_least16_t pb_size_t;
 typedef int_least16_t pb_ssize_t;
 #endif
-#define PB_SIZE_MAX ((pb_size_t)-1)
+#define PB_SIZE_MAX ((pb_size_t) - 1)
 
 /* Data type for storing encoded data and other byte streams.
  * This typedef exists to support platforms where uint8_t does not exist.
@@ -428,8 +428,7 @@ struct pb_extension_s {
     bool found;
 };
 
-#define pb_extension_init_zero \
-    { NULL, NULL, NULL, false }
+#define pb_extension_init_zero {NULL, NULL, NULL, false}
 
 /* Memory allocation functions to use. You can define pb_realloc and
  * pb_free to custom functions if you want. */
@@ -706,17 +705,17 @@ struct pb_extension_s {
  *          [32-bit reserved]
  */
 
-#define PB_FIELDINFO_1(tag, type, data_offset, data_size, size_offset, array_size)        \
-    (0 | (((tag) << 2) & 0xFF) | ((type) << 8) | (((uint32_t)(data_offset)&0xFF) << 16) | \
-     (((uint32_t)(size_offset)&0x0F) << 24) | (((uint32_t)(data_size)&0x0F) << 28)),
+#define PB_FIELDINFO_1(tag, type, data_offset, data_size, size_offset, array_size)          \
+    (0 | (((tag) << 2) & 0xFF) | ((type) << 8) | (((uint32_t)(data_offset) & 0xFF) << 16) | \
+     (((uint32_t)(size_offset) & 0x0F) << 24) | (((uint32_t)(data_size) & 0x0F) << 28)),
 
-#define PB_FIELDINFO_2(tag, type, data_offset, data_size, size_offset, array_size)        \
-    (1 | (((tag) << 2) & 0xFF) | ((type) << 8) | (((uint32_t)(array_size)&0xFFF) << 16) | \
-     (((uint32_t)(size_offset)&0x0F) << 28)),                                             \
-        (((uint32_t)(data_offset)&0xFFFF) | (((uint32_t)(data_size)&0xFFF) << 16) | (((uint32_t)(tag)&0x3c0) << 22)),
+#define PB_FIELDINFO_2(tag, type, data_offset, data_size, size_offset, array_size)          \
+    (1 | (((tag) << 2) & 0xFF) | ((type) << 8) | (((uint32_t)(array_size) & 0xFFF) << 16) | \
+     (((uint32_t)(size_offset) & 0x0F) << 28)),                                             \
+        (((uint32_t)(data_offset) & 0xFFFF) | (((uint32_t)(data_size) & 0xFFF) << 16) | (((uint32_t)(tag) & 0x3c0) << 22)),
 
-#define PB_FIELDINFO_4(tag, type, data_offset, data_size, size_offset, array_size)         \
-    (2 | (((tag) << 2) & 0xFF) | ((type) << 8) | (((uint32_t)(array_size)&0xFFFF) << 16)), \
+#define PB_FIELDINFO_4(tag, type, data_offset, data_size, size_offset, array_size)           \
+    (2 | (((tag) << 2) & 0xFF) | ((type) << 8) | (((uint32_t)(array_size) & 0xFFFF) << 16)), \
         ((uint32_t)(int_least8_t)(size_offset) | (((uint32_t)(tag) << 2) & 0xFFFFFF00)), (data_offset), (data_size),
 
 #define PB_FIELDINFO_8(tag, type, data_offset, data_size, size_offset, array_size)                                   \

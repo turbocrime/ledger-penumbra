@@ -937,35 +937,34 @@ extern "C" {
 /* Initializer values for message structs */
 #define penumbra_core_component_dex_v1_ZKSwapProof_init_default \
     {                                                           \
-        { {NULL}, NULL }                                        \
+        {                                                       \
+            {NULL}, NULL                                        \
+        }                                                       \
     }
 #define penumbra_core_component_dex_v1_ZKSwapClaimProof_init_default \
     {                                                                \
-        { {NULL}, NULL }                                             \
+        {                                                            \
+            {NULL}, NULL                                             \
+        }                                                            \
     }
-#define penumbra_core_component_dex_v1_Swap_init_default                       \
-    {                                                                          \
-        false, penumbra_core_component_dex_v1_ZKSwapProof_init_default, false, \
-            penumbra_core_component_dex_v1_SwapBody_init_default               \
-    }
-#define penumbra_core_component_dex_v1_SwapClaim_init_default                       \
-    {                                                                               \
-        false, penumbra_core_component_dex_v1_ZKSwapClaimProof_init_default, false, \
-            penumbra_core_component_dex_v1_SwapClaimBody_init_default, 0            \
-    }
-#define penumbra_core_component_dex_v1_SwapClaimBody_init_default                                                        \
-    {                                                                                                                    \
-        false, penumbra_core_component_sct_v1_Nullifier_init_default, false,                                             \
-            penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_crypto_tct_v1_StateCommitment_init_default, \
-            false, penumbra_crypto_tct_v1_StateCommitment_init_default, false,                                           \
-            penumbra_core_component_dex_v1_BatchSwapOutputData_init_default                                              \
-    }
-#define penumbra_core_component_dex_v1_SwapBody_init_default                                                               \
-    {                                                                                                                      \
-        false, penumbra_core_component_dex_v1_TradingPair_init_default, false, penumbra_core_num_v1_Amount_init_default,   \
-            false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_BalanceCommitment_init_default, \
-            false, penumbra_core_component_dex_v1_SwapPayload_init_default                                                 \
-    }
+#define penumbra_core_component_dex_v1_Swap_init_default                    \
+    {false, penumbra_core_component_dex_v1_ZKSwapProof_init_default, false, \
+     penumbra_core_component_dex_v1_SwapBody_init_default}
+#define penumbra_core_component_dex_v1_SwapClaim_init_default                    \
+    {false, penumbra_core_component_dex_v1_ZKSwapClaimProof_init_default, false, \
+     penumbra_core_component_dex_v1_SwapClaimBody_init_default, 0}
+#define penumbra_core_component_dex_v1_SwapClaimBody_init_default  \
+    {false, penumbra_core_component_sct_v1_Nullifier_init_default, \
+     false, penumbra_core_component_fee_v1_Fee_init_default,       \
+     false, penumbra_crypto_tct_v1_StateCommitment_init_default,   \
+     false, penumbra_crypto_tct_v1_StateCommitment_init_default,   \
+     false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_default}
+#define penumbra_core_component_dex_v1_SwapBody_init_default         \
+    {false, penumbra_core_component_dex_v1_TradingPair_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default,                \
+     false, penumbra_core_num_v1_Amount_init_default,                \
+     false, penumbra_core_asset_v1_BalanceCommitment_init_default,   \
+     false, penumbra_core_component_dex_v1_SwapPayload_init_default}
 #define penumbra_core_component_dex_v1_SwapPayload_init_default                      \
     {                                                                                \
         false, penumbra_crypto_tct_v1_StateCommitment_init_default, { {NULL}, NULL } \
@@ -993,92 +992,97 @@ extern "C" {
     {                                                                       \
         0, { penumbra_core_component_dex_v1_SwapView_Visible_init_default } \
     }
-#define penumbra_core_component_dex_v1_SwapView_Visible_init_default                                          \
-    {                                                                                                         \
-        false, penumbra_core_component_dex_v1_Swap_init_default, false,                                       \
-            penumbra_core_component_dex_v1_SwapPlaintext_init_default, false,                                 \
-            penumbra_core_txhash_v1_TransactionId_init_default, false,                                        \
-            penumbra_core_component_dex_v1_BatchSwapOutputData_init_default, false,                           \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_default, false,                            \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_default, false,                            \
-            penumbra_core_asset_v1_Metadata_init_default, false, penumbra_core_asset_v1_Metadata_init_default \
-    }
-#define penumbra_core_component_dex_v1_SwapView_Opaque_init_default                                                     \
-    {                                                                                                                   \
-        false, penumbra_core_component_dex_v1_Swap_init_default, false,                                                 \
-            penumbra_core_component_dex_v1_BatchSwapOutputData_init_default, false,                                     \
-            penumbra_core_asset_v1_ValueView_init_default, false, penumbra_core_asset_v1_ValueView_init_default, false, \
-            penumbra_core_asset_v1_Metadata_init_default, false, penumbra_core_asset_v1_Metadata_init_default           \
-    }
+#define penumbra_core_component_dex_v1_SwapView_Visible_init_default         \
+    {false, penumbra_core_component_dex_v1_Swap_init_default,                \
+     false, penumbra_core_component_dex_v1_SwapPlaintext_init_default,       \
+     false, penumbra_core_txhash_v1_TransactionId_init_default,              \
+     false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_default, \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_default,  \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_default,  \
+     false, penumbra_core_asset_v1_Metadata_init_default,                    \
+     false, penumbra_core_asset_v1_Metadata_init_default}
+#define penumbra_core_component_dex_v1_SwapView_Opaque_init_default          \
+    {false, penumbra_core_component_dex_v1_Swap_init_default,                \
+     false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_default, \
+     false, penumbra_core_asset_v1_ValueView_init_default,                   \
+     false, penumbra_core_asset_v1_ValueView_init_default,                   \
+     false, penumbra_core_asset_v1_Metadata_init_default,                    \
+     false, penumbra_core_asset_v1_Metadata_init_default}
 #define penumbra_core_component_dex_v1_SwapClaimView_init_default                \
     {                                                                            \
         0, { penumbra_core_component_dex_v1_SwapClaimView_Visible_init_default } \
     }
-#define penumbra_core_component_dex_v1_SwapClaimView_Visible_init_default          \
-    {                                                                              \
-        false, penumbra_core_component_dex_v1_SwapClaim_init_default, false,       \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_default, false, \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_default, false, \
-            penumbra_core_txhash_v1_TransactionId_init_default                     \
-    }
+#define penumbra_core_component_dex_v1_SwapClaimView_Visible_init_default   \
+    {false, penumbra_core_component_dex_v1_SwapClaim_init_default,          \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_default, \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_default, \
+     false, penumbra_core_txhash_v1_TransactionId_init_default}
 #define penumbra_core_component_dex_v1_SwapClaimView_Opaque_init_default \
-    { false, penumbra_core_component_dex_v1_SwapClaim_init_default }
+    {false, penumbra_core_component_dex_v1_SwapClaim_init_default}
 #define penumbra_core_component_dex_v1_TradingPair_init_default \
-    { false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_asset_v1_AssetId_init_default }
+    {false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_asset_v1_AssetId_init_default}
 #define penumbra_core_component_dex_v1_DirectedTradingPair_init_default \
-    { false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_asset_v1_AssetId_init_default }
-#define penumbra_core_component_dex_v1_BatchSwapOutputData_init_default                                          \
-    {                                                                                                            \
-        false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default, false,    \
-            penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default, 0, false, \
-            penumbra_core_component_dex_v1_TradingPair_init_default, 0, 0                                        \
-    }
-#define penumbra_core_component_dex_v1_TradingFunction_init_default                    \
-    {                                                                                  \
-        false, penumbra_core_component_dex_v1_BareTradingFunction_init_default, false, \
-            penumbra_core_component_dex_v1_TradingPair_init_default                    \
-    }
+    {false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_asset_v1_AssetId_init_default}
+#define penumbra_core_component_dex_v1_BatchSwapOutputData_init_default \
+    {false,                                                             \
+     penumbra_core_num_v1_Amount_init_default,                          \
+     false,                                                             \
+     penumbra_core_num_v1_Amount_init_default,                          \
+     false,                                                             \
+     penumbra_core_num_v1_Amount_init_default,                          \
+     false,                                                             \
+     penumbra_core_num_v1_Amount_init_default,                          \
+     false,                                                             \
+     penumbra_core_num_v1_Amount_init_default,                          \
+     false,                                                             \
+     penumbra_core_num_v1_Amount_init_default,                          \
+     0,                                                                 \
+     false,                                                             \
+     penumbra_core_component_dex_v1_TradingPair_init_default,           \
+     0,                                                                 \
+     0}
+#define penumbra_core_component_dex_v1_TradingFunction_init_default                 \
+    {false, penumbra_core_component_dex_v1_BareTradingFunction_init_default, false, \
+     penumbra_core_component_dex_v1_TradingPair_init_default}
 #define penumbra_core_component_dex_v1_BareTradingFunction_init_default \
-    { 0, false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default }
+    {0, false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default}
 #define penumbra_core_component_dex_v1_Reserves_init_default \
-    { false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default }
-#define penumbra_core_component_dex_v1_Position_init_default                                       \
-    {                                                                                              \
-        false, penumbra_core_component_dex_v1_TradingFunction_init_default, {{NULL}, NULL}, false, \
-            penumbra_core_component_dex_v1_PositionState_init_default, false,                      \
-            penumbra_core_component_dex_v1_Reserves_init_default, 0                                \
-    }
+    {false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_dex_v1_Position_init_default      \
+    {false,                                                       \
+     penumbra_core_component_dex_v1_TradingFunction_init_default, \
+     {{NULL}, NULL},                                              \
+     false,                                                       \
+     penumbra_core_component_dex_v1_PositionState_init_default,   \
+     false,                                                       \
+     penumbra_core_component_dex_v1_Reserves_init_default,        \
+     0}
 #define penumbra_core_component_dex_v1_PositionId_init_default \
     {                                                          \
         {{NULL}, NULL}, { {NULL}, NULL }                       \
     }
 #define penumbra_core_component_dex_v1_PositionState_init_default \
-    { _penumbra_core_component_dex_v1_PositionState_PositionStateEnum_MIN, 0 }
-#define penumbra_core_component_dex_v1_LpNft_init_default                     \
-    {                                                                         \
-        false, penumbra_core_component_dex_v1_PositionId_init_default, false, \
-            penumbra_core_component_dex_v1_PositionState_init_default         \
-    }
+    {_penumbra_core_component_dex_v1_PositionState_PositionStateEnum_MIN, 0}
+#define penumbra_core_component_dex_v1_LpNft_init_default                  \
+    {false, penumbra_core_component_dex_v1_PositionId_init_default, false, \
+     penumbra_core_component_dex_v1_PositionState_init_default}
 #define penumbra_core_component_dex_v1_PositionOpen_init_default \
-    { false, penumbra_core_component_dex_v1_Position_init_default }
+    {false, penumbra_core_component_dex_v1_Position_init_default}
 #define penumbra_core_component_dex_v1_PositionClose_init_default \
-    { false, penumbra_core_component_dex_v1_PositionId_init_default }
-#define penumbra_core_component_dex_v1_PositionWithdraw_init_default          \
-    {                                                                         \
-        false, penumbra_core_component_dex_v1_PositionId_init_default, false, \
-            penumbra_core_asset_v1_BalanceCommitment_init_default, 0          \
-    }
-#define penumbra_core_component_dex_v1_PositionRewardClaim_init_default       \
-    {                                                                         \
-        false, penumbra_core_component_dex_v1_PositionId_init_default, false, \
-            penumbra_core_asset_v1_BalanceCommitment_init_default             \
-    }
+    {false, penumbra_core_component_dex_v1_PositionId_init_default}
+#define penumbra_core_component_dex_v1_PositionWithdraw_init_default       \
+    {false, penumbra_core_component_dex_v1_PositionId_init_default, false, \
+     penumbra_core_asset_v1_BalanceCommitment_init_default, 0}
+#define penumbra_core_component_dex_v1_PositionRewardClaim_init_default    \
+    {false, penumbra_core_component_dex_v1_PositionId_init_default, false, \
+     penumbra_core_asset_v1_BalanceCommitment_init_default}
 #define penumbra_core_component_dex_v1_SwapExecution_init_default \
-    { {{NULL}, NULL}, false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_asset_v1_Value_init_default }
+    {{{NULL}, NULL}, false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_asset_v1_Value_init_default}
 #define penumbra_core_component_dex_v1_SwapExecution_Trace_init_default \
     {                                                                   \
-        { {NULL}, NULL }                                                \
+        {                                                               \
+            {NULL}, NULL                                                \
+        }                                                               \
     }
 #define penumbra_core_component_dex_v1_PositionWithdrawPlan_init_default    \
     {                                                                       \
@@ -1089,171 +1093,161 @@ extern "C" {
         }                                                                   \
     }
 #define penumbra_core_component_dex_v1_PositionRewardClaimPlan_init_default \
-    { false, penumbra_core_component_dex_v1_Reserves_init_default }
+    {false, penumbra_core_component_dex_v1_Reserves_init_default}
 #define penumbra_core_component_dex_v1_BatchSwapOutputDataRequest_init_default \
-    { 0, false, penumbra_core_component_dex_v1_TradingPair_init_default }
+    {0, false, penumbra_core_component_dex_v1_TradingPair_init_default}
 #define penumbra_core_component_dex_v1_BatchSwapOutputDataResponse_init_default \
-    { false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_default }
+    {false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_default}
 #define penumbra_core_component_dex_v1_SwapExecutionRequest_init_default \
-    { 0, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default }
+    {0, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default}
 #define penumbra_core_component_dex_v1_SwapExecutionResponse_init_default \
-    { false, penumbra_core_component_dex_v1_SwapExecution_init_default }
-#define penumbra_core_component_dex_v1_ArbExecutionRequest_init_default \
-    { 0 }
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_default}
+#define penumbra_core_component_dex_v1_ArbExecutionRequest_init_default {0}
 #define penumbra_core_component_dex_v1_ArbExecutionResponse_init_default \
-    { false, penumbra_core_component_dex_v1_SwapExecution_init_default, 0 }
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_default, 0}
 #define penumbra_core_component_dex_v1_SwapExecutionsRequest_init_default \
-    { 0, 0, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default }
-#define penumbra_core_component_dex_v1_SwapExecutionsResponse_init_default          \
-    {                                                                               \
-        false, penumbra_core_component_dex_v1_SwapExecution_init_default, 0, false, \
-            penumbra_core_component_dex_v1_DirectedTradingPair_init_default         \
-    }
-#define penumbra_core_component_dex_v1_ArbExecutionsRequest_init_default \
-    { 0, 0 }
+    {0, 0, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default}
+#define penumbra_core_component_dex_v1_SwapExecutionsResponse_init_default       \
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_default, 0, false, \
+     penumbra_core_component_dex_v1_DirectedTradingPair_init_default}
+#define penumbra_core_component_dex_v1_ArbExecutionsRequest_init_default {0, 0}
 #define penumbra_core_component_dex_v1_ArbExecutionsResponse_init_default \
-    { false, penumbra_core_component_dex_v1_SwapExecution_init_default, 0 }
-#define penumbra_core_component_dex_v1_LiquidityPositionsRequest_init_default \
-    { 0 }
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_default, 0}
+#define penumbra_core_component_dex_v1_LiquidityPositionsRequest_init_default {0}
 #define penumbra_core_component_dex_v1_LiquidityPositionsResponse_init_default \
-    { false, penumbra_core_component_dex_v1_Position_init_default }
+    {false, penumbra_core_component_dex_v1_Position_init_default}
 #define penumbra_core_component_dex_v1_LiquidityPositionByIdRequest_init_default \
-    { false, penumbra_core_component_dex_v1_PositionId_init_default }
+    {false, penumbra_core_component_dex_v1_PositionId_init_default}
 #define penumbra_core_component_dex_v1_LiquidityPositionByIdResponse_init_default \
-    { false, penumbra_core_component_dex_v1_Position_init_default }
+    {false, penumbra_core_component_dex_v1_Position_init_default}
 #define penumbra_core_component_dex_v1_LiquidityPositionsByIdRequest_init_default \
     {                                                                             \
-        { {NULL}, NULL }                                                          \
+        {                                                                         \
+            {NULL}, NULL                                                          \
+        }                                                                         \
     }
 #define penumbra_core_component_dex_v1_LiquidityPositionsByIdResponse_init_default \
-    { false, penumbra_core_component_dex_v1_Position_init_default }
+    {false, penumbra_core_component_dex_v1_Position_init_default}
 #define penumbra_core_component_dex_v1_LiquidityPositionsByPriceRequest_init_default \
-    { false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default, 0 }
+    {false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default, 0}
 #define penumbra_core_component_dex_v1_LiquidityPositionsByPriceResponse_init_default \
-    {                                                                                 \
-        false, penumbra_core_component_dex_v1_Position_init_default, false,           \
-            penumbra_core_component_dex_v1_PositionId_init_default                    \
-    }
+    {false, penumbra_core_component_dex_v1_Position_init_default, false,              \
+     penumbra_core_component_dex_v1_PositionId_init_default}
 #define penumbra_core_component_dex_v1_SpreadRequest_init_default \
-    { false, penumbra_core_component_dex_v1_TradingPair_init_default }
-#define penumbra_core_component_dex_v1_SpreadResponse_init_default          \
-    {                                                                       \
-        false, penumbra_core_component_dex_v1_Position_init_default, false, \
-            penumbra_core_component_dex_v1_Position_init_default, 0, 0      \
-    }
-#define penumbra_core_component_dex_v1_SimulateTradeRequest_init_default                                             \
-    {                                                                                                                \
-        false, penumbra_core_asset_v1_Value_init_default, false, penumbra_core_asset_v1_AssetId_init_default, false, \
-            penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_init_default                                 \
-    }
+    {false, penumbra_core_component_dex_v1_TradingPair_init_default}
+#define penumbra_core_component_dex_v1_SpreadResponse_init_default \
+    {false, penumbra_core_component_dex_v1_Position_init_default,  \
+     false, penumbra_core_component_dex_v1_Position_init_default,  \
+     0,     0}
+#define penumbra_core_component_dex_v1_SimulateTradeRequest_init_default \
+    {false, penumbra_core_asset_v1_Value_init_default,                   \
+     false, penumbra_core_asset_v1_AssetId_init_default,                 \
+     false, penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_init_default}
 #define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_init_default                \
     {                                                                                           \
         0, { penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_Default_init_default } \
     }
-#define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_SingleHop_init_default \
-    { 0 }
-#define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_Default_init_default \
-    { 0 }
+#define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_SingleHop_init_default {0}
+#define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_Default_init_default {0}
 #define penumbra_core_component_dex_v1_SimulateTradeResponse_init_default \
-    { false, penumbra_core_component_dex_v1_SwapExecution_init_default, false, penumbra_core_asset_v1_Value_init_default }
-#define penumbra_core_component_dex_v1_EventSwap_init_default                                                            \
-    {                                                                                                                    \
-        false, penumbra_core_component_dex_v1_TradingPair_init_default, false, penumbra_core_num_v1_Amount_init_default, \
-            false, penumbra_core_num_v1_Amount_init_default, false, penumbra_crypto_tct_v1_StateCommitment_init_default  \
-    }
-#define penumbra_core_component_dex_v1_EventSwapClaim_init_default             \
-    {                                                                          \
-        false, penumbra_core_component_dex_v1_TradingPair_init_default, false, \
-            penumbra_crypto_tct_v1_StateCommitment_init_default, false,        \
-            penumbra_crypto_tct_v1_StateCommitment_init_default, false,        \
-            penumbra_core_component_sct_v1_Nullifier_init_default              \
-    }
-#define penumbra_core_component_dex_v1_EventPositionOpen_init_default                                                       \
-    {                                                                                                                       \
-        false, penumbra_core_component_dex_v1_PositionId_init_default, false,                                               \
-            penumbra_core_component_dex_v1_TradingPair_init_default, false, penumbra_core_num_v1_Amount_init_default,       \
-            false, penumbra_core_num_v1_Amount_init_default, 0, false, penumbra_core_component_dex_v1_Position_init_default \
-    }
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_default, false, penumbra_core_asset_v1_Value_init_default}
+#define penumbra_core_component_dex_v1_EventSwap_init_default        \
+    {false, penumbra_core_component_dex_v1_TradingPair_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default,                \
+     false, penumbra_core_num_v1_Amount_init_default,                \
+     false, penumbra_crypto_tct_v1_StateCommitment_init_default}
+#define penumbra_core_component_dex_v1_EventSwapClaim_init_default   \
+    {false, penumbra_core_component_dex_v1_TradingPair_init_default, \
+     false, penumbra_crypto_tct_v1_StateCommitment_init_default,     \
+     false, penumbra_crypto_tct_v1_StateCommitment_init_default,     \
+     false, penumbra_core_component_sct_v1_Nullifier_init_default}
+#define penumbra_core_component_dex_v1_EventPositionOpen_init_default \
+    {false,                                                           \
+     penumbra_core_component_dex_v1_PositionId_init_default,          \
+     false,                                                           \
+     penumbra_core_component_dex_v1_TradingPair_init_default,         \
+     false,                                                           \
+     penumbra_core_num_v1_Amount_init_default,                        \
+     false,                                                           \
+     penumbra_core_num_v1_Amount_init_default,                        \
+     0,                                                               \
+     false,                                                           \
+     penumbra_core_component_dex_v1_Position_init_default}
 #define penumbra_core_component_dex_v1_EventPositionClose_init_default \
-    { false, penumbra_core_component_dex_v1_PositionId_init_default }
+    {false, penumbra_core_component_dex_v1_PositionId_init_default}
 #define penumbra_core_component_dex_v1_EventQueuePositionClose_init_default \
-    { false, penumbra_core_component_dex_v1_PositionId_init_default }
-#define penumbra_core_component_dex_v1_EventPositionWithdraw_init_default                                             \
-    {                                                                                                                 \
-        false, penumbra_core_component_dex_v1_PositionId_init_default, false,                                         \
-            penumbra_core_component_dex_v1_TradingPair_init_default, false, penumbra_core_num_v1_Amount_init_default, \
-            false, penumbra_core_num_v1_Amount_init_default, 0                                                        \
-    }
-#define penumbra_core_component_dex_v1_EventPositionExecution_init_default                                            \
-    {                                                                                                                 \
-        false, penumbra_core_component_dex_v1_PositionId_init_default, false,                                         \
-            penumbra_core_component_dex_v1_TradingPair_init_default, false, penumbra_core_num_v1_Amount_init_default, \
-            false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default, false,  \
-            penumbra_core_num_v1_Amount_init_default, false,                                                          \
-            penumbra_core_component_dex_v1_DirectedTradingPair_init_default                                           \
-    }
-#define penumbra_core_component_dex_v1_EventBatchSwap_init_default                     \
-    {                                                                                  \
-        false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_default, false, \
-            penumbra_core_component_dex_v1_SwapExecution_init_default, false,          \
-            penumbra_core_component_dex_v1_SwapExecution_init_default                  \
-    }
+    {false, penumbra_core_component_dex_v1_PositionId_init_default}
+#define penumbra_core_component_dex_v1_EventPositionWithdraw_init_default \
+    {false, penumbra_core_component_dex_v1_PositionId_init_default,       \
+     false, penumbra_core_component_dex_v1_TradingPair_init_default,      \
+     false, penumbra_core_num_v1_Amount_init_default,                     \
+     false, penumbra_core_num_v1_Amount_init_default,                     \
+     0}
+#define penumbra_core_component_dex_v1_EventPositionExecution_init_default \
+    {false, penumbra_core_component_dex_v1_PositionId_init_default,        \
+     false, penumbra_core_component_dex_v1_TradingPair_init_default,       \
+     false, penumbra_core_num_v1_Amount_init_default,                      \
+     false, penumbra_core_num_v1_Amount_init_default,                      \
+     false, penumbra_core_num_v1_Amount_init_default,                      \
+     false, penumbra_core_num_v1_Amount_init_default,                      \
+     false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default}
+#define penumbra_core_component_dex_v1_EventBatchSwap_init_default           \
+    {false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_default, \
+     false, penumbra_core_component_dex_v1_SwapExecution_init_default,       \
+     false, penumbra_core_component_dex_v1_SwapExecution_init_default}
 #define penumbra_core_component_dex_v1_EventArbExecution_init_default \
-    { 0, false, penumbra_core_component_dex_v1_SwapExecution_init_default }
-#define penumbra_core_component_dex_v1_EventValueCircuitBreakerCredit_init_default                                  \
-    {                                                                                                               \
-        false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default                                                                \
-    }
-#define penumbra_core_component_dex_v1_EventValueCircuitBreakerDebit_init_default                                   \
-    {                                                                                                               \
-        false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default                                                                \
-    }
-#define penumbra_core_component_dex_v1_DexParameters_init_default \
-    { 0, {{NULL}, NULL}, 0, 0, 0 }
+    {0, false, penumbra_core_component_dex_v1_SwapExecution_init_default}
+#define penumbra_core_component_dex_v1_EventValueCircuitBreakerCredit_init_default                        \
+    {false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_num_v1_Amount_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_dex_v1_EventValueCircuitBreakerDebit_init_default                         \
+    {false, penumbra_core_asset_v1_AssetId_init_default, false, penumbra_core_num_v1_Amount_init_default, \
+     false, penumbra_core_num_v1_Amount_init_default}
+#define penumbra_core_component_dex_v1_DexParameters_init_default {0, {{NULL}, NULL}, 0, 0, 0}
 #define penumbra_core_component_dex_v1_GenesisContent_init_default \
-    { false, penumbra_core_component_dex_v1_DexParameters_init_default }
-#define penumbra_core_component_dex_v1_CandlestickData_init_default \
-    { 0, 0, 0, 0, 0, 0, 0 }
+    {false, penumbra_core_component_dex_v1_DexParameters_init_default}
+#define penumbra_core_component_dex_v1_CandlestickData_init_default {0, 0, 0, 0, 0, 0, 0}
 #define penumbra_core_component_dex_v1_CandlestickDataRequest_init_default \
-    { false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default, 0, 0 }
+    {false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default, 0, 0}
 #define penumbra_core_component_dex_v1_CandlestickDataResponse_init_default \
     {                                                                       \
-        { {NULL}, NULL }                                                    \
+        {                                                                   \
+            {NULL}, NULL                                                    \
+        }                                                                   \
     }
 #define penumbra_core_component_dex_v1_CandlestickDataStreamRequest_init_default \
-    { false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default }
+    {false, penumbra_core_component_dex_v1_DirectedTradingPair_init_default}
 #define penumbra_core_component_dex_v1_CandlestickDataStreamResponse_init_default \
-    { false, penumbra_core_component_dex_v1_CandlestickData_init_default }
+    {false, penumbra_core_component_dex_v1_CandlestickData_init_default}
 #define penumbra_core_component_dex_v1_ZKSwapProof_init_zero \
     {                                                        \
-        { {NULL}, NULL }                                     \
+        {                                                    \
+            {NULL}, NULL                                     \
+        }                                                    \
     }
 #define penumbra_core_component_dex_v1_ZKSwapClaimProof_init_zero \
     {                                                             \
-        { {NULL}, NULL }                                          \
+        {                                                         \
+            {NULL}, NULL                                          \
+        }                                                         \
     }
 #define penumbra_core_component_dex_v1_Swap_init_zero \
-    { false, penumbra_core_component_dex_v1_ZKSwapProof_init_zero, false, penumbra_core_component_dex_v1_SwapBody_init_zero }
-#define penumbra_core_component_dex_v1_SwapClaim_init_zero                       \
-    {                                                                            \
-        false, penumbra_core_component_dex_v1_ZKSwapClaimProof_init_zero, false, \
-            penumbra_core_component_dex_v1_SwapClaimBody_init_zero, 0            \
-    }
-#define penumbra_core_component_dex_v1_SwapClaimBody_init_zero                                                          \
-    {                                                                                                                   \
-        false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, penumbra_core_component_fee_v1_Fee_init_zero, \
-            false, penumbra_crypto_tct_v1_StateCommitment_init_zero, false,                                             \
-            penumbra_crypto_tct_v1_StateCommitment_init_zero, false,                                                    \
-            penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero                                                \
-    }
-#define penumbra_core_component_dex_v1_SwapBody_init_zero                                                                 \
-    {                                                                                                                     \
-        false, penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_BalanceCommitment_init_zero, false,      \
-            penumbra_core_component_dex_v1_SwapPayload_init_zero                                                          \
-    }
+    {false, penumbra_core_component_dex_v1_ZKSwapProof_init_zero, false, penumbra_core_component_dex_v1_SwapBody_init_zero}
+#define penumbra_core_component_dex_v1_SwapClaim_init_zero                    \
+    {false, penumbra_core_component_dex_v1_ZKSwapClaimProof_init_zero, false, \
+     penumbra_core_component_dex_v1_SwapClaimBody_init_zero, 0}
+#define penumbra_core_component_dex_v1_SwapClaimBody_init_zero  \
+    {false, penumbra_core_component_sct_v1_Nullifier_init_zero, \
+     false, penumbra_core_component_fee_v1_Fee_init_zero,       \
+     false, penumbra_crypto_tct_v1_StateCommitment_init_zero,   \
+     false, penumbra_crypto_tct_v1_StateCommitment_init_zero,   \
+     false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero}
+#define penumbra_core_component_dex_v1_SwapBody_init_zero         \
+    {false, penumbra_core_component_dex_v1_TradingPair_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero,                \
+     false, penumbra_core_num_v1_Amount_init_zero,                \
+     false, penumbra_core_asset_v1_BalanceCommitment_init_zero,   \
+     false, penumbra_core_component_dex_v1_SwapPayload_init_zero}
 #define penumbra_core_component_dex_v1_SwapPayload_init_zero                      \
     {                                                                             \
         false, penumbra_crypto_tct_v1_StateCommitment_init_zero, { {NULL}, NULL } \
@@ -1281,88 +1275,94 @@ extern "C" {
     {                                                                    \
         0, { penumbra_core_component_dex_v1_SwapView_Visible_init_zero } \
     }
-#define penumbra_core_component_dex_v1_SwapView_Visible_init_zero                                                           \
-    {                                                                                                                       \
-        false, penumbra_core_component_dex_v1_Swap_init_zero, false,                                                        \
-            penumbra_core_component_dex_v1_SwapPlaintext_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero, \
-            false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero, false,                                     \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false,                                             \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero,  \
-            false, penumbra_core_asset_v1_Metadata_init_zero                                                                \
-    }
-#define penumbra_core_component_dex_v1_SwapView_Opaque_init_zero                                                  \
-    {                                                                                                             \
-        false, penumbra_core_component_dex_v1_Swap_init_zero, false,                                              \
-            penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero, false,                                  \
-            penumbra_core_asset_v1_ValueView_init_zero, false, penumbra_core_asset_v1_ValueView_init_zero, false, \
-            penumbra_core_asset_v1_Metadata_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero           \
-    }
+#define penumbra_core_component_dex_v1_SwapView_Visible_init_zero         \
+    {false, penumbra_core_component_dex_v1_Swap_init_zero,                \
+     false, penumbra_core_component_dex_v1_SwapPlaintext_init_zero,       \
+     false, penumbra_core_txhash_v1_TransactionId_init_zero,              \
+     false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero, \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_zero,  \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_zero,  \
+     false, penumbra_core_asset_v1_Metadata_init_zero,                    \
+     false, penumbra_core_asset_v1_Metadata_init_zero}
+#define penumbra_core_component_dex_v1_SwapView_Opaque_init_zero          \
+    {false, penumbra_core_component_dex_v1_Swap_init_zero,                \
+     false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero, \
+     false, penumbra_core_asset_v1_ValueView_init_zero,                   \
+     false, penumbra_core_asset_v1_ValueView_init_zero,                   \
+     false, penumbra_core_asset_v1_Metadata_init_zero,                    \
+     false, penumbra_core_asset_v1_Metadata_init_zero}
 #define penumbra_core_component_dex_v1_SwapClaimView_init_zero                \
     {                                                                         \
         0, { penumbra_core_component_dex_v1_SwapClaimView_Visible_init_zero } \
     }
-#define penumbra_core_component_dex_v1_SwapClaimView_Visible_init_zero          \
-    {                                                                           \
-        false, penumbra_core_component_dex_v1_SwapClaim_init_zero, false,       \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false, \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false, \
-            penumbra_core_txhash_v1_TransactionId_init_zero                     \
-    }
+#define penumbra_core_component_dex_v1_SwapClaimView_Visible_init_zero   \
+    {false, penumbra_core_component_dex_v1_SwapClaim_init_zero,          \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_zero, \
+     false, penumbra_core_component_shielded_pool_v1_NoteView_init_zero, \
+     false, penumbra_core_txhash_v1_TransactionId_init_zero}
 #define penumbra_core_component_dex_v1_SwapClaimView_Opaque_init_zero \
-    { false, penumbra_core_component_dex_v1_SwapClaim_init_zero }
+    {false, penumbra_core_component_dex_v1_SwapClaim_init_zero}
 #define penumbra_core_component_dex_v1_TradingPair_init_zero \
-    { false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero }
+    {false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero}
 #define penumbra_core_component_dex_v1_DirectedTradingPair_init_zero \
-    { false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero }
-#define penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero                                       \
-    {                                                                                                      \
-        false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false,    \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero, 0, false, \
-            penumbra_core_component_dex_v1_TradingPair_init_zero, 0, 0                                     \
-    }
-#define penumbra_core_component_dex_v1_TradingFunction_init_zero                    \
-    {                                                                               \
-        false, penumbra_core_component_dex_v1_BareTradingFunction_init_zero, false, \
-            penumbra_core_component_dex_v1_TradingPair_init_zero                    \
-    }
+    {false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero}
+#define penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero \
+    {false,                                                          \
+     penumbra_core_num_v1_Amount_init_zero,                          \
+     false,                                                          \
+     penumbra_core_num_v1_Amount_init_zero,                          \
+     false,                                                          \
+     penumbra_core_num_v1_Amount_init_zero,                          \
+     false,                                                          \
+     penumbra_core_num_v1_Amount_init_zero,                          \
+     false,                                                          \
+     penumbra_core_num_v1_Amount_init_zero,                          \
+     false,                                                          \
+     penumbra_core_num_v1_Amount_init_zero,                          \
+     0,                                                              \
+     false,                                                          \
+     penumbra_core_component_dex_v1_TradingPair_init_zero,           \
+     0,                                                              \
+     0}
+#define penumbra_core_component_dex_v1_TradingFunction_init_zero                 \
+    {false, penumbra_core_component_dex_v1_BareTradingFunction_init_zero, false, \
+     penumbra_core_component_dex_v1_TradingPair_init_zero}
 #define penumbra_core_component_dex_v1_BareTradingFunction_init_zero \
-    { 0, false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero }
+    {0, false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero}
 #define penumbra_core_component_dex_v1_Reserves_init_zero \
-    { false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero }
-#define penumbra_core_component_dex_v1_Position_init_zero                                       \
-    {                                                                                           \
-        false, penumbra_core_component_dex_v1_TradingFunction_init_zero, {{NULL}, NULL}, false, \
-            penumbra_core_component_dex_v1_PositionState_init_zero, false,                      \
-            penumbra_core_component_dex_v1_Reserves_init_zero, 0                                \
-    }
+    {false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero}
+#define penumbra_core_component_dex_v1_Position_init_zero      \
+    {false,                                                    \
+     penumbra_core_component_dex_v1_TradingFunction_init_zero, \
+     {{NULL}, NULL},                                           \
+     false,                                                    \
+     penumbra_core_component_dex_v1_PositionState_init_zero,   \
+     false,                                                    \
+     penumbra_core_component_dex_v1_Reserves_init_zero,        \
+     0}
 #define penumbra_core_component_dex_v1_PositionId_init_zero \
     {                                                       \
         {{NULL}, NULL}, { {NULL}, NULL }                    \
     }
 #define penumbra_core_component_dex_v1_PositionState_init_zero \
-    { _penumbra_core_component_dex_v1_PositionState_PositionStateEnum_MIN, 0 }
-#define penumbra_core_component_dex_v1_LpNft_init_zero                     \
-    {                                                                      \
-        false, penumbra_core_component_dex_v1_PositionId_init_zero, false, \
-            penumbra_core_component_dex_v1_PositionState_init_zero         \
-    }
-#define penumbra_core_component_dex_v1_PositionOpen_init_zero \
-    { false, penumbra_core_component_dex_v1_Position_init_zero }
-#define penumbra_core_component_dex_v1_PositionClose_init_zero \
-    { false, penumbra_core_component_dex_v1_PositionId_init_zero }
-#define penumbra_core_component_dex_v1_PositionWithdraw_init_zero          \
-    {                                                                      \
-        false, penumbra_core_component_dex_v1_PositionId_init_zero, false, \
-            penumbra_core_asset_v1_BalanceCommitment_init_zero, 0          \
-    }
+    {_penumbra_core_component_dex_v1_PositionState_PositionStateEnum_MIN, 0}
+#define penumbra_core_component_dex_v1_LpNft_init_zero                  \
+    {false, penumbra_core_component_dex_v1_PositionId_init_zero, false, \
+     penumbra_core_component_dex_v1_PositionState_init_zero}
+#define penumbra_core_component_dex_v1_PositionOpen_init_zero {false, penumbra_core_component_dex_v1_Position_init_zero}
+#define penumbra_core_component_dex_v1_PositionClose_init_zero {false, penumbra_core_component_dex_v1_PositionId_init_zero}
+#define penumbra_core_component_dex_v1_PositionWithdraw_init_zero                                                           \
+    {false, penumbra_core_component_dex_v1_PositionId_init_zero, false, penumbra_core_asset_v1_BalanceCommitment_init_zero, \
+     0}
 #define penumbra_core_component_dex_v1_PositionRewardClaim_init_zero \
-    { false, penumbra_core_component_dex_v1_PositionId_init_zero, false, penumbra_core_asset_v1_BalanceCommitment_init_zero }
+    {false, penumbra_core_component_dex_v1_PositionId_init_zero, false, penumbra_core_asset_v1_BalanceCommitment_init_zero}
 #define penumbra_core_component_dex_v1_SwapExecution_init_zero \
-    { {{NULL}, NULL}, false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_asset_v1_Value_init_zero }
+    {{{NULL}, NULL}, false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_asset_v1_Value_init_zero}
 #define penumbra_core_component_dex_v1_SwapExecution_Trace_init_zero \
     {                                                                \
-        { {NULL}, NULL }                                             \
+        {                                                            \
+            {NULL}, NULL                                             \
+        }                                                            \
     }
 #define penumbra_core_component_dex_v1_PositionWithdrawPlan_init_zero    \
     {                                                                    \
@@ -1373,138 +1373,130 @@ extern "C" {
         }                                                                \
     }
 #define penumbra_core_component_dex_v1_PositionRewardClaimPlan_init_zero \
-    { false, penumbra_core_component_dex_v1_Reserves_init_zero }
+    {false, penumbra_core_component_dex_v1_Reserves_init_zero}
 #define penumbra_core_component_dex_v1_BatchSwapOutputDataRequest_init_zero \
-    { 0, false, penumbra_core_component_dex_v1_TradingPair_init_zero }
+    {0, false, penumbra_core_component_dex_v1_TradingPair_init_zero}
 #define penumbra_core_component_dex_v1_BatchSwapOutputDataResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero }
+    {false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero}
 #define penumbra_core_component_dex_v1_SwapExecutionRequest_init_zero \
-    { 0, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero }
+    {0, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero}
 #define penumbra_core_component_dex_v1_SwapExecutionResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_SwapExecution_init_zero }
-#define penumbra_core_component_dex_v1_ArbExecutionRequest_init_zero \
-    { 0 }
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_zero}
+#define penumbra_core_component_dex_v1_ArbExecutionRequest_init_zero {0}
 #define penumbra_core_component_dex_v1_ArbExecutionResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_SwapExecution_init_zero, 0 }
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_zero, 0}
 #define penumbra_core_component_dex_v1_SwapExecutionsRequest_init_zero \
-    { 0, 0, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero }
-#define penumbra_core_component_dex_v1_SwapExecutionsResponse_init_zero          \
-    {                                                                            \
-        false, penumbra_core_component_dex_v1_SwapExecution_init_zero, 0, false, \
-            penumbra_core_component_dex_v1_DirectedTradingPair_init_zero         \
-    }
-#define penumbra_core_component_dex_v1_ArbExecutionsRequest_init_zero \
-    { 0, 0 }
+    {0, 0, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero}
+#define penumbra_core_component_dex_v1_SwapExecutionsResponse_init_zero       \
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_zero, 0, false, \
+     penumbra_core_component_dex_v1_DirectedTradingPair_init_zero}
+#define penumbra_core_component_dex_v1_ArbExecutionsRequest_init_zero {0, 0}
 #define penumbra_core_component_dex_v1_ArbExecutionsResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_SwapExecution_init_zero, 0 }
-#define penumbra_core_component_dex_v1_LiquidityPositionsRequest_init_zero \
-    { 0 }
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_zero, 0}
+#define penumbra_core_component_dex_v1_LiquidityPositionsRequest_init_zero {0}
 #define penumbra_core_component_dex_v1_LiquidityPositionsResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_Position_init_zero }
+    {false, penumbra_core_component_dex_v1_Position_init_zero}
 #define penumbra_core_component_dex_v1_LiquidityPositionByIdRequest_init_zero \
-    { false, penumbra_core_component_dex_v1_PositionId_init_zero }
+    {false, penumbra_core_component_dex_v1_PositionId_init_zero}
 #define penumbra_core_component_dex_v1_LiquidityPositionByIdResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_Position_init_zero }
+    {false, penumbra_core_component_dex_v1_Position_init_zero}
 #define penumbra_core_component_dex_v1_LiquidityPositionsByIdRequest_init_zero \
     {                                                                          \
-        { {NULL}, NULL }                                                       \
+        {                                                                      \
+            {NULL}, NULL                                                       \
+        }                                                                      \
     }
 #define penumbra_core_component_dex_v1_LiquidityPositionsByIdResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_Position_init_zero }
+    {false, penumbra_core_component_dex_v1_Position_init_zero}
 #define penumbra_core_component_dex_v1_LiquidityPositionsByPriceRequest_init_zero \
-    { false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero, 0 }
+    {false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero, 0}
 #define penumbra_core_component_dex_v1_LiquidityPositionsByPriceResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_Position_init_zero, false, penumbra_core_component_dex_v1_PositionId_init_zero }
-#define penumbra_core_component_dex_v1_SpreadRequest_init_zero \
-    { false, penumbra_core_component_dex_v1_TradingPair_init_zero }
+    {false, penumbra_core_component_dex_v1_Position_init_zero, false, penumbra_core_component_dex_v1_PositionId_init_zero}
+#define penumbra_core_component_dex_v1_SpreadRequest_init_zero {false, penumbra_core_component_dex_v1_TradingPair_init_zero}
 #define penumbra_core_component_dex_v1_SpreadResponse_init_zero                                                             \
-    {                                                                                                                       \
-        false, penumbra_core_component_dex_v1_Position_init_zero, false, penumbra_core_component_dex_v1_Position_init_zero, \
-            0, 0                                                                                                            \
-    }
-#define penumbra_core_component_dex_v1_SimulateTradeRequest_init_zero                                          \
-    {                                                                                                          \
-        false, penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero, false, \
-            penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_init_zero                              \
-    }
+    {false, penumbra_core_component_dex_v1_Position_init_zero, false, penumbra_core_component_dex_v1_Position_init_zero, 0, \
+     0}
+#define penumbra_core_component_dex_v1_SimulateTradeRequest_init_zero \
+    {false, penumbra_core_asset_v1_Value_init_zero,                   \
+     false, penumbra_core_asset_v1_AssetId_init_zero,                 \
+     false, penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_init_zero}
 #define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_init_zero                \
     {                                                                                        \
         0, { penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_Default_init_zero } \
     }
-#define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_SingleHop_init_zero \
-    { 0 }
-#define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_Default_init_zero \
-    { 0 }
+#define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_SingleHop_init_zero {0}
+#define penumbra_core_component_dex_v1_SimulateTradeRequest_Routing_Default_init_zero {0}
 #define penumbra_core_component_dex_v1_SimulateTradeResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_SwapExecution_init_zero, false, penumbra_core_asset_v1_Value_init_zero }
-#define penumbra_core_component_dex_v1_EventSwap_init_zero                                                                \
-    {                                                                                                                     \
-        false, penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_crypto_tct_v1_StateCommitment_init_zero                \
-    }
-#define penumbra_core_component_dex_v1_EventSwapClaim_init_zero                                                        \
-    {                                                                                                                  \
-        false, penumbra_core_component_dex_v1_TradingPair_init_zero, false,                                            \
-            penumbra_crypto_tct_v1_StateCommitment_init_zero, false, penumbra_crypto_tct_v1_StateCommitment_init_zero, \
-            false, penumbra_core_component_sct_v1_Nullifier_init_zero                                                  \
-    }
-#define penumbra_core_component_dex_v1_EventPositionOpen_init_zero                                                     \
-    {                                                                                                                  \
-        false, penumbra_core_component_dex_v1_PositionId_init_zero, false,                                             \
-            penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, 0, false, penumbra_core_component_dex_v1_Position_init_zero         \
-    }
+    {false, penumbra_core_component_dex_v1_SwapExecution_init_zero, false, penumbra_core_asset_v1_Value_init_zero}
+#define penumbra_core_component_dex_v1_EventSwap_init_zero        \
+    {false, penumbra_core_component_dex_v1_TradingPair_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero,                \
+     false, penumbra_core_num_v1_Amount_init_zero,                \
+     false, penumbra_crypto_tct_v1_StateCommitment_init_zero}
+#define penumbra_core_component_dex_v1_EventSwapClaim_init_zero      \
+    {                                                                \
+        false, penumbra_core_component_dex_v1_TradingPair_init_zero, \
+        false, penumbra_crypto_tct_v1_StateCommitment_init_zero,     \
+        false, penumbra_crypto_tct_v1_StateCommitment_init_zero,     \
+        false, penumbra_core_component_sct_v1_Nullifier_init_zero}
+#define penumbra_core_component_dex_v1_EventPositionOpen_init_zero \
+    {false,                                                        \
+     penumbra_core_component_dex_v1_PositionId_init_zero,          \
+     false,                                                        \
+     penumbra_core_component_dex_v1_TradingPair_init_zero,         \
+     false,                                                        \
+     penumbra_core_num_v1_Amount_init_zero,                        \
+     false,                                                        \
+     penumbra_core_num_v1_Amount_init_zero,                        \
+     0,                                                            \
+     false,                                                        \
+     penumbra_core_component_dex_v1_Position_init_zero}
 #define penumbra_core_component_dex_v1_EventPositionClose_init_zero \
-    { false, penumbra_core_component_dex_v1_PositionId_init_zero }
+    {false, penumbra_core_component_dex_v1_PositionId_init_zero}
 #define penumbra_core_component_dex_v1_EventQueuePositionClose_init_zero \
-    { false, penumbra_core_component_dex_v1_PositionId_init_zero }
-#define penumbra_core_component_dex_v1_EventPositionWithdraw_init_zero                                                 \
-    {                                                                                                                  \
-        false, penumbra_core_component_dex_v1_PositionId_init_zero, false,                                             \
-            penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, 0                                                                   \
-    }
-#define penumbra_core_component_dex_v1_EventPositionExecution_init_zero                                                \
-    {                                                                                                                  \
-        false, penumbra_core_component_dex_v1_PositionId_init_zero, false,                                             \
-            penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false,                \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero \
-    }
-#define penumbra_core_component_dex_v1_EventBatchSwap_init_zero                     \
-    {                                                                               \
-        false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero, false, \
-            penumbra_core_component_dex_v1_SwapExecution_init_zero, false,          \
-            penumbra_core_component_dex_v1_SwapExecution_init_zero                  \
-    }
+    {false, penumbra_core_component_dex_v1_PositionId_init_zero}
+#define penumbra_core_component_dex_v1_EventPositionWithdraw_init_zero \
+    {false, penumbra_core_component_dex_v1_PositionId_init_zero,       \
+     false, penumbra_core_component_dex_v1_TradingPair_init_zero,      \
+     false, penumbra_core_num_v1_Amount_init_zero,                     \
+     false, penumbra_core_num_v1_Amount_init_zero,                     \
+     0}
+#define penumbra_core_component_dex_v1_EventPositionExecution_init_zero \
+    {false, penumbra_core_component_dex_v1_PositionId_init_zero,        \
+     false, penumbra_core_component_dex_v1_TradingPair_init_zero,       \
+     false, penumbra_core_num_v1_Amount_init_zero,                      \
+     false, penumbra_core_num_v1_Amount_init_zero,                      \
+     false, penumbra_core_num_v1_Amount_init_zero,                      \
+     false, penumbra_core_num_v1_Amount_init_zero,                      \
+     false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero}
+#define penumbra_core_component_dex_v1_EventBatchSwap_init_zero           \
+    {false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero, \
+     false, penumbra_core_component_dex_v1_SwapExecution_init_zero,       \
+     false, penumbra_core_component_dex_v1_SwapExecution_init_zero}
 #define penumbra_core_component_dex_v1_EventArbExecution_init_zero \
-    { 0, false, penumbra_core_component_dex_v1_SwapExecution_init_zero }
-#define penumbra_core_component_dex_v1_EventValueCircuitBreakerCredit_init_zero                               \
-    {                                                                                                         \
-        false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero                                                             \
-    }
-#define penumbra_core_component_dex_v1_EventValueCircuitBreakerDebit_init_zero                                \
-    {                                                                                                         \
-        false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero                                                             \
-    }
-#define penumbra_core_component_dex_v1_DexParameters_init_zero \
-    { 0, {{NULL}, NULL}, 0, 0, 0 }
+    {0, false, penumbra_core_component_dex_v1_SwapExecution_init_zero}
+#define penumbra_core_component_dex_v1_EventValueCircuitBreakerCredit_init_zero                     \
+    {false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_num_v1_Amount_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero}
+#define penumbra_core_component_dex_v1_EventValueCircuitBreakerDebit_init_zero                      \
+    {false, penumbra_core_asset_v1_AssetId_init_zero, false, penumbra_core_num_v1_Amount_init_zero, \
+     false, penumbra_core_num_v1_Amount_init_zero}
+#define penumbra_core_component_dex_v1_DexParameters_init_zero {0, {{NULL}, NULL}, 0, 0, 0}
 #define penumbra_core_component_dex_v1_GenesisContent_init_zero \
-    { false, penumbra_core_component_dex_v1_DexParameters_init_zero }
-#define penumbra_core_component_dex_v1_CandlestickData_init_zero \
-    { 0, 0, 0, 0, 0, 0, 0 }
+    {false, penumbra_core_component_dex_v1_DexParameters_init_zero}
+#define penumbra_core_component_dex_v1_CandlestickData_init_zero {0, 0, 0, 0, 0, 0, 0}
 #define penumbra_core_component_dex_v1_CandlestickDataRequest_init_zero \
-    { false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero, 0, 0 }
+    {false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero, 0, 0}
 #define penumbra_core_component_dex_v1_CandlestickDataResponse_init_zero \
     {                                                                    \
-        { {NULL}, NULL }                                                 \
+        {                                                                \
+            {NULL}, NULL                                                 \
+        }                                                                \
     }
 #define penumbra_core_component_dex_v1_CandlestickDataStreamRequest_init_zero \
-    { false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero }
+    {false, penumbra_core_component_dex_v1_DirectedTradingPair_init_zero}
 #define penumbra_core_component_dex_v1_CandlestickDataStreamResponse_init_zero \
-    { false, penumbra_core_component_dex_v1_CandlestickData_init_zero }
+    {false, penumbra_core_component_dex_v1_CandlestickData_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_dex_v1_ZKSwapProof_inner_tag 1

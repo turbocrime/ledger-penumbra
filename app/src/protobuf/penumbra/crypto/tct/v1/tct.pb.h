@@ -40,11 +40,15 @@ extern "C" {
 /* Initializer values for message structs */
 #define penumbra_crypto_tct_v1_StateCommitment_init_default \
     {                                                       \
-        { {NULL}, NULL }                                    \
+        {                                                   \
+            {NULL}, NULL                                    \
+        }                                                   \
     }
 #define penumbra_crypto_tct_v1_MerkleRoot_init_default \
     {                                                  \
-        { {NULL}, NULL }                               \
+        {                                              \
+            {NULL}, NULL                               \
+        }                                              \
     }
 #define penumbra_crypto_tct_v1_StateCommitmentProof_init_default                        \
     {                                                                                   \
@@ -56,11 +60,15 @@ extern "C" {
     }
 #define penumbra_crypto_tct_v1_StateCommitment_init_zero \
     {                                                    \
-        { {NULL}, NULL }                                 \
+        {                                                \
+            {NULL}, NULL                                 \
+        }                                                \
     }
 #define penumbra_crypto_tct_v1_MerkleRoot_init_zero \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
 #define penumbra_crypto_tct_v1_StateCommitmentProof_init_zero                        \
     {                                                                                \

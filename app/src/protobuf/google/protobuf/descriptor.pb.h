@@ -1211,14 +1211,27 @@ extern "C" {
 /* Initializer values for message structs */
 #define google_protobuf_FileDescriptorSet_init_default \
     {                                                  \
-        { {NULL}, NULL }                               \
+        {                                              \
+            {NULL}, NULL                               \
+        }                                              \
     }
-#define google_protobuf_FileDescriptorProto_init_default                                                                \
-    {                                                                                                                   \
-        {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
-            false, google_protobuf_FileOptions_init_default, false, google_protobuf_SourceCodeInfo_init_default,        \
-            {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, _google_protobuf_Edition_MIN                         \
-    }
+#define google_protobuf_FileDescriptorProto_init_default \
+    {{{NULL}, NULL},                                     \
+     {{NULL}, NULL},                                     \
+     {{NULL}, NULL},                                     \
+     {{NULL}, NULL},                                     \
+     {{NULL}, NULL},                                     \
+     {{NULL}, NULL},                                     \
+     {{NULL}, NULL},                                     \
+     false,                                              \
+     google_protobuf_FileOptions_init_default,           \
+     false,                                              \
+     google_protobuf_SourceCodeInfo_init_default,        \
+     {{NULL}, NULL},                                     \
+     {{NULL}, NULL},                                     \
+     {{NULL}, NULL},                                     \
+     false,                                              \
+     _google_protobuf_Edition_MIN}
 #define google_protobuf_DescriptorProto_init_default                                                           \
     {                                                                                                          \
         {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, \
@@ -1227,104 +1240,137 @@ extern "C" {
         }                                                                                                      \
     }
 #define google_protobuf_DescriptorProto_ExtensionRange_init_default \
-    { false, 0, false, 0, false, google_protobuf_ExtensionRangeOptions_init_default }
-#define google_protobuf_DescriptorProto_ReservedRange_init_default \
-    { false, 0, false, 0 }
-#define google_protobuf_ExtensionRangeOptions_init_default                                                \
-    {                                                                                                     \
-        {{NULL}, NULL}, false, google_protobuf_ExtensionRangeOptions_VerificationState_UNVERIFIED, false, \
-            google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL                                 \
-    }
+    {false, 0, false, 0, false, google_protobuf_ExtensionRangeOptions_init_default}
+#define google_protobuf_DescriptorProto_ReservedRange_init_default {false, 0, false, 0}
+#define google_protobuf_ExtensionRangeOptions_init_default               \
+    {{{NULL}, NULL},                                                     \
+     false,                                                              \
+     google_protobuf_ExtensionRangeOptions_VerificationState_UNVERIFIED, \
+     false,                                                              \
+     google_protobuf_FeatureSet_init_default,                            \
+     {{NULL}, NULL},                                                     \
+     NULL}
 #define google_protobuf_ExtensionRangeOptions_Declaration_init_default \
-    { false, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0 }
-#define google_protobuf_FieldDescriptorProto_init_default                                                        \
-    {                                                                                                            \
-        {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, _google_protobuf_FieldDescriptorProto_Label_MIN, false, \
-            _google_protobuf_FieldDescriptorProto_Type_MIN, {{NULL}, NULL}, {{NULL}, NULL}, false,               \
-            google_protobuf_FieldOptions_init_default, false, 0, {{NULL}, NULL}, false, 0                        \
-    }
-#define google_protobuf_OneofDescriptorProto_init_default \
-    { {{NULL}, NULL}, false, google_protobuf_OneofOptions_init_default }
+    {false, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0}
+#define google_protobuf_FieldDescriptorProto_init_default \
+    {{{NULL}, NULL},                                      \
+     {{NULL}, NULL},                                      \
+     false,                                               \
+     0,                                                   \
+     false,                                               \
+     _google_protobuf_FieldDescriptorProto_Label_MIN,     \
+     false,                                               \
+     _google_protobuf_FieldDescriptorProto_Type_MIN,      \
+     {{NULL}, NULL},                                      \
+     {{NULL}, NULL},                                      \
+     false,                                               \
+     google_protobuf_FieldOptions_init_default,           \
+     false,                                               \
+     0,                                                   \
+     {{NULL}, NULL},                                      \
+     false,                                               \
+     0}
+#define google_protobuf_OneofDescriptorProto_init_default {{{NULL}, NULL}, false, google_protobuf_OneofOptions_init_default}
 #define google_protobuf_EnumDescriptorProto_init_default                                                                  \
     {                                                                                                                     \
         {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_EnumOptions_init_default, {{NULL}, NULL}, { {NULL}, NULL } \
     }
-#define google_protobuf_EnumDescriptorProto_EnumReservedRange_init_default \
-    { false, 0, false, 0 }
+#define google_protobuf_EnumDescriptorProto_EnumReservedRange_init_default {false, 0, false, 0}
 #define google_protobuf_EnumValueDescriptorProto_init_default \
-    { {{NULL}, NULL}, false, 0, false, google_protobuf_EnumValueOptions_init_default }
+    {{{NULL}, NULL}, false, 0, false, google_protobuf_EnumValueOptions_init_default}
 #define google_protobuf_ServiceDescriptorProto_init_default \
-    { {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_ServiceOptions_init_default }
-#define google_protobuf_MethodDescriptorProto_init_default                                                               \
-    {                                                                                                                    \
-        {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_MethodOptions_init_default, false, false, \
-            false, false                                                                                                 \
-    }
-#define google_protobuf_FileOptions_init_default                                                                            \
-    {                                                                                                                       \
-        {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_FileOptions_OptimizeMode_SPEED, false, false,                \
-            {{NULL}, NULL}, false, false, false, false, false, false, false, 0, false, false, false, false, false, true,    \
-            {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
-            false, google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL                                            \
-    }
-#define google_protobuf_MessageOptions_init_default                                                                   \
-    {                                                                                                                 \
-        false, false, false, false, false, false, false, 0, false, 0, false, google_protobuf_FeatureSet_init_default, \
-            {{NULL}, NULL}, NULL                                                                                      \
-    }
-#define google_protobuf_FieldOptions_init_default                                                                     \
-    {                                                                                                                 \
-        false, google_protobuf_FieldOptions_CType_STRING, false, 0, false, false, false, false, false,                \
-            google_protobuf_FieldOptions_JSType_JS_NORMAL, false, false, false, false, false, false, false,           \
-            _google_protobuf_FieldOptions_OptionRetention_MIN, {{NULL}, NULL}, {{NULL}, NULL}, false,                 \
-            google_protobuf_FeatureSet_init_default, false, google_protobuf_FieldOptions_FeatureSupport_init_default, \
-            {{NULL}, NULL}, NULL                                                                                      \
-    }
-#define google_protobuf_FieldOptions_EditionDefault_init_default \
-    { {{NULL}, NULL}, false, _google_protobuf_Edition_MIN }
-#define google_protobuf_FieldOptions_FeatureSupport_init_default                                         \
-    {                                                                                                    \
-        false, _google_protobuf_Edition_MIN, false, _google_protobuf_Edition_MIN, {{NULL}, NULL}, false, \
-            _google_protobuf_Edition_MIN                                                                 \
-    }
-#define google_protobuf_OneofOptions_init_default \
-    { false, google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL }
+    {{{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_ServiceOptions_init_default}
+#define google_protobuf_MethodDescriptorProto_init_default                                              \
+    {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_MethodOptions_init_default, \
+     false,          false,          false,          false}
+#define google_protobuf_FileOptions_init_default     \
+    {{{NULL}, NULL},                                 \
+     {{NULL}, NULL},                                 \
+     false,                                          \
+     google_protobuf_FileOptions_OptimizeMode_SPEED, \
+     false,                                          \
+     false,                                          \
+     {{NULL}, NULL},                                 \
+     false,                                          \
+     false,                                          \
+     false,                                          \
+     false,                                          \
+     false,                                          \
+     false,                                          \
+     false,                                          \
+     0,                                              \
+     false,                                          \
+     false,                                          \
+     false,                                          \
+     false,                                          \
+     false,                                          \
+     true,                                           \
+     {{NULL}, NULL},                                 \
+     {{NULL}, NULL},                                 \
+     {{NULL}, NULL},                                 \
+     {{NULL}, NULL},                                 \
+     {{NULL}, NULL},                                 \
+     {{NULL}, NULL},                                 \
+     {{NULL}, NULL},                                 \
+     false,                                          \
+     google_protobuf_FeatureSet_init_default,        \
+     {{NULL}, NULL},                                 \
+     NULL}
+#define google_protobuf_MessageOptions_init_default                                                                         \
+    {false,          false, false, false, false, false, false, 0, false, 0, false, google_protobuf_FeatureSet_init_default, \
+     {{NULL}, NULL}, NULL}
+#define google_protobuf_FieldOptions_init_default                              \
+    {false,          google_protobuf_FieldOptions_CType_STRING,                \
+     false,          0,                                                        \
+     false,          false,                                                    \
+     false,          false,                                                    \
+     false,          google_protobuf_FieldOptions_JSType_JS_NORMAL,            \
+     false,          false,                                                    \
+     false,          false,                                                    \
+     false,          false,                                                    \
+     false,          _google_protobuf_FieldOptions_OptionRetention_MIN,        \
+     {{NULL}, NULL}, {{NULL}, NULL},                                           \
+     false,          google_protobuf_FeatureSet_init_default,                  \
+     false,          google_protobuf_FieldOptions_FeatureSupport_init_default, \
+     {{NULL}, NULL}, NULL}
+#define google_protobuf_FieldOptions_EditionDefault_init_default {{{NULL}, NULL}, false, _google_protobuf_Edition_MIN}
+#define google_protobuf_FieldOptions_FeatureSupport_init_default                               \
+    {false, _google_protobuf_Edition_MIN, false, _google_protobuf_Edition_MIN, {{NULL}, NULL}, \
+     false, _google_protobuf_Edition_MIN}
+#define google_protobuf_OneofOptions_init_default {false, google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL}
 #define google_protobuf_EnumOptions_init_default \
-    { false, 0, false, false, false, 0, false, google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL }
-#define google_protobuf_EnumValueOptions_init_default                                      \
-    {                                                                                      \
-        false, false, false, google_protobuf_FeatureSet_init_default, false, false, false, \
-            google_protobuf_FieldOptions_FeatureSupport_init_default, {{NULL}, NULL}, NULL \
-    }
+    {false, 0, false, false, false, 0, false, google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL}
+#define google_protobuf_EnumValueOptions_init_default                                        \
+    {false,          false, false, google_protobuf_FeatureSet_init_default,                  \
+     false,          false, false, google_protobuf_FieldOptions_FeatureSupport_init_default, \
+     {{NULL}, NULL}, NULL}
 #define google_protobuf_ServiceOptions_init_default \
-    { false, false, false, google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL }
-#define google_protobuf_MethodOptions_init_default                                                      \
-    {                                                                                                   \
-        false, false, false, google_protobuf_MethodOptions_IdempotencyLevel_IDEMPOTENCY_UNKNOWN, false, \
-            google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL                               \
-    }
+    {false, false, false, google_protobuf_FeatureSet_init_default, {{NULL}, NULL}, NULL}
+#define google_protobuf_MethodOptions_init_default                                       \
+    {false,          false,                                                              \
+     false,          google_protobuf_MethodOptions_IdempotencyLevel_IDEMPOTENCY_UNKNOWN, \
+     false,          google_protobuf_FeatureSet_init_default,                            \
+     {{NULL}, NULL}, NULL}
 #define google_protobuf_UninterpretedOption_init_default                                               \
     {                                                                                                  \
         {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0, false, 0, {{NULL}, NULL}, { {NULL}, NULL } \
     }
-#define google_protobuf_UninterpretedOption_NamePart_init_default \
-    { {{NULL}, NULL}, 0 }
-#define google_protobuf_FeatureSet_init_default                                                                             \
-    {                                                                                                                       \
-        false, _google_protobuf_FeatureSet_FieldPresence_MIN, false, _google_protobuf_FeatureSet_EnumType_MIN, false,       \
-            _google_protobuf_FeatureSet_RepeatedFieldEncoding_MIN, false, _google_protobuf_FeatureSet_Utf8Validation_MIN,   \
-            false, _google_protobuf_FeatureSet_MessageEncoding_MIN, false, _google_protobuf_FeatureSet_JsonFormat_MIN, NULL \
-    }
+#define google_protobuf_UninterpretedOption_NamePart_init_default {{{NULL}, NULL}, 0}
+#define google_protobuf_FeatureSet_init_default                                                                           \
+    {false, _google_protobuf_FeatureSet_FieldPresence_MIN,         false, _google_protobuf_FeatureSet_EnumType_MIN,       \
+     false, _google_protobuf_FeatureSet_RepeatedFieldEncoding_MIN, false, _google_protobuf_FeatureSet_Utf8Validation_MIN, \
+     false, _google_protobuf_FeatureSet_MessageEncoding_MIN,       false, _google_protobuf_FeatureSet_JsonFormat_MIN,     \
+     NULL}
 #define google_protobuf_FeatureSetDefaults_init_default \
-    { {{NULL}, NULL}, false, _google_protobuf_Edition_MIN, false, _google_protobuf_Edition_MIN }
+    {{{NULL}, NULL}, false, _google_protobuf_Edition_MIN, false, _google_protobuf_Edition_MIN}
 #define google_protobuf_FeatureSetDefaults_FeatureSetEditionDefault_init_default                    \
-    {                                                                                               \
-        false, _google_protobuf_Edition_MIN, false, google_protobuf_FeatureSet_init_default, false, \
-            google_protobuf_FeatureSet_init_default                                                 \
-    }
+    {false, _google_protobuf_Edition_MIN,           false, google_protobuf_FeatureSet_init_default, \
+     false, google_protobuf_FeatureSet_init_default}
 #define google_protobuf_SourceCodeInfo_init_default \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
 #define google_protobuf_SourceCodeInfo_Location_init_default                             \
     {                                                                                    \
@@ -1332,20 +1378,35 @@ extern "C" {
     }
 #define google_protobuf_GeneratedCodeInfo_init_default \
     {                                                  \
-        { {NULL}, NULL }                               \
+        {                                              \
+            {NULL}, NULL                               \
+        }                                              \
     }
 #define google_protobuf_GeneratedCodeInfo_Annotation_init_default \
-    { {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0, false, _google_protobuf_GeneratedCodeInfo_Annotation_Semantic_MIN }
+    {{{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0, false, _google_protobuf_GeneratedCodeInfo_Annotation_Semantic_MIN}
 #define google_protobuf_FileDescriptorSet_init_zero \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
-#define google_protobuf_FileDescriptorProto_init_zero                                                                      \
-    {                                                                                                                      \
-        {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL},    \
-            false, google_protobuf_FileOptions_init_zero, false, google_protobuf_SourceCodeInfo_init_zero, {{NULL}, NULL}, \
-            {{NULL}, NULL}, {{NULL}, NULL}, false, _google_protobuf_Edition_MIN                                            \
-    }
+#define google_protobuf_FileDescriptorProto_init_zero \
+    {{{NULL}, NULL},                                  \
+     {{NULL}, NULL},                                  \
+     {{NULL}, NULL},                                  \
+     {{NULL}, NULL},                                  \
+     {{NULL}, NULL},                                  \
+     {{NULL}, NULL},                                  \
+     {{NULL}, NULL},                                  \
+     false,                                           \
+     google_protobuf_FileOptions_init_zero,           \
+     false,                                           \
+     google_protobuf_SourceCodeInfo_init_zero,        \
+     {{NULL}, NULL},                                  \
+     {{NULL}, NULL},                                  \
+     {{NULL}, NULL},                                  \
+     false,                                           \
+     _google_protobuf_Edition_MIN}
 #define google_protobuf_DescriptorProto_init_zero                                                              \
     {                                                                                                          \
         {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, \
@@ -1354,98 +1415,135 @@ extern "C" {
         }                                                                                                      \
     }
 #define google_protobuf_DescriptorProto_ExtensionRange_init_zero \
-    { false, 0, false, 0, false, google_protobuf_ExtensionRangeOptions_init_zero }
-#define google_protobuf_DescriptorProto_ReservedRange_init_zero \
-    { false, 0, false, 0 }
-#define google_protobuf_ExtensionRangeOptions_init_zero                                             \
-    {                                                                                               \
-        {{NULL}, NULL}, false, _google_protobuf_ExtensionRangeOptions_VerificationState_MIN, false, \
-            google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL                              \
-    }
+    {false, 0, false, 0, false, google_protobuf_ExtensionRangeOptions_init_zero}
+#define google_protobuf_DescriptorProto_ReservedRange_init_zero {false, 0, false, 0}
+#define google_protobuf_ExtensionRangeOptions_init_zero            \
+    {{{NULL}, NULL},                                               \
+     false,                                                        \
+     _google_protobuf_ExtensionRangeOptions_VerificationState_MIN, \
+     false,                                                        \
+     google_protobuf_FeatureSet_init_zero,                         \
+     {{NULL}, NULL},                                               \
+     NULL}
 #define google_protobuf_ExtensionRangeOptions_Declaration_init_zero \
-    { false, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0 }
-#define google_protobuf_FieldDescriptorProto_init_zero                                                           \
-    {                                                                                                            \
-        {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, _google_protobuf_FieldDescriptorProto_Label_MIN, false, \
-            _google_protobuf_FieldDescriptorProto_Type_MIN, {{NULL}, NULL}, {{NULL}, NULL}, false,               \
-            google_protobuf_FieldOptions_init_zero, false, 0, {{NULL}, NULL}, false, 0                           \
-    }
-#define google_protobuf_OneofDescriptorProto_init_zero \
-    { {{NULL}, NULL}, false, google_protobuf_OneofOptions_init_zero }
+    {false, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0}
+#define google_protobuf_FieldDescriptorProto_init_zero \
+    {{{NULL}, NULL},                                   \
+     {{NULL}, NULL},                                   \
+     false,                                            \
+     0,                                                \
+     false,                                            \
+     _google_protobuf_FieldDescriptorProto_Label_MIN,  \
+     false,                                            \
+     _google_protobuf_FieldDescriptorProto_Type_MIN,   \
+     {{NULL}, NULL},                                   \
+     {{NULL}, NULL},                                   \
+     false,                                            \
+     google_protobuf_FieldOptions_init_zero,           \
+     false,                                            \
+     0,                                                \
+     {{NULL}, NULL},                                   \
+     false,                                            \
+     0}
+#define google_protobuf_OneofDescriptorProto_init_zero {{{NULL}, NULL}, false, google_protobuf_OneofOptions_init_zero}
 #define google_protobuf_EnumDescriptorProto_init_zero                                                                  \
     {                                                                                                                  \
         {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_EnumOptions_init_zero, {{NULL}, NULL}, { {NULL}, NULL } \
     }
-#define google_protobuf_EnumDescriptorProto_EnumReservedRange_init_zero \
-    { false, 0, false, 0 }
+#define google_protobuf_EnumDescriptorProto_EnumReservedRange_init_zero {false, 0, false, 0}
 #define google_protobuf_EnumValueDescriptorProto_init_zero \
-    { {{NULL}, NULL}, false, 0, false, google_protobuf_EnumValueOptions_init_zero }
+    {{{NULL}, NULL}, false, 0, false, google_protobuf_EnumValueOptions_init_zero}
 #define google_protobuf_ServiceDescriptorProto_init_zero \
-    { {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_ServiceOptions_init_zero }
+    {{{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_ServiceOptions_init_zero}
 #define google_protobuf_MethodDescriptorProto_init_zero \
-    { {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_MethodOptions_init_zero, false, 0, false, 0 }
-#define google_protobuf_FileOptions_init_zero                                                                           \
-    {                                                                                                                   \
-        {{NULL}, NULL}, {{NULL}, NULL}, false, _google_protobuf_FileOptions_OptimizeMode_MIN, false, 0, {{NULL}, NULL}, \
-            false, 0, false, 0, false, 0, false, 0, false, 0, false, 0, false, 0, {{NULL}, NULL}, {{NULL}, NULL},       \
-            {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false,                      \
-            google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL                                                  \
-    }
+    {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, google_protobuf_MethodOptions_init_zero, false, 0, false, 0}
+#define google_protobuf_FileOptions_init_zero       \
+    {{{NULL}, NULL},                                \
+     {{NULL}, NULL},                                \
+     false,                                         \
+     _google_protobuf_FileOptions_OptimizeMode_MIN, \
+     false,                                         \
+     0,                                             \
+     {{NULL}, NULL},                                \
+     false,                                         \
+     0,                                             \
+     false,                                         \
+     0,                                             \
+     false,                                         \
+     0,                                             \
+     false,                                         \
+     0,                                             \
+     false,                                         \
+     0,                                             \
+     false,                                         \
+     0,                                             \
+     false,                                         \
+     0,                                             \
+     {{NULL}, NULL},                                \
+     {{NULL}, NULL},                                \
+     {{NULL}, NULL},                                \
+     {{NULL}, NULL},                                \
+     {{NULL}, NULL},                                \
+     {{NULL}, NULL},                                \
+     {{NULL}, NULL},                                \
+     false,                                         \
+     google_protobuf_FeatureSet_init_zero,          \
+     {{NULL}, NULL},                                \
+     NULL}
 #define google_protobuf_MessageOptions_init_zero \
-    { false, 0, false, 0, false, 0, false, 0, false, 0, false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL }
-#define google_protobuf_FieldOptions_init_zero                                                                  \
-    {                                                                                                           \
-        false, _google_protobuf_FieldOptions_CType_MIN, false, 0, false, 0, false, 0, false,                    \
-            _google_protobuf_FieldOptions_JSType_MIN, false, 0, false, 0, false, 0, false,                      \
-            _google_protobuf_FieldOptions_OptionRetention_MIN, {{NULL}, NULL}, {{NULL}, NULL}, false,           \
-            google_protobuf_FeatureSet_init_zero, false, google_protobuf_FieldOptions_FeatureSupport_init_zero, \
-            {{NULL}, NULL}, NULL                                                                                \
-    }
-#define google_protobuf_FieldOptions_EditionDefault_init_zero \
-    { {{NULL}, NULL}, false, _google_protobuf_Edition_MIN }
-#define google_protobuf_FieldOptions_FeatureSupport_init_zero                                            \
-    {                                                                                                    \
-        false, _google_protobuf_Edition_MIN, false, _google_protobuf_Edition_MIN, {{NULL}, NULL}, false, \
-            _google_protobuf_Edition_MIN                                                                 \
-    }
-#define google_protobuf_OneofOptions_init_zero \
-    { false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL }
+    {false, 0, false, 0, false, 0, false, 0, false, 0, false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL}
+#define google_protobuf_FieldOptions_init_zero                              \
+    {false,          _google_protobuf_FieldOptions_CType_MIN,               \
+     false,          0,                                                     \
+     false,          0,                                                     \
+     false,          0,                                                     \
+     false,          _google_protobuf_FieldOptions_JSType_MIN,              \
+     false,          0,                                                     \
+     false,          0,                                                     \
+     false,          0,                                                     \
+     false,          _google_protobuf_FieldOptions_OptionRetention_MIN,     \
+     {{NULL}, NULL}, {{NULL}, NULL},                                        \
+     false,          google_protobuf_FeatureSet_init_zero,                  \
+     false,          google_protobuf_FieldOptions_FeatureSupport_init_zero, \
+     {{NULL}, NULL}, NULL}
+#define google_protobuf_FieldOptions_EditionDefault_init_zero {{{NULL}, NULL}, false, _google_protobuf_Edition_MIN}
+#define google_protobuf_FieldOptions_FeatureSupport_init_zero                                  \
+    {false, _google_protobuf_Edition_MIN, false, _google_protobuf_Edition_MIN, {{NULL}, NULL}, \
+     false, _google_protobuf_Edition_MIN}
+#define google_protobuf_OneofOptions_init_zero {false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL}
 #define google_protobuf_EnumOptions_init_zero \
-    { false, 0, false, 0, false, 0, false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL }
+    {false, 0, false, 0, false, 0, false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL}
 #define google_protobuf_EnumValueOptions_init_zero                                      \
-    {                                                                                   \
-        false, 0, false, google_protobuf_FeatureSet_init_zero, false, 0, false,         \
-            google_protobuf_FieldOptions_FeatureSupport_init_zero, {{NULL}, NULL}, NULL \
-    }
+    {false,          0,   false, google_protobuf_FeatureSet_init_zero,                  \
+     false,          0,   false, google_protobuf_FieldOptions_FeatureSupport_init_zero, \
+     {{NULL}, NULL}, NULL}
 #define google_protobuf_ServiceOptions_init_zero \
-    { false, 0, false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL }
-#define google_protobuf_MethodOptions_init_zero                                                                            \
-    {                                                                                                                      \
-        false, 0, false, _google_protobuf_MethodOptions_IdempotencyLevel_MIN, false, google_protobuf_FeatureSet_init_zero, \
-            {{NULL}, NULL}, NULL                                                                                           \
-    }
+    {false, 0, false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL}
+#define google_protobuf_MethodOptions_init_zero                           \
+    {false,          0,                                                   \
+     false,          _google_protobuf_MethodOptions_IdempotencyLevel_MIN, \
+     false,          google_protobuf_FeatureSet_init_zero,                \
+     {{NULL}, NULL}, NULL}
 #define google_protobuf_UninterpretedOption_init_zero                                                  \
     {                                                                                                  \
         {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0, false, 0, {{NULL}, NULL}, { {NULL}, NULL } \
     }
-#define google_protobuf_UninterpretedOption_NamePart_init_zero \
-    { {{NULL}, NULL}, 0 }
-#define google_protobuf_FeatureSet_init_zero                                                                                \
-    {                                                                                                                       \
-        false, _google_protobuf_FeatureSet_FieldPresence_MIN, false, _google_protobuf_FeatureSet_EnumType_MIN, false,       \
-            _google_protobuf_FeatureSet_RepeatedFieldEncoding_MIN, false, _google_protobuf_FeatureSet_Utf8Validation_MIN,   \
-            false, _google_protobuf_FeatureSet_MessageEncoding_MIN, false, _google_protobuf_FeatureSet_JsonFormat_MIN, NULL \
-    }
+#define google_protobuf_UninterpretedOption_NamePart_init_zero {{{NULL}, NULL}, 0}
+#define google_protobuf_FeatureSet_init_zero                                                                              \
+    {false, _google_protobuf_FeatureSet_FieldPresence_MIN,         false, _google_protobuf_FeatureSet_EnumType_MIN,       \
+     false, _google_protobuf_FeatureSet_RepeatedFieldEncoding_MIN, false, _google_protobuf_FeatureSet_Utf8Validation_MIN, \
+     false, _google_protobuf_FeatureSet_MessageEncoding_MIN,       false, _google_protobuf_FeatureSet_JsonFormat_MIN,     \
+     NULL}
 #define google_protobuf_FeatureSetDefaults_init_zero \
-    { {{NULL}, NULL}, false, _google_protobuf_Edition_MIN, false, _google_protobuf_Edition_MIN }
-#define google_protobuf_FeatureSetDefaults_FeatureSetEditionDefault_init_zero                    \
-    {                                                                                            \
-        false, _google_protobuf_Edition_MIN, false, google_protobuf_FeatureSet_init_zero, false, \
-            google_protobuf_FeatureSet_init_zero                                                 \
-    }
+    {{{NULL}, NULL}, false, _google_protobuf_Edition_MIN, false, _google_protobuf_Edition_MIN}
+#define google_protobuf_FeatureSetDefaults_FeatureSetEditionDefault_init_zero                 \
+    {false, _google_protobuf_Edition_MIN,        false, google_protobuf_FeatureSet_init_zero, \
+     false, google_protobuf_FeatureSet_init_zero}
 #define google_protobuf_SourceCodeInfo_init_zero \
     {                                            \
-        { {NULL}, NULL }                         \
+        {                                        \
+            {NULL}, NULL                         \
+        }                                        \
     }
 #define google_protobuf_SourceCodeInfo_Location_init_zero                                \
     {                                                                                    \
@@ -1453,10 +1551,12 @@ extern "C" {
     }
 #define google_protobuf_GeneratedCodeInfo_init_zero \
     {                                               \
-        { {NULL}, NULL }                            \
+        {                                           \
+            {NULL}, NULL                            \
+        }                                           \
     }
 #define google_protobuf_GeneratedCodeInfo_Annotation_init_zero \
-    { {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0, false, _google_protobuf_GeneratedCodeInfo_Annotation_Semantic_MIN }
+    {{{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0, false, _google_protobuf_GeneratedCodeInfo_Annotation_Semantic_MIN}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define google_protobuf_FileDescriptorSet_file_tag 1
