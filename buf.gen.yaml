@@ -1,0 +1,25 @@
+# to use local protos and the local nanopb plugin, comment out the 'remote' and
+# 'module' headers, and uncomment the 'local' and 'directory' headers.
+
+version: v2
+clean: true
+managed:
+  enabled: true
+plugins:
+#  - local: ./deps/nanopb/generator/protoc-gen-nanopb
+  - remote: buf.build/community/nanopb
+    out: ./app/src/protobuf
+    include_imports: true
+    include_wkt: true
+inputs:
+#  - directory: ./proto
+  - module: buf.build/penumbra-zone/penumbra:main
+    types:
+      - penumbra.custody.v1
+      - penumbra.core.transaction.v1
+      - penumbra.core.keys.v1
+      - penumbra.core.txhash.v1
+      - penumbra.crypto.decaf377_fmd.v1
+    exclude_types:
+      # SimulateTradeRequest.Routing contains a field named 'default'
+      - penumbra.core.component.dex.v1.SimulationService

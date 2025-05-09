@@ -50,24 +50,29 @@ test_all:
 prod:
 	make PRODUCTION_BUILD=1
 
+.PHONY: proto-clean
+proto-clean:
+	@rm -rvf ./proto ./app/src/protobuf/* ./app/rust/src/protobuf_h/*
+	@mkdir -p ./app/rust/src/protobuf_h
+
+# to use local protos exported by this target, see comments in buf.gen.yaml
+.PHONY: proto-export
+proto-export:
+# buf export buf.build/penumbra-zone/penumbra:d55e7e80eb42ecb205d88d270644c3e23e2cde36 --output ./proto
+	buf export buf.build/penumbra-zone/penumbra:main --output ./proto
+
+
+.PHONY: proto-generate
+proto-generate: proto-clean
+	buf generate
+
+.PHONY: proto-rust
+proto-rust: proto-generate
+	@cd tools/proto-bindgen && cargo run
+
 .PHONY: proto
+proto: proto-rust
 
-# Set the paths
-PROTO_PATH := ./proto/penumbra
-VENDORED_PROTO_PATH := ./proto/rust-vendored
-OUTPUT_PATH := ./app/src/protobuf
-
-proto:
-	@mkdir -p $(OUTPUT_PATH)
-	@find $(PROTO_PATH) $(VENDORED_PROTO_PATH) -name "*.proto" -type f | \
-		xargs -I {} ./deps/nanopb/generator/protoc {} \
-		--proto_path=$(PROTO_PATH) \
-		--proto_path=$(VENDORED_PROTO_PATH) \
-		--nanopb_out=$(OUTPUT_PATH)
-	@echo "C protobuf files generated in $(OUTPUT_PATH)"
-	make format
-	cd tools/proto-bindgen && cargo run
-	
 test_ledger_try:
 	make zemu_install
 	cd tests_zemu && yarn try

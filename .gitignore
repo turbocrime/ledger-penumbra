@@ -84,3 +84,8 @@ app/rust/.cargo/git
 app/rust/target
 
 tools/proto-bindgen/target
+
+# generated protobuf code
+proto
+app/rust/src/protobuf_h
+app/src/protobuf
