@@ -50,28 +50,24 @@ test_all:
 prod:
 	make PRODUCTION_BUILD=1
 
-.PHONY: proto-clean
-proto-clean:
-	@rm -rvf ./proto ./app/src/protobuf/* ./app/rust/src/protobuf_h/*
-	@mkdir -p ./app/rust/src/protobuf_h
+./proto/penumbra:
+# penumbra:main tag or commit penumbra:d55e7e80eb42ecb205d88d270644c3e23e2cde36
+	buf export --output ./proto buf.build/penumbra-zone/penumbra:main
 
-# to use local protos exported by this target, see comments in buf.gen.yaml
-.PHONY: proto-export
-proto-export:
-# buf export buf.build/penumbra-zone/penumbra:d55e7e80eb42ecb205d88d270644c3e23e2cde36 --output ./proto
-	buf export buf.build/penumbra-zone/penumbra:main --output ./proto
-
-
-.PHONY: proto-generate
-proto-generate: proto-clean
+# to use local protos, see comments in `buf.gen.yaml` and uncomment dependency
+./app/src/protobuf: # ./proto/penumbra
 	buf generate
 
-.PHONY: proto-rust
-proto-rust: proto-generate
+./app/rust/src/protobuf_h: ./app/src/protobuf
+	@mkdir -p ./app/rust/src/protobuf_h
 	@cd tools/proto-bindgen && cargo run
 
+.PHONY: proto-clean
+proto-clean:
+	@rm -rfv ./app/rust/src/protobuf_h ./app/src/protobuf ./proto
+
 .PHONY: proto
-proto: proto-rust
+proto: proto-clean ./app/rust/src/protobuf_h
 
 test_ledger_try:
 	make zemu_install
