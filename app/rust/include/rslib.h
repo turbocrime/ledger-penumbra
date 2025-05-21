@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "coin.h"
+#include "parser_common.h"
 
 #ifdef __cplusplus
 extern "C" {
