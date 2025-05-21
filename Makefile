@@ -50,24 +50,10 @@ test_all:
 prod:
 	make PRODUCTION_BUILD=1
 
-.PHONY: proto
-
-# Set the paths
-PROTO_PATH := ./proto/penumbra
-VENDORED_PROTO_PATH := ./proto/rust-vendored
-OUTPUT_PATH := ./app/src/protobuf
-
-proto:
-	@mkdir -p $(OUTPUT_PATH)
-	@find $(PROTO_PATH) $(VENDORED_PROTO_PATH) -name "*.proto" -type f | \
-		xargs -I {} ./deps/nanopb/generator/protoc {} \
-		--proto_path=$(PROTO_PATH) \
-		--proto_path=$(VENDORED_PROTO_PATH) \
-		--nanopb_out=$(OUTPUT_PATH)
-	@echo "C protobuf files generated in $(OUTPUT_PATH)"
-	make format
-	cd tools/proto-bindgen && cargo run
-	
 test_ledger_try:
 	make zemu_install
 	cd tests_zemu && yarn try
+
+ifeq ($(filter proto,$(MAKECMDGOALS)),proto)
+include proto.mk
+endif

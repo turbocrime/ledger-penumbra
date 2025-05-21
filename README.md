@@ -238,6 +238,25 @@ The Makefile will build the firmware in a docker container and leave the binary 
    make loadS2        # Loads the built app to the device
    ```
 
+## Generating Protobuf Files
+
+This project uses protocol buffers (protos) from the [Penumbra repository](https://buf.build/penumbra-zone/penumbra). To fetch and generate the required files, use:
+
+```sh
+make proto
+```
+
+This command will:
+- Download the latest Penumbra protos using [buf](https://buf.build/).
+- Generate source code from the protos.
+- Generate Rust bindings and header files.
+
+### Dependencies
+
+Before running `make proto`, ensure you have the following installed:
+- [buf](https://docs.buf.build/installation) 
+- [cargo](https://www.rust-lang.org/tools/install) 
+
 ## APDU Specifications
 
 - [APDU Protocol](./docs/APDUSPEC.md)

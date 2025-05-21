@@ -1,0 +1,35 @@
+# Usage:
+# - To use local protos and the local nanopb plugin (for local development or custom changes),
+#   comment out the 'remote' and 'module' headers, and uncomment the 'local' and 'directory' headers below.
+# - To use remote protos and plugins (for reproducible builds or CI), keep the 'remote' and 'module' headers enabled.
+
+version: v2
+clean: true
+managed:
+  enabled: true
+
+# Plugins configuration
+plugins:
+  # Use the local nanopb plugin for local development:
+  # - local: ./deps/nanopb/generator/protoc-gen-nanopb
+  # Use the remote nanopb plugin for reproducible builds:
+  - remote: buf.build/community/nanopb
+    out: ./app/src/protobuf
+    include_imports: true
+    include_wkt: true
+
+# Proto source configuration
+inputs:
+  # Use local proto directory for local development:
+  # - directory: ./proto
+  # Use remote module for reproducible builds:
+  - module: buf.build/penumbra-zone/penumbra:main
+    types:
+      - penumbra.custody.v1
+      - penumbra.core.transaction.v1
+      - penumbra.core.keys.v1
+      - penumbra.core.txhash.v1
+      - penumbra.crypto.decaf377_fmd.v1
+    exclude_types:
+      # Exclude SimulationService due to 'default' field name conflict in SimulateTradeRequest.Routing
+      - penumbra.core.component.dex.v1.SimulationService
