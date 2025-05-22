@@ -471,7 +471,10 @@ extern "C" {
             penumbra_core_txhash_v1_TransactionId_init_default                                            \
     }
 #define penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment_init_default \
-    { false, penumbra_crypto_tct_v1_StateCommitment_init_default, false, penumbra_core_txhash_v1_TransactionId_init_default }
+    {                                                                                                           \
+        false, penumbra_crypto_tct_v1_StateCommitment_init_default, false,                                      \
+            penumbra_core_txhash_v1_TransactionId_init_default                                                  \
+    }
 #define penumbra_core_transaction_v1_PayloadKeyWithCommitment_init_default \
     { false, penumbra_core_keys_v1_PayloadKey_init_default, false, penumbra_crypto_tct_v1_StateCommitment_init_default }
 #define penumbra_core_transaction_v1_NullifierWithNote_init_default          \
@@ -546,10 +549,11 @@ extern "C" {
     }
 #define penumbra_core_transaction_v1_MemoView_Opaque_init_default \
     { false, penumbra_core_transaction_v1_MemoCiphertext_init_default }
-#define penumbra_core_transaction_v1_Transaction_init_zero                                                                  \
-    {                                                                                                                       \
-        false, penumbra_core_transaction_v1_TransactionBody_init_zero, false,                                               \
-            penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero, false, penumbra_crypto_tct_v1_MerkleRoot_init_zero \
+#define penumbra_core_transaction_v1_Transaction_init_zero                      \
+    {                                                                           \
+        false, penumbra_core_transaction_v1_TransactionBody_init_zero, false,   \
+            penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero, false, \
+            penumbra_crypto_tct_v1_MerkleRoot_init_zero                         \
     }
 #define penumbra_core_transaction_v1_TransactionBody_init_zero                                      \
     {                                                                                               \
@@ -584,7 +588,10 @@ extern "C" {
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_init_zero \
     { false, penumbra_core_asset_v1_AssetId_init_zero, false, google_protobuf_Any_init_zero }
 #define penumbra_core_transaction_v1_TransactionPerspective_CreationTransactionIdByNullifier_init_zero \
-    { false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero }
+    {                                                                                                  \
+        false, penumbra_core_component_sct_v1_Nullifier_init_zero, false,                              \
+            penumbra_core_txhash_v1_TransactionId_init_zero                                            \
+    }
 #define penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment_init_zero \
     { false, penumbra_crypto_tct_v1_StateCommitment_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero }
 #define penumbra_core_transaction_v1_PayloadKeyWithCommitment_init_zero \
@@ -594,15 +601,17 @@ extern "C" {
         false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, \
             penumbra_core_component_shielded_pool_v1_Note_init_zero       \
     }
-#define penumbra_core_transaction_v1_TransactionView_init_zero                                                              \
-    {                                                                                                                       \
-        false, penumbra_core_transaction_v1_TransactionBodyView_init_zero, false,                                           \
-            penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero, false, penumbra_crypto_tct_v1_MerkleRoot_init_zero \
+#define penumbra_core_transaction_v1_TransactionView_init_zero                    \
+    {                                                                             \
+        false, penumbra_core_transaction_v1_TransactionBodyView_init_zero, false, \
+            penumbra_crypto_decaf377_rdsa_v1_BindingSignature_init_zero, false,   \
+            penumbra_crypto_tct_v1_MerkleRoot_init_zero                           \
     }
-#define penumbra_core_transaction_v1_TransactionBodyView_init_zero                                                       \
-    {                                                                                                                    \
-        {{NULL}, NULL}, false, penumbra_core_transaction_v1_TransactionParameters_init_zero, false,                      \
-            penumbra_core_transaction_v1_DetectionData_init_zero, false, penumbra_core_transaction_v1_MemoView_init_zero \
+#define penumbra_core_transaction_v1_TransactionBodyView_init_zero                                  \
+    {                                                                                               \
+        {{NULL}, NULL}, false, penumbra_core_transaction_v1_TransactionParameters_init_zero, false, \
+            penumbra_core_transaction_v1_DetectionData_init_zero, false,                            \
+            penumbra_core_transaction_v1_MemoView_init_zero                                         \
     }
 #define penumbra_core_transaction_v1_ActionView_init_zero                   \
     {                                                                       \
@@ -894,18 +903,22 @@ extern "C" {
     penumbra_core_component_governance_v1_ProposalSubmit
 #define penumbra_core_transaction_v1_Action_action_proposal_withdraw_MSGTYPE \
     penumbra_core_component_governance_v1_ProposalWithdraw
-#define penumbra_core_transaction_v1_Action_action_validator_vote_MSGTYPE penumbra_core_component_governance_v1_ValidatorVote
-#define penumbra_core_transaction_v1_Action_action_delegator_vote_MSGTYPE penumbra_core_component_governance_v1_DelegatorVote
+#define penumbra_core_transaction_v1_Action_action_validator_vote_MSGTYPE \
+    penumbra_core_component_governance_v1_ValidatorVote
+#define penumbra_core_transaction_v1_Action_action_delegator_vote_MSGTYPE \
+    penumbra_core_component_governance_v1_DelegatorVote
 #define penumbra_core_transaction_v1_Action_action_proposal_deposit_claim_MSGTYPE \
     penumbra_core_component_governance_v1_ProposalDepositClaim
 #define penumbra_core_transaction_v1_Action_action_position_open_MSGTYPE penumbra_core_component_dex_v1_PositionOpen
 #define penumbra_core_transaction_v1_Action_action_position_close_MSGTYPE penumbra_core_component_dex_v1_PositionClose
-#define penumbra_core_transaction_v1_Action_action_position_withdraw_MSGTYPE penumbra_core_component_dex_v1_PositionWithdraw
+#define penumbra_core_transaction_v1_Action_action_position_withdraw_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionWithdraw
 #define penumbra_core_transaction_v1_Action_action_position_reward_claim_MSGTYPE \
     penumbra_core_component_dex_v1_PositionRewardClaim
 #define penumbra_core_transaction_v1_Action_action_delegate_MSGTYPE penumbra_core_component_stake_v1_Delegate
 #define penumbra_core_transaction_v1_Action_action_undelegate_MSGTYPE penumbra_core_component_stake_v1_Undelegate
-#define penumbra_core_transaction_v1_Action_action_undelegate_claim_MSGTYPE penumbra_core_component_stake_v1_UndelegateClaim
+#define penumbra_core_transaction_v1_Action_action_undelegate_claim_MSGTYPE \
+    penumbra_core_component_stake_v1_UndelegateClaim
 #define penumbra_core_transaction_v1_Action_action_community_pool_spend_MSGTYPE \
     penumbra_core_component_governance_v1_CommunityPoolSpend
 #define penumbra_core_transaction_v1_Action_action_community_pool_output_MSGTYPE \
@@ -918,7 +931,8 @@ extern "C" {
     penumbra_core_component_auction_v1_ActionDutchAuctionEnd
 #define penumbra_core_transaction_v1_Action_action_action_dutch_auction_withdraw_MSGTYPE \
     penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw
-#define penumbra_core_transaction_v1_Action_action_ics20_withdrawal_MSGTYPE penumbra_core_component_ibc_v1_Ics20Withdrawal
+#define penumbra_core_transaction_v1_Action_action_ics20_withdrawal_MSGTYPE \
+    penumbra_core_component_ibc_v1_Ics20Withdrawal
 
 #define penumbra_core_transaction_v1_TransactionPerspective_FIELDLIST(X, a)            \
     X(a, CALLBACK, REPEATED, MESSAGE, payload_keys, 1)                                 \
@@ -1006,7 +1020,8 @@ extern "C" {
 #define penumbra_core_transaction_v1_TransactionView_CALLBACK NULL
 #define penumbra_core_transaction_v1_TransactionView_DEFAULT NULL
 #define penumbra_core_transaction_v1_TransactionView_body_view_MSGTYPE penumbra_core_transaction_v1_TransactionBodyView
-#define penumbra_core_transaction_v1_TransactionView_binding_sig_MSGTYPE penumbra_crypto_decaf377_rdsa_v1_BindingSignature
+#define penumbra_core_transaction_v1_TransactionView_binding_sig_MSGTYPE \
+    penumbra_crypto_decaf377_rdsa_v1_BindingSignature
 #define penumbra_core_transaction_v1_TransactionView_anchor_MSGTYPE penumbra_crypto_tct_v1_MerkleRoot
 
 #define penumbra_core_transaction_v1_TransactionBodyView_FIELDLIST(X, a) \
@@ -1019,47 +1034,51 @@ extern "C" {
 #define penumbra_core_transaction_v1_TransactionBodyView_action_views_MSGTYPE penumbra_core_transaction_v1_ActionView
 #define penumbra_core_transaction_v1_TransactionBodyView_transaction_parameters_MSGTYPE \
     penumbra_core_transaction_v1_TransactionParameters
-#define penumbra_core_transaction_v1_TransactionBodyView_detection_data_MSGTYPE penumbra_core_transaction_v1_DetectionData
+#define penumbra_core_transaction_v1_TransactionBodyView_detection_data_MSGTYPE \
+    penumbra_core_transaction_v1_DetectionData
 #define penumbra_core_transaction_v1_TransactionBodyView_memo_view_MSGTYPE penumbra_core_transaction_v1_MemoView
 
-#define penumbra_core_transaction_v1_ActionView_FIELDLIST(X, a)                                                           \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, spend, action_view.spend), 1)                                              \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, output, action_view.output), 2)                                            \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, swap, action_view.swap), 3)                                                \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, swap_claim, action_view.swap_claim), 4)                                    \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, validator_definition, action_view.validator_definition), 16)               \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, ibc_relay_action, action_view.ibc_relay_action), 17)                       \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, proposal_submit, action_view.proposal_submit), 18)                         \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, proposal_withdraw, action_view.proposal_withdraw), 19)                     \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, validator_vote, action_view.validator_vote), 20)                           \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, delegator_vote, action_view.delegator_vote), 21)                           \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, proposal_deposit_claim, action_view.proposal_deposit_claim), 22)           \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_open, action_view.position_open), 30)                             \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_close, action_view.position_close), 31)                           \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_withdraw, action_view.position_withdraw), 32)                     \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_reward_claim, action_view.position_reward_claim), 34)             \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, delegate, action_view.delegate), 41)                                       \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, undelegate, action_view.undelegate), 42)                                   \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, undelegate_claim, action_view.undelegate_claim), 43)                       \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, community_pool_spend, action_view.community_pool_spend), 50)               \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, community_pool_output, action_view.community_pool_output), 51)             \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, community_pool_deposit, action_view.community_pool_deposit), 52)           \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, action_dutch_auction_schedule, action_view.action_dutch_auction_schedule), \
-      53)                                                                                                                 \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, action_dutch_auction_end, action_view.action_dutch_auction_end), 54)       \
-    X(a, STATIC, ONEOF, MESSAGE, (action_view, action_dutch_auction_withdraw, action_view.action_dutch_auction_withdraw), \
-      55)                                                                                                                 \
+#define penumbra_core_transaction_v1_ActionView_FIELDLIST(X, a)                                                     \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, spend, action_view.spend), 1)                                        \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, output, action_view.output), 2)                                      \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, swap, action_view.swap), 3)                                          \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, swap_claim, action_view.swap_claim), 4)                              \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, validator_definition, action_view.validator_definition), 16)         \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, ibc_relay_action, action_view.ibc_relay_action), 17)                 \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, proposal_submit, action_view.proposal_submit), 18)                   \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, proposal_withdraw, action_view.proposal_withdraw), 19)               \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, validator_vote, action_view.validator_vote), 20)                     \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, delegator_vote, action_view.delegator_vote), 21)                     \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, proposal_deposit_claim, action_view.proposal_deposit_claim), 22)     \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_open, action_view.position_open), 30)                       \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_close, action_view.position_close), 31)                     \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_withdraw, action_view.position_withdraw), 32)               \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_reward_claim, action_view.position_reward_claim), 34)       \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, delegate, action_view.delegate), 41)                                 \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, undelegate, action_view.undelegate), 42)                             \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, undelegate_claim, action_view.undelegate_claim), 43)                 \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, community_pool_spend, action_view.community_pool_spend), 50)         \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, community_pool_output, action_view.community_pool_output), 51)       \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, community_pool_deposit, action_view.community_pool_deposit), 52)     \
+    X(a, STATIC, ONEOF, MESSAGE,                                                                                    \
+      (action_view, action_dutch_auction_schedule, action_view.action_dutch_auction_schedule), 53)                  \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, action_dutch_auction_end, action_view.action_dutch_auction_end), 54) \
+    X(a, STATIC, ONEOF, MESSAGE,                                                                                    \
+      (action_view, action_dutch_auction_withdraw, action_view.action_dutch_auction_withdraw), 55)                  \
     X(a, STATIC, ONEOF, MESSAGE, (action_view, ics20_withdrawal, action_view.ics20_withdrawal), 200)
 #define penumbra_core_transaction_v1_ActionView_CALLBACK NULL
 #define penumbra_core_transaction_v1_ActionView_DEFAULT NULL
-#define penumbra_core_transaction_v1_ActionView_action_view_spend_MSGTYPE penumbra_core_component_shielded_pool_v1_SpendView
+#define penumbra_core_transaction_v1_ActionView_action_view_spend_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_SpendView
 #define penumbra_core_transaction_v1_ActionView_action_view_output_MSGTYPE \
     penumbra_core_component_shielded_pool_v1_OutputView
 #define penumbra_core_transaction_v1_ActionView_action_view_swap_MSGTYPE penumbra_core_component_dex_v1_SwapView
-#define penumbra_core_transaction_v1_ActionView_action_view_swap_claim_MSGTYPE penumbra_core_component_dex_v1_SwapClaimView
+#define penumbra_core_transaction_v1_ActionView_action_view_swap_claim_MSGTYPE \
+    penumbra_core_component_dex_v1_SwapClaimView
 #define penumbra_core_transaction_v1_ActionView_action_view_validator_definition_MSGTYPE \
     penumbra_core_component_stake_v1_ValidatorDefinition
-#define penumbra_core_transaction_v1_ActionView_action_view_ibc_relay_action_MSGTYPE penumbra_core_component_ibc_v1_IbcRelay
+#define penumbra_core_transaction_v1_ActionView_action_view_ibc_relay_action_MSGTYPE \
+    penumbra_core_component_ibc_v1_IbcRelay
 #define penumbra_core_transaction_v1_ActionView_action_view_proposal_submit_MSGTYPE \
     penumbra_core_component_governance_v1_ProposalSubmit
 #define penumbra_core_transaction_v1_ActionView_action_view_proposal_withdraw_MSGTYPE \
@@ -1070,7 +1089,8 @@ extern "C" {
     penumbra_core_component_governance_v1_DelegatorVoteView
 #define penumbra_core_transaction_v1_ActionView_action_view_proposal_deposit_claim_MSGTYPE \
     penumbra_core_component_governance_v1_ProposalDepositClaim
-#define penumbra_core_transaction_v1_ActionView_action_view_position_open_MSGTYPE penumbra_core_component_dex_v1_PositionOpen
+#define penumbra_core_transaction_v1_ActionView_action_view_position_open_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionOpen
 #define penumbra_core_transaction_v1_ActionView_action_view_position_close_MSGTYPE \
     penumbra_core_component_dex_v1_PositionClose
 #define penumbra_core_transaction_v1_ActionView_action_view_position_withdraw_MSGTYPE \
@@ -1078,7 +1098,8 @@ extern "C" {
 #define penumbra_core_transaction_v1_ActionView_action_view_position_reward_claim_MSGTYPE \
     penumbra_core_component_dex_v1_PositionRewardClaim
 #define penumbra_core_transaction_v1_ActionView_action_view_delegate_MSGTYPE penumbra_core_component_stake_v1_Delegate
-#define penumbra_core_transaction_v1_ActionView_action_view_undelegate_MSGTYPE penumbra_core_component_stake_v1_Undelegate
+#define penumbra_core_transaction_v1_ActionView_action_view_undelegate_MSGTYPE \
+    penumbra_core_component_stake_v1_Undelegate
 #define penumbra_core_transaction_v1_ActionView_action_view_undelegate_claim_MSGTYPE \
     penumbra_core_component_stake_v1_UndelegateClaim
 #define penumbra_core_transaction_v1_ActionView_action_view_community_pool_spend_MSGTYPE \
@@ -1114,7 +1135,8 @@ extern "C" {
 #define penumbra_core_transaction_v1_WitnessData_CALLBACK pb_default_field_callback
 #define penumbra_core_transaction_v1_WitnessData_DEFAULT NULL
 #define penumbra_core_transaction_v1_WitnessData_anchor_MSGTYPE penumbra_crypto_tct_v1_MerkleRoot
-#define penumbra_core_transaction_v1_WitnessData_state_commitment_proofs_MSGTYPE penumbra_crypto_tct_v1_StateCommitmentProof
+#define penumbra_core_transaction_v1_WitnessData_state_commitment_proofs_MSGTYPE \
+    penumbra_crypto_tct_v1_StateCommitmentProof
 
 #define penumbra_core_transaction_v1_TransactionPlan_FIELDLIST(X, a) \
     X(a, CALLBACK, REPEATED, MESSAGE, actions, 1)                    \
@@ -1126,7 +1148,8 @@ extern "C" {
 #define penumbra_core_transaction_v1_TransactionPlan_actions_MSGTYPE penumbra_core_transaction_v1_ActionPlan
 #define penumbra_core_transaction_v1_TransactionPlan_transaction_parameters_MSGTYPE \
     penumbra_core_transaction_v1_TransactionParameters
-#define penumbra_core_transaction_v1_TransactionPlan_detection_data_MSGTYPE penumbra_core_transaction_v1_DetectionDataPlan
+#define penumbra_core_transaction_v1_TransactionPlan_detection_data_MSGTYPE \
+    penumbra_core_transaction_v1_DetectionDataPlan
 #define penumbra_core_transaction_v1_TransactionPlan_memo_MSGTYPE penumbra_core_transaction_v1_MemoPlan
 
 #define penumbra_core_transaction_v1_DetectionDataPlan_FIELDLIST(X, a) X(a, CALLBACK, REPEATED, MESSAGE, clue_plans, 5)
@@ -1163,7 +1186,8 @@ extern "C" {
 #define penumbra_core_transaction_v1_ActionPlan_CALLBACK NULL
 #define penumbra_core_transaction_v1_ActionPlan_DEFAULT NULL
 #define penumbra_core_transaction_v1_ActionPlan_action_spend_MSGTYPE penumbra_core_component_shielded_pool_v1_SpendPlan
-#define penumbra_core_transaction_v1_ActionPlan_action_output_MSGTYPE penumbra_core_component_shielded_pool_v1_OutputPlan
+#define penumbra_core_transaction_v1_ActionPlan_action_output_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_OutputPlan
 #define penumbra_core_transaction_v1_ActionPlan_action_swap_MSGTYPE penumbra_core_component_dex_v1_SwapPlan
 #define penumbra_core_transaction_v1_ActionPlan_action_swap_claim_MSGTYPE penumbra_core_component_dex_v1_SwapClaimPlan
 #define penumbra_core_transaction_v1_ActionPlan_action_validator_definition_MSGTYPE \
@@ -1180,7 +1204,8 @@ extern "C" {
 #define penumbra_core_transaction_v1_ActionPlan_action_proposal_deposit_claim_MSGTYPE \
     penumbra_core_component_governance_v1_ProposalDepositClaim
 #define penumbra_core_transaction_v1_ActionPlan_action_position_open_MSGTYPE penumbra_core_component_dex_v1_PositionOpen
-#define penumbra_core_transaction_v1_ActionPlan_action_position_close_MSGTYPE penumbra_core_component_dex_v1_PositionClose
+#define penumbra_core_transaction_v1_ActionPlan_action_position_close_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionClose
 #define penumbra_core_transaction_v1_ActionPlan_action_position_withdraw_MSGTYPE \
     penumbra_core_component_dex_v1_PositionWithdrawPlan
 #define penumbra_core_transaction_v1_ActionPlan_action_position_reward_claim_MSGTYPE \
@@ -1268,7 +1293,8 @@ extern const pb_msgdesc_t penumbra_core_transaction_v1_Action_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionPerspective_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionPerspective_CreationTransactionIdByNullifier_msg;
-extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment_msg;
+extern const pb_msgdesc_t
+    penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_PayloadKeyWithCommitment_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_NullifierWithNote_msg;
 extern const pb_msgdesc_t penumbra_core_transaction_v1_TransactionView_msg;
@@ -1291,13 +1317,15 @@ extern const pb_msgdesc_t penumbra_core_transaction_v1_MemoView_Opaque_msg;
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define penumbra_core_transaction_v1_Transaction_fields &penumbra_core_transaction_v1_Transaction_msg
 #define penumbra_core_transaction_v1_TransactionBody_fields &penumbra_core_transaction_v1_TransactionBody_msg
-#define penumbra_core_transaction_v1_TransactionParameters_fields &penumbra_core_transaction_v1_TransactionParameters_msg
+#define penumbra_core_transaction_v1_TransactionParameters_fields \
+    &penumbra_core_transaction_v1_TransactionParameters_msg
 #define penumbra_core_transaction_v1_TransactionSummary_fields &penumbra_core_transaction_v1_TransactionSummary_msg
 #define penumbra_core_transaction_v1_TransactionSummary_Effects_fields \
     &penumbra_core_transaction_v1_TransactionSummary_Effects_msg
 #define penumbra_core_transaction_v1_DetectionData_fields &penumbra_core_transaction_v1_DetectionData_msg
 #define penumbra_core_transaction_v1_Action_fields &penumbra_core_transaction_v1_Action_msg
-#define penumbra_core_transaction_v1_TransactionPerspective_fields &penumbra_core_transaction_v1_TransactionPerspective_msg
+#define penumbra_core_transaction_v1_TransactionPerspective_fields \
+    &penumbra_core_transaction_v1_TransactionPerspective_msg
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_fields \
     &penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_msg
 #define penumbra_core_transaction_v1_TransactionPerspective_CreationTransactionIdByNullifier_fields \
@@ -1325,28 +1353,29 @@ extern const pb_msgdesc_t penumbra_core_transaction_v1_MemoView_Opaque_msg;
 #define penumbra_core_transaction_v1_MemoView_Opaque_fields &penumbra_core_transaction_v1_MemoView_Opaque_msg
 
 /* Maximum encoded size of messages (where known) */
-#if defined(penumbra_core_component_shielded_pool_v1_Spend_size) &&                                                         \
-    defined(penumbra_core_component_shielded_pool_v1_Output_size) && defined(penumbra_core_component_dex_v1_Swap_size) &&   \
-    defined(penumbra_core_component_dex_v1_SwapClaim_size) &&                                                               \
-    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&                                                   \
-    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                                                                \
-    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&                                                   \
-    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&                                                 \
-    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&                                                    \
-    defined(penumbra_core_component_governance_v1_DelegatorVote_size) &&                                                    \
-    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&                                             \
-    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                                                            \
-    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                                                           \
-    defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                                                        \
-    defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                                                     \
-    defined(penumbra_core_component_stake_v1_Delegate_size) && defined(penumbra_core_component_stake_v1_Undelegate_size) && \
-    defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                                                       \
-    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&                                               \
-    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&                                              \
-    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&                                             \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_size) &&                                          \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&                                               \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_size) &&                                          \
+#if defined(penumbra_core_component_shielded_pool_v1_Spend_size) &&                                                \
+    defined(penumbra_core_component_shielded_pool_v1_Output_size) &&                                               \
+    defined(penumbra_core_component_dex_v1_Swap_size) && defined(penumbra_core_component_dex_v1_SwapClaim_size) && \
+    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&                                          \
+    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                                                       \
+    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&                                          \
+    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&                                        \
+    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&                                           \
+    defined(penumbra_core_component_governance_v1_DelegatorVote_size) &&                                           \
+    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&                                    \
+    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                                                   \
+    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                                                  \
+    defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                                               \
+    defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                                            \
+    defined(penumbra_core_component_stake_v1_Delegate_size) &&                                                     \
+    defined(penumbra_core_component_stake_v1_Undelegate_size) &&                                                   \
+    defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                                              \
+    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&                                      \
+    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&                                     \
+    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&                                    \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_size) &&                                 \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&                                      \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_size) &&                                 \
     defined(penumbra_core_component_ibc_v1_Ics20Withdrawal_size)
 union penumbra_core_transaction_v1_Action_action_size_union {
     char f1[(6 + penumbra_core_component_shielded_pool_v1_Spend_size)];
@@ -1376,28 +1405,30 @@ union penumbra_core_transaction_v1_Action_action_size_union {
     char f200[(7 + penumbra_core_component_ibc_v1_Ics20Withdrawal_size)];
 };
 #endif
-#if defined(penumbra_core_component_shielded_pool_v1_SpendView_size) &&                                                     \
-    defined(penumbra_core_component_shielded_pool_v1_OutputView_size) &&                                                    \
-    defined(penumbra_core_component_dex_v1_SwapView_size) && defined(penumbra_core_component_dex_v1_SwapClaimView_size) &&  \
-    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&                                                   \
-    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                                                                \
-    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&                                                   \
-    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&                                                 \
-    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&                                                    \
-    defined(penumbra_core_component_governance_v1_DelegatorVoteView_size) &&                                                \
-    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&                                             \
-    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                                                            \
-    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                                                           \
-    defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                                                        \
-    defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                                                     \
-    defined(penumbra_core_component_stake_v1_Delegate_size) && defined(penumbra_core_component_stake_v1_Undelegate_size) && \
-    defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                                                       \
-    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&                                               \
-    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&                                              \
-    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&                                             \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_size) &&                                      \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&                                               \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_size) &&                                      \
+#if defined(penumbra_core_component_shielded_pool_v1_SpendView_size) &&                \
+    defined(penumbra_core_component_shielded_pool_v1_OutputView_size) &&               \
+    defined(penumbra_core_component_dex_v1_SwapView_size) &&                           \
+    defined(penumbra_core_component_dex_v1_SwapClaimView_size) &&                      \
+    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&              \
+    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                           \
+    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&              \
+    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&            \
+    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&               \
+    defined(penumbra_core_component_governance_v1_DelegatorVoteView_size) &&           \
+    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&        \
+    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                       \
+    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                      \
+    defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                   \
+    defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                \
+    defined(penumbra_core_component_stake_v1_Delegate_size) &&                         \
+    defined(penumbra_core_component_stake_v1_Undelegate_size) &&                       \
+    defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                  \
+    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&          \
+    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&         \
+    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&        \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_size) && \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&          \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_size) && \
     defined(penumbra_core_component_ibc_v1_Ics20Withdrawal_size)
 union penumbra_core_transaction_v1_ActionView_action_view_size_union {
     char f1[(6 + penumbra_core_component_shielded_pool_v1_SpendView_size)];
@@ -1427,27 +1458,29 @@ union penumbra_core_transaction_v1_ActionView_action_view_size_union {
     char f200[(7 + penumbra_core_component_ibc_v1_Ics20Withdrawal_size)];
 };
 #endif
-#if defined(penumbra_core_component_shielded_pool_v1_SpendPlan_size) &&                                                     \
-    defined(penumbra_core_component_shielded_pool_v1_OutputPlan_size) &&                                                    \
-    defined(penumbra_core_component_dex_v1_SwapPlan_size) && defined(penumbra_core_component_dex_v1_SwapClaimPlan_size) &&  \
-    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&                                                   \
-    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                                                                \
-    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&                                                   \
-    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&                                                 \
-    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&                                                    \
-    defined(penumbra_core_component_governance_v1_DelegatorVotePlan_size) &&                                                \
-    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&                                             \
-    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                                                            \
-    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                                                           \
-    defined(penumbra_core_component_dex_v1_PositionWithdrawPlan_size) &&                                                    \
-    defined(penumbra_core_component_stake_v1_Delegate_size) && defined(penumbra_core_component_stake_v1_Undelegate_size) && \
-    defined(penumbra_core_component_stake_v1_UndelegateClaimPlan_size) &&                                                   \
-    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&                                               \
-    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&                                              \
-    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&                                             \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_size) &&                                          \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&                                               \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_size) &&                                      \
+#if defined(penumbra_core_component_shielded_pool_v1_SpendPlan_size) &&                \
+    defined(penumbra_core_component_shielded_pool_v1_OutputPlan_size) &&               \
+    defined(penumbra_core_component_dex_v1_SwapPlan_size) &&                           \
+    defined(penumbra_core_component_dex_v1_SwapClaimPlan_size) &&                      \
+    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&              \
+    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                           \
+    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&              \
+    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&            \
+    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&               \
+    defined(penumbra_core_component_governance_v1_DelegatorVotePlan_size) &&           \
+    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&        \
+    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                       \
+    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                      \
+    defined(penumbra_core_component_dex_v1_PositionWithdrawPlan_size) &&               \
+    defined(penumbra_core_component_stake_v1_Delegate_size) &&                         \
+    defined(penumbra_core_component_stake_v1_Undelegate_size) &&                       \
+    defined(penumbra_core_component_stake_v1_UndelegateClaimPlan_size) &&              \
+    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&          \
+    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&         \
+    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&        \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_size) &&     \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&          \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_size) && \
     defined(penumbra_core_component_ibc_v1_Ics20Withdrawal_size)
 union penumbra_core_transaction_v1_ActionPlan_action_size_union {
     char f1[(6 + penumbra_core_component_shielded_pool_v1_SpendPlan_size)];
@@ -1503,30 +1536,32 @@ union penumbra_core_transaction_v1_ActionPlan_action_size_union {
 #define penumbra_core_transaction_v1_TransactionSummary_Effects_size \
     (12 + penumbra_core_keys_v1_AddressView_size + penumbra_core_asset_v1_Balance_size)
 #endif
-#if defined(penumbra_core_component_shielded_pool_v1_Spend_size) &&                                                         \
-    defined(penumbra_core_component_shielded_pool_v1_Output_size) && defined(penumbra_core_component_dex_v1_Swap_size) &&   \
-    defined(penumbra_core_component_dex_v1_SwapClaim_size) &&                                                               \
-    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&                                                   \
-    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                                                                \
-    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&                                                   \
-    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&                                                 \
-    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&                                                    \
-    defined(penumbra_core_component_governance_v1_DelegatorVote_size) &&                                                    \
-    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&                                             \
-    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                                                            \
-    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                                                           \
-    defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                                                        \
-    defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                                                     \
-    defined(penumbra_core_component_stake_v1_Delegate_size) && defined(penumbra_core_component_stake_v1_Undelegate_size) && \
-    defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                                                       \
-    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&                                               \
-    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&                                              \
-    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&                                             \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_size) &&                                          \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&                                               \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_size) &&                                          \
+#if defined(penumbra_core_component_shielded_pool_v1_Spend_size) &&                                                \
+    defined(penumbra_core_component_shielded_pool_v1_Output_size) &&                                               \
+    defined(penumbra_core_component_dex_v1_Swap_size) && defined(penumbra_core_component_dex_v1_SwapClaim_size) && \
+    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&                                          \
+    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                                                       \
+    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&                                          \
+    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&                                        \
+    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&                                           \
+    defined(penumbra_core_component_governance_v1_DelegatorVote_size) &&                                           \
+    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&                                    \
+    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                                                   \
+    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                                                  \
+    defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                                               \
+    defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                                            \
+    defined(penumbra_core_component_stake_v1_Delegate_size) &&                                                     \
+    defined(penumbra_core_component_stake_v1_Undelegate_size) &&                                                   \
+    defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                                              \
+    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&                                      \
+    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&                                     \
+    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&                                    \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_size) &&                                 \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&                                      \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw_size) &&                                 \
     defined(penumbra_core_component_ibc_v1_Ics20Withdrawal_size)
-#define penumbra_core_transaction_v1_Action_size (0 + sizeof(union penumbra_core_transaction_v1_Action_action_size_union))
+#define penumbra_core_transaction_v1_Action_size \
+    (0 + sizeof(union penumbra_core_transaction_v1_Action_action_size_union))
 #endif
 #if defined(penumbra_core_asset_v1_AssetId_size) && defined(google_protobuf_Any_size)
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_size \
@@ -1544,57 +1579,62 @@ union penumbra_core_transaction_v1_ActionPlan_action_size_union {
 #define penumbra_core_transaction_v1_PayloadKeyWithCommitment_size \
     (12 + penumbra_core_keys_v1_PayloadKey_size + penumbra_crypto_tct_v1_StateCommitment_size)
 #endif
-#if defined(penumbra_core_component_sct_v1_Nullifier_size) && defined(penumbra_core_component_shielded_pool_v1_Note_size)
+#if defined(penumbra_core_component_sct_v1_Nullifier_size) && \
+    defined(penumbra_core_component_shielded_pool_v1_Note_size)
 #define penumbra_core_transaction_v1_NullifierWithNote_size \
     (12 + penumbra_core_component_sct_v1_Nullifier_size + penumbra_core_component_shielded_pool_v1_Note_size)
 #endif
-#if defined(penumbra_core_component_shielded_pool_v1_SpendView_size) &&                                                     \
-    defined(penumbra_core_component_shielded_pool_v1_OutputView_size) &&                                                    \
-    defined(penumbra_core_component_dex_v1_SwapView_size) && defined(penumbra_core_component_dex_v1_SwapClaimView_size) &&  \
-    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&                                                   \
-    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                                                                \
-    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&                                                   \
-    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&                                                 \
-    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&                                                    \
-    defined(penumbra_core_component_governance_v1_DelegatorVoteView_size) &&                                                \
-    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&                                             \
-    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                                                            \
-    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                                                           \
-    defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                                                        \
-    defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                                                     \
-    defined(penumbra_core_component_stake_v1_Delegate_size) && defined(penumbra_core_component_stake_v1_Undelegate_size) && \
-    defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                                                       \
-    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&                                               \
-    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&                                              \
-    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&                                             \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_size) &&                                      \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&                                               \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_size) &&                                      \
+#if defined(penumbra_core_component_shielded_pool_v1_SpendView_size) &&                \
+    defined(penumbra_core_component_shielded_pool_v1_OutputView_size) &&               \
+    defined(penumbra_core_component_dex_v1_SwapView_size) &&                           \
+    defined(penumbra_core_component_dex_v1_SwapClaimView_size) &&                      \
+    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&              \
+    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                           \
+    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&              \
+    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&            \
+    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&               \
+    defined(penumbra_core_component_governance_v1_DelegatorVoteView_size) &&           \
+    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&        \
+    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                       \
+    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                      \
+    defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                   \
+    defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                \
+    defined(penumbra_core_component_stake_v1_Delegate_size) &&                         \
+    defined(penumbra_core_component_stake_v1_Undelegate_size) &&                       \
+    defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                  \
+    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&          \
+    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&         \
+    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&        \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_size) && \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&          \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_size) && \
     defined(penumbra_core_component_ibc_v1_Ics20Withdrawal_size)
 #define penumbra_core_transaction_v1_ActionView_size \
     (0 + sizeof(union penumbra_core_transaction_v1_ActionView_action_view_size_union))
 #endif
-#if defined(penumbra_core_component_shielded_pool_v1_SpendPlan_size) &&                                                     \
-    defined(penumbra_core_component_shielded_pool_v1_OutputPlan_size) &&                                                    \
-    defined(penumbra_core_component_dex_v1_SwapPlan_size) && defined(penumbra_core_component_dex_v1_SwapClaimPlan_size) &&  \
-    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&                                                   \
-    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                                                                \
-    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&                                                   \
-    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&                                                 \
-    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&                                                    \
-    defined(penumbra_core_component_governance_v1_DelegatorVotePlan_size) &&                                                \
-    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&                                             \
-    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                                                            \
-    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                                                           \
-    defined(penumbra_core_component_dex_v1_PositionWithdrawPlan_size) &&                                                    \
-    defined(penumbra_core_component_stake_v1_Delegate_size) && defined(penumbra_core_component_stake_v1_Undelegate_size) && \
-    defined(penumbra_core_component_stake_v1_UndelegateClaimPlan_size) &&                                                   \
-    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&                                               \
-    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&                                              \
-    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&                                             \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_size) &&                                          \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&                                               \
-    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_size) &&                                      \
+#if defined(penumbra_core_component_shielded_pool_v1_SpendPlan_size) &&                \
+    defined(penumbra_core_component_shielded_pool_v1_OutputPlan_size) &&               \
+    defined(penumbra_core_component_dex_v1_SwapPlan_size) &&                           \
+    defined(penumbra_core_component_dex_v1_SwapClaimPlan_size) &&                      \
+    defined(penumbra_core_component_stake_v1_ValidatorDefinition_size) &&              \
+    defined(penumbra_core_component_ibc_v1_IbcRelay_size) &&                           \
+    defined(penumbra_core_component_governance_v1_ProposalSubmit_size) &&              \
+    defined(penumbra_core_component_governance_v1_ProposalWithdraw_size) &&            \
+    defined(penumbra_core_component_governance_v1_ValidatorVote_size) &&               \
+    defined(penumbra_core_component_governance_v1_DelegatorVotePlan_size) &&           \
+    defined(penumbra_core_component_governance_v1_ProposalDepositClaim_size) &&        \
+    defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                       \
+    defined(penumbra_core_component_dex_v1_PositionClose_size) &&                      \
+    defined(penumbra_core_component_dex_v1_PositionWithdrawPlan_size) &&               \
+    defined(penumbra_core_component_stake_v1_Delegate_size) &&                         \
+    defined(penumbra_core_component_stake_v1_Undelegate_size) &&                       \
+    defined(penumbra_core_component_stake_v1_UndelegateClaimPlan_size) &&              \
+    defined(penumbra_core_component_governance_v1_CommunityPoolSpend_size) &&          \
+    defined(penumbra_core_component_governance_v1_CommunityPoolOutput_size) &&         \
+    defined(penumbra_core_component_governance_v1_CommunityPoolDeposit_size) &&        \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_size) &&     \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionEnd_size) &&          \
+    defined(penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_size) && \
     defined(penumbra_core_component_ibc_v1_Ics20Withdrawal_size)
 #define penumbra_core_transaction_v1_ActionPlan_size \
     (0 + sizeof(union penumbra_core_transaction_v1_ActionPlan_action_size_union))

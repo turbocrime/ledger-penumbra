@@ -26,8 +26,8 @@
 #include "zxformat.h"
 #include "zxmacros.h"
 
-parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data, uint16_t data_len, char *out,
-                                  uint16_t out_len) {
+parser_error_t printBech32Encoded(const char *prefix, uint16_t prefix_len, const uint8_t *data, uint16_t data_len,
+                                  char *out, uint16_t out_len) {
     if (data == NULL) {
         return parser_unexpected_error;
     }
@@ -136,8 +136,8 @@ parser_error_t encodePositionId(const uint8_t *position_id, uint16_t position_id
     if (position_id_len != POSITION_ID_LEN) {
         return parser_invalid_address;
     }
-    return printBech32Encoded(POSITION_ID_BECH32_PREFIX, sizeof(POSITION_ID_BECH32_PREFIX) - 1, position_id, position_id_len,
-                              out, out_len);
+    return printBech32Encoded(POSITION_ID_BECH32_PREFIX, sizeof(POSITION_ID_BECH32_PREFIX) - 1, position_id,
+                              position_id_len, out, out_len);
 }
 
 parser_error_t encodeAuctionId(const uint8_t *auction_id, uint16_t auction_id_len, char *out, uint16_t out_len) {
@@ -145,8 +145,8 @@ parser_error_t encodeAuctionId(const uint8_t *auction_id, uint16_t auction_id_le
     if (auction_id_len != AUCTION_ID_LEN) {
         return parser_invalid_address;
     }
-    return printBech32Encoded(AUCTION_ID_BECH32_PREFIX, sizeof(AUCTION_ID_BECH32_PREFIX) - 1, auction_id, auction_id_len,
-                              out, out_len);
+    return printBech32Encoded(AUCTION_ID_BECH32_PREFIX, sizeof(AUCTION_ID_BECH32_PREFIX) - 1, auction_id,
+                              auction_id_len, out, out_len);
 }
 
 parser_error_t uint128_to_str(char *data, int dataLen, uint64_t high, uint64_t low) {

@@ -534,34 +534,38 @@ extern "C" {
         false, penumbra_core_component_dex_v1_ZKSwapClaimProof_init_default, false, \
             penumbra_core_component_dex_v1_SwapClaimBody_init_default, 0            \
     }
-#define penumbra_core_component_dex_v1_SwapClaimBody_init_default                                                        \
-    {                                                                                                                    \
-        false, penumbra_core_component_sct_v1_Nullifier_init_default, false,                                             \
-            penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_crypto_tct_v1_StateCommitment_init_default, \
-            false, penumbra_crypto_tct_v1_StateCommitment_init_default, false,                                           \
-            penumbra_core_component_dex_v1_BatchSwapOutputData_init_default                                              \
+#define penumbra_core_component_dex_v1_SwapClaimBody_init_default            \
+    {                                                                        \
+        false, penumbra_core_component_sct_v1_Nullifier_init_default, false, \
+            penumbra_core_component_fee_v1_Fee_init_default, false,          \
+            penumbra_crypto_tct_v1_StateCommitment_init_default, false,      \
+            penumbra_crypto_tct_v1_StateCommitment_init_default, false,      \
+            penumbra_core_component_dex_v1_BatchSwapOutputData_init_default  \
     }
-#define penumbra_core_component_dex_v1_SwapBody_init_default                                                               \
-    {                                                                                                                      \
-        false, penumbra_core_component_dex_v1_TradingPair_init_default, false, penumbra_core_num_v1_Amount_init_default,   \
-            false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_asset_v1_BalanceCommitment_init_default, \
-            false, penumbra_core_component_dex_v1_SwapPayload_init_default                                                 \
+#define penumbra_core_component_dex_v1_SwapBody_init_default                                                  \
+    {                                                                                                         \
+        false, penumbra_core_component_dex_v1_TradingPair_init_default, false,                                \
+            penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default, false, \
+            penumbra_core_asset_v1_BalanceCommitment_init_default, false,                                     \
+            penumbra_core_component_dex_v1_SwapPayload_init_default                                           \
     }
 #define penumbra_core_component_dex_v1_SwapPayload_init_default                      \
     {                                                                                \
         false, penumbra_crypto_tct_v1_StateCommitment_init_default, { {NULL}, NULL } \
     }
-#define penumbra_core_component_dex_v1_SwapPlaintext_init_default                                                           \
-    {                                                                                                                       \
-        false, penumbra_core_component_dex_v1_TradingPair_init_default, false, penumbra_core_num_v1_Amount_init_default,    \
-            false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_component_fee_v1_Fee_init_default, false, \
-            penumbra_core_keys_v1_Address_init_default, {                                                                   \
-            {NULL}, NULL                                                                                                    \
-        }                                                                                                                   \
+#define penumbra_core_component_dex_v1_SwapPlaintext_init_default                                                 \
+    {                                                                                                             \
+        false, penumbra_core_component_dex_v1_TradingPair_init_default, false,                                    \
+            penumbra_core_num_v1_Amount_init_default, false, penumbra_core_num_v1_Amount_init_default, false,     \
+            penumbra_core_component_fee_v1_Fee_init_default, false, penumbra_core_keys_v1_Address_init_default, { \
+            {NULL}, NULL                                                                                          \
+        }                                                                                                         \
     }
-#define penumbra_core_component_dex_v1_SwapPlan_init_default                                                               \
-    {                                                                                                                      \
-        false, penumbra_core_component_dex_v1_SwapPlaintext_init_default, {{NULL}, NULL}, {{NULL}, NULL}, { {NULL}, NULL } \
+#define penumbra_core_component_dex_v1_SwapPlan_init_default                                                \
+    {                                                                                                       \
+        false, penumbra_core_component_dex_v1_SwapPlaintext_init_default, {{NULL}, NULL}, {{NULL}, NULL}, { \
+            {NULL}, NULL                                                                                    \
+        }                                                                                                   \
     }
 #define penumbra_core_component_dex_v1_SwapClaimPlan_init_default                                 \
     {                                                                                             \
@@ -584,12 +588,12 @@ extern "C" {
             penumbra_core_component_shielded_pool_v1_NoteView_init_default, false,                            \
             penumbra_core_asset_v1_Metadata_init_default, false, penumbra_core_asset_v1_Metadata_init_default \
     }
-#define penumbra_core_component_dex_v1_SwapView_Opaque_init_default                                                     \
-    {                                                                                                                   \
-        false, penumbra_core_component_dex_v1_Swap_init_default, false,                                                 \
-            penumbra_core_component_dex_v1_BatchSwapOutputData_init_default, false,                                     \
-            penumbra_core_asset_v1_ValueView_init_default, false, penumbra_core_asset_v1_ValueView_init_default, false, \
-            penumbra_core_asset_v1_Metadata_init_default, false, penumbra_core_asset_v1_Metadata_init_default           \
+#define penumbra_core_component_dex_v1_SwapView_Opaque_init_default                                                  \
+    {                                                                                                                \
+        false, penumbra_core_component_dex_v1_Swap_init_default, false,                                              \
+            penumbra_core_component_dex_v1_BatchSwapOutputData_init_default, false,                                  \
+            penumbra_core_asset_v1_ValueView_init_default, false, penumbra_core_asset_v1_ValueView_init_default,     \
+            false, penumbra_core_asset_v1_Metadata_init_default, false, penumbra_core_asset_v1_Metadata_init_default \
     }
 #define penumbra_core_component_dex_v1_SwapClaimView_init_default                \
     {                                                                            \
@@ -668,41 +672,46 @@ extern "C" {
     {                                                             \
         { {NULL}, NULL }                                          \
     }
-#define penumbra_core_component_dex_v1_Swap_init_zero \
-    { false, penumbra_core_component_dex_v1_ZKSwapProof_init_zero, false, penumbra_core_component_dex_v1_SwapBody_init_zero }
+#define penumbra_core_component_dex_v1_Swap_init_zero                       \
+    {                                                                       \
+        false, penumbra_core_component_dex_v1_ZKSwapProof_init_zero, false, \
+            penumbra_core_component_dex_v1_SwapBody_init_zero               \
+    }
 #define penumbra_core_component_dex_v1_SwapClaim_init_zero                       \
     {                                                                            \
         false, penumbra_core_component_dex_v1_ZKSwapClaimProof_init_zero, false, \
             penumbra_core_component_dex_v1_SwapClaimBody_init_zero, 0            \
     }
-#define penumbra_core_component_dex_v1_SwapClaimBody_init_zero                                                          \
-    {                                                                                                                   \
-        false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, penumbra_core_component_fee_v1_Fee_init_zero, \
-            false, penumbra_crypto_tct_v1_StateCommitment_init_zero, false,                                             \
-            penumbra_crypto_tct_v1_StateCommitment_init_zero, false,                                                    \
-            penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero                                                \
+#define penumbra_core_component_dex_v1_SwapClaimBody_init_zero                                                     \
+    {                                                                                                              \
+        false, penumbra_core_component_sct_v1_Nullifier_init_zero, false,                                          \
+            penumbra_core_component_fee_v1_Fee_init_zero, false, penumbra_crypto_tct_v1_StateCommitment_init_zero, \
+            false, penumbra_crypto_tct_v1_StateCommitment_init_zero, false,                                        \
+            penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero                                           \
     }
-#define penumbra_core_component_dex_v1_SwapBody_init_zero                                                                 \
-    {                                                                                                                     \
-        false, penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_BalanceCommitment_init_zero, false,      \
-            penumbra_core_component_dex_v1_SwapPayload_init_zero                                                          \
+#define penumbra_core_component_dex_v1_SwapBody_init_zero                                                            \
+    {                                                                                                                \
+        false, penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero,   \
+            false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_BalanceCommitment_init_zero, \
+            false, penumbra_core_component_dex_v1_SwapPayload_init_zero                                              \
     }
 #define penumbra_core_component_dex_v1_SwapPayload_init_zero                      \
     {                                                                             \
         false, penumbra_crypto_tct_v1_StateCommitment_init_zero, { {NULL}, NULL } \
     }
-#define penumbra_core_component_dex_v1_SwapPlaintext_init_zero                                                            \
-    {                                                                                                                     \
-        false, penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
-            penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_component_fee_v1_Fee_init_zero, false,            \
-            penumbra_core_keys_v1_Address_init_zero, {                                                                    \
-            {NULL}, NULL                                                                                                  \
-        }                                                                                                                 \
+#define penumbra_core_component_dex_v1_SwapPlaintext_init_zero                                                        \
+    {                                                                                                                 \
+        false, penumbra_core_component_dex_v1_TradingPair_init_zero, false, penumbra_core_num_v1_Amount_init_zero,    \
+            false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_component_fee_v1_Fee_init_zero, false, \
+            penumbra_core_keys_v1_Address_init_zero, {                                                                \
+            {NULL}, NULL                                                                                              \
+        }                                                                                                             \
     }
-#define penumbra_core_component_dex_v1_SwapPlan_init_zero                                                               \
-    {                                                                                                                   \
-        false, penumbra_core_component_dex_v1_SwapPlaintext_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, { {NULL}, NULL } \
+#define penumbra_core_component_dex_v1_SwapPlan_init_zero                                                \
+    {                                                                                                    \
+        false, penumbra_core_component_dex_v1_SwapPlaintext_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, { \
+            {NULL}, NULL                                                                                 \
+        }                                                                                                \
     }
 #define penumbra_core_component_dex_v1_SwapClaimPlan_init_zero                                 \
     {                                                                                          \
@@ -715,14 +724,15 @@ extern "C" {
     {                                                                    \
         0, { penumbra_core_component_dex_v1_SwapView_Visible_init_zero } \
     }
-#define penumbra_core_component_dex_v1_SwapView_Visible_init_zero                                                           \
-    {                                                                                                                       \
-        false, penumbra_core_component_dex_v1_Swap_init_zero, false,                                                        \
-            penumbra_core_component_dex_v1_SwapPlaintext_init_zero, false, penumbra_core_txhash_v1_TransactionId_init_zero, \
-            false, penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero, false,                                     \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false,                                             \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero,  \
-            false, penumbra_core_asset_v1_Metadata_init_zero                                                                \
+#define penumbra_core_component_dex_v1_SwapView_Visible_init_zero                                       \
+    {                                                                                                   \
+        false, penumbra_core_component_dex_v1_Swap_init_zero, false,                                    \
+            penumbra_core_component_dex_v1_SwapPlaintext_init_zero, false,                              \
+            penumbra_core_txhash_v1_TransactionId_init_zero, false,                                     \
+            penumbra_core_component_dex_v1_BatchSwapOutputData_init_zero, false,                        \
+            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false,                         \
+            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false,                         \
+            penumbra_core_asset_v1_Metadata_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero \
     }
 #define penumbra_core_component_dex_v1_SwapView_Opaque_init_zero                                                  \
     {                                                                                                             \
@@ -783,8 +793,11 @@ extern "C" {
         false, penumbra_core_component_dex_v1_PositionId_init_zero, false, \
             penumbra_core_asset_v1_BalanceCommitment_init_zero, 0          \
     }
-#define penumbra_core_component_dex_v1_PositionRewardClaim_init_zero \
-    { false, penumbra_core_component_dex_v1_PositionId_init_zero, false, penumbra_core_asset_v1_BalanceCommitment_init_zero }
+#define penumbra_core_component_dex_v1_PositionRewardClaim_init_zero       \
+    {                                                                      \
+        false, penumbra_core_component_dex_v1_PositionId_init_zero, false, \
+            penumbra_core_asset_v1_BalanceCommitment_init_zero             \
+    }
 #define penumbra_core_component_dex_v1_PositionWithdrawPlan_init_zero    \
     {                                                                    \
         false, penumbra_core_component_dex_v1_Reserves_init_zero, false, \
@@ -942,7 +955,8 @@ extern "C" {
 #define penumbra_core_component_dex_v1_SwapClaimBody_fee_MSGTYPE penumbra_core_component_fee_v1_Fee
 #define penumbra_core_component_dex_v1_SwapClaimBody_output_1_commitment_MSGTYPE penumbra_crypto_tct_v1_StateCommitment
 #define penumbra_core_component_dex_v1_SwapClaimBody_output_2_commitment_MSGTYPE penumbra_crypto_tct_v1_StateCommitment
-#define penumbra_core_component_dex_v1_SwapClaimBody_output_data_MSGTYPE penumbra_core_component_dex_v1_BatchSwapOutputData
+#define penumbra_core_component_dex_v1_SwapClaimBody_output_data_MSGTYPE \
+    penumbra_core_component_dex_v1_BatchSwapOutputData
 
 #define penumbra_core_component_dex_v1_SwapBody_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, trading_pair, 1)            \
@@ -999,14 +1013,16 @@ extern "C" {
 #define penumbra_core_component_dex_v1_SwapClaimPlan_CALLBACK pb_default_field_callback
 #define penumbra_core_component_dex_v1_SwapClaimPlan_DEFAULT NULL
 #define penumbra_core_component_dex_v1_SwapClaimPlan_swap_plaintext_MSGTYPE penumbra_core_component_dex_v1_SwapPlaintext
-#define penumbra_core_component_dex_v1_SwapClaimPlan_output_data_MSGTYPE penumbra_core_component_dex_v1_BatchSwapOutputData
+#define penumbra_core_component_dex_v1_SwapClaimPlan_output_data_MSGTYPE \
+    penumbra_core_component_dex_v1_BatchSwapOutputData
 
 #define penumbra_core_component_dex_v1_SwapView_FIELDLIST(X, a)              \
     X(a, STATIC, ONEOF, MESSAGE, (swap_view, visible, swap_view.visible), 1) \
     X(a, STATIC, ONEOF, MESSAGE, (swap_view, opaque, swap_view.opaque), 2)
 #define penumbra_core_component_dex_v1_SwapView_CALLBACK NULL
 #define penumbra_core_component_dex_v1_SwapView_DEFAULT NULL
-#define penumbra_core_component_dex_v1_SwapView_swap_view_visible_MSGTYPE penumbra_core_component_dex_v1_SwapView_Visible
+#define penumbra_core_component_dex_v1_SwapView_swap_view_visible_MSGTYPE \
+    penumbra_core_component_dex_v1_SwapView_Visible
 #define penumbra_core_component_dex_v1_SwapView_swap_view_opaque_MSGTYPE penumbra_core_component_dex_v1_SwapView_Opaque
 
 #define penumbra_core_component_dex_v1_SwapView_Visible_FIELDLIST(X, a) \
@@ -1021,12 +1037,15 @@ extern "C" {
 #define penumbra_core_component_dex_v1_SwapView_Visible_CALLBACK NULL
 #define penumbra_core_component_dex_v1_SwapView_Visible_DEFAULT NULL
 #define penumbra_core_component_dex_v1_SwapView_Visible_swap_MSGTYPE penumbra_core_component_dex_v1_Swap
-#define penumbra_core_component_dex_v1_SwapView_Visible_swap_plaintext_MSGTYPE penumbra_core_component_dex_v1_SwapPlaintext
+#define penumbra_core_component_dex_v1_SwapView_Visible_swap_plaintext_MSGTYPE \
+    penumbra_core_component_dex_v1_SwapPlaintext
 #define penumbra_core_component_dex_v1_SwapView_Visible_claim_tx_MSGTYPE penumbra_core_txhash_v1_TransactionId
 #define penumbra_core_component_dex_v1_SwapView_Visible_batch_swap_output_data_MSGTYPE \
     penumbra_core_component_dex_v1_BatchSwapOutputData
-#define penumbra_core_component_dex_v1_SwapView_Visible_output_1_MSGTYPE penumbra_core_component_shielded_pool_v1_NoteView
-#define penumbra_core_component_dex_v1_SwapView_Visible_output_2_MSGTYPE penumbra_core_component_shielded_pool_v1_NoteView
+#define penumbra_core_component_dex_v1_SwapView_Visible_output_1_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_NoteView
+#define penumbra_core_component_dex_v1_SwapView_Visible_output_2_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_NoteView
 #define penumbra_core_component_dex_v1_SwapView_Visible_asset_1_metadata_MSGTYPE penumbra_core_asset_v1_Metadata
 #define penumbra_core_component_dex_v1_SwapView_Visible_asset_2_metadata_MSGTYPE penumbra_core_asset_v1_Metadata
 
@@ -1071,7 +1090,8 @@ extern "C" {
     penumbra_core_component_shielded_pool_v1_NoteView
 #define penumbra_core_component_dex_v1_SwapClaimView_Visible_swap_tx_MSGTYPE penumbra_core_txhash_v1_TransactionId
 
-#define penumbra_core_component_dex_v1_SwapClaimView_Opaque_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, swap_claim, 1)
+#define penumbra_core_component_dex_v1_SwapClaimView_Opaque_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, swap_claim, 1)
 #define penumbra_core_component_dex_v1_SwapClaimView_Opaque_CALLBACK NULL
 #define penumbra_core_component_dex_v1_SwapClaimView_Opaque_DEFAULT NULL
 #define penumbra_core_component_dex_v1_SwapClaimView_Opaque_swap_claim_MSGTYPE penumbra_core_component_dex_v1_SwapClaim
@@ -1103,14 +1123,16 @@ extern "C" {
 #define penumbra_core_component_dex_v1_BatchSwapOutputData_lambda_2_MSGTYPE penumbra_core_num_v1_Amount
 #define penumbra_core_component_dex_v1_BatchSwapOutputData_unfilled_1_MSGTYPE penumbra_core_num_v1_Amount
 #define penumbra_core_component_dex_v1_BatchSwapOutputData_unfilled_2_MSGTYPE penumbra_core_num_v1_Amount
-#define penumbra_core_component_dex_v1_BatchSwapOutputData_trading_pair_MSGTYPE penumbra_core_component_dex_v1_TradingPair
+#define penumbra_core_component_dex_v1_BatchSwapOutputData_trading_pair_MSGTYPE \
+    penumbra_core_component_dex_v1_TradingPair
 
 #define penumbra_core_component_dex_v1_TradingFunction_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, component, 1)                      \
     X(a, STATIC, OPTIONAL, MESSAGE, pair, 2)
 #define penumbra_core_component_dex_v1_TradingFunction_CALLBACK NULL
 #define penumbra_core_component_dex_v1_TradingFunction_DEFAULT NULL
-#define penumbra_core_component_dex_v1_TradingFunction_component_MSGTYPE penumbra_core_component_dex_v1_BareTradingFunction
+#define penumbra_core_component_dex_v1_TradingFunction_component_MSGTYPE \
+    penumbra_core_component_dex_v1_BareTradingFunction
 #define penumbra_core_component_dex_v1_TradingFunction_pair_MSGTYPE penumbra_core_component_dex_v1_TradingPair
 
 #define penumbra_core_component_dex_v1_BareTradingFunction_FIELDLIST(X, a) \
@@ -1171,7 +1193,8 @@ extern "C" {
 #define penumbra_core_component_dex_v1_PositionWithdraw_CALLBACK NULL
 #define penumbra_core_component_dex_v1_PositionWithdraw_DEFAULT NULL
 #define penumbra_core_component_dex_v1_PositionWithdraw_position_id_MSGTYPE penumbra_core_component_dex_v1_PositionId
-#define penumbra_core_component_dex_v1_PositionWithdraw_reserves_commitment_MSGTYPE penumbra_core_asset_v1_BalanceCommitment
+#define penumbra_core_component_dex_v1_PositionWithdraw_reserves_commitment_MSGTYPE \
+    penumbra_core_asset_v1_BalanceCommitment
 
 #define penumbra_core_component_dex_v1_PositionRewardClaim_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, position_id, 1)                        \
@@ -1191,11 +1214,13 @@ extern "C" {
 #define penumbra_core_component_dex_v1_PositionWithdrawPlan_CALLBACK pb_default_field_callback
 #define penumbra_core_component_dex_v1_PositionWithdrawPlan_DEFAULT NULL
 #define penumbra_core_component_dex_v1_PositionWithdrawPlan_reserves_MSGTYPE penumbra_core_component_dex_v1_Reserves
-#define penumbra_core_component_dex_v1_PositionWithdrawPlan_position_id_MSGTYPE penumbra_core_component_dex_v1_PositionId
+#define penumbra_core_component_dex_v1_PositionWithdrawPlan_position_id_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionId
 #define penumbra_core_component_dex_v1_PositionWithdrawPlan_pair_MSGTYPE penumbra_core_component_dex_v1_TradingPair
 #define penumbra_core_component_dex_v1_PositionWithdrawPlan_rewards_MSGTYPE penumbra_core_asset_v1_Value
 
-#define penumbra_core_component_dex_v1_PositionRewardClaimPlan_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, reserves, 1)
+#define penumbra_core_component_dex_v1_PositionRewardClaimPlan_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, reserves, 1)
 #define penumbra_core_component_dex_v1_PositionRewardClaimPlan_CALLBACK NULL
 #define penumbra_core_component_dex_v1_PositionRewardClaimPlan_DEFAULT NULL
 #define penumbra_core_component_dex_v1_PositionRewardClaimPlan_reserves_MSGTYPE penumbra_core_component_dex_v1_Reserves
@@ -1257,12 +1282,16 @@ extern const pb_msgdesc_t penumbra_core_component_dex_v1_DexParameters_msg;
 #define penumbra_core_component_dex_v1_SwapView_Visible_fields &penumbra_core_component_dex_v1_SwapView_Visible_msg
 #define penumbra_core_component_dex_v1_SwapView_Opaque_fields &penumbra_core_component_dex_v1_SwapView_Opaque_msg
 #define penumbra_core_component_dex_v1_SwapClaimView_fields &penumbra_core_component_dex_v1_SwapClaimView_msg
-#define penumbra_core_component_dex_v1_SwapClaimView_Visible_fields &penumbra_core_component_dex_v1_SwapClaimView_Visible_msg
-#define penumbra_core_component_dex_v1_SwapClaimView_Opaque_fields &penumbra_core_component_dex_v1_SwapClaimView_Opaque_msg
+#define penumbra_core_component_dex_v1_SwapClaimView_Visible_fields \
+    &penumbra_core_component_dex_v1_SwapClaimView_Visible_msg
+#define penumbra_core_component_dex_v1_SwapClaimView_Opaque_fields \
+    &penumbra_core_component_dex_v1_SwapClaimView_Opaque_msg
 #define penumbra_core_component_dex_v1_TradingPair_fields &penumbra_core_component_dex_v1_TradingPair_msg
-#define penumbra_core_component_dex_v1_BatchSwapOutputData_fields &penumbra_core_component_dex_v1_BatchSwapOutputData_msg
+#define penumbra_core_component_dex_v1_BatchSwapOutputData_fields \
+    &penumbra_core_component_dex_v1_BatchSwapOutputData_msg
 #define penumbra_core_component_dex_v1_TradingFunction_fields &penumbra_core_component_dex_v1_TradingFunction_msg
-#define penumbra_core_component_dex_v1_BareTradingFunction_fields &penumbra_core_component_dex_v1_BareTradingFunction_msg
+#define penumbra_core_component_dex_v1_BareTradingFunction_fields \
+    &penumbra_core_component_dex_v1_BareTradingFunction_msg
 #define penumbra_core_component_dex_v1_Reserves_fields &penumbra_core_component_dex_v1_Reserves_msg
 #define penumbra_core_component_dex_v1_Position_fields &penumbra_core_component_dex_v1_Position_msg
 #define penumbra_core_component_dex_v1_PositionId_fields &penumbra_core_component_dex_v1_PositionId_msg
@@ -1270,8 +1299,10 @@ extern const pb_msgdesc_t penumbra_core_component_dex_v1_DexParameters_msg;
 #define penumbra_core_component_dex_v1_PositionOpen_fields &penumbra_core_component_dex_v1_PositionOpen_msg
 #define penumbra_core_component_dex_v1_PositionClose_fields &penumbra_core_component_dex_v1_PositionClose_msg
 #define penumbra_core_component_dex_v1_PositionWithdraw_fields &penumbra_core_component_dex_v1_PositionWithdraw_msg
-#define penumbra_core_component_dex_v1_PositionRewardClaim_fields &penumbra_core_component_dex_v1_PositionRewardClaim_msg
-#define penumbra_core_component_dex_v1_PositionWithdrawPlan_fields &penumbra_core_component_dex_v1_PositionWithdrawPlan_msg
+#define penumbra_core_component_dex_v1_PositionRewardClaim_fields \
+    &penumbra_core_component_dex_v1_PositionRewardClaim_msg
+#define penumbra_core_component_dex_v1_PositionWithdrawPlan_fields \
+    &penumbra_core_component_dex_v1_PositionWithdrawPlan_msg
 #define penumbra_core_component_dex_v1_PositionRewardClaimPlan_fields \
     &penumbra_core_component_dex_v1_PositionRewardClaimPlan_msg
 #define penumbra_core_component_dex_v1_DexParameters_fields &penumbra_core_component_dex_v1_DexParameters_msg

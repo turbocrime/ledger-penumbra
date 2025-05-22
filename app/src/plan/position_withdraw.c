@@ -38,7 +38,8 @@ parser_error_t decode_position_withdraw_plan(const bytes_t *data, position_withd
 
     variable_size_field_array_t rewards_arg;
     bytes_t rewards_bytes[MAX_CALLBACK_ARRAY_SIZE];
-    setup_decode_variable_field_array(&position_withdraw_pb.rewards, &rewards_arg, rewards_bytes, MAX_CALLBACK_ARRAY_SIZE);
+    setup_decode_variable_field_array(&position_withdraw_pb.rewards, &rewards_arg, rewards_bytes,
+                                      MAX_CALLBACK_ARRAY_SIZE);
 
     if (!pb_decode(&stream, penumbra_core_component_dex_v1_PositionWithdrawPlan_fields, &position_withdraw_pb)) {
         return parser_position_withdraw_plan_error;
@@ -113,8 +114,9 @@ parser_error_t position_withdraw_getItem(const parser_context_t *ctx, const posi
     return parser_ok;
 }
 
-parser_error_t position_withdraw_printValue(const parser_context_t *ctx, const position_withdraw_plan_t *position_withdraw,
-                                            char *outVal, uint16_t outValLen) {
+parser_error_t position_withdraw_printValue(const parser_context_t *ctx,
+                                            const position_withdraw_plan_t *position_withdraw, char *outVal,
+                                            uint16_t outValLen) {
     if (ctx == NULL || position_withdraw == NULL || outVal == NULL) {
         return parser_no_data;
     }

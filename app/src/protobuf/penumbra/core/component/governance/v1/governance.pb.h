@@ -401,7 +401,8 @@ extern "C" {
 #endif
 
 /* Helper constants for enums */
-#define _penumbra_core_component_governance_v1_Vote_Vote_MIN penumbra_core_component_governance_v1_Vote_Vote_VOTE_UNSPECIFIED
+#define _penumbra_core_component_governance_v1_Vote_Vote_MIN \
+    penumbra_core_component_governance_v1_Vote_Vote_VOTE_UNSPECIFIED
 #define _penumbra_core_component_governance_v1_Vote_Vote_MAX penumbra_core_component_governance_v1_Vote_Vote_VOTE_NO
 #define _penumbra_core_component_governance_v1_Vote_Vote_ARRAYSIZE \
     ((penumbra_core_component_governance_v1_Vote_Vote)(penumbra_core_component_governance_v1_Vote_Vote_VOTE_NO + 1))
@@ -413,8 +414,11 @@ extern "C" {
     {                                                                           \
         { {NULL}, NULL }                                                        \
     }
-#define penumbra_core_component_governance_v1_ProposalSubmit_init_default \
-    { false, penumbra_core_component_governance_v1_Proposal_init_default, false, penumbra_core_num_v1_Amount_init_default }
+#define penumbra_core_component_governance_v1_ProposalSubmit_init_default          \
+    {                                                                              \
+        false, penumbra_core_component_governance_v1_Proposal_init_default, false, \
+            penumbra_core_num_v1_Amount_init_default                               \
+    }
 #define penumbra_core_component_governance_v1_ProposalWithdraw_init_default \
     {                                                                       \
         0, { {NULL}, NULL }                                                 \
@@ -433,11 +437,11 @@ extern "C" {
     {                                                                          \
         { {NULL}, NULL }                                                       \
     }
-#define penumbra_core_component_governance_v1_ValidatorVoteBody_init_default                                                \
-    {                                                                                                                       \
-        0, false, penumbra_core_component_governance_v1_Vote_init_default, false,                                           \
-            penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_keys_v1_GovernanceKey_init_default, false, \
-            penumbra_core_component_governance_v1_ValidatorVoteReason_init_default                                          \
+#define penumbra_core_component_governance_v1_ValidatorVoteBody_init_default                                         \
+    {                                                                                                                \
+        0, false, penumbra_core_component_governance_v1_Vote_init_default, false,                                    \
+            penumbra_core_keys_v1_IdentityKey_init_default, false, penumbra_core_keys_v1_GovernanceKey_init_default, \
+            false, penumbra_core_component_governance_v1_ValidatorVoteReason_init_default                            \
     }
 #define penumbra_core_component_governance_v1_DelegatorVote_init_default                    \
     {                                                                                       \
@@ -463,13 +467,13 @@ extern "C" {
     }
 #define penumbra_core_component_governance_v1_DelegatorVoteView_Opaque_init_default \
     { false, penumbra_core_component_governance_v1_DelegatorVote_init_default }
-#define penumbra_core_component_governance_v1_DelegatorVotePlan_init_default                                                \
-    {                                                                                                                       \
-        0, 0, false, penumbra_core_component_governance_v1_Vote_init_default, false,                                        \
-            penumbra_core_component_shielded_pool_v1_Note_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, \
-            {{NULL}, NULL}, {{NULL}, NULL}, {                                                                               \
-            {NULL}, NULL                                                                                                    \
-        }                                                                                                                   \
+#define penumbra_core_component_governance_v1_DelegatorVotePlan_init_default            \
+    {                                                                                   \
+        0, 0, false, penumbra_core_component_governance_v1_Vote_init_default, false,    \
+            penumbra_core_component_shielded_pool_v1_Note_init_default, 0, false,       \
+            penumbra_core_num_v1_Amount_init_default, {{NULL}, NULL}, {{NULL}, NULL}, { \
+            {NULL}, NULL                                                                \
+        }                                                                               \
     }
 #define penumbra_core_component_governance_v1_CommunityPoolDeposit_init_default \
     { false, penumbra_core_asset_v1_Value_init_default }
@@ -493,9 +497,11 @@ extern "C" {
     { false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_default }
 #define penumbra_core_component_governance_v1_ProposalOutcome_Slashed_init_default \
     { false, penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn_init_default }
-#define penumbra_core_component_governance_v1_Proposal_init_default                                                     \
-    {                                                                                                                   \
-        {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, { penumbra_core_component_governance_v1_Proposal_Signaling_init_default } \
+#define penumbra_core_component_governance_v1_Proposal_init_default               \
+    {                                                                             \
+        {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, {                                   \
+            penumbra_core_component_governance_v1_Proposal_Signaling_init_default \
+        }                                                                         \
     }
 #define penumbra_core_component_governance_v1_Proposal_Signaling_init_default \
     {                                                                         \
@@ -568,11 +574,11 @@ extern "C" {
     {                                                                       \
         { {NULL}, NULL }                                                    \
     }
-#define penumbra_core_component_governance_v1_ValidatorVoteBody_init_zero                                                   \
-    {                                                                                                                       \
-        0, false, penumbra_core_component_governance_v1_Vote_init_zero, false, penumbra_core_keys_v1_IdentityKey_init_zero, \
-            false, penumbra_core_keys_v1_GovernanceKey_init_zero, false,                                                    \
-            penumbra_core_component_governance_v1_ValidatorVoteReason_init_zero                                             \
+#define penumbra_core_component_governance_v1_ValidatorVoteBody_init_zero                                             \
+    {                                                                                                                 \
+        0, false, penumbra_core_component_governance_v1_Vote_init_zero, false,                                        \
+            penumbra_core_keys_v1_IdentityKey_init_zero, false, penumbra_core_keys_v1_GovernanceKey_init_zero, false, \
+            penumbra_core_component_governance_v1_ValidatorVoteReason_init_zero                                       \
     }
 #define penumbra_core_component_governance_v1_DelegatorVote_init_zero                    \
     {                                                                                    \
@@ -580,11 +586,12 @@ extern "C" {
             penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero, false,        \
             penumbra_core_component_governance_v1_ZKDelegatorVoteProof_init_zero         \
     }
-#define penumbra_core_component_governance_v1_DelegatorVoteBody_init_zero                                                   \
-    {                                                                                                                       \
-        0, 0, false, penumbra_core_component_governance_v1_Vote_init_zero, false, penumbra_core_asset_v1_Value_init_zero,   \
-            false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, \
-            penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_zero                                                 \
+#define penumbra_core_component_governance_v1_DelegatorVoteBody_init_zero                                \
+    {                                                                                                    \
+        0, 0, false, penumbra_core_component_governance_v1_Vote_init_zero, false,                        \
+            penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_num_v1_Amount_init_zero, false, \
+            penumbra_core_component_sct_v1_Nullifier_init_zero, false,                                   \
+            penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_zero                              \
     }
 #define penumbra_core_component_governance_v1_DelegatorVoteView_init_zero                \
     {                                                                                    \
@@ -772,7 +779,8 @@ extern "C" {
 #define penumbra_core_component_governance_v1_ProposalSubmit_deposit_amount_tag 3
 
 /* Struct field encoding specification for nanopb */
-#define penumbra_core_component_governance_v1_ZKDelegatorVoteProof_FIELDLIST(X, a) X(a, CALLBACK, SINGULAR, BYTES, inner, 1)
+#define penumbra_core_component_governance_v1_ZKDelegatorVoteProof_FIELDLIST(X, a) \
+    X(a, CALLBACK, SINGULAR, BYTES, inner, 1)
 #define penumbra_core_component_governance_v1_ZKDelegatorVoteProof_CALLBACK pb_default_field_callback
 #define penumbra_core_component_governance_v1_ZKDelegatorVoteProof_DEFAULT NULL
 
@@ -781,7 +789,8 @@ extern "C" {
     X(a, STATIC, OPTIONAL, MESSAGE, deposit_amount, 3)
 #define penumbra_core_component_governance_v1_ProposalSubmit_CALLBACK NULL
 #define penumbra_core_component_governance_v1_ProposalSubmit_DEFAULT NULL
-#define penumbra_core_component_governance_v1_ProposalSubmit_proposal_MSGTYPE penumbra_core_component_governance_v1_Proposal
+#define penumbra_core_component_governance_v1_ProposalSubmit_proposal_MSGTYPE \
+    penumbra_core_component_governance_v1_Proposal
 #define penumbra_core_component_governance_v1_ProposalSubmit_deposit_amount_MSGTYPE penumbra_core_num_v1_Amount
 
 #define penumbra_core_component_governance_v1_ProposalWithdraw_FIELDLIST(X, a) \
@@ -810,7 +819,8 @@ extern "C" {
 #define penumbra_core_component_governance_v1_ValidatorVote_auth_sig_MSGTYPE \
     penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature
 
-#define penumbra_core_component_governance_v1_ValidatorVoteReason_FIELDLIST(X, a) X(a, CALLBACK, SINGULAR, STRING, reason, 1)
+#define penumbra_core_component_governance_v1_ValidatorVoteReason_FIELDLIST(X, a) \
+    X(a, CALLBACK, SINGULAR, STRING, reason, 1)
 #define penumbra_core_component_governance_v1_ValidatorVoteReason_CALLBACK pb_default_field_callback
 #define penumbra_core_component_governance_v1_ValidatorVoteReason_DEFAULT NULL
 
@@ -824,7 +834,8 @@ extern "C" {
 #define penumbra_core_component_governance_v1_ValidatorVoteBody_DEFAULT NULL
 #define penumbra_core_component_governance_v1_ValidatorVoteBody_vote_MSGTYPE penumbra_core_component_governance_v1_Vote
 #define penumbra_core_component_governance_v1_ValidatorVoteBody_identity_key_MSGTYPE penumbra_core_keys_v1_IdentityKey
-#define penumbra_core_component_governance_v1_ValidatorVoteBody_governance_key_MSGTYPE penumbra_core_keys_v1_GovernanceKey
+#define penumbra_core_component_governance_v1_ValidatorVoteBody_governance_key_MSGTYPE \
+    penumbra_core_keys_v1_GovernanceKey
 #define penumbra_core_component_governance_v1_ValidatorVoteBody_reason_MSGTYPE \
     penumbra_core_component_governance_v1_ValidatorVoteReason
 
@@ -854,7 +865,8 @@ extern "C" {
 #define penumbra_core_component_governance_v1_DelegatorVoteBody_vote_MSGTYPE penumbra_core_component_governance_v1_Vote
 #define penumbra_core_component_governance_v1_DelegatorVoteBody_value_MSGTYPE penumbra_core_asset_v1_Value
 #define penumbra_core_component_governance_v1_DelegatorVoteBody_unbonded_amount_MSGTYPE penumbra_core_num_v1_Amount
-#define penumbra_core_component_governance_v1_DelegatorVoteBody_nullifier_MSGTYPE penumbra_core_component_sct_v1_Nullifier
+#define penumbra_core_component_governance_v1_DelegatorVoteBody_nullifier_MSGTYPE \
+    penumbra_core_component_sct_v1_Nullifier
 #define penumbra_core_component_governance_v1_DelegatorVoteBody_rk_MSGTYPE \
     penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey
 
@@ -902,12 +914,14 @@ extern "C" {
     penumbra_core_component_shielded_pool_v1_Note
 #define penumbra_core_component_governance_v1_DelegatorVotePlan_unbonded_amount_MSGTYPE penumbra_core_num_v1_Amount
 
-#define penumbra_core_component_governance_v1_CommunityPoolDeposit_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, value, 1)
+#define penumbra_core_component_governance_v1_CommunityPoolDeposit_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, value, 1)
 #define penumbra_core_component_governance_v1_CommunityPoolDeposit_CALLBACK NULL
 #define penumbra_core_component_governance_v1_CommunityPoolDeposit_DEFAULT NULL
 #define penumbra_core_component_governance_v1_CommunityPoolDeposit_value_MSGTYPE penumbra_core_asset_v1_Value
 
-#define penumbra_core_component_governance_v1_CommunityPoolSpend_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, value, 1)
+#define penumbra_core_component_governance_v1_CommunityPoolSpend_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, value, 1)
 #define penumbra_core_component_governance_v1_CommunityPoolSpend_CALLBACK NULL
 #define penumbra_core_component_governance_v1_CommunityPoolSpend_DEFAULT NULL
 #define penumbra_core_component_governance_v1_CommunityPoolSpend_value_MSGTYPE penumbra_core_asset_v1_Value
@@ -989,11 +1003,13 @@ extern "C" {
 #define penumbra_core_component_governance_v1_Proposal_payload_unfreeze_ibc_client_MSGTYPE \
     penumbra_core_component_governance_v1_Proposal_UnfreezeIbcClient
 
-#define penumbra_core_component_governance_v1_Proposal_Signaling_FIELDLIST(X, a) X(a, CALLBACK, SINGULAR, STRING, commit, 1)
+#define penumbra_core_component_governance_v1_Proposal_Signaling_FIELDLIST(X, a) \
+    X(a, CALLBACK, SINGULAR, STRING, commit, 1)
 #define penumbra_core_component_governance_v1_Proposal_Signaling_CALLBACK pb_default_field_callback
 #define penumbra_core_component_governance_v1_Proposal_Signaling_DEFAULT NULL
 
-#define penumbra_core_component_governance_v1_Proposal_Emergency_FIELDLIST(X, a) X(a, STATIC, SINGULAR, BOOL, halt_chain, 1)
+#define penumbra_core_component_governance_v1_Proposal_Emergency_FIELDLIST(X, a) \
+    X(a, STATIC, SINGULAR, BOOL, halt_chain, 1)
 #define penumbra_core_component_governance_v1_Proposal_Emergency_CALLBACK NULL
 #define penumbra_core_component_governance_v1_Proposal_Emergency_DEFAULT NULL
 
@@ -1019,7 +1035,8 @@ extern "C" {
 #define penumbra_core_component_governance_v1_Proposal_CommunityPoolSpend_DEFAULT NULL
 #define penumbra_core_component_governance_v1_Proposal_CommunityPoolSpend_transaction_plan_MSGTYPE google_protobuf_Any
 
-#define penumbra_core_component_governance_v1_Proposal_UpgradePlan_FIELDLIST(X, a) X(a, STATIC, SINGULAR, UINT64, height, 1)
+#define penumbra_core_component_governance_v1_Proposal_UpgradePlan_FIELDLIST(X, a) \
+    X(a, STATIC, SINGULAR, UINT64, height, 1)
 #define penumbra_core_component_governance_v1_Proposal_UpgradePlan_CALLBACK NULL
 #define penumbra_core_component_governance_v1_Proposal_UpgradePlan_DEFAULT NULL
 
@@ -1125,17 +1142,20 @@ extern const pb_msgdesc_t penumbra_core_component_governance_v1_ChangedAppParame
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define penumbra_core_component_governance_v1_ZKDelegatorVoteProof_fields \
     &penumbra_core_component_governance_v1_ZKDelegatorVoteProof_msg
-#define penumbra_core_component_governance_v1_ProposalSubmit_fields &penumbra_core_component_governance_v1_ProposalSubmit_msg
+#define penumbra_core_component_governance_v1_ProposalSubmit_fields \
+    &penumbra_core_component_governance_v1_ProposalSubmit_msg
 #define penumbra_core_component_governance_v1_ProposalWithdraw_fields \
     &penumbra_core_component_governance_v1_ProposalWithdraw_msg
 #define penumbra_core_component_governance_v1_ProposalDepositClaim_fields \
     &penumbra_core_component_governance_v1_ProposalDepositClaim_msg
-#define penumbra_core_component_governance_v1_ValidatorVote_fields &penumbra_core_component_governance_v1_ValidatorVote_msg
+#define penumbra_core_component_governance_v1_ValidatorVote_fields \
+    &penumbra_core_component_governance_v1_ValidatorVote_msg
 #define penumbra_core_component_governance_v1_ValidatorVoteReason_fields \
     &penumbra_core_component_governance_v1_ValidatorVoteReason_msg
 #define penumbra_core_component_governance_v1_ValidatorVoteBody_fields \
     &penumbra_core_component_governance_v1_ValidatorVoteBody_msg
-#define penumbra_core_component_governance_v1_DelegatorVote_fields &penumbra_core_component_governance_v1_DelegatorVote_msg
+#define penumbra_core_component_governance_v1_DelegatorVote_fields \
+    &penumbra_core_component_governance_v1_DelegatorVote_msg
 #define penumbra_core_component_governance_v1_DelegatorVoteBody_fields \
     &penumbra_core_component_governance_v1_DelegatorVoteBody_msg
 #define penumbra_core_component_governance_v1_DelegatorVoteView_fields \

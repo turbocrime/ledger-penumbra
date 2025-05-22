@@ -33,7 +33,8 @@ parser_error_t decode_action_dutch_auction_end_plan(const bytes_t *data,
     setup_decode_fixed_field(&action_dutch_auction_end_pb.auction_id.inner, &auction_id_arg,
                              &action_dutch_auction_end->auction_id.inner, ASSET_ID_LEN);
 
-    if (!pb_decode(&stream, penumbra_core_component_auction_v1_ActionDutchAuctionEnd_fields, &action_dutch_auction_end_pb)) {
+    if (!pb_decode(&stream, penumbra_core_component_auction_v1_ActionDutchAuctionEnd_fields,
+                   &action_dutch_auction_end_pb)) {
         return parser_action_dutch_auction_end_plan_error;
     }
 

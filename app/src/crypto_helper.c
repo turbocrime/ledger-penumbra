@@ -14,7 +14,7 @@
  *  limitations under the License.
  ********************************************************************************/
 #include "crypto_helper.h"
-// #include "keys_personalizations.h"
+
 #include <string.h>
 
 #include "keys_def.h"

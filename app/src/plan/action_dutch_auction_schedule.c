@@ -74,7 +74,8 @@ parser_error_t decode_action_dutch_auction_schedule_plan(
             action_dutch_auction_schedule->description.min_output.lo =
                 action_dutch_auction_schedule_pb.description.min_output.lo;
         }
-        action_dutch_auction_schedule->description.start_height = action_dutch_auction_schedule_pb.description.start_height;
+        action_dutch_auction_schedule->description.start_height =
+            action_dutch_auction_schedule_pb.description.start_height;
         action_dutch_auction_schedule->description.end_height = action_dutch_auction_schedule_pb.description.end_height;
         action_dutch_auction_schedule->description.step_count = action_dutch_auction_schedule_pb.description.step_count;
     }
@@ -100,15 +101,16 @@ parser_error_t action_dutch_auction_schedule_getItem(
     char bufferUI[DUTCH_AUCTION_SCHEDULE_DISPLAY_MAX_LEN] = {0};
 
     snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
-    CHECK_ERROR(action_dutch_auction_schedule_printValue(ctx, action_dutch_auction_schedule, bufferUI, sizeof(bufferUI)));
+    CHECK_ERROR(
+        action_dutch_auction_schedule_printValue(ctx, action_dutch_auction_schedule, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 
     return parser_ok;
 }
 
 parser_error_t action_dutch_auction_schedule_printValue(
-    const parser_context_t *ctx, const action_dutch_auction_schedule_plan_t *action_dutch_auction_schedule, char *outVal,
-    uint16_t outValLen) {
+    const parser_context_t *ctx, const action_dutch_auction_schedule_plan_t *action_dutch_auction_schedule,
+    char *outVal, uint16_t outValLen) {
     if (ctx == NULL || action_dutch_auction_schedule == NULL || outVal == NULL) {
         return parser_no_data;
     }
@@ -124,8 +126,9 @@ parser_error_t action_dutch_auction_schedule_printValue(
     uint16_t written_value = strlen(outVal);
 
     // Selling value
-    CHECK_ERROR(printValue(ctx, &action_dutch_auction_schedule->description.input, &ctx->tx_obj->parameters_plan.chain_id,
-                           true, outVal + written_value, outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &action_dutch_auction_schedule->description.input,
+                           &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
+                           outValLen - written_value));
     written_value = strlen(outVal);
 
     snprintf(outVal + written_value, outValLen - written_value, " For: ");
@@ -157,8 +160,9 @@ parser_error_t action_dutch_auction_schedule_printValue(
     snprintf(outVal + written_value, outValLen - written_value, " for ");
     written_value = strlen(outVal);
 
-    CHECK_ERROR(printValue(ctx, &action_dutch_auction_schedule->description.input, &ctx->tx_obj->parameters_plan.chain_id,
-                           false, outVal + written_value, outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &action_dutch_auction_schedule->description.input,
+                           &ctx->tx_obj->parameters_plan.chain_id, false, outVal + written_value,
+                           outValLen - written_value));
     written_value = strlen(outVal);
 
     // Format ending price
@@ -177,8 +181,9 @@ parser_error_t action_dutch_auction_schedule_printValue(
     snprintf(outVal + written_value, outValLen - written_value, " for ");
     written_value = strlen(outVal);
 
-    CHECK_ERROR(printValue(ctx, &action_dutch_auction_schedule->description.input, &ctx->tx_obj->parameters_plan.chain_id,
-                           false, outVal + written_value, outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &action_dutch_auction_schedule->description.input,
+                           &ctx->tx_obj->parameters_plan.chain_id, false, outVal + written_value,
+                           outValLen - written_value));
     written_value = strlen(outVal);
 
     // Start block height
@@ -191,13 +196,15 @@ parser_error_t action_dutch_auction_schedule_printValue(
     // End block height
     snprintf(outVal + written_value, outValLen - written_value, " End block height: ");
     written_value = strlen(outVal);
-    uint64_to_str(outVal + written_value, outValLen - written_value, action_dutch_auction_schedule->description.end_height);
+    uint64_to_str(outVal + written_value, outValLen - written_value,
+                  action_dutch_auction_schedule->description.end_height);
     written_value = strlen(outVal);
 
     // Step count
     snprintf(outVal + written_value, outValLen - written_value, " Steps: ");
     written_value = strlen(outVal);
-    uint64_to_str(outVal + written_value, outValLen - written_value, action_dutch_auction_schedule->description.step_count);
+    uint64_to_str(outVal + written_value, outValLen - written_value,
+                  action_dutch_auction_schedule->description.step_count);
 
     return parser_ok;
 }

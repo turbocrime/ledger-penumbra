@@ -217,15 +217,15 @@ extern "C" {
     {                                                                                    \
         false, penumbra_core_component_stake_v1_Validator_init_default, { {NULL}, NULL } \
     }
-#define penumbra_core_component_stake_v1_Delegate_init_default                                                            \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default                                                                      \
+#define penumbra_core_component_stake_v1_Delegate_init_default                                                     \
+    {                                                                                                              \
+        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, \
+            false, penumbra_core_num_v1_Amount_init_default                                                        \
     }
-#define penumbra_core_component_stake_v1_Undelegate_init_default                                                          \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default, false, \
-            penumbra_core_num_v1_Amount_init_default, false, penumbra_core_component_sct_v1_Epoch_init_default            \
+#define penumbra_core_component_stake_v1_Undelegate_init_default                                                      \
+    {                                                                                                                 \
+        false, penumbra_core_keys_v1_IdentityKey_init_default, 0, false, penumbra_core_num_v1_Amount_init_default,    \
+            false, penumbra_core_num_v1_Amount_init_default, false, penumbra_core_component_sct_v1_Epoch_init_default \
     }
 #define penumbra_core_component_stake_v1_UndelegateClaim_init_default                              \
     {                                                                                              \
@@ -249,10 +249,10 @@ extern "C" {
     }
 #define penumbra_core_component_stake_v1_StakeParameters_init_default \
     { 0, 0, 0, 0, 0, 0, 0, false, penumbra_core_num_v1_Amount_init_default, 0 }
-#define penumbra_core_component_stake_v1_Validator_init_zero                                                                \
-    {                                                                                                                       \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
-            {{NULL}, NULL}, 0, 0, false, penumbra_core_keys_v1_GovernanceKey_init_zero                                      \
+#define penumbra_core_component_stake_v1_Validator_init_zero                                                \
+    {                                                                                                       \
+        false, penumbra_core_keys_v1_IdentityKey_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
+            {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, false, penumbra_core_keys_v1_GovernanceKey_init_zero      \
     }
 #define penumbra_core_component_stake_v1_FundingStream_init_zero                  \
     {                                                                             \
@@ -280,15 +280,17 @@ extern "C" {
     {                                                                                           \
         false, penumbra_core_component_stake_v1_UndelegateClaimBody_init_zero, { {NULL}, NULL } \
     }
-#define penumbra_core_component_stake_v1_UndelegateClaimBody_init_zero                                                    \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_component_stake_v1_Penalty_init_zero, \
-            false, penumbra_core_asset_v1_BalanceCommitment_init_zero, 0                                                  \
+#define penumbra_core_component_stake_v1_UndelegateClaimBody_init_zero \
+    {                                                                  \
+        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false,  \
+            penumbra_core_component_stake_v1_Penalty_init_zero, false, \
+            penumbra_core_asset_v1_BalanceCommitment_init_zero, 0      \
     }
-#define penumbra_core_component_stake_v1_UndelegateClaimPlan_init_zero                                                    \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false, penumbra_core_component_stake_v1_Penalty_init_zero, \
-            false, penumbra_core_num_v1_Amount_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0               \
+#define penumbra_core_component_stake_v1_UndelegateClaimPlan_init_zero                                        \
+    {                                                                                                         \
+        false, penumbra_core_keys_v1_IdentityKey_init_zero, 0, false,                                         \
+            penumbra_core_component_stake_v1_Penalty_init_zero, false, penumbra_core_num_v1_Amount_init_zero, \
+            {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0                                                 \
     }
 #define penumbra_core_component_stake_v1_Penalty_init_zero \
     {                                                      \
@@ -363,7 +365,8 @@ extern "C" {
 #define penumbra_core_component_stake_v1_Validator_CALLBACK pb_default_field_callback
 #define penumbra_core_component_stake_v1_Validator_DEFAULT NULL
 #define penumbra_core_component_stake_v1_Validator_identity_key_MSGTYPE penumbra_core_keys_v1_IdentityKey
-#define penumbra_core_component_stake_v1_Validator_funding_streams_MSGTYPE penumbra_core_component_stake_v1_FundingStream
+#define penumbra_core_component_stake_v1_Validator_funding_streams_MSGTYPE \
+    penumbra_core_component_stake_v1_FundingStream
 #define penumbra_core_component_stake_v1_Validator_governance_key_MSGTYPE penumbra_core_keys_v1_GovernanceKey
 
 #define penumbra_core_component_stake_v1_FundingStream_FIELDLIST(X, a)             \
@@ -392,7 +395,8 @@ extern "C" {
     X(a, CALLBACK, SINGULAR, BYTES, auth_sig, 2)
 #define penumbra_core_component_stake_v1_ValidatorDefinition_CALLBACK pb_default_field_callback
 #define penumbra_core_component_stake_v1_ValidatorDefinition_DEFAULT NULL
-#define penumbra_core_component_stake_v1_ValidatorDefinition_validator_MSGTYPE penumbra_core_component_stake_v1_Validator
+#define penumbra_core_component_stake_v1_ValidatorDefinition_validator_MSGTYPE \
+    penumbra_core_component_stake_v1_Validator
 
 #define penumbra_core_component_stake_v1_Delegate_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, validator_identity, 1)        \
@@ -423,7 +427,8 @@ extern "C" {
     X(a, CALLBACK, SINGULAR, BYTES, proof, 2)
 #define penumbra_core_component_stake_v1_UndelegateClaim_CALLBACK pb_default_field_callback
 #define penumbra_core_component_stake_v1_UndelegateClaim_DEFAULT NULL
-#define penumbra_core_component_stake_v1_UndelegateClaim_body_MSGTYPE penumbra_core_component_stake_v1_UndelegateClaimBody
+#define penumbra_core_component_stake_v1_UndelegateClaim_body_MSGTYPE \
+    penumbra_core_component_stake_v1_UndelegateClaimBody
 
 #define penumbra_core_component_stake_v1_UndelegateClaimBody_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, validator_identity, 1)                   \
@@ -433,7 +438,8 @@ extern "C" {
     X(a, STATIC, SINGULAR, UINT64, unbonding_start_height, 5)
 #define penumbra_core_component_stake_v1_UndelegateClaimBody_CALLBACK NULL
 #define penumbra_core_component_stake_v1_UndelegateClaimBody_DEFAULT NULL
-#define penumbra_core_component_stake_v1_UndelegateClaimBody_validator_identity_MSGTYPE penumbra_core_keys_v1_IdentityKey
+#define penumbra_core_component_stake_v1_UndelegateClaimBody_validator_identity_MSGTYPE \
+    penumbra_core_keys_v1_IdentityKey
 #define penumbra_core_component_stake_v1_UndelegateClaimBody_penalty_MSGTYPE penumbra_core_component_stake_v1_Penalty
 #define penumbra_core_component_stake_v1_UndelegateClaimBody_balance_commitment_MSGTYPE \
     penumbra_core_asset_v1_BalanceCommitment
@@ -449,7 +455,8 @@ extern "C" {
     X(a, STATIC, SINGULAR, UINT64, unbonding_start_height, 9)
 #define penumbra_core_component_stake_v1_UndelegateClaimPlan_CALLBACK pb_default_field_callback
 #define penumbra_core_component_stake_v1_UndelegateClaimPlan_DEFAULT NULL
-#define penumbra_core_component_stake_v1_UndelegateClaimPlan_validator_identity_MSGTYPE penumbra_core_keys_v1_IdentityKey
+#define penumbra_core_component_stake_v1_UndelegateClaimPlan_validator_identity_MSGTYPE \
+    penumbra_core_keys_v1_IdentityKey
 #define penumbra_core_component_stake_v1_UndelegateClaimPlan_penalty_MSGTYPE penumbra_core_component_stake_v1_Penalty
 #define penumbra_core_component_stake_v1_UndelegateClaimPlan_unbonding_amount_MSGTYPE penumbra_core_num_v1_Amount
 
@@ -491,12 +498,15 @@ extern const pb_msgdesc_t penumbra_core_component_stake_v1_StakeParameters_msg;
     &penumbra_core_component_stake_v1_FundingStream_ToAddress_msg
 #define penumbra_core_component_stake_v1_FundingStream_ToCommunityPool_fields \
     &penumbra_core_component_stake_v1_FundingStream_ToCommunityPool_msg
-#define penumbra_core_component_stake_v1_ValidatorDefinition_fields &penumbra_core_component_stake_v1_ValidatorDefinition_msg
+#define penumbra_core_component_stake_v1_ValidatorDefinition_fields \
+    &penumbra_core_component_stake_v1_ValidatorDefinition_msg
 #define penumbra_core_component_stake_v1_Delegate_fields &penumbra_core_component_stake_v1_Delegate_msg
 #define penumbra_core_component_stake_v1_Undelegate_fields &penumbra_core_component_stake_v1_Undelegate_msg
 #define penumbra_core_component_stake_v1_UndelegateClaim_fields &penumbra_core_component_stake_v1_UndelegateClaim_msg
-#define penumbra_core_component_stake_v1_UndelegateClaimBody_fields &penumbra_core_component_stake_v1_UndelegateClaimBody_msg
-#define penumbra_core_component_stake_v1_UndelegateClaimPlan_fields &penumbra_core_component_stake_v1_UndelegateClaimPlan_msg
+#define penumbra_core_component_stake_v1_UndelegateClaimBody_fields \
+    &penumbra_core_component_stake_v1_UndelegateClaimBody_msg
+#define penumbra_core_component_stake_v1_UndelegateClaimPlan_fields \
+    &penumbra_core_component_stake_v1_UndelegateClaimPlan_msg
 #define penumbra_core_component_stake_v1_Penalty_fields &penumbra_core_component_stake_v1_Penalty_msg
 #define penumbra_core_component_stake_v1_StakeParameters_fields &penumbra_core_component_stake_v1_StakeParameters_msg
 

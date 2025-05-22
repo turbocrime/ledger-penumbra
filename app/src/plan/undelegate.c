@@ -22,7 +22,8 @@
 #include "zxformat.h"
 
 parser_error_t decode_undelegate_plan(const bytes_t *data, undelegate_plan_t *undelegate) {
-    penumbra_core_component_stake_v1_Undelegate undelegate_plan = penumbra_core_component_stake_v1_Undelegate_init_default;
+    penumbra_core_component_stake_v1_Undelegate undelegate_plan =
+        penumbra_core_component_stake_v1_Undelegate_init_default;
 
     pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
@@ -115,8 +116,8 @@ parser_error_t undelegate_printValue(const parser_context_t *ctx, const undelega
                                      .asset_id.inner = {.ptr = asset_id_bytes, .len = ASSET_ID_LEN},
                                      .has_amount = true,
                                      .has_asset_id = true};
-    CHECK_ERROR(printValue(ctx, &local_delegate_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
-                           outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &local_delegate_amount, &ctx->tx_obj->parameters_plan.chain_id, true,
+                           outVal + written_value, outValLen - written_value));
     written_value = strlen(outVal);
 
     // add "Output"
@@ -141,7 +142,7 @@ parser_error_t undelegate_printValue(const parser_context_t *ctx, const undelega
                                      .asset_id.inner = {.ptr = asset_id_bytes, .len = ASSET_ID_LEN},
                                      .has_amount = true,
                                      .has_asset_id = true};
-    CHECK_ERROR(printValue(ctx, &local_unbonded_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
-                           outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &local_unbonded_amount, &ctx->tx_obj->parameters_plan.chain_id, true,
+                           outVal + written_value, outValLen - written_value));
     return parser_ok;
 }

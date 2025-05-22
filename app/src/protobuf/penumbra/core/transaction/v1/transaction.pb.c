@@ -14,8 +14,8 @@ PB_BIND(penumbra_core_transaction_v1_TransactionParameters, penumbra_core_transa
 
 PB_BIND(penumbra_core_transaction_v1_TransactionSummary, penumbra_core_transaction_v1_TransactionSummary, AUTO)
 
-PB_BIND(penumbra_core_transaction_v1_TransactionSummary_Effects, penumbra_core_transaction_v1_TransactionSummary_Effects,
-        AUTO)
+PB_BIND(penumbra_core_transaction_v1_TransactionSummary_Effects,
+        penumbra_core_transaction_v1_TransactionSummary_Effects, AUTO)
 
 PB_BIND(penumbra_core_transaction_v1_DetectionData, penumbra_core_transaction_v1_DetectionData, AUTO)
 
@@ -32,7 +32,8 @@ PB_BIND(penumbra_core_transaction_v1_TransactionPerspective_CreationTransactionI
 PB_BIND(penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment,
         penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment, AUTO)
 
-PB_BIND(penumbra_core_transaction_v1_PayloadKeyWithCommitment, penumbra_core_transaction_v1_PayloadKeyWithCommitment, AUTO)
+PB_BIND(penumbra_core_transaction_v1_PayloadKeyWithCommitment, penumbra_core_transaction_v1_PayloadKeyWithCommitment,
+        AUTO)
 
 PB_BIND(penumbra_core_transaction_v1_NullifierWithNote, penumbra_core_transaction_v1_NullifierWithNote, AUTO)
 

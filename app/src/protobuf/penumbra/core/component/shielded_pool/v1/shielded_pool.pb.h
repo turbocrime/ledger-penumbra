@@ -247,8 +247,11 @@ extern "C" {
     { 0, 0 }
 #define penumbra_core_component_shielded_pool_v1_FmdParameters_init_default \
     { 0, 0 }
-#define penumbra_core_component_shielded_pool_v1_Note_init_default \
-    { false, penumbra_core_asset_v1_Value_init_default, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_default }
+#define penumbra_core_component_shielded_pool_v1_Note_init_default               \
+    {                                                                            \
+        false, penumbra_core_asset_v1_Value_init_default, {{NULL}, NULL}, false, \
+            penumbra_core_keys_v1_Address_init_default                           \
+    }
 #define penumbra_core_component_shielded_pool_v1_NoteView_init_default               \
     {                                                                                \
         false, penumbra_core_asset_v1_ValueView_init_default, {{NULL}, NULL}, false, \
@@ -349,8 +352,11 @@ extern "C" {
     { 0, 0 }
 #define penumbra_core_component_shielded_pool_v1_Note_init_zero \
     { false, penumbra_core_asset_v1_Value_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_Address_init_zero }
-#define penumbra_core_component_shielded_pool_v1_NoteView_init_zero \
-    { false, penumbra_core_asset_v1_ValueView_init_zero, {{NULL}, NULL}, false, penumbra_core_keys_v1_AddressView_init_zero }
+#define penumbra_core_component_shielded_pool_v1_NoteView_init_zero               \
+    {                                                                             \
+        false, penumbra_core_asset_v1_ValueView_init_zero, {{NULL}, NULL}, false, \
+            penumbra_core_keys_v1_AddressView_init_zero                           \
+    }
 #define penumbra_core_component_shielded_pool_v1_NoteCiphertext_init_zero \
     {                                                                     \
         { {NULL}, NULL }                                                  \
@@ -393,12 +399,12 @@ extern "C" {
     }
 #define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_init_zero \
     { false, penumbra_core_component_shielded_pool_v1_Spend_init_zero }
-#define penumbra_core_component_shielded_pool_v1_SpendPlan_init_zero                                                       \
-    {                                                                                                                      \
-        false, penumbra_core_component_shielded_pool_v1_Note_init_zero, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
-        {                                                                                                                  \
-            {NULL}, NULL                                                                                                   \
-        }                                                                                                                  \
+#define penumbra_core_component_shielded_pool_v1_SpendPlan_init_zero                                       \
+    {                                                                                                      \
+        false, penumbra_core_component_shielded_pool_v1_Note_init_zero, 0, {{NULL}, NULL}, {{NULL}, NULL}, \
+            {{NULL}, NULL}, {                                                                              \
+            {NULL}, NULL                                                                                   \
+        }                                                                                                  \
     }
 #define penumbra_core_component_shielded_pool_v1_Output_init_zero                    \
     {                                                                                \
@@ -416,10 +422,11 @@ extern "C" {
     {                                                                                \
         0, { penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_zero } \
     }
-#define penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_zero                                              \
-    {                                                                                                                      \
-        false, penumbra_core_component_shielded_pool_v1_Output_init_zero, false,                                           \
-            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false, penumbra_core_keys_v1_PayloadKey_init_zero \
+#define penumbra_core_component_shielded_pool_v1_OutputView_Visible_init_zero    \
+    {                                                                            \
+        false, penumbra_core_component_shielded_pool_v1_Output_init_zero, false, \
+            penumbra_core_component_shielded_pool_v1_NoteView_init_zero, false,  \
+            penumbra_core_keys_v1_PayloadKey_init_zero                           \
     }
 #define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_init_zero \
     { false, penumbra_core_component_shielded_pool_v1_Output_init_zero }
@@ -541,7 +548,8 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_NoteView_value_MSGTYPE penumbra_core_asset_v1_ValueView
 #define penumbra_core_component_shielded_pool_v1_NoteView_address_MSGTYPE penumbra_core_keys_v1_AddressView
 
-#define penumbra_core_component_shielded_pool_v1_NoteCiphertext_FIELDLIST(X, a) X(a, CALLBACK, SINGULAR, BYTES, inner, 1)
+#define penumbra_core_component_shielded_pool_v1_NoteCiphertext_FIELDLIST(X, a) \
+    X(a, CALLBACK, SINGULAR, BYTES, inner, 1)
 #define penumbra_core_component_shielded_pool_v1_NoteCiphertext_CALLBACK pb_default_field_callback
 #define penumbra_core_component_shielded_pool_v1_NoteCiphertext_DEFAULT NULL
 
@@ -551,7 +559,8 @@ extern "C" {
     X(a, STATIC, OPTIONAL, MESSAGE, encrypted_note, 3)
 #define penumbra_core_component_shielded_pool_v1_NotePayload_CALLBACK pb_default_field_callback
 #define penumbra_core_component_shielded_pool_v1_NotePayload_DEFAULT NULL
-#define penumbra_core_component_shielded_pool_v1_NotePayload_note_commitment_MSGTYPE penumbra_crypto_tct_v1_StateCommitment
+#define penumbra_core_component_shielded_pool_v1_NotePayload_note_commitment_MSGTYPE \
+    penumbra_crypto_tct_v1_StateCommitment
 #define penumbra_core_component_shielded_pool_v1_NotePayload_encrypted_note_MSGTYPE \
     penumbra_core_component_shielded_pool_v1_NoteCiphertext
 
@@ -570,8 +579,10 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_Spend_CALLBACK NULL
 #define penumbra_core_component_shielded_pool_v1_Spend_DEFAULT NULL
 #define penumbra_core_component_shielded_pool_v1_Spend_body_MSGTYPE penumbra_core_component_shielded_pool_v1_SpendBody
-#define penumbra_core_component_shielded_pool_v1_Spend_auth_sig_MSGTYPE penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature
-#define penumbra_core_component_shielded_pool_v1_Spend_proof_MSGTYPE penumbra_core_component_shielded_pool_v1_ZKSpendProof
+#define penumbra_core_component_shielded_pool_v1_Spend_auth_sig_MSGTYPE \
+    penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature
+#define penumbra_core_component_shielded_pool_v1_Spend_proof_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_ZKSpendProof
 
 #define penumbra_core_component_shielded_pool_v1_SpendBody_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, balance_commitment, 1)                 \
@@ -582,7 +593,8 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_SpendBody_DEFAULT NULL
 #define penumbra_core_component_shielded_pool_v1_SpendBody_balance_commitment_MSGTYPE \
     penumbra_core_asset_v1_BalanceCommitment
-#define penumbra_core_component_shielded_pool_v1_SpendBody_rk_MSGTYPE penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey
+#define penumbra_core_component_shielded_pool_v1_SpendBody_rk_MSGTYPE \
+    penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey
 #define penumbra_core_component_shielded_pool_v1_SpendBody_nullifier_MSGTYPE penumbra_core_component_sct_v1_Nullifier
 
 #define penumbra_core_component_shielded_pool_v1_SpendView_FIELDLIST(X, a)     \
@@ -605,7 +617,8 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_SpendView_Visible_note_MSGTYPE \
     penumbra_core_component_shielded_pool_v1_NoteView
 
-#define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, spend, 1)
+#define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, spend, 1)
 #define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_CALLBACK NULL
 #define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_DEFAULT NULL
 #define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_spend_MSGTYPE \
@@ -628,7 +641,8 @@ extern "C" {
 #define penumbra_core_component_shielded_pool_v1_Output_CALLBACK NULL
 #define penumbra_core_component_shielded_pool_v1_Output_DEFAULT NULL
 #define penumbra_core_component_shielded_pool_v1_Output_body_MSGTYPE penumbra_core_component_shielded_pool_v1_OutputBody
-#define penumbra_core_component_shielded_pool_v1_Output_proof_MSGTYPE penumbra_core_component_shielded_pool_v1_ZKOutputProof
+#define penumbra_core_component_shielded_pool_v1_Output_proof_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_ZKOutputProof
 
 #define penumbra_core_component_shielded_pool_v1_OutputBody_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, note_payload, 1)                        \
@@ -664,7 +678,8 @@ extern "C" {
     penumbra_core_component_shielded_pool_v1_NoteView
 #define penumbra_core_component_shielded_pool_v1_OutputView_Visible_payload_key_MSGTYPE penumbra_core_keys_v1_PayloadKey
 
-#define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, output, 1)
+#define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, output, 1)
 #define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_CALLBACK NULL
 #define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_DEFAULT NULL
 #define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_output_MSGTYPE \
@@ -718,27 +733,34 @@ extern const pb_msgdesc_t penumbra_core_component_shielded_pool_v1_OutputPlan_ms
 #define penumbra_core_component_shielded_pool_v1_NoteView_fields &penumbra_core_component_shielded_pool_v1_NoteView_msg
 #define penumbra_core_component_shielded_pool_v1_NoteCiphertext_fields \
     &penumbra_core_component_shielded_pool_v1_NoteCiphertext_msg
-#define penumbra_core_component_shielded_pool_v1_NotePayload_fields &penumbra_core_component_shielded_pool_v1_NotePayload_msg
+#define penumbra_core_component_shielded_pool_v1_NotePayload_fields \
+    &penumbra_core_component_shielded_pool_v1_NotePayload_msg
 #define penumbra_core_component_shielded_pool_v1_ZKOutputProof_fields \
     &penumbra_core_component_shielded_pool_v1_ZKOutputProof_msg
 #define penumbra_core_component_shielded_pool_v1_ZKSpendProof_fields \
     &penumbra_core_component_shielded_pool_v1_ZKSpendProof_msg
 #define penumbra_core_component_shielded_pool_v1_Spend_fields &penumbra_core_component_shielded_pool_v1_Spend_msg
-#define penumbra_core_component_shielded_pool_v1_SpendBody_fields &penumbra_core_component_shielded_pool_v1_SpendBody_msg
-#define penumbra_core_component_shielded_pool_v1_SpendView_fields &penumbra_core_component_shielded_pool_v1_SpendView_msg
+#define penumbra_core_component_shielded_pool_v1_SpendBody_fields \
+    &penumbra_core_component_shielded_pool_v1_SpendBody_msg
+#define penumbra_core_component_shielded_pool_v1_SpendView_fields \
+    &penumbra_core_component_shielded_pool_v1_SpendView_msg
 #define penumbra_core_component_shielded_pool_v1_SpendView_Visible_fields \
     &penumbra_core_component_shielded_pool_v1_SpendView_Visible_msg
 #define penumbra_core_component_shielded_pool_v1_SpendView_Opaque_fields \
     &penumbra_core_component_shielded_pool_v1_SpendView_Opaque_msg
-#define penumbra_core_component_shielded_pool_v1_SpendPlan_fields &penumbra_core_component_shielded_pool_v1_SpendPlan_msg
+#define penumbra_core_component_shielded_pool_v1_SpendPlan_fields \
+    &penumbra_core_component_shielded_pool_v1_SpendPlan_msg
 #define penumbra_core_component_shielded_pool_v1_Output_fields &penumbra_core_component_shielded_pool_v1_Output_msg
-#define penumbra_core_component_shielded_pool_v1_OutputBody_fields &penumbra_core_component_shielded_pool_v1_OutputBody_msg
-#define penumbra_core_component_shielded_pool_v1_OutputView_fields &penumbra_core_component_shielded_pool_v1_OutputView_msg
+#define penumbra_core_component_shielded_pool_v1_OutputBody_fields \
+    &penumbra_core_component_shielded_pool_v1_OutputBody_msg
+#define penumbra_core_component_shielded_pool_v1_OutputView_fields \
+    &penumbra_core_component_shielded_pool_v1_OutputView_msg
 #define penumbra_core_component_shielded_pool_v1_OutputView_Visible_fields \
     &penumbra_core_component_shielded_pool_v1_OutputView_Visible_msg
 #define penumbra_core_component_shielded_pool_v1_OutputView_Opaque_fields \
     &penumbra_core_component_shielded_pool_v1_OutputView_Opaque_msg
-#define penumbra_core_component_shielded_pool_v1_OutputPlan_fields &penumbra_core_component_shielded_pool_v1_OutputPlan_msg
+#define penumbra_core_component_shielded_pool_v1_OutputPlan_fields \
+    &penumbra_core_component_shielded_pool_v1_OutputPlan_msg
 
 /* Maximum encoded size of messages (where known) */
 /* penumbra_core_component_shielded_pool_v1_Note_size depends on runtime parameters */

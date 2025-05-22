@@ -22,16 +22,15 @@
 #include "keys_def.h"
 #include "nv_signature.h"
 #include "parser_interface.h"
+#include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
 #include "rslib.h"
 #include "zxformat.h"
 #include "zxmacros.h"
 
-// TODO: Maybe move this to crypto_helper
-#include "protobuf/penumbra/core/transaction/v1/transaction.pb.h"
-
 uint32_t hdPath[HDPATH_LEN_DEFAULT];
 
-__Z_INLINE zxerr_t copyKeys(keys_t *keys, key_kind_e req_type, uint8_t *output, uint16_t len, uint16_t *cmdResponseLen) {
+__Z_INLINE zxerr_t copyKeys(keys_t *keys, key_kind_e req_type, uint8_t *output, uint16_t len,
+                            uint16_t *cmdResponseLen) {
     if (keys == NULL || output == NULL) {
         return zxerr_no_data;
     }
@@ -41,7 +40,7 @@ __Z_INLINE zxerr_t copyKeys(keys_t *keys, key_kind_e req_type, uint8_t *output, 
             if (len < ADDRESS_LEN_BYTES) {
                 return zxerr_buffer_too_small;
             }
-            memcpy(output, keys->address, ADDRESS_LEN_BYTES);
+            MEMCPY(output, keys->address, ADDRESS_LEN_BYTES);
             *cmdResponseLen = ADDRESS_LEN_BYTES;
             break;
 
@@ -52,7 +51,7 @@ __Z_INLINE zxerr_t copyKeys(keys_t *keys, key_kind_e req_type, uint8_t *output, 
                 *cmdResponseLen = 0;
                 return zxerr_buffer_too_small;
             }
-            memcpy(output, keys->fvk, *cmdResponseLen);
+            MEMCPY(output, keys->fvk, *cmdResponseLen);
             break;
 
         default:
@@ -72,12 +71,11 @@ __Z_INLINE zxerr_t computeSpendKey(keys_t *keys) {
     uint8_t privateKeyData[SK_LEN_25519] = {0};
     CATCH_CXERROR(os_derive_bip32_no_throw(CX_CURVE_256K1, hdPath, HDPATH_LEN_DEFAULT, privateKeyData, NULL));
 
-    memcpy(keys->skb, privateKeyData, sizeof(keys->skb));
+    MEMCPY(keys->skb, privateKeyData, sizeof(keys->skb));
     // if we reach this point no errors occurred
     error = zxerr_ok;
 
 catch_cx_error:
-    MEMZERO(&keys, sizeof(keys));
     MEMZERO(privateKeyData, sizeof(privateKeyData));
 
     return error;
@@ -102,6 +100,7 @@ zxerr_t crypto_fillKeys(uint8_t *output, uint16_t len, uint16_t *cmdResponseLen)
 
         // use seed to compute viewieng keys
         CATCH_ZX_ERROR(compute_keys(&keys));
+        MEMZERO(keys.skb, sizeof(keys.skb));
 
         // Copy keys
         CATCH_ZX_ERROR(copyKeys(&keys, Fvk, output, len, cmdResponseLen));
@@ -140,6 +139,7 @@ zxerr_t crypto_fillAddress(uint8_t *buffer, uint16_t bufferLen, uint16_t *cmdRes
     CATCH_ZX_ERROR(computeSpendKey(&keys));
 
     CATCH_ZX_ERROR(compute_address(&keys, account, randomizer));
+    MEMZERO(keys.skb, sizeof(keys.skb));
 
     CATCH_ZX_ERROR(copyKeys(&keys, Address, buffer, bufferLen, cmdResponseLen));
 
@@ -169,19 +169,22 @@ zxerr_t crypto_sign(parser_tx_t *tx_obj, uint8_t *signature, uint16_t signatureM
     bytes_t effect_hash = {.ptr = tx_obj->effect_hash, .len = 64};
     for (uint16_t i = 0; i < tx_obj->plan.actions.qty; i++) {
         if (tx_obj->actions_plan[i].action_type == penumbra_core_transaction_v1_ActionPlan_spend_tag) {
-            if (rs_sign_spend(&effect_hash, &tx_obj->actions_plan[i].action.spend.randomizer, &keys.skb, spend_signature,
-                              64) != parser_ok) {
+            if (rs_sign_spend(&effect_hash, &tx_obj->actions_plan[i].action.spend.randomizer, &keys.skb,
+                              spend_signature, 64) != parser_ok) {
+                MEMZERO(keys.skb, sizeof(keys.skb));
                 return zxerr_invalid_crypto_settings;
             }
 
-            // TODO:
             // Copy signature to flash either one by one
             // or by chunks.
             if (!nv_write_signature(spend_signature, Spend)) {
+                MEMZERO(keys.skb, sizeof(keys.skb));
                 return zxerr_buffer_too_small;
             }
         }
     }
+
+    MEMZERO(keys.skb, sizeof(keys.skb));
 
     uint8_t *current_ptr = signature;
     MEMCPY(current_ptr, tx_obj->effect_hash, EFFECT_HASH_LEN);

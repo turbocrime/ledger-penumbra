@@ -36,7 +36,8 @@ extern "C" {
 extern const pb_msgdesc_t penumbra_core_component_funding_v1_FundingParameters_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
-#define penumbra_core_component_funding_v1_FundingParameters_fields &penumbra_core_component_funding_v1_FundingParameters_msg
+#define penumbra_core_component_funding_v1_FundingParameters_fields \
+    &penumbra_core_component_funding_v1_FundingParameters_msg
 
 /* Maximum encoded size of messages (where known) */
 #define PENUMBRA_CORE_COMPONENT_FUNDING_V1_PENUMBRA_CORE_COMPONENT_FUNDING_V1_FUNDING_PB_H_MAX_SIZE \

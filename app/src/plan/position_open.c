@@ -21,7 +21,8 @@
 #include "zxformat.h"
 
 parser_error_t decode_position_open_plan(const bytes_t *data, position_open_plan_t *position_open) {
-    penumbra_core_component_dex_v1_PositionOpen position_open_pb = penumbra_core_component_dex_v1_PositionOpen_init_default;
+    penumbra_core_component_dex_v1_PositionOpen position_open_pb =
+        penumbra_core_component_dex_v1_PositionOpen_init_default;
 
     pb_istream_t stream = pb_istream_from_buffer(data->ptr, data->len);
     CHECK_APP_CANARY()
@@ -89,8 +90,8 @@ parser_error_t position_open_getNumItems(const parser_context_t *ctx, uint8_t *n
 }
 
 parser_error_t position_open_getItem(const parser_context_t *ctx, const position_open_plan_t *position_open,
-                                     uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen,
-                                     uint8_t pageIdx, uint8_t *pageCount) {
+                                     uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal,
+                                     uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (position_open == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;
@@ -105,8 +106,8 @@ parser_error_t position_open_getItem(const parser_context_t *ctx, const position
     return parser_ok;
 }
 
-parser_error_t position_open_printValue(const parser_context_t *ctx, const position_open_plan_t *position_open, char *outVal,
-                                        uint16_t outValLen) {
+parser_error_t position_open_printValue(const parser_context_t *ctx, const position_open_plan_t *position_open,
+                                        char *outVal, uint16_t outValLen) {
     if (ctx == NULL || position_open == NULL || outVal == NULL) {
         return parser_no_data;
     }
@@ -122,10 +123,11 @@ parser_error_t position_open_printValue(const parser_context_t *ctx, const posit
     uint16_t written_value = strlen(outVal);
 
     // add value r1
-    value_t r1_amount = {.amount = position_open->position.reserves.r1,
-                         .asset_id.inner = {.ptr = position_open->position.phi.pair.asset_1.inner.ptr, .len = ASSET_ID_LEN},
-                         .has_amount = true,
-                         .has_asset_id = true};
+    value_t r1_amount = {
+        .amount = position_open->position.reserves.r1,
+        .asset_id.inner = {.ptr = position_open->position.phi.pair.asset_1.inner.ptr, .len = ASSET_ID_LEN},
+        .has_amount = true,
+        .has_asset_id = true};
 
     CHECK_ERROR(printValue(ctx, &r1_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));
@@ -136,10 +138,11 @@ parser_error_t position_open_printValue(const parser_context_t *ctx, const posit
     written_value = strlen(outVal);
 
     // add value r2
-    value_t r2_amount = {.amount = position_open->position.reserves.r2,
-                         .asset_id.inner = {.ptr = position_open->position.phi.pair.asset_2.inner.ptr, .len = ASSET_ID_LEN},
-                         .has_amount = true,
-                         .has_asset_id = true};
+    value_t r2_amount = {
+        .amount = position_open->position.reserves.r2,
+        .asset_id.inner = {.ptr = position_open->position.phi.pair.asset_2.inner.ptr, .len = ASSET_ID_LEN},
+        .has_amount = true,
+        .has_asset_id = true};
 
     CHECK_ERROR(printValue(ctx, &r2_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
                            outValLen - written_value));

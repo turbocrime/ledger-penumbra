@@ -10,4 +10,5 @@ PB_BIND(penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature, penumbra_crypto_dec
 
 PB_BIND(penumbra_crypto_decaf377_rdsa_v1_BindingSignature, penumbra_crypto_decaf377_rdsa_v1_BindingSignature, AUTO)
 
-PB_BIND(penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey, penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey, AUTO)
+PB_BIND(penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey, penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey,
+        AUTO)

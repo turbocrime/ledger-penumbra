@@ -241,7 +241,8 @@ extern "C" {
 #define penumbra_custody_v1_AuthorizeValidatorVoteRequest_DEFAULT NULL
 #define penumbra_custody_v1_AuthorizeValidatorVoteRequest_validator_vote_MSGTYPE \
     penumbra_core_component_governance_v1_ValidatorVoteBody
-#define penumbra_custody_v1_AuthorizeValidatorVoteRequest_pre_authorizations_MSGTYPE penumbra_custody_v1_PreAuthorization
+#define penumbra_custody_v1_AuthorizeValidatorVoteRequest_pre_authorizations_MSGTYPE \
+    penumbra_custody_v1_PreAuthorization
 
 #define penumbra_custody_v1_AuthorizeValidatorVoteResponse_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, validator_vote_auth, 1)
@@ -254,7 +255,8 @@ extern "C" {
     X(a, STATIC, ONEOF, MESSAGE, (pre_authorization, ed25519, pre_authorization.ed25519), 1)
 #define penumbra_custody_v1_PreAuthorization_CALLBACK NULL
 #define penumbra_custody_v1_PreAuthorization_DEFAULT NULL
-#define penumbra_custody_v1_PreAuthorization_pre_authorization_ed25519_MSGTYPE penumbra_custody_v1_PreAuthorization_Ed25519
+#define penumbra_custody_v1_PreAuthorization_pre_authorization_ed25519_MSGTYPE \
+    penumbra_custody_v1_PreAuthorization_Ed25519
 
 #define penumbra_custody_v1_PreAuthorization_Ed25519_FIELDLIST(X, a) \
     X(a, CALLBACK, SINGULAR, BYTES, vk, 1)                           \
@@ -267,7 +269,8 @@ extern "C" {
 #define penumbra_custody_v1_ExportFullViewingKeyRequest_CALLBACK NULL
 #define penumbra_custody_v1_ExportFullViewingKeyRequest_DEFAULT NULL
 
-#define penumbra_custody_v1_ExportFullViewingKeyResponse_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, full_viewing_key, 1)
+#define penumbra_custody_v1_ExportFullViewingKeyResponse_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, full_viewing_key, 1)
 #define penumbra_custody_v1_ExportFullViewingKeyResponse_CALLBACK NULL
 #define penumbra_custody_v1_ExportFullViewingKeyResponse_DEFAULT NULL
 #define penumbra_custody_v1_ExportFullViewingKeyResponse_full_viewing_key_MSGTYPE penumbra_core_keys_v1_FullViewingKey
@@ -303,7 +306,8 @@ extern const pb_msgdesc_t penumbra_custody_v1_ConfirmAddressResponse_msg;
 #define penumbra_custody_v1_AuthorizeValidatorDefinitionResponse_fields \
     &penumbra_custody_v1_AuthorizeValidatorDefinitionResponse_msg
 #define penumbra_custody_v1_AuthorizeValidatorVoteRequest_fields &penumbra_custody_v1_AuthorizeValidatorVoteRequest_msg
-#define penumbra_custody_v1_AuthorizeValidatorVoteResponse_fields &penumbra_custody_v1_AuthorizeValidatorVoteResponse_msg
+#define penumbra_custody_v1_AuthorizeValidatorVoteResponse_fields \
+    &penumbra_custody_v1_AuthorizeValidatorVoteResponse_msg
 #define penumbra_custody_v1_PreAuthorization_fields &penumbra_custody_v1_PreAuthorization_msg
 #define penumbra_custody_v1_PreAuthorization_Ed25519_fields &penumbra_custody_v1_PreAuthorization_Ed25519_msg
 #define penumbra_custody_v1_ExportFullViewingKeyRequest_fields &penumbra_custody_v1_ExportFullViewingKeyRequest_msg

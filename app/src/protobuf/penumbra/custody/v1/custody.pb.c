@@ -10,11 +10,11 @@ PB_BIND(penumbra_custody_v1_AuthorizeRequest, penumbra_custody_v1_AuthorizeReque
 
 PB_BIND(penumbra_custody_v1_AuthorizeResponse, penumbra_custody_v1_AuthorizeResponse, AUTO)
 
-PB_BIND(penumbra_custody_v1_AuthorizeValidatorDefinitionRequest, penumbra_custody_v1_AuthorizeValidatorDefinitionRequest,
-        AUTO)
+PB_BIND(penumbra_custody_v1_AuthorizeValidatorDefinitionRequest,
+        penumbra_custody_v1_AuthorizeValidatorDefinitionRequest, AUTO)
 
-PB_BIND(penumbra_custody_v1_AuthorizeValidatorDefinitionResponse, penumbra_custody_v1_AuthorizeValidatorDefinitionResponse,
-        AUTO)
+PB_BIND(penumbra_custody_v1_AuthorizeValidatorDefinitionResponse,
+        penumbra_custody_v1_AuthorizeValidatorDefinitionResponse, AUTO)
 
 PB_BIND(penumbra_custody_v1_AuthorizeValidatorVoteRequest, penumbra_custody_v1_AuthorizeValidatorVoteRequest, AUTO)
 

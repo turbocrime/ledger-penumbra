@@ -213,7 +213,8 @@ extern "C" {
 #define _google_protobuf_FeatureSet_Utf8Validation_ARRAYSIZE \
     ((google_protobuf_FeatureSet_Utf8Validation)(google_protobuf_FeatureSet_Utf8Validation_NONE + 1))
 
-#define _google_protobuf_FeatureSet_MessageEncoding_MIN google_protobuf_FeatureSet_MessageEncoding_MESSAGE_ENCODING_UNKNOWN
+#define _google_protobuf_FeatureSet_MessageEncoding_MIN \
+    google_protobuf_FeatureSet_MessageEncoding_MESSAGE_ENCODING_UNKNOWN
 #define _google_protobuf_FeatureSet_MessageEncoding_MAX google_protobuf_FeatureSet_MessageEncoding_DELIMITED
 #define _google_protobuf_FeatureSet_MessageEncoding_ARRAYSIZE \
     ((google_protobuf_FeatureSet_MessageEncoding)(google_protobuf_FeatureSet_MessageEncoding_DELIMITED + 1))
@@ -249,27 +250,32 @@ extern "C" {
     }
 #define google_protobuf_UninterpretedOption_NamePart_init_default \
     { {{NULL}, NULL}, 0 }
-#define google_protobuf_FeatureSet_init_default                                                                           \
-    {                                                                                                                     \
-        false, _google_protobuf_FeatureSet_FieldPresence_MIN, false, _google_protobuf_FeatureSet_EnumType_MIN, false,     \
-            _google_protobuf_FeatureSet_RepeatedFieldEncoding_MIN, false, _google_protobuf_FeatureSet_Utf8Validation_MIN, \
-            false, _google_protobuf_FeatureSet_MessageEncoding_MIN, false, _google_protobuf_FeatureSet_JsonFormat_MIN,    \
-            false, _google_protobuf_FeatureSet_EnforceNamingStyle_MIN, NULL                                               \
+#define google_protobuf_FeatureSet_init_default                                                                       \
+    {                                                                                                                 \
+        false, _google_protobuf_FeatureSet_FieldPresence_MIN, false, _google_protobuf_FeatureSet_EnumType_MIN, false, \
+            _google_protobuf_FeatureSet_RepeatedFieldEncoding_MIN, false,                                             \
+            _google_protobuf_FeatureSet_Utf8Validation_MIN, false, _google_protobuf_FeatureSet_MessageEncoding_MIN,   \
+            false, _google_protobuf_FeatureSet_JsonFormat_MIN, false,                                                 \
+            _google_protobuf_FeatureSet_EnforceNamingStyle_MIN, NULL                                                  \
     }
-#define google_protobuf_MessageOptions_init_zero \
-    { false, 0, false, 0, false, 0, false, 0, false, 0, false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, NULL }
+#define google_protobuf_MessageOptions_init_zero                                                                       \
+    {                                                                                                                  \
+        false, 0, false, 0, false, 0, false, 0, false, 0, false, google_protobuf_FeatureSet_init_zero, {{NULL}, NULL}, \
+            NULL                                                                                                       \
+    }
 #define google_protobuf_UninterpretedOption_init_zero                                                  \
     {                                                                                                  \
         {{NULL}, NULL}, {{NULL}, NULL}, false, 0, false, 0, false, 0, {{NULL}, NULL}, { {NULL}, NULL } \
     }
 #define google_protobuf_UninterpretedOption_NamePart_init_zero \
     { {{NULL}, NULL}, 0 }
-#define google_protobuf_FeatureSet_init_zero                                                                              \
-    {                                                                                                                     \
-        false, _google_protobuf_FeatureSet_FieldPresence_MIN, false, _google_protobuf_FeatureSet_EnumType_MIN, false,     \
-            _google_protobuf_FeatureSet_RepeatedFieldEncoding_MIN, false, _google_protobuf_FeatureSet_Utf8Validation_MIN, \
-            false, _google_protobuf_FeatureSet_MessageEncoding_MIN, false, _google_protobuf_FeatureSet_JsonFormat_MIN,    \
-            false, _google_protobuf_FeatureSet_EnforceNamingStyle_MIN, NULL                                               \
+#define google_protobuf_FeatureSet_init_zero                                                                          \
+    {                                                                                                                 \
+        false, _google_protobuf_FeatureSet_FieldPresence_MIN, false, _google_protobuf_FeatureSet_EnumType_MIN, false, \
+            _google_protobuf_FeatureSet_RepeatedFieldEncoding_MIN, false,                                             \
+            _google_protobuf_FeatureSet_Utf8Validation_MIN, false, _google_protobuf_FeatureSet_MessageEncoding_MIN,   \
+            false, _google_protobuf_FeatureSet_JsonFormat_MIN, false,                                                 \
+            _google_protobuf_FeatureSet_EnforceNamingStyle_MIN, NULL                                                  \
     }
 
 /* Field tags (for use in manual encoding/decoding) */

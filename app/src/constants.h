@@ -55,9 +55,9 @@
 #define ASSET_ID_LEN 32
 // HRP length + 1 (separator) + 52 (data) + 6 (checksum) + 1 (null terminator)
 // 6 + 1 + 52 + 6 + 2 = 67
-#define ENCODED_ASSET_SIZE                                                                                              \
-    (strlen(ASSET_BECH32_PREFIX) + ((ASSET_ID_LEN * BITS_PER_BYTE + BECH32_BITS_PER_CHAR - 1) / BECH32_BITS_PER_CHAR) + \
-     CHECKSUM_LENGTH + 1)
+#define ENCODED_ASSET_SIZE         \
+    (strlen(ASSET_BECH32_PREFIX) + \
+     ((ASSET_ID_LEN * BITS_PER_BYTE + BECH32_BITS_PER_CHAR - 1) / BECH32_BITS_PER_CHAR) + CHECKSUM_LENGTH + 1)
 
 #define ENCODED_DATA_LENGTH \
     (((ADDRESS_LEN_BYTES + CHECKSUM_LENGTH) * BITS_PER_BYTE + BECH32_BITS_PER_CHAR - 1) / BECH32_BITS_PER_CHAR)
@@ -80,10 +80,10 @@
 
 // The staking token asset ID (upenumbra)
 // Bech32m: passet1984fctenw8m2fpl8a9wzguzp7j34d7vravryuhft808nyt9fdggqxmanqm
-#define STAKING_TOKEN_ASSET_ID_BYTES                                                                                      \
-    {                                                                                                                     \
-        0x29, 0xea, 0x9c, 0x2f, 0x33, 0x71, 0xf6, 0xa4, 0x87, 0xe7, 0xe9, 0x5c, 0x24, 0x70, 0x41, 0xf4, 0xa3, 0x56, 0xf9, \
-            0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10                                  \
+#define STAKING_TOKEN_ASSET_ID_BYTES                                                                                \
+    {                                                                                                               \
+        0x29, 0xea, 0x9c, 0x2f, 0x33, 0x71, 0xf6, 0xa4, 0x87, 0xe7, 0xe9, 0x5c, 0x24, 0x70, 0x41, 0xf4, 0xa3, 0x56, \
+            0xf9, 0x83, 0xeb, 0x06, 0x4e, 0x5d, 0x2b, 0x3b, 0xcf, 0x32, 0x2c, 0xa9, 0x6a, 0x10                      \
     }
 
 #define DEFAULT_CHAIN_ID "penumbra-1"

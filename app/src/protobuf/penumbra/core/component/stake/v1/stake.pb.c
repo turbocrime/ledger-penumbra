@@ -10,13 +10,14 @@ PB_BIND(penumbra_core_component_stake_v1_Validator, penumbra_core_component_stak
 
 PB_BIND(penumbra_core_component_stake_v1_FundingStream, penumbra_core_component_stake_v1_FundingStream, AUTO)
 
-PB_BIND(penumbra_core_component_stake_v1_FundingStream_ToAddress, penumbra_core_component_stake_v1_FundingStream_ToAddress,
-        AUTO)
+PB_BIND(penumbra_core_component_stake_v1_FundingStream_ToAddress,
+        penumbra_core_component_stake_v1_FundingStream_ToAddress, AUTO)
 
 PB_BIND(penumbra_core_component_stake_v1_FundingStream_ToCommunityPool,
         penumbra_core_component_stake_v1_FundingStream_ToCommunityPool, AUTO)
 
-PB_BIND(penumbra_core_component_stake_v1_ValidatorDefinition, penumbra_core_component_stake_v1_ValidatorDefinition, AUTO)
+PB_BIND(penumbra_core_component_stake_v1_ValidatorDefinition, penumbra_core_component_stake_v1_ValidatorDefinition,
+        AUTO)
 
 PB_BIND(penumbra_core_component_stake_v1_Delegate, penumbra_core_component_stake_v1_Delegate, AUTO)
 
@@ -24,9 +25,11 @@ PB_BIND(penumbra_core_component_stake_v1_Undelegate, penumbra_core_component_sta
 
 PB_BIND(penumbra_core_component_stake_v1_UndelegateClaim, penumbra_core_component_stake_v1_UndelegateClaim, AUTO)
 
-PB_BIND(penumbra_core_component_stake_v1_UndelegateClaimBody, penumbra_core_component_stake_v1_UndelegateClaimBody, AUTO)
+PB_BIND(penumbra_core_component_stake_v1_UndelegateClaimBody, penumbra_core_component_stake_v1_UndelegateClaimBody,
+        AUTO)
 
-PB_BIND(penumbra_core_component_stake_v1_UndelegateClaimPlan, penumbra_core_component_stake_v1_UndelegateClaimPlan, AUTO)
+PB_BIND(penumbra_core_component_stake_v1_UndelegateClaimPlan, penumbra_core_component_stake_v1_UndelegateClaimPlan,
+        AUTO)
 
 PB_BIND(penumbra_core_component_stake_v1_Penalty, penumbra_core_component_stake_v1_Penalty, AUTO)
 

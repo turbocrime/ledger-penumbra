@@ -284,10 +284,10 @@ extern "C" {
     {                                                                  \
         0, { penumbra_core_asset_v1_ValueView_KnownAssetId_init_zero } \
     }
-#define penumbra_core_asset_v1_ValueView_KnownAssetId_init_zero                                                         \
-    {                                                                                                                   \
-        false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero, {{NULL}, NULL}, \
-            false, google_protobuf_Any_init_zero                                                                        \
+#define penumbra_core_asset_v1_ValueView_KnownAssetId_init_zero                                         \
+    {                                                                                                   \
+        false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_Metadata_init_zero, \
+            {{NULL}, NULL}, false, google_protobuf_Any_init_zero                                        \
     }
 #define penumbra_core_asset_v1_ValueView_UnknownAssetId_init_zero \
     { false, penumbra_core_num_v1_Amount_init_zero, false, penumbra_core_asset_v1_AssetId_init_zero }
@@ -415,7 +415,8 @@ extern "C" {
 #define penumbra_core_asset_v1_ValueView_CALLBACK NULL
 #define penumbra_core_asset_v1_ValueView_DEFAULT NULL
 #define penumbra_core_asset_v1_ValueView_value_view_known_asset_id_MSGTYPE penumbra_core_asset_v1_ValueView_KnownAssetId
-#define penumbra_core_asset_v1_ValueView_value_view_unknown_asset_id_MSGTYPE penumbra_core_asset_v1_ValueView_UnknownAssetId
+#define penumbra_core_asset_v1_ValueView_value_view_unknown_asset_id_MSGTYPE \
+    penumbra_core_asset_v1_ValueView_UnknownAssetId
 
 #define penumbra_core_asset_v1_ValueView_KnownAssetId_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, amount, 1)                        \

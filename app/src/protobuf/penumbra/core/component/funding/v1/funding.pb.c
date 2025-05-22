@@ -6,4 +6,5 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
-PB_BIND(penumbra_core_component_funding_v1_FundingParameters, penumbra_core_component_funding_v1_FundingParameters, AUTO)
+PB_BIND(penumbra_core_component_funding_v1_FundingParameters, penumbra_core_component_funding_v1_FundingParameters,
+        AUTO)

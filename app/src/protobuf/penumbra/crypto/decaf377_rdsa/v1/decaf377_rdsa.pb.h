@@ -75,7 +75,8 @@ extern const pb_msgdesc_t penumbra_crypto_decaf377_rdsa_v1_BindingSignature_msg;
 extern const pb_msgdesc_t penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
-#define penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_fields &penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_msg
+#define penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_fields \
+    &penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_msg
 #define penumbra_crypto_decaf377_rdsa_v1_BindingSignature_fields &penumbra_crypto_decaf377_rdsa_v1_BindingSignature_msg
 #define penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_fields \
     &penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_msg

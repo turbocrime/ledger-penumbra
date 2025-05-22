@@ -15,20 +15,24 @@ PB_BIND(penumbra_core_component_shielded_pool_v1_FmdMetaParameters,
 PB_BIND(penumbra_core_component_shielded_pool_v1_FmdMetaParameters_AlgorithmSlidingWindow,
         penumbra_core_component_shielded_pool_v1_FmdMetaParameters_AlgorithmSlidingWindow, AUTO)
 
-PB_BIND(penumbra_core_component_shielded_pool_v1_FmdParameters, penumbra_core_component_shielded_pool_v1_FmdParameters, AUTO)
+PB_BIND(penumbra_core_component_shielded_pool_v1_FmdParameters, penumbra_core_component_shielded_pool_v1_FmdParameters,
+        AUTO)
 
 PB_BIND(penumbra_core_component_shielded_pool_v1_Note, penumbra_core_component_shielded_pool_v1_Note, AUTO)
 
 PB_BIND(penumbra_core_component_shielded_pool_v1_NoteView, penumbra_core_component_shielded_pool_v1_NoteView, 2)
 
-PB_BIND(penumbra_core_component_shielded_pool_v1_NoteCiphertext, penumbra_core_component_shielded_pool_v1_NoteCiphertext,
+PB_BIND(penumbra_core_component_shielded_pool_v1_NoteCiphertext,
+        penumbra_core_component_shielded_pool_v1_NoteCiphertext, AUTO)
+
+PB_BIND(penumbra_core_component_shielded_pool_v1_NotePayload, penumbra_core_component_shielded_pool_v1_NotePayload,
         AUTO)
 
-PB_BIND(penumbra_core_component_shielded_pool_v1_NotePayload, penumbra_core_component_shielded_pool_v1_NotePayload, AUTO)
+PB_BIND(penumbra_core_component_shielded_pool_v1_ZKOutputProof, penumbra_core_component_shielded_pool_v1_ZKOutputProof,
+        AUTO)
 
-PB_BIND(penumbra_core_component_shielded_pool_v1_ZKOutputProof, penumbra_core_component_shielded_pool_v1_ZKOutputProof, AUTO)
-
-PB_BIND(penumbra_core_component_shielded_pool_v1_ZKSpendProof, penumbra_core_component_shielded_pool_v1_ZKSpendProof, AUTO)
+PB_BIND(penumbra_core_component_shielded_pool_v1_ZKSpendProof, penumbra_core_component_shielded_pool_v1_ZKSpendProof,
+        AUTO)
 
 PB_BIND(penumbra_core_component_shielded_pool_v1_Spend, penumbra_core_component_shielded_pool_v1_Spend, AUTO)
 
@@ -39,8 +43,8 @@ PB_BIND(penumbra_core_component_shielded_pool_v1_SpendView, penumbra_core_compon
 PB_BIND(penumbra_core_component_shielded_pool_v1_SpendView_Visible,
         penumbra_core_component_shielded_pool_v1_SpendView_Visible, 2)
 
-PB_BIND(penumbra_core_component_shielded_pool_v1_SpendView_Opaque, penumbra_core_component_shielded_pool_v1_SpendView_Opaque,
-        AUTO)
+PB_BIND(penumbra_core_component_shielded_pool_v1_SpendView_Opaque,
+        penumbra_core_component_shielded_pool_v1_SpendView_Opaque, AUTO)
 
 PB_BIND(penumbra_core_component_shielded_pool_v1_SpendPlan, penumbra_core_component_shielded_pool_v1_SpendPlan, AUTO)
 

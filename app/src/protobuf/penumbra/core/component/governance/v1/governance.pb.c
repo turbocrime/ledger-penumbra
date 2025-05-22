@@ -11,25 +11,27 @@ PB_BIND(penumbra_core_component_governance_v1_ZKDelegatorVoteProof,
 
 PB_BIND(penumbra_core_component_governance_v1_ProposalSubmit, penumbra_core_component_governance_v1_ProposalSubmit, 2)
 
-PB_BIND(penumbra_core_component_governance_v1_ProposalWithdraw, penumbra_core_component_governance_v1_ProposalWithdraw, AUTO)
+PB_BIND(penumbra_core_component_governance_v1_ProposalWithdraw, penumbra_core_component_governance_v1_ProposalWithdraw,
+        AUTO)
 
 PB_BIND(penumbra_core_component_governance_v1_ProposalDepositClaim,
         penumbra_core_component_governance_v1_ProposalDepositClaim, AUTO)
 
 PB_BIND(penumbra_core_component_governance_v1_ValidatorVote, penumbra_core_component_governance_v1_ValidatorVote, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_ValidatorVoteReason, penumbra_core_component_governance_v1_ValidatorVoteReason,
-        AUTO)
+PB_BIND(penumbra_core_component_governance_v1_ValidatorVoteReason,
+        penumbra_core_component_governance_v1_ValidatorVoteReason, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_ValidatorVoteBody, penumbra_core_component_governance_v1_ValidatorVoteBody,
-        AUTO)
+PB_BIND(penumbra_core_component_governance_v1_ValidatorVoteBody,
+        penumbra_core_component_governance_v1_ValidatorVoteBody, AUTO)
 
 PB_BIND(penumbra_core_component_governance_v1_DelegatorVote, penumbra_core_component_governance_v1_DelegatorVote, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_DelegatorVoteBody, penumbra_core_component_governance_v1_DelegatorVoteBody,
-        AUTO)
+PB_BIND(penumbra_core_component_governance_v1_DelegatorVoteBody,
+        penumbra_core_component_governance_v1_DelegatorVoteBody, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_DelegatorVoteView, penumbra_core_component_governance_v1_DelegatorVoteView, 2)
+PB_BIND(penumbra_core_component_governance_v1_DelegatorVoteView,
+        penumbra_core_component_governance_v1_DelegatorVoteView, 2)
 
 PB_BIND(penumbra_core_component_governance_v1_DelegatorVoteView_Visible,
         penumbra_core_component_governance_v1_DelegatorVoteView_Visible, 2)
@@ -37,20 +39,22 @@ PB_BIND(penumbra_core_component_governance_v1_DelegatorVoteView_Visible,
 PB_BIND(penumbra_core_component_governance_v1_DelegatorVoteView_Opaque,
         penumbra_core_component_governance_v1_DelegatorVoteView_Opaque, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_DelegatorVotePlan, penumbra_core_component_governance_v1_DelegatorVotePlan, 2)
+PB_BIND(penumbra_core_component_governance_v1_DelegatorVotePlan,
+        penumbra_core_component_governance_v1_DelegatorVotePlan, 2)
 
 PB_BIND(penumbra_core_component_governance_v1_CommunityPoolDeposit,
         penumbra_core_component_governance_v1_CommunityPoolDeposit, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_CommunityPoolSpend, penumbra_core_component_governance_v1_CommunityPoolSpend,
-        AUTO)
+PB_BIND(penumbra_core_component_governance_v1_CommunityPoolSpend,
+        penumbra_core_component_governance_v1_CommunityPoolSpend, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_CommunityPoolOutput, penumbra_core_component_governance_v1_CommunityPoolOutput,
-        AUTO)
+PB_BIND(penumbra_core_component_governance_v1_CommunityPoolOutput,
+        penumbra_core_component_governance_v1_CommunityPoolOutput, AUTO)
 
 PB_BIND(penumbra_core_component_governance_v1_Vote, penumbra_core_component_governance_v1_Vote, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_ProposalOutcome, penumbra_core_component_governance_v1_ProposalOutcome, AUTO)
+PB_BIND(penumbra_core_component_governance_v1_ProposalOutcome, penumbra_core_component_governance_v1_ProposalOutcome,
+        AUTO)
 
 PB_BIND(penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn,
         penumbra_core_component_governance_v1_ProposalOutcome_Withdrawn, AUTO)
@@ -66,11 +70,11 @@ PB_BIND(penumbra_core_component_governance_v1_ProposalOutcome_Slashed,
 
 PB_BIND(penumbra_core_component_governance_v1_Proposal, penumbra_core_component_governance_v1_Proposal, 2)
 
-PB_BIND(penumbra_core_component_governance_v1_Proposal_Signaling, penumbra_core_component_governance_v1_Proposal_Signaling,
-        AUTO)
+PB_BIND(penumbra_core_component_governance_v1_Proposal_Signaling,
+        penumbra_core_component_governance_v1_Proposal_Signaling, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_Proposal_Emergency, penumbra_core_component_governance_v1_Proposal_Emergency,
-        AUTO)
+PB_BIND(penumbra_core_component_governance_v1_Proposal_Emergency,
+        penumbra_core_component_governance_v1_Proposal_Emergency, AUTO)
 
 PB_BIND(penumbra_core_component_governance_v1_Proposal_ParameterChange,
         penumbra_core_component_governance_v1_Proposal_ParameterChange, 2)
@@ -90,7 +94,8 @@ PB_BIND(penumbra_core_component_governance_v1_Proposal_UnfreezeIbcClient,
 PB_BIND(penumbra_core_component_governance_v1_GovernanceParameters,
         penumbra_core_component_governance_v1_GovernanceParameters, AUTO)
 
-PB_BIND(penumbra_core_component_governance_v1_EncodedParameter, penumbra_core_component_governance_v1_EncodedParameter, AUTO)
+PB_BIND(penumbra_core_component_governance_v1_EncodedParameter, penumbra_core_component_governance_v1_EncodedParameter,
+        AUTO)
 
 PB_BIND(penumbra_core_component_governance_v1_ChangedAppParameters,
         penumbra_core_component_governance_v1_ChangedAppParameters, 2)

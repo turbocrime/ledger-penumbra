@@ -30,8 +30,8 @@ parser_error_t decode_delegate_plan(const bytes_t *data, delegate_plan_t *delega
 
     // Set up fixed size fields
     fixed_size_field_t validator_identity_arg;
-    setup_decode_fixed_field(&delegate_plan.validator_identity.ik, &validator_identity_arg, &delegate->validator_identity.ik,
-                             32);
+    setup_decode_fixed_field(&delegate_plan.validator_identity.ik, &validator_identity_arg,
+                             &delegate->validator_identity.ik, 32);
 
     if (!pb_decode(&stream, penumbra_core_component_stake_v1_Delegate_fields, &delegate_plan)) {
         return parser_delegate_plan_error;

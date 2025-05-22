@@ -7,7 +7,7 @@ use decaf377_rdsa::{SigningKey, SpendAuth, VerificationKey};
 // Documentation says that the ask in used as a SigningKey in decaf377-rdsa,
 // so we define this type as the ask + ak pair, wrapped up by the SigningKey type
 // from decaf377-rdsa.
-// TODO: What domain do we use here? lets default it to SpendAuth for now.
+
 #[repr(C)]
 #[derive(Copy, Clone)]
 /// SigningKey

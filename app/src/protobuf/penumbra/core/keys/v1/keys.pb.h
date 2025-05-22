@@ -102,10 +102,10 @@ extern "C" {
     {                                                                 \
         0, { penumbra_core_keys_v1_AddressView_Decoded_init_default } \
     }
-#define penumbra_core_keys_v1_AddressView_Decoded_init_default                                                            \
-    {                                                                                                                     \
-        false, penumbra_core_keys_v1_Address_init_default, false, penumbra_core_keys_v1_AddressIndex_init_default, false, \
-            penumbra_core_keys_v1_WalletId_init_default                                                                   \
+#define penumbra_core_keys_v1_AddressView_Decoded_init_default                                                     \
+    {                                                                                                              \
+        false, penumbra_core_keys_v1_Address_init_default, false, penumbra_core_keys_v1_AddressIndex_init_default, \
+            false, penumbra_core_keys_v1_WalletId_init_default                                                     \
     }
 #define penumbra_core_keys_v1_AddressView_Opaque_init_default \
     { false, penumbra_core_keys_v1_Address_init_default }

@@ -153,11 +153,11 @@ extern "C" {
         false, penumbra_core_component_auction_v1_AuctionId_init_default, 0, false,                     \
             penumbra_core_asset_v1_Value_init_default, false, penumbra_core_asset_v1_Value_init_default \
     }
-#define penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_init_default                                      \
-    {                                                                                                                       \
-        false, penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_init_default, false,                           \
-            penumbra_core_component_auction_v1_AuctionId_init_default, false, penumbra_core_asset_v1_Metadata_init_default, \
-            false, penumbra_core_asset_v1_Metadata_init_default                                                             \
+#define penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_init_default                        \
+    {                                                                                                         \
+        false, penumbra_core_component_auction_v1_ActionDutchAuctionSchedule_init_default, false,             \
+            penumbra_core_component_auction_v1_AuctionId_init_default, false,                                 \
+            penumbra_core_asset_v1_Metadata_init_default, false, penumbra_core_asset_v1_Metadata_init_default \
     }
 #define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_init_default                      \
     {                                                                                                       \
@@ -185,10 +185,10 @@ extern "C" {
         false, penumbra_core_component_auction_v1_AuctionId_init_zero, 0, false, \
             penumbra_core_asset_v1_BalanceCommitment_init_zero                   \
     }
-#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_init_zero                                      \
-    {                                                                                                                    \
-        false, penumbra_core_component_auction_v1_AuctionId_init_zero, 0, false, penumbra_core_asset_v1_Value_init_zero, \
-            false, penumbra_core_asset_v1_Value_init_zero                                                                \
+#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_init_zero               \
+    {                                                                                             \
+        false, penumbra_core_component_auction_v1_AuctionId_init_zero, 0, false,                  \
+            penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_asset_v1_Value_init_zero \
     }
 #define penumbra_core_component_auction_v1_ActionDutchAuctionScheduleView_init_zero                                   \
     {                                                                                                                 \
@@ -287,7 +287,8 @@ extern "C" {
 #define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_DEFAULT NULL
 #define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_auction_id_MSGTYPE \
     penumbra_core_component_auction_v1_AuctionId
-#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_reserves_input_MSGTYPE penumbra_core_asset_v1_Value
+#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_reserves_input_MSGTYPE \
+    penumbra_core_asset_v1_Value
 #define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawPlan_reserves_output_MSGTYPE \
     penumbra_core_asset_v1_Value
 
@@ -314,7 +315,8 @@ extern "C" {
 #define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_DEFAULT NULL
 #define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_action_MSGTYPE \
     penumbra_core_component_auction_v1_ActionDutchAuctionWithdraw
-#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_reserves_MSGTYPE penumbra_core_asset_v1_ValueView
+#define penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_reserves_MSGTYPE \
+    penumbra_core_asset_v1_ValueView
 
 extern const pb_msgdesc_t penumbra_core_component_auction_v1_AuctionParameters_msg;
 extern const pb_msgdesc_t penumbra_core_component_auction_v1_AuctionId_msg;
@@ -327,7 +329,8 @@ extern const pb_msgdesc_t penumbra_core_component_auction_v1_ActionDutchAuctionS
 extern const pb_msgdesc_t penumbra_core_component_auction_v1_ActionDutchAuctionWithdrawView_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
-#define penumbra_core_component_auction_v1_AuctionParameters_fields &penumbra_core_component_auction_v1_AuctionParameters_msg
+#define penumbra_core_component_auction_v1_AuctionParameters_fields \
+    &penumbra_core_component_auction_v1_AuctionParameters_msg
 #define penumbra_core_component_auction_v1_AuctionId_fields &penumbra_core_component_auction_v1_AuctionId_msg
 #define penumbra_core_component_auction_v1_DutchAuctionDescription_fields \
     &penumbra_core_component_auction_v1_DutchAuctionDescription_msg

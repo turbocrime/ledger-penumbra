@@ -64,6 +64,7 @@ PB_BIND(penumbra_core_component_dex_v1_PositionRewardClaim, penumbra_core_compon
 
 PB_BIND(penumbra_core_component_dex_v1_PositionWithdrawPlan, penumbra_core_component_dex_v1_PositionWithdrawPlan, AUTO)
 
-PB_BIND(penumbra_core_component_dex_v1_PositionRewardClaimPlan, penumbra_core_component_dex_v1_PositionRewardClaimPlan, AUTO)
+PB_BIND(penumbra_core_component_dex_v1_PositionRewardClaimPlan, penumbra_core_component_dex_v1_PositionRewardClaimPlan,
+        AUTO)
 
 PB_BIND(penumbra_core_component_dex_v1_DexParameters, penumbra_core_component_dex_v1_DexParameters, AUTO)
