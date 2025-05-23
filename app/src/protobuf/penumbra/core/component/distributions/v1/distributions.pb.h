@@ -14,6 +14,10 @@
 typedef struct _penumbra_core_component_distributions_v1_DistributionsParameters {
     /* The amount of staking token issued per block. */
     uint64_t staking_issuance_per_block;
+    /* The amount of staking token flowing from the community pool to the liquidity tournament each block. */
+    uint64_t liquidity_tournament_incentive_per_block;
+    /* If non-zero, no rewards will be distributed at a height >= this height. */
+    uint64_t liquidity_tournament_end_block;
 } penumbra_core_component_distributions_v1_DistributionsParameters;
 
 #ifdef __cplusplus
@@ -22,16 +26,20 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define penumbra_core_component_distributions_v1_DistributionsParameters_init_default \
-    { 0 }
+    { 0, 0, 0 }
 #define penumbra_core_component_distributions_v1_DistributionsParameters_init_zero \
-    { 0 }
+    { 0, 0, 0 }
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_component_distributions_v1_DistributionsParameters_staking_issuance_per_block_tag 1
+#define penumbra_core_component_distributions_v1_DistributionsParameters_liquidity_tournament_incentive_per_block_tag 2
+#define penumbra_core_component_distributions_v1_DistributionsParameters_liquidity_tournament_end_block_tag 3
 
 /* Struct field encoding specification for nanopb */
 #define penumbra_core_component_distributions_v1_DistributionsParameters_FIELDLIST(X, a) \
-    X(a, STATIC, SINGULAR, UINT64, staking_issuance_per_block, 1)
+    X(a, STATIC, SINGULAR, UINT64, staking_issuance_per_block, 1)                        \
+    X(a, STATIC, SINGULAR, UINT64, liquidity_tournament_incentive_per_block, 2)          \
+    X(a, STATIC, SINGULAR, UINT64, liquidity_tournament_end_block, 3)
 #define penumbra_core_component_distributions_v1_DistributionsParameters_CALLBACK NULL
 #define penumbra_core_component_distributions_v1_DistributionsParameters_DEFAULT NULL
 
@@ -44,7 +52,7 @@ extern const pb_msgdesc_t penumbra_core_component_distributions_v1_Distributions
 /* Maximum encoded size of messages (where known) */
 #define PENUMBRA_CORE_COMPONENT_DISTRIBUTIONS_V1_PENUMBRA_CORE_COMPONENT_DISTRIBUTIONS_V1_DISTRIBUTIONS_PB_H_MAX_SIZE \
     penumbra_core_component_distributions_v1_DistributionsParameters_size
-#define penumbra_core_component_distributions_v1_DistributionsParameters_size 11
+#define penumbra_core_component_distributions_v1_DistributionsParameters_size 33
 
 #ifdef __cplusplus
 } /* extern "C" */

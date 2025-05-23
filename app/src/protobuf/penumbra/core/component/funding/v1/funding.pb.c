@@ -8,3 +8,27 @@
 
 PB_BIND(penumbra_core_component_funding_v1_FundingParameters, penumbra_core_component_funding_v1_FundingParameters,
         AUTO)
+
+PB_BIND(penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament,
+        penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament, AUTO)
+
+PB_BIND(penumbra_core_component_funding_v1_ActionLiquidityTournamentVote,
+        penumbra_core_component_funding_v1_ActionLiquidityTournamentVote, 2)
+
+PB_BIND(penumbra_core_component_funding_v1_LiquidityTournamentVoteBody,
+        penumbra_core_component_funding_v1_LiquidityTournamentVoteBody, AUTO)
+
+PB_BIND(penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan,
+        penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan, 2)
+
+PB_BIND(penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof,
+        penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof, AUTO)
+
+PB_BIND(penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView,
+        penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView, 2)
+
+PB_BIND(penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible,
+        penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible, 2)
+
+PB_BIND(penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque,
+        penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque, 2)

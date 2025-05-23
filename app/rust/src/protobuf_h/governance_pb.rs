@@ -900,6 +900,44 @@ pub const penumbra_core_component_dex_v1_DexParameters_max_hops_tag: u32 = 3;
 pub const penumbra_core_component_dex_v1_DexParameters_max_positions_per_pair_tag: u32 = 4;
 pub const penumbra_core_component_dex_v1_DexParameters_max_execution_budget_tag: u32 = 5;
 pub const penumbra_core_component_distributions_v1_DistributionsParameters_staking_issuance_per_block_tag : u32 = 1 ;
+pub const penumbra_core_component_distributions_v1_DistributionsParameters_liquidity_tournament_incentive_per_block_tag : u32 = 2 ;
+pub const penumbra_core_component_distributions_v1_DistributionsParameters_liquidity_tournament_end_block_tag : u32 = 3 ;
+pub const penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_gauge_threshold_percent_tag : u32 = 1 ;
+pub const penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_max_positions_tag : u32 = 2 ;
+pub const penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_max_delegators_tag : u32 = 3 ;
+pub const penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_delegator_share_percent_tag : u32 = 4 ;
+pub const penumbra_core_component_funding_v1_FundingParameters_liquidity_tournament_tag: u32 = 1;
+pub const penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_incentivized_tag: u32 = 1;
+pub const penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_rewards_recipient_tag:
+    u32 = 2;
+pub const penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_start_position_tag: u32 =
+    3;
+pub const penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_value_tag: u32 = 4;
+pub const penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_nullifier_tag: u32 = 5;
+pub const penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_rk_tag: u32 = 6;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_incentivized_tag:
+    u32 = 1;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_rewards_recipient_tag : u32 = 2 ;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_staked_note_tag:
+    u32 = 3;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_staked_note_position_tag : u32 = 4 ;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_start_position_tag : u32 = 5 ;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_randomizer_tag: u32 =
+    6;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_proof_blinding_r_tag : u32 = 7 ;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_proof_blinding_s_tag : u32 = 8 ;
+pub const penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_inner_tag: u32 = 1;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_body_tag: u32 = 1;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_auth_sig_tag: u32 = 2;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_proof_tag: u32 = 3;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_vote_tag:
+    u32 = 1;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_note_tag:
+    u32 = 2;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_vote_tag:
+    u32 = 1;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_visible_tag: u32 = 1;
+pub const penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_opaque_tag: u32 = 2;
 pub const ibc_core_client_v1_Height_revision_number_tag: u32 = 1;
 pub const ibc_core_client_v1_Height_revision_height_tag: u32 = 2;
 pub const penumbra_core_component_ibc_v1_IbcRelay_raw_action_tag: u32 = 1;

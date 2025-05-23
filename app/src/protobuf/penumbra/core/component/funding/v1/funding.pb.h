@@ -5,15 +5,124 @@
 #define PB_PENUMBRA_CORE_COMPONENT_FUNDING_V1_PENUMBRA_CORE_COMPONENT_FUNDING_V1_FUNDING_PB_H_INCLUDED
 #include <pb.h>
 
+#include "penumbra/core/asset/v1/asset.pb.h"
+#include "penumbra/core/component/sct/v1/sct.pb.h"
+#include "penumbra/core/component/shielded_pool/v1/shielded_pool.pb.h"
+#include "penumbra/core/keys/v1/keys.pb.h"
+#include "penumbra/crypto/decaf377_rdsa/v1/decaf377_rdsa.pb.h"
+
 #if PB_PROTO_HEADER_VERSION != 40
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
 /* Struct definitions */
+typedef struct _penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament {
+    /* The fraction of gauge votes that an asset must pass to get any rewards.
+
+ Takes a value in [0, 100]. */
+    uint64_t gauge_threshold_percent;
+    /* The maximum number of liquidity positions that can receive rewards.
+
+ This avoids potential DoS vectors with processing a large number of small positions. */
+    uint64_t max_positions;
+    /* The maximum number of delegators that can be rewarded.
+
+ Also avoids potential DoS vectors */
+    uint64_t max_delegators;
+    /* The share of rewards which will go to delegators, opposed with positions.
+
+ Takes a value in [0, 100]. */
+    uint64_t delegator_share_percent;
+} penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament;
+
 /* Funding component configuration data. */
 typedef struct _penumbra_core_component_funding_v1_FundingParameters {
-    char dummy_field;
+    /* The parameters governing the funding of the liquidity tournament. */
+    bool has_liquidity_tournament;
+    penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament liquidity_tournament;
 } penumbra_core_component_funding_v1_FundingParameters;
+
+typedef struct _penumbra_core_component_funding_v1_LiquidityTournamentVoteBody {
+    /* Which asset should be incentivized. */
+    bool has_incentivized;
+    penumbra_core_asset_v1_Denom incentivized;
+    /* Where to send any rewards for participating in the tournament. */
+    bool has_rewards_recipient;
+    penumbra_core_keys_v1_Address rewards_recipient;
+    /* The start position of the tournament */
+    uint64_t start_position;
+    /* The value being voted with.
+
+ This should be some amount of a validator's delegation token. */
+    bool has_value;
+    penumbra_core_asset_v1_Value value;
+    /* The nullifier associated with the note being spent. */
+    bool has_nullifier;
+    penumbra_core_component_sct_v1_Nullifier nullifier;
+    /* A randomized verification key with which to check the auth signature. */
+    bool has_rk;
+    penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey rk;
+} penumbra_core_component_funding_v1_LiquidityTournamentVoteBody;
+
+/* The plan associated with a `ActionLiquidityTournamentVote`. */
+typedef struct _penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan {
+    /* The asset the user wants to vote for. */
+    bool has_incentivized;
+    penumbra_core_asset_v1_Denom incentivized;
+    /* Where to send any rewards for participating in the tournament. */
+    bool has_rewards_recipient;
+    penumbra_core_keys_v1_Address rewards_recipient;
+    /* The note containing the staked note used for voting. */
+    bool has_staked_note;
+    penumbra_core_component_shielded_pool_v1_Note staked_note;
+    /* The position of the staked note. */
+    uint64_t staked_note_position;
+    /* The start position of the tournament. */
+    uint64_t start_position;
+    /* Randomizer for proof of spend capability. */
+    pb_callback_t randomizer;
+    pb_callback_t proof_blinding_r;
+    pb_callback_t proof_blinding_s;
+} penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan;
+
+/* A proof of the validity of a liquidity vote, wrt private state. */
+typedef struct _penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof {
+    pb_callback_t inner;
+} penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof;
+
+/* An action for voting in a liquidity tournament. */
+typedef struct _penumbra_core_component_funding_v1_ActionLiquidityTournamentVote {
+    /* The effectful data signalling user intent, and the validity of this intent. */
+    bool has_body;
+    penumbra_core_component_funding_v1_LiquidityTournamentVoteBody body;
+    /* An authorization from the user over this body. */
+    bool has_auth_sig;
+    penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature auth_sig;
+    /* A ZK proof that it was correctly constructed from private user state. */
+    bool has_proof;
+    penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof proof;
+} penumbra_core_component_funding_v1_ActionLiquidityTournamentVote;
+
+/* If we initiated the vote, we should know the note that we spent. */
+typedef struct _penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible {
+    bool has_vote;
+    penumbra_core_component_funding_v1_ActionLiquidityTournamentVote vote;
+    bool has_note;
+    penumbra_core_component_shielded_pool_v1_NoteView note;
+} penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible;
+
+typedef struct _penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque {
+    bool has_vote;
+    penumbra_core_component_funding_v1_ActionLiquidityTournamentVote vote;
+} penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque;
+
+typedef struct _penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView {
+    pb_size_t which_liquidity_tournament_vote;
+    union {
+        penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible visible;
+        penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque opaque;
+    } liquidity_tournament_vote;
+} penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView;
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,28 +130,257 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define penumbra_core_component_funding_v1_FundingParameters_init_default \
-    { 0 }
+    { false, penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_init_default }
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_init_default \
+    { 0, 0, 0, 0 }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_init_default              \
+    {                                                                                              \
+        false, penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_init_default, false, \
+            penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_default, false,               \
+            penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_init_default         \
+    }
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_init_default                                    \
+    {                                                                                                                  \
+        false, penumbra_core_asset_v1_Denom_init_default, false, penumbra_core_keys_v1_Address_init_default, 0, false, \
+            penumbra_core_asset_v1_Value_init_default, false, penumbra_core_component_sct_v1_Nullifier_init_default,   \
+            false, penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_default                                  \
+    }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_init_default                           \
+    {                                                                                                               \
+        false, penumbra_core_asset_v1_Denom_init_default, false, penumbra_core_keys_v1_Address_init_default, false, \
+            penumbra_core_component_shielded_pool_v1_Note_init_default, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, {     \
+            {NULL}, NULL                                                                                            \
+        }                                                                                                           \
+    }
+#define penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_init_default \
+    {                                                                                  \
+        { {NULL}, NULL }                                                               \
+    }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_init_default                \
+    {                                                                                                    \
+        0, { penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_init_default } \
+    }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_init_default    \
+    {                                                                                                \
+        false, penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_init_default, false, \
+            penumbra_core_component_shielded_pool_v1_NoteView_init_default                           \
+    }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_init_default \
+    { false, penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_init_default }
 #define penumbra_core_component_funding_v1_FundingParameters_init_zero \
-    { 0 }
+    { false, penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_init_zero }
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_init_zero \
+    { 0, 0, 0, 0 }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_init_zero              \
+    {                                                                                           \
+        false, penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_init_zero, false, \
+            penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_init_zero, false,               \
+            penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_init_zero         \
+    }
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_init_zero                                      \
+    {                                                                                                                 \
+        false, penumbra_core_asset_v1_Denom_init_zero, false, penumbra_core_keys_v1_Address_init_zero, 0, false,      \
+            penumbra_core_asset_v1_Value_init_zero, false, penumbra_core_component_sct_v1_Nullifier_init_zero, false, \
+            penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_init_zero                                           \
+    }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_init_zero                        \
+    {                                                                                                         \
+        false, penumbra_core_asset_v1_Denom_init_zero, false, penumbra_core_keys_v1_Address_init_zero, false, \
+            penumbra_core_component_shielded_pool_v1_Note_init_zero, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, {  \
+            {NULL}, NULL                                                                                      \
+        }                                                                                                     \
+    }
+#define penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_init_zero \
+    {                                                                               \
+        { {NULL}, NULL }                                                            \
+    }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_init_zero                \
+    {                                                                                                 \
+        0, { penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_init_zero } \
+    }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_init_zero    \
+    {                                                                                             \
+        false, penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_init_zero, false, \
+            penumbra_core_component_shielded_pool_v1_NoteView_init_zero                           \
+    }
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_init_zero \
+    { false, penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_init_zero }
 
 /* Field tags (for use in manual encoding/decoding) */
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_gauge_threshold_percent_tag 1
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_max_positions_tag 2
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_max_delegators_tag 3
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_delegator_share_percent_tag 4
+#define penumbra_core_component_funding_v1_FundingParameters_liquidity_tournament_tag 1
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_incentivized_tag 1
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_rewards_recipient_tag 2
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_start_position_tag 3
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_value_tag 4
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_nullifier_tag 5
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_rk_tag 6
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_incentivized_tag 1
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_rewards_recipient_tag 2
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_staked_note_tag 3
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_staked_note_position_tag 4
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_start_position_tag 5
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_randomizer_tag 6
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_proof_blinding_r_tag 7
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_proof_blinding_s_tag 8
+#define penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_inner_tag 1
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_body_tag 1
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_auth_sig_tag 2
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_proof_tag 3
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_vote_tag 1
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_note_tag 2
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_vote_tag 1
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_visible_tag 1
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_opaque_tag 2
 
 /* Struct field encoding specification for nanopb */
-#define penumbra_core_component_funding_v1_FundingParameters_FIELDLIST(X, a)
-
+#define penumbra_core_component_funding_v1_FundingParameters_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, liquidity_tournament, 1)
 #define penumbra_core_component_funding_v1_FundingParameters_CALLBACK NULL
 #define penumbra_core_component_funding_v1_FundingParameters_DEFAULT NULL
+#define penumbra_core_component_funding_v1_FundingParameters_liquidity_tournament_MSGTYPE \
+    penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament
+
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_FIELDLIST(X, a) \
+    X(a, STATIC, SINGULAR, UINT64, gauge_threshold_percent, 1)                                   \
+    X(a, STATIC, SINGULAR, UINT64, max_positions, 2)                                             \
+    X(a, STATIC, SINGULAR, UINT64, max_delegators, 3)                                            \
+    X(a, STATIC, SINGULAR, UINT64, delegator_share_percent, 4)
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_CALLBACK NULL
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_DEFAULT NULL
+
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, body, 1)                                             \
+    X(a, STATIC, OPTIONAL, MESSAGE, auth_sig, 2)                                         \
+    X(a, STATIC, OPTIONAL, MESSAGE, proof, 3)
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_CALLBACK NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_DEFAULT NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_body_MSGTYPE \
+    penumbra_core_component_funding_v1_LiquidityTournamentVoteBody
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_auth_sig_MSGTYPE \
+    penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_proof_MSGTYPE \
+    penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof
+
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, incentivized, 1)                                   \
+    X(a, STATIC, OPTIONAL, MESSAGE, rewards_recipient, 2)                              \
+    X(a, STATIC, SINGULAR, UINT64, start_position, 3)                                  \
+    X(a, STATIC, OPTIONAL, MESSAGE, value, 4)                                          \
+    X(a, STATIC, OPTIONAL, MESSAGE, nullifier, 5)                                      \
+    X(a, STATIC, OPTIONAL, MESSAGE, rk, 6)
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_CALLBACK NULL
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_DEFAULT NULL
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_incentivized_MSGTYPE penumbra_core_asset_v1_Denom
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_rewards_recipient_MSGTYPE \
+    penumbra_core_keys_v1_Address
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_value_MSGTYPE penumbra_core_asset_v1_Value
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_nullifier_MSGTYPE \
+    penumbra_core_component_sct_v1_Nullifier
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_rk_MSGTYPE \
+    penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey
+
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, incentivized, 1)                                         \
+    X(a, STATIC, OPTIONAL, MESSAGE, rewards_recipient, 2)                                    \
+    X(a, STATIC, OPTIONAL, MESSAGE, staked_note, 3)                                          \
+    X(a, STATIC, SINGULAR, UINT64, staked_note_position, 4)                                  \
+    X(a, STATIC, SINGULAR, UINT64, start_position, 5)                                        \
+    X(a, CALLBACK, SINGULAR, BYTES, randomizer, 6)                                           \
+    X(a, CALLBACK, SINGULAR, BYTES, proof_blinding_r, 7)                                     \
+    X(a, CALLBACK, SINGULAR, BYTES, proof_blinding_s, 8)
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_CALLBACK pb_default_field_callback
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_DEFAULT NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_incentivized_MSGTYPE \
+    penumbra_core_asset_v1_Denom
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_rewards_recipient_MSGTYPE \
+    penumbra_core_keys_v1_Address
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_staked_note_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_Note
+
+#define penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_FIELDLIST(X, a) \
+    X(a, CALLBACK, SINGULAR, BYTES, inner, 1)
+#define penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_CALLBACK pb_default_field_callback
+#define penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_DEFAULT NULL
+
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_FIELDLIST(X, a)                 \
+    X(a, STATIC, ONEOF, MESSAGE, (liquidity_tournament_vote, visible, liquidity_tournament_vote.visible), 1) \
+    X(a, STATIC, ONEOF, MESSAGE, (liquidity_tournament_vote, opaque, liquidity_tournament_vote.opaque), 2)
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_CALLBACK NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_DEFAULT NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_liquidity_tournament_vote_visible_MSGTYPE \
+    penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_liquidity_tournament_vote_opaque_MSGTYPE \
+    penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque
+
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, vote, 1)                                                         \
+    X(a, STATIC, OPTIONAL, MESSAGE, note, 2)
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_CALLBACK NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_DEFAULT NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_vote_MSGTYPE \
+    penumbra_core_component_funding_v1_ActionLiquidityTournamentVote
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_note_MSGTYPE \
+    penumbra_core_component_shielded_pool_v1_NoteView
+
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, vote, 1)
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_CALLBACK NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_DEFAULT NULL
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_vote_MSGTYPE \
+    penumbra_core_component_funding_v1_ActionLiquidityTournamentVote
 
 extern const pb_msgdesc_t penumbra_core_component_funding_v1_FundingParameters_msg;
+extern const pb_msgdesc_t penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_msg;
+extern const pb_msgdesc_t penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_msg;
+extern const pb_msgdesc_t penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_msg;
+extern const pb_msgdesc_t penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_msg;
+extern const pb_msgdesc_t penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_msg;
+extern const pb_msgdesc_t penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_msg;
+extern const pb_msgdesc_t penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_msg;
+extern const pb_msgdesc_t penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define penumbra_core_component_funding_v1_FundingParameters_fields \
     &penumbra_core_component_funding_v1_FundingParameters_msg
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_fields \
+    &penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_msg
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_fields \
+    &penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_msg
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_fields \
+    &penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_msg
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_fields \
+    &penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_msg
+#define penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_fields \
+    &penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_msg
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_fields \
+    &penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_msg
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_fields \
+    &penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_msg
+#define penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_fields \
+    &penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_msg
 
 /* Maximum encoded size of messages (where known) */
+/* penumbra_core_component_funding_v1_ActionLiquidityTournamentVote_size depends on runtime parameters */
+/* penumbra_core_component_funding_v1_ActionLiquidityTournamentVotePlan_size depends on runtime parameters */
+/* penumbra_core_component_funding_v1_ZKLiquidityTournamentVoteProof_size depends on runtime parameters */
+/* penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_size depends on runtime parameters */
+/* penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Visible_size depends on runtime parameters */
+/* penumbra_core_component_funding_v1_ActionLiquidityTournamentVoteView_Opaque_size depends on runtime parameters */
 #define PENUMBRA_CORE_COMPONENT_FUNDING_V1_PENUMBRA_CORE_COMPONENT_FUNDING_V1_FUNDING_PB_H_MAX_SIZE \
     penumbra_core_component_funding_v1_FundingParameters_size
-#define penumbra_core_component_funding_v1_FundingParameters_size 0
+#define penumbra_core_component_funding_v1_FundingParameters_LiquidityTournament_size 44
+#define penumbra_core_component_funding_v1_FundingParameters_size 46
+#if defined(penumbra_core_asset_v1_Denom_size) && defined(penumbra_core_keys_v1_Address_size) &&            \
+    defined(penumbra_core_asset_v1_Value_size) && defined(penumbra_core_component_sct_v1_Nullifier_size) && \
+    defined(penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_size)
+#define penumbra_core_component_funding_v1_LiquidityTournamentVoteBody_size                                            \
+    (41 + penumbra_core_asset_v1_Denom_size + penumbra_core_keys_v1_Address_size + penumbra_core_asset_v1_Value_size + \
+     penumbra_core_component_sct_v1_Nullifier_size + penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_size)
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" */

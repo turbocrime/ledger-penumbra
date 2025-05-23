@@ -612,3 +612,5 @@ pub const PB_LTYPE_MAP_UINT64: u32 = 2;
 pub const PB_LTYPE_MAP_EXTENSION: u32 = 10;
 pub const PB_LTYPE_MAP_FIXED_LENGTH_BYTES: u32 = 11;
 pub const penumbra_core_component_distributions_v1_DistributionsParameters_staking_issuance_per_block_tag : u32 = 1 ;
+pub const penumbra_core_component_distributions_v1_DistributionsParameters_liquidity_tournament_incentive_per_block_tag : u32 = 2 ;
+pub const penumbra_core_component_distributions_v1_DistributionsParameters_liquidity_tournament_end_block_tag : u32 = 3 ;
