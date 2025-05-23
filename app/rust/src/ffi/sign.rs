@@ -53,7 +53,6 @@ pub fn sign_spend(
     let sk = randomized_signing_key(spend_key, randomizer)?;
 
     let effect_hash = effect_hash.into();
-    // TODO: check if seed must be taken as an argument, for now lets use the passed randomizer
     let seed = randomizer.into_array()?;
     let mut rng = ChaCha20Rng::from_seed(seed);
 

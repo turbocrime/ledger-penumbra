@@ -104,8 +104,8 @@ parser_error_t delegator_vote_getNumItems(const parser_context_t *ctx, uint8_t *
 }
 
 parser_error_t delegator_vote_getItem(const parser_context_t *ctx, const delegator_vote_plan_t *delegator_vote,
-                                      uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen,
-                                      uint8_t pageIdx, uint8_t *pageCount) {
+                                      uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal,
+                                      uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (delegator_vote == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;

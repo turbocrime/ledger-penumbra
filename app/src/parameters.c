@@ -84,8 +84,8 @@ parser_error_t parameters_getItem(const parser_context_t *ctx, uint8_t displayId
             return parser_ok;
         case 2:
             snprintf(outKey, outKeyLen, "Fee");
-            CHECK_ERROR(printFee(ctx, &ctx->tx_obj->parameters_plan.fee, &ctx->tx_obj->parameters_plan.chain_id, bufferUI,
-                                 sizeof(bufferUI)));
+            CHECK_ERROR(printFee(ctx, &ctx->tx_obj->parameters_plan.fee, &ctx->tx_obj->parameters_plan.chain_id,
+                                 bufferUI, sizeof(bufferUI)));
             pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
             return parser_ok;
         default:

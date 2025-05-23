@@ -32,7 +32,8 @@ parser_error_t decode_undelegate_claim_plan(const bytes_t *data, undelegate_clai
     fixed_size_field_t validator_identity_arg, penalty_arg, balance_blinding;
     setup_decode_fixed_field(&undelegate_claim_plan.validator_identity.ik, &validator_identity_arg,
                              &undelegate_claim_claim->validator_identity.ik, 32);
-    setup_decode_fixed_field(&undelegate_claim_plan.penalty.inner, &penalty_arg, &undelegate_claim_claim->penalty.inner, 32);
+    setup_decode_fixed_field(&undelegate_claim_plan.penalty.inner, &penalty_arg, &undelegate_claim_claim->penalty.inner,
+                             32);
     setup_decode_fixed_field(&undelegate_claim_plan.balance_blinding, &balance_blinding,
                              &undelegate_claim_claim->balance_blinding, 32);
 
@@ -120,7 +121,7 @@ parser_error_t undelegate_claim_printValue(const parser_context_t *ctx, const un
                                      .asset_id.inner = {.ptr = asset_id_bytes, .len = ASSET_ID_LEN},
                                      .has_amount = true,
                                      .has_asset_id = true};
-    CHECK_ERROR(printValue(ctx, &local_unbonded_amount, &ctx->tx_obj->parameters_plan.chain_id, true, outVal + written_value,
-                           outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &local_unbonded_amount, &ctx->tx_obj->parameters_plan.chain_id, true,
+                           outVal + written_value, outValLen - written_value));
     return parser_ok;
 }

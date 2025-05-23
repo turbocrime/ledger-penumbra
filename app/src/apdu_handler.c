@@ -39,10 +39,10 @@ void extractHDPath(uint32_t rx, uint32_t offset) {
     if ((rx - offset) < sizeof(uint32_t) * HDPATH_LEN_DEFAULT) {
         THROW(APDU_CODE_WRONG_LENGTH);
     }
-    memcpy(hdPath, G_io_apdu_buffer + offset, sizeof(uint32_t) * HDPATH_LEN_DEFAULT);
+    MEMCPY(hdPath, G_io_apdu_buffer + offset, sizeof(uint32_t) * HDPATH_LEN_DEFAULT);
 
-    // #{TODO} --> testnet necessary?
-    const bool mainnet = hdPath[0] == HDPATH_0_DEFAULT && hdPath[1] == HDPATH_1_DEFAULT && hdPath[2] == HDPATH_2_DEFAULT;
+    const bool mainnet =
+        hdPath[0] == HDPATH_0_DEFAULT && hdPath[1] == HDPATH_1_DEFAULT && hdPath[2] == HDPATH_2_DEFAULT;
 
     if (!mainnet) {
         THROW(APDU_CODE_DATA_INVALID);
@@ -61,7 +61,7 @@ void extractAddressIndex(uint32_t rx, uint32_t offset, address_index_t *address_
         THROW(APDU_CODE_WRONG_LENGTH);
     }
 
-    memcpy(address_index, &G_io_apdu_buffer[offset], sizeof(address_index_t));
+    MEMCPY(address_index, &G_io_apdu_buffer[offset], sizeof(address_index_t));
 }
 
 __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx, bool handle_path) {
@@ -162,7 +162,7 @@ __Z_INLINE void handleTxMetadata(volatile uint32_t *tx, uint32_t rx) {
     CHECK_APP_CANARY()
     if (error_msg != NULL) {
         const int error_msg_length = strnlen(error_msg, sizeof(G_io_apdu_buffer));
-        memcpy(G_io_apdu_buffer, error_msg, error_msg_length);
+        MEMCPY(G_io_apdu_buffer, error_msg, error_msg_length);
         *tx += (error_msg_length);
         THROW(APDU_CODE_DATA_INVALID);
     }
@@ -182,7 +182,7 @@ __Z_INLINE void handleSign(volatile uint32_t *flags, volatile uint32_t *tx, uint
     CHECK_APP_CANARY()
     if (error_msg != NULL) {
         const int error_msg_length = strnlen(error_msg, sizeof(G_io_apdu_buffer));
-        memcpy(G_io_apdu_buffer, error_msg, error_msg_length);
+        MEMCPY(G_io_apdu_buffer, error_msg, error_msg_length);
         *tx += (error_msg_length);
         THROW(APDU_CODE_DATA_INVALID);
     }

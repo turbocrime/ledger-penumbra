@@ -660,52 +660,10 @@ pub const penumbra_core_asset_v1_EstimatedPrice_as_of_height_tag: u32 = 4;
 pub const penumbra_core_asset_v1_EquivalentValue_equivalent_amount_tag: u32 = 1;
 pub const penumbra_core_asset_v1_EquivalentValue_numeraire_tag: u32 = 2;
 pub const penumbra_core_asset_v1_EquivalentValue_as_of_height_tag: u32 = 3;
-pub const google_protobuf_Timestamp_seconds_tag: u32 = 1;
-pub const google_protobuf_Timestamp_nanos_tag: u32 = 2;
-pub const penumbra_crypto_tct_v1_StateCommitment_inner_tag: u32 = 1;
-pub const penumbra_crypto_tct_v1_MerkleRoot_inner_tag: u32 = 1;
-pub const penumbra_crypto_tct_v1_StateCommitmentProof_note_commitment_tag: u32 = 1;
-pub const penumbra_crypto_tct_v1_StateCommitmentProof_position_tag: u32 = 2;
-pub const penumbra_crypto_tct_v1_StateCommitmentProof_auth_path_tag: u32 = 3;
-pub const penumbra_crypto_tct_v1_MerklePathChunk_sibling_1_tag: u32 = 1;
-pub const penumbra_crypto_tct_v1_MerklePathChunk_sibling_2_tag: u32 = 2;
-pub const penumbra_crypto_tct_v1_MerklePathChunk_sibling_3_tag: u32 = 3;
 pub const penumbra_core_component_sct_v1_SctParameters_epoch_duration_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_GenesisContent_sct_params_tag: u32 = 1;
 pub const penumbra_core_component_sct_v1_Epoch_index_tag: u32 = 1;
 pub const penumbra_core_component_sct_v1_Epoch_start_height_tag: u32 = 2;
-pub const penumbra_core_component_sct_v1_CommitmentSource_Transaction_id_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_CommitmentSource_FundingStreamReward_epoch_index_tag: u32 =
-    1;
-pub const penumbra_core_component_sct_v1_CommitmentSource_Ics20Transfer_packet_seq_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_CommitmentSource_Ics20Transfer_channel_id_tag: u32 = 2;
-pub const penumbra_core_component_sct_v1_CommitmentSource_Ics20Transfer_sender_tag: u32 = 3;
-pub const penumbra_core_component_sct_v1_CommitmentSource_transaction_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_CommitmentSource_ics_20_transfer_tag: u32 = 2;
-pub const penumbra_core_component_sct_v1_CommitmentSource_funding_stream_reward_tag: u32 = 20;
-pub const penumbra_core_component_sct_v1_CommitmentSource_community_pool_output_tag: u32 = 30;
-pub const penumbra_core_component_sct_v1_CommitmentSource_genesis_tag: u32 = 40;
 pub const penumbra_core_component_sct_v1_Nullifier_inner_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_NullificationInfo_id_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_NullificationInfo_spend_height_tag: u32 = 2;
-pub const penumbra_core_component_sct_v1_EventCommitment_commitment_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_EventCommitment_position_tag: u32 = 2;
-pub const penumbra_core_component_sct_v1_EventCommitment_source_tag: u32 = 3;
-pub const penumbra_core_component_sct_v1_EventAnchor_anchor_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_EventAnchor_height_tag: u32 = 2;
-pub const penumbra_core_component_sct_v1_EventAnchor_timestamp_tag: u32 = 3;
-pub const penumbra_core_component_sct_v1_EventEpochRoot_root_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_EventEpochRoot_index_tag: u32 = 2;
-pub const penumbra_core_component_sct_v1_EventEpochRoot_timestamp_tag: u32 = 3;
-pub const penumbra_core_component_sct_v1_EventBlockRoot_root_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_EventBlockRoot_height_tag: u32 = 2;
-pub const penumbra_core_component_sct_v1_EventBlockRoot_timestamp_tag: u32 = 3;
-pub const penumbra_core_component_sct_v1_EpochByHeightRequest_height_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_EpochByHeightResponse_epoch_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_AnchorByHeightRequest_height_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_AnchorByHeightResponse_anchor_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_TimestampByHeightRequest_height_tag: u32 = 1;
-pub const penumbra_core_component_sct_v1_TimestampByHeightResponse_timestamp_tag: u32 = 1;
 pub const penumbra_core_keys_v1_Address_inner_tag: u32 = 1;
 pub const penumbra_core_keys_v1_Address_alt_bech32m_tag: u32 = 2;
 pub const penumbra_core_keys_v1_AddressView_Opaque_address_tag: u32 = 1;
@@ -724,15 +682,17 @@ pub const penumbra_core_keys_v1_AddressView_opaque_tag: u32 = 2;
 pub const penumbra_core_keys_v1_IdentityKey_ik_tag: u32 = 1;
 pub const penumbra_core_keys_v1_GovernanceKey_gk_tag: u32 = 1;
 pub const penumbra_core_keys_v1_ConsensusKey_inner_tag: u32 = 1;
-pub const penumbra_core_txhash_v1_EffectHash_inner_tag: u32 = 1;
-pub const penumbra_core_txhash_v1_TransactionId_inner_tag: u32 = 1;
-pub const penumbra_crypto_decaf377_fmd_v1_Clue_inner_tag: u32 = 1;
 pub const penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_inner_tag: u32 = 1;
 pub const penumbra_crypto_decaf377_rdsa_v1_BindingSignature_inner_tag: u32 = 1;
 pub const penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_inner_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation_amount_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation_denom_tag: u32 = 2;
-pub const penumbra_core_component_shielded_pool_v1_GenesisContent_Allocation_address_tag: u32 = 3;
+pub const penumbra_crypto_tct_v1_StateCommitment_inner_tag: u32 = 1;
+pub const penumbra_crypto_tct_v1_MerkleRoot_inner_tag: u32 = 1;
+pub const penumbra_crypto_tct_v1_StateCommitmentProof_note_commitment_tag: u32 = 1;
+pub const penumbra_crypto_tct_v1_StateCommitmentProof_position_tag: u32 = 2;
+pub const penumbra_crypto_tct_v1_StateCommitmentProof_auth_path_tag: u32 = 3;
+pub const penumbra_crypto_tct_v1_MerklePathChunk_sibling_1_tag: u32 = 1;
+pub const penumbra_crypto_tct_v1_MerklePathChunk_sibling_2_tag: u32 = 2;
+pub const penumbra_crypto_tct_v1_MerklePathChunk_sibling_3_tag: u32 = 3;
 pub const penumbra_core_component_shielded_pool_v1_FmdMetaParameters_AlgorithmSlidingWindow_window_update_periods_tag : u32 = 1 ;
 pub const penumbra_core_component_shielded_pool_v1_FmdMetaParameters_AlgorithmSlidingWindow_targeted_detections_per_window_tag : u32 = 2 ;
 pub const penumbra_core_component_shielded_pool_v1_FmdMetaParameters_fmd_grace_period_blocks_tag:
@@ -740,18 +700,12 @@ pub const penumbra_core_component_shielded_pool_v1_FmdMetaParameters_fmd_grace_p
 pub const penumbra_core_component_shielded_pool_v1_FmdMetaParameters_fixed_precision_bits_tag: u32 =
     2;
 pub const penumbra_core_component_shielded_pool_v1_FmdMetaParameters_sliding_window_tag: u32 = 3;
-pub const penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_SlidingWindowState_approximate_clue_count_tag : u32 = 1 ;
-pub const penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_fixed_tag: u32 =
-    1;
-pub const penumbra_core_component_shielded_pool_v1_FmdMetaParametersAlgorithmState_sliding_window_tag : u32 = 2 ;
 pub const penumbra_core_component_shielded_pool_v1_FmdParameters_precision_bits_tag: u32 = 1;
 pub const penumbra_core_component_shielded_pool_v1_FmdParameters_as_of_block_height_tag: u32 = 2;
 pub const penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_fixed_fmd_params_tag:
     u32 = 1;
 pub const penumbra_core_component_shielded_pool_v1_ShieldedPoolParameters_fmd_meta_params_tag: u32 =
     2;
-pub const penumbra_core_component_shielded_pool_v1_GenesisContent_shielded_pool_params_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_GenesisContent_allocations_tag: u32 = 3;
 pub const penumbra_core_component_shielded_pool_v1_Note_value_tag: u32 = 1;
 pub const penumbra_core_component_shielded_pool_v1_Note_rseed_tag: u32 = 2;
 pub const penumbra_core_component_shielded_pool_v1_Note_address_tag: u32 = 3;
@@ -764,11 +718,6 @@ pub const penumbra_core_component_shielded_pool_v1_NotePayload_ephemeral_key_tag
 pub const penumbra_core_component_shielded_pool_v1_NotePayload_encrypted_note_tag: u32 = 3;
 pub const penumbra_core_component_shielded_pool_v1_ZKOutputProof_inner_tag: u32 = 1;
 pub const penumbra_core_component_shielded_pool_v1_ZKSpendProof_inner_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_ZKNullifierDerivationProof_inner_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_EventSpend_nullifier_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_EventOutput_note_commitment_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_EventBroadcastClue_clue_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_EventBroadcastClue_tx_tag: u32 = 2;
 pub const penumbra_core_component_shielded_pool_v1_SpendBody_balance_commitment_tag: u32 = 1;
 pub const penumbra_core_component_shielded_pool_v1_SpendBody_rk_tag: u32 = 4;
 pub const penumbra_core_component_shielded_pool_v1_SpendBody_nullifier_tag: u32 = 6;
@@ -805,35 +754,3 @@ pub const penumbra_core_component_shielded_pool_v1_OutputPlan_rseed_tag: u32 = 3
 pub const penumbra_core_component_shielded_pool_v1_OutputPlan_value_blinding_tag: u32 = 4;
 pub const penumbra_core_component_shielded_pool_v1_OutputPlan_proof_blinding_r_tag: u32 = 5;
 pub const penumbra_core_component_shielded_pool_v1_OutputPlan_proof_blinding_s_tag: u32 = 6;
-pub const penumbra_core_component_shielded_pool_v1_AssetMetadataByIdRequest_asset_id_tag: u32 = 2;
-pub const penumbra_core_component_shielded_pool_v1_AssetMetadataByIdResponse_denom_metadata_tag:
-    u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsRequest_asset_id_tag: u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_AssetMetadataByIdsResponse_denom_metadata_tag:
-    u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_channel_tag : u32 = 1 ;
-pub const penumbra_core_component_shielded_pool_v1_FungibleTokenTransferPacketMetadata_sequence_tag : u32 = 2 ;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_value_tag:
-    u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_sender_tag:
-    u32 = 2;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_receiver_tag : u32 = 3 ;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenTransfer_meta_tag:
-    u32 = 4;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_value_tag: u32 =
-    1;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_sender_tag:
-    u32 = 2;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_receiver_tag:
-    u32 = 3;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_reason_tag:
-    u32 = 4;
-pub const penumbra_core_component_shielded_pool_v1_EventOutboundFungibleTokenRefund_meta_tag: u32 =
-    5;
-pub const penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_value_tag:
-    u32 = 1;
-pub const penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_sender_tag:
-    u32 = 2;
-pub const penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_receiver_tag : u32 = 3 ;
-pub const penumbra_core_component_shielded_pool_v1_EventInboundFungibleTokenTransfer_meta_tag: u32 =
-    4;

@@ -131,7 +131,8 @@ static void advance_iterator(pb_field_iter_t *iter) {
          * Because the data is is constants from generator, there is no danger of overflow.
          */
         iter->field_info_index = (pb_size_t)(iter->field_info_index + descriptor_len);
-        iter->required_field_index = (pb_size_t)(iter->required_field_index + (PB_HTYPE(prev_type) == PB_HTYPE_REQUIRED));
+        iter->required_field_index =
+            (pb_size_t)(iter->required_field_index + (PB_HTYPE(prev_type) == PB_HTYPE_REQUIRED));
         iter->submessage_index = (pb_size_t)(iter->submessage_index + PB_LTYPE_IS_SUBMSG(prev_type));
     }
 }
@@ -314,8 +315,9 @@ bool pb_validate_utf8(const char *str) {
                 s += 2;
         } else if ((s[0] & 0xf0) == 0xe0) {
             /* 1110XXXX 10Xxxxxx 10xxxxxx */
-            if ((s[1] & 0xc0) != 0x80 || (s[2] & 0xc0) != 0x80 || (s[0] == 0xe0 && (s[1] & 0xe0) == 0x80) || /* overlong? */
-                (s[0] == 0xed && (s[1] & 0xe0) == 0xa0) ||                                                   /* surrogate? */
+            if ((s[1] & 0xc0) != 0x80 || (s[2] & 0xc0) != 0x80 ||
+                (s[0] == 0xe0 && (s[1] & 0xe0) == 0x80) ||               /* overlong? */
+                (s[0] == 0xed && (s[1] & 0xe0) == 0xa0) ||               /* surrogate? */
                 (s[0] == 0xef && s[1] == 0xbf && (s[2] & 0xfe) == 0xbe)) /* U+FFFE or U+FFFF? */
                 return false;
             else

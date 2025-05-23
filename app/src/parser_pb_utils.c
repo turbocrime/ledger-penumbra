@@ -72,7 +72,8 @@ bool decode_variable_field_array(pb_istream_t *stream, __Z_UNUSED const pb_field
     return true;
 }
 
-void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, bytes_t *bytes, uint16_t expected_size) {
+void setup_decode_fixed_field(pb_callback_t *callback, fixed_size_field_t *arg, bytes_t *bytes,
+                              uint16_t expected_size) {
     arg->bytes = bytes;
     arg->expected_size = expected_size;
     callback->funcs.decode = &decode_fixed_field;

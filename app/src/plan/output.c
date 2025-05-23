@@ -35,7 +35,8 @@ parser_error_t decode_output_plan(const bytes_t *data, output_plan_t *output) {
 
     // asset_id in value
     fixed_size_field_t asset_id_arg;
-    setup_decode_fixed_field(&output_plan.value.asset_id.inner, &asset_id_arg, &output->value.asset_id.inner, ASSET_ID_LEN);
+    setup_decode_fixed_field(&output_plan.value.asset_id.inner, &asset_id_arg, &output->value.asset_id.inner,
+                             ASSET_ID_LEN);
 
     // inner in dest_address
     fixed_size_field_t dest_address_inner_arg;
@@ -65,7 +66,8 @@ parser_error_t output_getNumItems(const parser_context_t *ctx, uint8_t *num_item
 }
 
 parser_error_t output_getItem(const parser_context_t *ctx, const output_plan_t *output, uint8_t actionIdx, char *outKey,
-                              uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
+                              uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx,
+                              uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (output == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;

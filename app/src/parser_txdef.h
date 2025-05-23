@@ -30,7 +30,6 @@ extern "C" {
 #define DETECTION_DATA_SIZE 122
 #define RSEED_SIZE 32
 
-// TODO: check size
 #define DETECTION_DATA_QTY 16
 #define ACTIONS_QTY 16
 #define MAX_CALLBACK_ARRAY_SIZE 5
@@ -398,7 +397,6 @@ typedef struct {
 typedef struct {
     uint8_t asset_id[ASSET_ID_LEN];
     const char symbol[MAX_SYMBOL_LEN];
-    // TODO: is this too much for a asset name?
     const char name[MAX_ASSET_NAME_LEN];
     uint16_t decimals;
 } asset_info_t;

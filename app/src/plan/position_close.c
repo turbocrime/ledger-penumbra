@@ -48,8 +48,8 @@ parser_error_t position_close_getNumItems(const parser_context_t *ctx, uint8_t *
 }
 
 parser_error_t position_close_getItem(const parser_context_t *ctx, const position_close_plan_t *position_close,
-                                      uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen,
-                                      uint8_t pageIdx, uint8_t *pageCount) {
+                                      uint8_t actionIdx, char *outKey, uint16_t outKeyLen, char *outVal,
+                                      uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
     parser_error_t err = parser_no_data;
     if (position_close == NULL || outKey == NULL || outVal == NULL || outKeyLen == 0 || outValLen == 0) {
         return err;

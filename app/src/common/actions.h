@@ -38,8 +38,8 @@ __Z_INLINE zxerr_t app_fill_address(address_index_t address_index) {
 
     cmdResponseLen = 0;
 
-    zxerr_t error = crypto_fillAddress(G_io_apdu_buffer, IO_APDU_BUFFER_SIZE - 2, &cmdResponseLen, address_index.account,
-                                       address_index.randomizer);
+    zxerr_t error = crypto_fillAddress(G_io_apdu_buffer, IO_APDU_BUFFER_SIZE - 2, &cmdResponseLen,
+                                       address_index.account, address_index.randomizer);
 
     if (error != zxerr_ok || cmdResponseLen == 0) {
         THROW(APDU_CODE_EXECUTION_ERROR);

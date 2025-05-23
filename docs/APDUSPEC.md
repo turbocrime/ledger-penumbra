@@ -4,6 +4,21 @@
 
 The general structure of commands and responses is as follows:
 
+### Action plan supported
+ - Spend
+ - Output
+ - Ics20 Withdrawal
+ - Delegate
+ - Undelegate
+ - Undelegate Claim
+ - Delegator Vote
+ - Position Open
+ - Position Close
+ - Position Withdraw
+ - Action Dutch Auction Schedule
+ - Action Dutch Auction End
+ - Action Dutch Auction Withdraw
+
 ### Commands
 
 | Field   | Type     | Content                | Note |

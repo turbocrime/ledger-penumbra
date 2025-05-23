@@ -168,8 +168,8 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
     uint8_t memo_num_items = 0;
     CHECK_ERROR(memo_getNumItems(ctx, &memo_num_items))
     if (displayIdx >= parameters_num_items && displayIdx < (parameters_num_items + memo_num_items)) {
-        CHECK_ERROR(
-            memo_getItem(ctx, displayIdx - parameters_num_items, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+        CHECK_ERROR(memo_getItem(ctx, displayIdx - parameters_num_items, outKey, outKeyLen, outVal, outValLen, pageIdx,
+                                 pageCount))
     }
 
     // Print actions
@@ -187,12 +187,13 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
                                           outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_output_tag:
-                CHECK_ERROR(output_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.output, action_idx, outKey,
-                                           outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(output_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.output, action_idx,
+                                           outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_ics20_withdrawal_tag:
-                CHECK_ERROR(ics20_withdrawal_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.ics20_withdrawal,
-                                                     action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(
+                    ics20_withdrawal_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.ics20_withdrawal,
+                                             action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
 #if defined(FULL_APP)
             case penumbra_core_transaction_v1_ActionPlan_swap_tag:
@@ -201,20 +202,22 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
                 break;
 #endif
             case penumbra_core_transaction_v1_ActionPlan_delegate_tag:
-                CHECK_ERROR(delegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegate, action_idx, outKey,
-                                             outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(delegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegate, action_idx,
+                                             outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_undelegate_tag:
-                CHECK_ERROR(undelegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate, action_idx,
-                                               outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(undelegate_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate,
+                                               action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_undelegate_claim_tag:
-                CHECK_ERROR(undelegate_claim_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate_claim,
-                                                     action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(
+                    undelegate_claim_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.undelegate_claim,
+                                             action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
                 CHECK_ERROR(delegator_vote_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.delegator_vote,
-                                                   action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                                                   action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx,
+                                                   pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
                 CHECK_ERROR(position_open_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_open,
@@ -222,16 +225,18 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
                 break;
             case penumbra_core_transaction_v1_ActionPlan_position_close_tag:
                 CHECK_ERROR(position_close_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_close,
-                                                   action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                                                   action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx,
+                                                   pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag:
-                CHECK_ERROR(position_withdraw_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_withdraw,
-                                                      action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                CHECK_ERROR(
+                    position_withdraw_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_withdraw,
+                                              action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_schedule_tag:
                 CHECK_ERROR(action_dutch_auction_schedule_getItem(
-                    ctx, &ctx->tx_obj->actions_plan[action_idx].action.action_dutch_auction_schedule, action_idx, outKey,
-                    outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                    ctx, &ctx->tx_obj->actions_plan[action_idx].action.action_dutch_auction_schedule, action_idx,
+                    outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_end_tag:
                 CHECK_ERROR(action_dutch_auction_end_getItem(
@@ -240,8 +245,8 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
                 break;
             case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_withdraw_tag:
                 CHECK_ERROR(action_dutch_auction_withdraw_getItem(
-                    ctx, &ctx->tx_obj->actions_plan[action_idx].action.action_dutch_auction_withdraw, action_idx, outKey,
-                    outKeyLen, outVal, outValLen, pageIdx, pageCount))
+                    ctx, &ctx->tx_obj->actions_plan[action_idx].action.action_dutch_auction_withdraw, action_idx,
+                    outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
             default:
                 return parser_invalid_action_type;
@@ -251,6 +256,7 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
     return parser_ok;
 }
 
-parser_error_t parser_parseTxMetadata(const uint8_t *data, size_t dataLen, tx_metadata_t *metadata, uint8_t metadataLen) {
+parser_error_t parser_parseTxMetadata(const uint8_t *data, size_t dataLen, tx_metadata_t *metadata,
+                                      uint8_t metadataLen) {
     return metadata_parse(data, dataLen, metadata, metadataLen);
 }

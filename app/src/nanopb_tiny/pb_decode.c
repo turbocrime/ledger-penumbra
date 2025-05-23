@@ -496,7 +496,8 @@ static bool checkreturn decode_static_field(pb_istream_t *stream, pb_wire_type_t
                 if (validDefaultValue || validFieldCallback || validSubmsgInfo) {
                     pb_field_iter_t submsg_iter;
                     if (pb_field_iter_begin(&submsg_iter, field->submsg_desc, field->pData)) {
-                        if (!pb_message_set_to_defaults(&submsg_iter)) PB_RETURN_ERROR(stream, "failed to set defaults");
+                        if (!pb_message_set_to_defaults(&submsg_iter))
+                            PB_RETURN_ERROR(stream, "failed to set defaults");
                     }
                 }
             }
@@ -840,7 +841,8 @@ static bool pb_message_set_to_defaults(pb_field_iter_t *iter) {
     const pb_msgdesc_t *descriptor = (const pb_msgdesc_t *)PIC(iter->descriptor);
 
     if (descriptor->default_value) {
-        defstream = pb_istream_from_buffer(PB_PROGMEM_READTYPE(const pb_byte_t *, descriptor->default_value, 0), (size_t)-1);
+        defstream =
+            pb_istream_from_buffer(PB_PROGMEM_READTYPE(const pb_byte_t *, descriptor->default_value, 0), (size_t)-1);
 
         if (!pb_decode_tag(&defstream, &wire_type, &tag, &eof)) return false;
     }
@@ -1144,7 +1146,8 @@ static void pb_release_single_field(pb_field_iter_t *field) {
     }
 
     if (PB_ATYPE(type) == PB_ATYPE_POINTER) {
-        if (PB_HTYPE(type) == PB_HTYPE_REPEATED && (PB_LTYPE(type) == PB_LTYPE_STRING || PB_LTYPE(type) == PB_LTYPE_BYTES)) {
+        if (PB_HTYPE(type) == PB_HTYPE_REPEATED &&
+            (PB_LTYPE(type) == PB_LTYPE_STRING || PB_LTYPE(type) == PB_LTYPE_BYTES)) {
             /* Release entries in repeated string or bytes array */
             void **pItem = *(void ***)field->pField;
             pb_size_t count = *(pb_size_t *)field->pSize;

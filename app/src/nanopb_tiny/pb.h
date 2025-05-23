@@ -457,18 +457,19 @@ struct pb_extension_s {
 #define PB_EXPAND(x) x
 
 /* Binding of a message field set into a specific structure */
-#define PB_BIND(msgname, structname, width)                                                                               \
-    const uint32_t structname##_field_info[] PB_PROGMEM = {msgname##_FIELDLIST(PB_GEN_FIELD_INFO_##width, structname) 0}; \
-    const pb_msgdesc_t *const structname##_submsg_info[] = {msgname##_FIELDLIST(PB_GEN_SUBMSG_INFO, structname) NULL};    \
-    const pb_msgdesc_t structname##_msg = {                                                                               \
-        structname##_field_info,                                                                                          \
-        structname##_submsg_info,                                                                                         \
-        msgname##_DEFAULT,                                                                                                \
-        msgname##_CALLBACK,                                                                                               \
-        0 msgname##_FIELDLIST(PB_GEN_FIELD_COUNT, structname),                                                            \
-        0 msgname##_FIELDLIST(PB_GEN_REQ_FIELD_COUNT, structname),                                                        \
-        0 msgname##_FIELDLIST(PB_GEN_LARGEST_TAG, structname),                                                            \
-    };                                                                                                                    \
+#define PB_BIND(msgname, structname, width)                                                                            \
+    const uint32_t structname##_field_info[] PB_PROGMEM = {                                                            \
+        msgname##_FIELDLIST(PB_GEN_FIELD_INFO_##width, structname) 0};                                                 \
+    const pb_msgdesc_t *const structname##_submsg_info[] = {msgname##_FIELDLIST(PB_GEN_SUBMSG_INFO, structname) NULL}; \
+    const pb_msgdesc_t structname##_msg = {                                                                            \
+        structname##_field_info,                                                                                       \
+        structname##_submsg_info,                                                                                      \
+        msgname##_DEFAULT,                                                                                             \
+        msgname##_CALLBACK,                                                                                            \
+        0 msgname##_FIELDLIST(PB_GEN_FIELD_COUNT, structname),                                                         \
+        0 msgname##_FIELDLIST(PB_GEN_REQ_FIELD_COUNT, structname),                                                     \
+        0 msgname##_FIELDLIST(PB_GEN_LARGEST_TAG, structname),                                                         \
+    };                                                                                                                 \
     msgname##_FIELDLIST(PB_GEN_FIELD_INFO_ASSERT_##width, structname)
 
 #define PB_GEN_FIELD_COUNT(structname, atype, htype, ltype, fieldname, tag) +1
@@ -737,9 +738,9 @@ struct pb_extension_s {
                          PB_FITS(array_size, 1),                                                                       \
                      FIELDINFO_DOES_NOT_FIT_width1_field##tag)
 
-#define PB_FIELDINFO_ASSERT_2(tag, type, data_offset, data_size, size_offset, array_size)                                 \
-    PB_STATIC_ASSERT(PB_FITS(tag, 10) && PB_FITS(data_offset, 16) && PB_FITS(size_offset, 4) && PB_FITS(data_size, 12) && \
-                         PB_FITS(array_size, 12),                                                                         \
+#define PB_FIELDINFO_ASSERT_2(tag, type, data_offset, data_size, size_offset, array_size)       \
+    PB_STATIC_ASSERT(PB_FITS(tag, 10) && PB_FITS(data_offset, 16) && PB_FITS(size_offset, 4) && \
+                         PB_FITS(data_size, 12) && PB_FITS(array_size, 12),                     \
                      FIELDINFO_DOES_NOT_FIT_width2_field##tag)
 
 #ifndef PB_FIELD_32BIT
@@ -758,14 +759,14 @@ struct pb_extension_s {
  * Note that the checks are against 31 bits to avoid compiler warnings about shift wider than type in the test.
  * I expect that there is no reasonable use for >2GB messages with nanopb anyway.
  */
-#define PB_FIELDINFO_ASSERT_4(tag, type, data_offset, data_size, size_offset, array_size)                                 \
-    PB_STATIC_ASSERT(PB_FITS(tag, 30) && PB_FITS(data_offset, 31) && PB_FITS(size_offset, 8) && PB_FITS(data_size, 31) && \
-                         PB_FITS(array_size, 16),                                                                         \
+#define PB_FIELDINFO_ASSERT_4(tag, type, data_offset, data_size, size_offset, array_size)       \
+    PB_STATIC_ASSERT(PB_FITS(tag, 30) && PB_FITS(data_offset, 31) && PB_FITS(size_offset, 8) && \
+                         PB_FITS(data_size, 31) && PB_FITS(array_size, 16),                     \
                      FIELDINFO_DOES_NOT_FIT_width4_field##tag)
 
-#define PB_FIELDINFO_ASSERT_8(tag, type, data_offset, data_size, size_offset, array_size)                                 \
-    PB_STATIC_ASSERT(PB_FITS(tag, 30) && PB_FITS(data_offset, 31) && PB_FITS(size_offset, 8) && PB_FITS(data_size, 31) && \
-                         PB_FITS(array_size, 31),                                                                         \
+#define PB_FIELDINFO_ASSERT_8(tag, type, data_offset, data_size, size_offset, array_size)       \
+    PB_STATIC_ASSERT(PB_FITS(tag, 30) && PB_FITS(data_offset, 31) && PB_FITS(size_offset, 8) && \
+                         PB_FITS(data_size, 31) && PB_FITS(array_size, 31),                     \
                      FIELDINFO_DOES_NOT_FIT_width8_field##tag)
 #endif
 

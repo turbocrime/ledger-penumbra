@@ -71,6 +71,107 @@ jobs:
           cd ./app/rust
           cargo clippy --all-targets --features "clippy"
 
+  setup_rust:
+    runs-on: ubuntu-latest
+    outputs:
+      cargo_home: ${{ steps.set_paths.outputs.cargo_home }}
+      rustup_home: ${{ steps.set_paths.outputs.rustup_home }}
+    steps:
+      - id: set_paths
+        run: |
+          echo "cargo_home=$GITHUB_WORKSPACE/app/rust/.cargo" >> $GITHUB_OUTPUT
+          echo "rustup_home=$GITHUB_WORKSPACE/app/rust/.rustup" >> $GITHUB_OUTPUT
+
+  build_application:
+    name: Build application using the reusable workflow
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
+    with:
+      upload_app_binaries_artifact: "compiled_app_binaries"
+      builder: ledger-app-builder
+
+  build_ledger:
+    needs: [configure, setup_rust]
+    runs-on: ubuntu-latest
+    container:
+      image: zondax/ledger-app-builder:latest
+      options: --user root
+      env:
+        BOLOS_SDK: /opt/nanosplus-secure-sdk
+        HOME: /root
+        CARGO_HOME: ${{ needs.setup_rust.outputs.cargo_home }}
+        RUSTUP_HOME: ${{ needs.setup_rust.outputs.rustup_home }}
+        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${{ needs.setup_rust.outputs.cargo_home }}/bin
+    outputs:
+      size: ${{steps.build.outputs.size}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup Rust environment
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: thumbv6m-none-eabi
+          override: true
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ needs.setup_rust.outputs.cargo_home }}
+            target/
+          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-rust-
+      - name: Build Standard app
+        id: build
+        shell: bash -l {0}
+        run: |
+          make PRODUCTION_BUILD=0
+          echo "size=$(python3 deps/ledger-zxlib/scripts/getSize.py s2)" >> $GITHUB_OUTPUT
+
+  build_ledger_production:
+    needs: [configure, setup_rust]
+    runs-on: ubuntu-latest
+    container:
+      image: zondax/ledger-app-builder:latest
+      options: --user root
+      env:
+        BOLOS_SDK: /opt/nanosplus-secure-sdk
+        HOME: /root
+        CARGO_HOME: ${{ needs.setup_rust.outputs.cargo_home }}
+        RUSTUP_HOME: ${{ needs.setup_rust.outputs.rustup_home }}
+        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${{ needs.setup_rust.outputs.cargo_home }}/bin
+    outputs:
+      size: ${{steps.build.outputs.size}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup Rust environment
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: thumbv6m-none-eabi
+          override: true
+          profile: minimal
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ needs.setup_rust.outputs.cargo_home }}
+            target/
+          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-rust-
+      - name: Build Production app
+        id: build
+        shell: bash -l {0}
+        run: |
+          make PRODUCTION_BUILD=1
+          echo "size=$(python3 deps/ledger-zxlib/scripts/getSize.py s2)" >> $GITHUB_OUTPUT
+
   test_zemu:
     runs-on: ${{ github.repository_owner == 'zondax' && 'zondax-runners' || 'ubuntu-latest' }}
     steps:
@@ -115,52 +216,60 @@ jobs:
           name: snapshots-tmp
           path: tests_zemu/snapshots-tmp/
 
-  build_ledger:
-    needs: configure
+  build_package_nanosp:
+    needs:
+      [
+        configure,
+        setup_rust,
+        cpp_tests,
+        build_ledger,
+        test_zemu,
+        rust_tests,
+      ]
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     container:
       image: zondax/ledger-app-builder:latest
-      options: --user ${{ needs.configure.outputs.uid_gid }}
+      options: --user root
       env:
         BOLOS_SDK: /opt/nanosplus-secure-sdk
+        HOME: /root
+        CARGO_HOME: ${{ needs.setup_rust.outputs.cargo_home }}
+        RUSTUP_HOME: ${{ needs.setup_rust.outputs.rustup_home }}
+        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${{ needs.setup_rust.outputs.cargo_home }}/bin
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Build Standard app
-        id: build
-        shell: bash -l {0}
-        run: |
-          make PRODUCTION_BUILD=0
-
-  build_package_nanosp:
-    needs: [configure, build_ledger, test_zemu, rust_tests]
-    if: ${{ github.ref == 'refs/heads/master' }}
-    runs-on: ubuntu-latest
-    container:
-      image: zondax/ledger-app-builder:latest
-      options: --user ${{ needs.configure.outputs.uid_gid }}
-      env:
-        BOLOS_SDK: /opt/nanosplus-secure-sdk
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Setup Rust environment
+        uses: actions-rs/toolchain@v1
         with:
-          submodules: true
+          toolchain: stable
+          target: thumbv6m-none-eabi
+          override: true
+          profile: minimal
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ needs.setup_rust.outputs.cargo_home }}
+            target/
+          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-rust-
       - name: Install deps
-        run: pip install ledgerblue
-
+        run: pip install --break-system-packages ledgerblue
       - name: Build NanoSP
         shell: bash -l {0}
         run: |
-          PRODUCTION_BUILD=0 make
+          make PRODUCTION_BUILD=0
           mv ./app/pkg/installer_s2.sh ./app/pkg/installer_nanos_plus.sh
       - name: Set tag
         id: nanosp
         run: echo "tag_name=$(./app/pkg/installer_nanos_plus.sh version)" >> $GITHUB_OUTPUT
       - name: Update Release
-        id: update_release_2
+        id: update_release_nanosp
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
@@ -171,31 +280,58 @@ jobs:
           prerelease: false
 
   build_package_stax:
-    needs: [configure, build_ledger, test_zemu, rust_tests]
-    if: ${{ github.ref == 'refs/heads/master' }}
+    needs:
+      [
+        configure,
+        setup_rust,
+        cpp_tests,
+        build_ledger,
+        test_zemu,
+        rust_tests,
+      ]
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     container:
-      image: zondax/ledger-app-builder:latest
-      options: --user ${{ needs.configure.outputs.uid_gid }}
+      image: zondax/giest
+      options: --user root
       env:
         BOLOS_SDK: /opt/stax-secure-sdk
+        HOME: /root
+        CARGO_HOME: ${{ needs.setup_rust.outputs.cargo_home }}
+        RUSTUP_HOME: ${{ needs.setup_rust.outputs.rustup_home }}
+        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${{ needs.setup_rust.outputs.cargo_home }}/bin
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: recursive
+      - name: Setup Rust environment
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: thumbv6m-none-eabi
+          override: true
+          profile: minimal
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ needs.setup_rust.outputs.cargo_home }}
+            target/
+          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-rust-
       - name: Install deps
-        run: pip install ledgerblue
-
+        run: pip install --break-system-packages ledgerblue
       - name: Build Stax
         shell: bash -l {0}
         run: |
-          PRODUCTION_BUILD=0 make
+          make PRODUCTION_BUILD=0
       - name: Set tag
         id: stax
         run: echo "tag_name=$(./app/pkg/installer_stax.sh version)" >> $GITHUB_OUTPUT
       - name: Update Release
-        id: update_release_2
+        id: update_release_stax
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
@@ -207,31 +343,58 @@ jobs:
           prerelease: false
 
   build_package_flex:
-    needs: [configure, build_ledger, test_zemu, rust_tests]
-    if: ${{ github.ref == 'refs/heads/master' }}
+    needs:
+      [
+        configure,
+        setup_rust,
+        cpp_tests,
+        build_ledger,
+        test_zemu,
+        rust_tests,
+      ]
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     container:
       image: zondax/ledger-app-builder:latest
-      options: --user ${{ needs.configure.outputs.uid_gid }}
+      options: --user root
       env:
         BOLOS_SDK: /opt/flex-secure-sdk
+        HOME: /root
+        CARGO_HOME: ${{ needs.setup_rust.outputs.cargo_home }}
+        RUSTUP_HOME: ${{ needs.setup_rust.outputs.rustup_home }}
+        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${{ needs.setup_rust.outputs.cargo_home }}/bin
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: recursive
+      - name: Setup Rust environment
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: thumbv6m-none-eabi
+          override: true
+          profile: minimal
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ needs.setup_rust.outputs.cargo_home }}
+            target/
+          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-rust-
       - name: Install deps
-        run: pip install ledgerblue
-
+        run: pip install --break-system-packages ledgerblue
       - name: Build Flex
         shell: bash -l {0}
         run: |
-          PRODUCTION_BUILD=0 make
+          make PRODUCTION_BUILD=0
       - name: Set tag
         id: flex
         run: echo "tag_name=$(./app/pkg/installer_flex.sh version)" >> $GITHUB_OUTPUT
       - name: Update Release
-        id: update_release_2
+        id: update_release_flex
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token

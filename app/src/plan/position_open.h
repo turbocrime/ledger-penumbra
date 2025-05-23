@@ -25,9 +25,9 @@ extern "C" {
 
 parser_error_t decode_position_open_plan(const bytes_t *data, position_open_plan_t *output);
 parser_error_t position_open_getNumItems(const parser_context_t *ctx, uint8_t *num_items);
-parser_error_t position_open_getItem(const parser_context_t *ctx, const position_open_plan_t *output, uint8_t displayIdx,
-                                     char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t actionIdx,
-                                     uint8_t *pageCount);
+parser_error_t position_open_getItem(const parser_context_t *ctx, const position_open_plan_t *output,
+                                     uint8_t displayIdx, char *outKey, uint16_t outKeyLen, char *outVal,
+                                     uint16_t outValLen, uint8_t actionIdx, uint8_t *pageCount);
 parser_error_t position_open_printValue(const parser_context_t *ctx, const position_open_plan_t *output, char *outVal,
                                         uint16_t outValLen);
 #ifdef __cplusplus

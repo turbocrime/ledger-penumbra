@@ -92,15 +92,16 @@ parser_error_t action_dutch_auction_withdraw_getItem(
     char bufferUI[DUTCH_AUCTION_WITHDRAW_DISPLAY_MAX_LEN] = {0};
 
     snprintf(outKey, outKeyLen, "Action_%d", actionIdx + 1);
-    CHECK_ERROR(action_dutch_auction_withdraw_printValue(ctx, action_dutch_auction_withdraw, bufferUI, sizeof(bufferUI)));
+    CHECK_ERROR(
+        action_dutch_auction_withdraw_printValue(ctx, action_dutch_auction_withdraw, bufferUI, sizeof(bufferUI)));
     pageString(outVal, outValLen, bufferUI, pageIdx, pageCount);
 
     return parser_ok;
 }
 
 parser_error_t action_dutch_auction_withdraw_printValue(
-    const parser_context_t *ctx, const action_dutch_auction_withdraw_plan_t *action_dutch_auction_withdraw, char *outVal,
-    uint16_t outValLen) {
+    const parser_context_t *ctx, const action_dutch_auction_withdraw_plan_t *action_dutch_auction_withdraw,
+    char *outVal, uint16_t outValLen) {
     if (ctx == NULL || action_dutch_auction_withdraw == NULL || outVal == NULL) {
         return parser_no_data;
     }
@@ -127,8 +128,8 @@ parser_error_t action_dutch_auction_withdraw_printValue(
     // add unsold amount
     snprintf(outVal + written_value, outValLen - written_value, " Unsold: ");
     written_value = strlen(outVal);
-    CHECK_ERROR(printValue(ctx, &action_dutch_auction_withdraw->reserves_input, &ctx->tx_obj->parameters_plan.chain_id, true,
-                           outVal + written_value, outValLen - written_value));
+    CHECK_ERROR(printValue(ctx, &action_dutch_auction_withdraw->reserves_input, &ctx->tx_obj->parameters_plan.chain_id,
+                           true, outVal + written_value, outValLen - written_value));
     written_value = strlen(outVal);
 
     // add proceeds amount

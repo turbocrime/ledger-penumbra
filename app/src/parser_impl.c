@@ -122,15 +122,18 @@ bool decode_action(pb_istream_t *stream, __Z_UNUSED const pb_field_t *field, voi
             break;
         case penumbra_core_transaction_v1_ActionPlan_delegator_vote_tag:
             decode_arg[actions_qty].action_data = action_data_4;
-            CHECK_ACTION_ERROR(decode_delegator_vote_plan(&action_data_4, &decode_arg[actions_qty].action.delegator_vote));
+            CHECK_ACTION_ERROR(
+                decode_delegator_vote_plan(&action_data_4, &decode_arg[actions_qty].action.delegator_vote));
             break;
         case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
             decode_arg[actions_qty].action_data = action_data_4;
-            CHECK_ACTION_ERROR(decode_position_open_plan(&action_data_4, &decode_arg[actions_qty].action.position_open));
+            CHECK_ACTION_ERROR(
+                decode_position_open_plan(&action_data_4, &decode_arg[actions_qty].action.position_open));
             break;
         case penumbra_core_transaction_v1_ActionPlan_position_close_tag:
             decode_arg[actions_qty].action_data = action_data_3;
-            CHECK_ACTION_ERROR(decode_position_close_plan(&action_data_3, &decode_arg[actions_qty].action.position_close));
+            CHECK_ACTION_ERROR(
+                decode_position_close_plan(&action_data_3, &decode_arg[actions_qty].action.position_close));
             break;
         case penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag:
             decode_arg[actions_qty].action_data = action_data_4;
@@ -175,8 +178,8 @@ bool decode_detection_data(pb_istream_t *stream, __Z_UNUSED const pb_field_t *fi
     clue_plan_t *clue_plan_arg = (clue_plan_t *)*arg;
 
     setup_decode_fixed_field(&cluePlan.rseed, &rseed_arg, &clue_plan_arg[detection_data_qty].rseed, RSEED_SIZE);
-    setup_decode_fixed_field(&cluePlan.address.inner, &address_inner_arg, &clue_plan_arg[detection_data_qty].address.inner,
-                             MEMO_ADDRESS_INNER_SIZE);
+    setup_decode_fixed_field(&cluePlan.address.inner, &address_inner_arg,
+                             &clue_plan_arg[detection_data_qty].address.inner, MEMO_ADDRESS_INNER_SIZE);
     setup_decode_variable_field(&cluePlan.address.alt_bech32m, &address_alt_bech32m_arg,
                                 &clue_plan_arg[detection_data_qty].address.alt_bech32m);
 
@@ -206,7 +209,8 @@ parser_error_t _read(parser_context_t *c, parser_tx_t *v) {
     setup_decode_variable_field(&request.memo.plaintext.text, &memo_text_arg, &v->plan.memo.plaintext.text);
     setup_decode_fixed_field(&request.memo.plaintext.return_address.inner, &memo_return_address_inner_arg,
                              &v->plan.memo.plaintext.return_address.inner, MEMO_ADDRESS_INNER_SIZE);
-    setup_decode_variable_field(&request.memo.plaintext.return_address.alt_bech32m, &memo_return_address_alt_bech32m_arg,
+    setup_decode_variable_field(&request.memo.plaintext.return_address.alt_bech32m,
+                                &memo_return_address_alt_bech32m_arg,
                                 &v->plan.memo.plaintext.return_address.alt_bech32m);
 
     // actions callbacks

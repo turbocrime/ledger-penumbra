@@ -33,7 +33,8 @@ typedef struct {
     size_t pos;
 } flash_state_t;
 
-#if defined(TARGET_NANOS) || defined(TARGET_NANOX) || defined(TARGET_NANOS2) || defined(TARGET_STAX) || defined(TARGET_FLEX)
+#if defined(TARGET_NANOS) || defined(TARGET_NANOX) || defined(TARGET_NANOS2) || defined(TARGET_STAX) || \
+    defined(TARGET_FLEX)
 // SpendAuth signature buffer
 storage_t NV_CONST N_spend_data_impl __attribute__((aligned(64)));
 #define N_spend_data (*(NV_VOLATILE storage_t *)PIC(&N_spend_data_impl))
