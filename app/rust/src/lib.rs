@@ -16,7 +16,9 @@
 #![no_std]
 #![no_builtins]
 #![allow(dead_code)]
-#![deny(unused_crate_dependencies)]
+// Only enable the unused_crate_dependencies lint when not building for ARM bare metal (Ledger targets)
+// This avoids false positives with compiler_builtins. See: https://github.com/rust-lang/rust/issues/106665
+#![cfg_attr(not(all(target_arch = "arm", target_os = "none")), warn(unused_crate_dependencies))]
 
 extern crate no_std_compat as std;
 
