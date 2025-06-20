@@ -81,7 +81,7 @@ The general structure of commands and responses is as follows:
 | MCU       | byte (?) | MCU version        | Non-terminated string    |
 | SW1-SW2   | byte (2) | Return code        | See list of return codes |
 
-### GET_VERSION
+### INS_GET_VERSION
 
 #### Command
 
@@ -95,30 +95,31 @@ The general structure of commands and responses is as follows:
 
 #### Response
 
-| Field   | Type     | Content          | Note                            |
-| ------- | -------- | ---------------- | ------------------------------- |
-| TEST    | byte (1) | Test Mode        | `0xFF` means test mode is enabled |
-| MAJOR   | byte (2) | Version Major    | `0..65535`                      |
-| MINOR   | byte (2) | Version Minor    | `0..65535`                      |
-| PATCH   | byte (2) | Version Patch    | `0..65535`                      |
-| LOCKED  | byte (1) | Device is locked |                                 |
-| SW1-SW2 | byte (2) | Return code      | See list of return codes        |
+| Field     | Type     | Content          | Note                              |
+| --------- | -------- | ---------------- | --------------------------------- |
+| TEST      | byte (1) | Test Mode        | `0xFF` means test mode is enabled |
+| MAJOR     | byte (2) | Version Major    | `0..65535`                        |
+| MINOR     | byte (2) | Version Minor    | `0..65535`                        |
+| PATCH     | byte (2) | Version Patch    | `0..65535`                        |
+| LOCKED    | byte (1) | Device is locked |                                   |
+| TARGET_ID | byte (4) | Target ID        |                                   |
+| SW1-SW2   | byte (2) | Return code      | See list of return codes          |
 
 ### INS_GET_ADDR
 
 #### Command
 
-| Field         | Type      | Content                   | Expected           |
-| ------------- | --------- | ------------------------- | ------------------ |
-| CLA           | byte (1)  | Application Identifier    | `0x80`             |
-| INS           | byte (1)  | Instruction ID            | `0x01`             |
-| P1            | byte (1)  | Request User confirmation | No = `0` / Yes = `1` |
-| P2            | byte (1)  | Parameter 2               | Ignored            |
-| L             | byte (1)  | Bytes in payload          | `20`               |
+| Field         | Type      | Content                   | Expected            |
+| ------------- | --------- | ------------------------- | ------------------- |
+| CLA           | byte (1)  | Application Identifier    | `0x80`              |
+| INS           | byte (1)  | Instruction ID            | `0x01`              |
+| P1            | byte (1)  | Request User confirmation | No = `0` / Yes = `1`|
+| P2            | byte (1)  | Parameter 2               | Ignored             |
+| L             | byte (1)  | Bytes in payload          | `0x1d`              |
 | Path[0]       | byte (4)  | Derivation Path Data      | `0x80000000 \| 44`  |
 | Path[1]       | byte (4)  | Derivation Path Data      | `0x80000000 \| 6532`|
 | Path[2]       | byte (4)  | Derivation Path Data      | `0x80000000 \| 0`   |
-| Account Index | byte (21) | Account Index             | ?                  |
+| Account Index | byte (17) | Account Index             | ?                   |
 
 #### Response
 
@@ -170,17 +171,17 @@ The first packet/chunk includes only the derivation path. All other packets/chun
 
 #### Command
 
-| Field         | Type      | Content                   | Expected           |
-| ------------- | --------- | ------------------------- | ------------------ |
-| CLA           | byte (1)  | Application Identifier    | `0x80`             |
-| INS           | byte (1)  | Instruction ID            | `0x03`             |
-| P1            | byte (1)  | Request User confirmation | No = `0` / Yes = `1` |
-| P2            | byte (1)  | Parameter 2               | Ignored            |
-| L             | byte (1)  | Bytes in payload          | `20`               |
-| Path[0]       | byte (4)  | Derivation Path Data      | `0x80000000 \| 44`  |
-| Path[1]       | byte (4)  | Derivation Path Data      | `0x80000000 \| 6532`|
-| Path[2]       | byte (4)  | Derivation Path Data      | `0x80000000 \| 0`   |
-| Account Index | byte (20) | Account Index             | ?                  |
+| Field         | Type      | Content                | Expected            |
+| ------------- | --------- | ---------------------- | ------------------- |
+| CLA           | byte (1)  | Application Identifier | `0x80`              |
+| INS           | byte (1)  | Instruction ID         | `0x03`              |
+| P1            | byte (1)  | Parameter 1            | Ignored             |
+| P2            | byte (1)  | Parameter 2            | Ignored             |
+| L             | byte (1)  | Bytes in payload       | `0x1d`              |
+| Path[0]       | byte (4)  | Derivation Path Data   | `0x80000000 \| 44`  |
+| Path[1]       | byte (4)  | Derivation Path Data   | `0x80000000 \| 6532`|
+| Path[2]       | byte (4)  | Derivation Path Data   | `0x80000000 \| 0`   |
+| Account Index | byte (17) | Account Index          | ?                   |
 
 #### Response
 
@@ -195,6 +196,7 @@ The first packet/chunk includes only the derivation path. All other packets/chun
 | Field          | Type       | Content          | Note         |
 | -------------- | ---------- | ---------------- | ------------ |
 | account        | u32        | Account          | 4 bytes      |
+| has_randomizer | u8         | Has randomizer   | 1 byte       |
 | randomizer     | u8 (12)    | Randomizer       | 12 bytes     |
 
 ### INS_TX_METADATA
@@ -223,13 +225,17 @@ The first packet/chunk includes only the derivation path. All other packets/chun
 
 ##### Other Chunks/Packets
 
-| Field      | Type           | Content              | Expected |
-| ---------- | -------------- | -------------------- | -------- |
-| Length_1   | u8             | Length of Metadata_1 |          |
-| Metadata_1 | bytes (Length) | Metadata_1           |          |
-| ...        | ...            | ...                  |          |
-| Length_n   | u8             | Length of Metadata_n |          |
-| Metadata_n | bytes (Length) | Metadata_n           |          |
+The concatenated data from all `add` and `last` chunks forms a single buffer which is parsed when the `last` chunk is received.
+This buffer should have the following structure (where Denom_qty ≤ 5):
+
+| Field      | Type           | Content                 | Note     |
+| ---------- | -------------- | ----------------------- | -------- |
+| Denom_qty  | u8             | Number of Denominations |          |
+| Length_1   | u8             | Length of Denom_1       |          |
+| Denom_1    | bytes (Length) | Denom_1                 |          |
+| ...        | ...            | ...                     |          |
+| Length_n   | u8             | Length of Denom_n       |          |
+| Denom_n    | bytes (Length) | Denom_n                 |          |
 
 #### Response
 
@@ -256,6 +262,8 @@ The first packet/chunk includes only the derivation path. All other packets/chun
 | SW1-SW2   | byte (2)  | Return code                                                | See list of return codes |
 
 ### INS_GET_DELEGATOR_VOTE_SIGNATURES
+
+**Note: This command has been removed for this release**
 
 #### Command
 

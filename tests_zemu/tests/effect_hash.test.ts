@@ -45,7 +45,7 @@ describe('Standard', function () {
           randomizer: undefined,
         }
         // do not wait here... we need to navigate
-        const signatureRequest = app.sign(PENUMBRA_PATH, messageToSign)
+        const signatureRequest = app.sign(PENUMBRA_PATH, messageToSign, data.metadata)
 
         // Wait until we are not in the main menu
         await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())

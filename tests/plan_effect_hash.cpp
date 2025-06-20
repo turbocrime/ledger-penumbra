@@ -15,11 +15,11 @@
  ********************************************************************************/
 
 #include <hexutils.h>
-#include <json/json.h>
 #include <parser_txdef.h>
 
 #include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
 
 #include "app_mode.h"
 #include "crypto.h"
@@ -30,6 +30,7 @@
 #include "zxformat.h"
 
 using ::testing::TestWithParam;
+using json = nlohmann::json;
 
 typedef struct {
     uint64_t index;
@@ -55,9 +56,6 @@ class JsonTestsEffectHash : public ::testing::TestWithParam<testcase_effect_hash
 std::vector<testcase_effect_hash_t> GetJsonTestCasesEffectHash(std::string jsonFile) {
     auto answer = std::vector<testcase_effect_hash_t>();
 
-    Json::CharReaderBuilder builder;
-    Json::Value obj;
-
     std::string fullPathJsonFile = std::string(TESTVECTORS_DIR) + jsonFile;
 
     std::ifstream inFile(fullPathJsonFile);
@@ -65,14 +63,16 @@ std::vector<testcase_effect_hash_t> GetJsonTestCasesEffectHash(std::string jsonF
         return answer;
     }
 
-    // Retrieve all test cases
-    JSONCPP_STRING errs;
-    Json::parseFromStream(builder, inFile, &obj, &errs);
+    // Parse JSON from stream
+    json obj;
+    inFile >> obj;
     std::cout << "Number of testcases: " << obj.size() << std::endl;
 
     for (int i = 0; i < obj.size(); i++) {
-        answer.push_back(testcase_effect_hash_t{obj[i]["index"].asUInt64(), obj[i]["name"].asString(),
-                                                obj[i]["blob"].asString(), obj[i]["hash"].asString()});
+        answer.push_back(testcase_effect_hash_t{obj[i]["index"].get<uint64_t>(),
+                                                obj[i]["name"].is_null() ? "" : obj[i]["name"].get<std::string>(),
+                                                obj[i]["blob"].is_null() ? "" : obj[i]["blob"].get<std::string>(),
+                                                obj[i]["hash"].is_null() ? "" : obj[i]["hash"].get<std::string>()});
     }
 
     return answer;

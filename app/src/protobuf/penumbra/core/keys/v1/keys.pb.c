@@ -31,3 +31,5 @@ PB_BIND(penumbra_core_keys_v1_IdentityKey, penumbra_core_keys_v1_IdentityKey, AU
 PB_BIND(penumbra_core_keys_v1_GovernanceKey, penumbra_core_keys_v1_GovernanceKey, AUTO)
 
 PB_BIND(penumbra_core_keys_v1_ConsensusKey, penumbra_core_keys_v1_ConsensusKey, AUTO)
+
+PB_BIND(penumbra_core_keys_v1_PositionMetadataKey, penumbra_core_keys_v1_PositionMetadataKey, AUTO)

@@ -54,7 +54,19 @@ PB_BIND(penumbra_core_component_dex_v1_PositionId, penumbra_core_component_dex_v
 
 PB_BIND(penumbra_core_component_dex_v1_PositionState, penumbra_core_component_dex_v1_PositionState, AUTO)
 
+PB_BIND(penumbra_core_component_dex_v1_PositionMetadata, penumbra_core_component_dex_v1_PositionMetadata, AUTO)
+
 PB_BIND(penumbra_core_component_dex_v1_PositionOpen, penumbra_core_component_dex_v1_PositionOpen, 2)
+
+PB_BIND(penumbra_core_component_dex_v1_PositionOpenPlan, penumbra_core_component_dex_v1_PositionOpenPlan, 2)
+
+PB_BIND(penumbra_core_component_dex_v1_PositionOpenView, penumbra_core_component_dex_v1_PositionOpenView, 2)
+
+PB_BIND(penumbra_core_component_dex_v1_PositionOpenView_Visible,
+        penumbra_core_component_dex_v1_PositionOpenView_Visible, 2)
+
+PB_BIND(penumbra_core_component_dex_v1_PositionOpenView_Opaque, penumbra_core_component_dex_v1_PositionOpenView_Opaque,
+        2)
 
 PB_BIND(penumbra_core_component_dex_v1_PositionClose, penumbra_core_component_dex_v1_PositionClose, AUTO)
 

@@ -4,4 +4,5 @@ export interface TestCase {
   blob: string
   expected_effect_hash: string
   expected_spend_sig: string
+  metadata: string[]
 }

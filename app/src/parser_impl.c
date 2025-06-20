@@ -125,7 +125,7 @@ bool decode_action(pb_istream_t *stream, __Z_UNUSED const pb_field_t *field, voi
             CHECK_ACTION_ERROR(
                 decode_delegator_vote_plan(&action_data_4, &decode_arg[actions_qty].action.delegator_vote));
             break;
-        case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
+        case penumbra_core_transaction_v1_ActionPlan_position_open_plan_tag:
             decode_arg[actions_qty].action_data = action_data_4;
             CHECK_ACTION_ERROR(
                 decode_position_open_plan(&action_data_4, &decode_arg[actions_qty].action.position_open));

@@ -24,8 +24,6 @@ extern "C" {
 
 #include "zxerror.h"
 
-extern bool is_randomized;
-
 // Return the number of items in the address view
 zxerr_t addr_getNumItems(uint8_t *num_items);
 

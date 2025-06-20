@@ -682,6 +682,7 @@ pub const penumbra_core_keys_v1_AddressView_opaque_tag: u32 = 2;
 pub const penumbra_core_keys_v1_IdentityKey_ik_tag: u32 = 1;
 pub const penumbra_core_keys_v1_GovernanceKey_gk_tag: u32 = 1;
 pub const penumbra_core_keys_v1_ConsensusKey_inner_tag: u32 = 1;
+pub const penumbra_core_keys_v1_PositionMetadataKey_inner_tag: u32 = 1;
 pub const penumbra_crypto_decaf377_rdsa_v1_SpendAuthSignature_inner_tag: u32 = 1;
 pub const penumbra_crypto_decaf377_rdsa_v1_BindingSignature_inner_tag: u32 = 1;
 pub const penumbra_crypto_decaf377_rdsa_v1_SpendVerificationKey_inner_tag: u32 = 1;

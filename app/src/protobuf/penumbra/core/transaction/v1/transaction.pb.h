@@ -125,6 +125,8 @@ typedef struct _penumbra_core_transaction_v1_TransactionPerspective {
 
  This can be used to fill in information about swap outputs. */
     pb_callback_t batch_swap_output_data;
+    bool has_position_metadata_key;
+    penumbra_core_keys_v1_PositionMetadataKey position_metadata_key;
 } penumbra_core_transaction_v1_TransactionPerspective;
 
 typedef struct _penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById {
@@ -188,10 +190,12 @@ typedef struct _penumbra_core_transaction_v1_ActionView {
         penumbra_core_component_governance_v1_ValidatorVote validator_vote;
         penumbra_core_component_governance_v1_DelegatorVoteView delegator_vote;
         penumbra_core_component_governance_v1_ProposalDepositClaim proposal_deposit_claim;
+        /* Deprecated: UIP-9 requires us to have an actual view here. */
         penumbra_core_component_dex_v1_PositionOpen position_open;
         penumbra_core_component_dex_v1_PositionClose position_close;
         penumbra_core_component_dex_v1_PositionWithdraw position_withdraw;
         penumbra_core_component_dex_v1_PositionRewardClaim position_reward_claim;
+        penumbra_core_component_dex_v1_PositionOpenView position_open_view;
         penumbra_core_component_stake_v1_Delegate delegate;
         penumbra_core_component_stake_v1_Undelegate undelegate;
         /* TODO: we have no way to recover the opening of the undelegate_claim's
@@ -266,6 +270,7 @@ typedef struct _penumbra_core_transaction_v1_ActionPlan {
         /* The position withdraw/reward claim actions require balance information so they have Plan types. */
         penumbra_core_component_dex_v1_PositionWithdrawPlan position_withdraw;
         penumbra_core_component_dex_v1_PositionRewardClaimPlan position_reward_claim;
+        penumbra_core_component_dex_v1_PositionOpenPlan position_open_plan;
         /* We don't need any extra information (yet) to understand delegations,
      because we don't yet use flow encryption. */
         penumbra_core_component_stake_v1_Delegate delegate;
@@ -467,9 +472,7 @@ extern "C" {
     {                                                                                                           \
         {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false,                  \
             penumbra_core_txhash_v1_TransactionId_init_default, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
-            {{NULL}, NULL}, {                                                                                   \
-            {NULL}, NULL                                                                                        \
-        }                                                                                                       \
+            {{NULL}, NULL}, {{NULL}, NULL}, false, penumbra_core_keys_v1_PositionMetadataKey_init_default       \
     }
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_init_default \
     { false, penumbra_core_asset_v1_AssetId_init_default, false, google_protobuf_Any_init_default }
@@ -589,9 +592,7 @@ extern "C" {
     {                                                                                                        \
         {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false,               \
             penumbra_core_txhash_v1_TransactionId_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, \
-            {{NULL}, NULL}, {                                                                                \
-            {NULL}, NULL                                                                                     \
-        }                                                                                                    \
+            {{NULL}, NULL}, {{NULL}, NULL}, false, penumbra_core_keys_v1_PositionMetadataKey_init_zero       \
     }
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_init_zero \
     { false, penumbra_core_asset_v1_AssetId_init_zero, false, google_protobuf_Any_init_zero }
@@ -722,6 +723,7 @@ extern "C" {
 #define penumbra_core_transaction_v1_TransactionPerspective_creation_transaction_ids_by_nullifier_tag 40
 #define penumbra_core_transaction_v1_TransactionPerspective_nullification_transaction_ids_by_commitment_tag 50
 #define penumbra_core_transaction_v1_TransactionPerspective_batch_swap_output_data_tag 60
+#define penumbra_core_transaction_v1_TransactionPerspective_position_metadata_key_tag 70
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_asset_id_tag 1
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_extended_metadata_tag 2
 #define penumbra_core_transaction_v1_TransactionPerspective_CreationTransactionIdByNullifier_nullifier_tag 1
@@ -747,6 +749,7 @@ extern "C" {
 #define penumbra_core_transaction_v1_ActionView_position_close_tag 31
 #define penumbra_core_transaction_v1_ActionView_position_withdraw_tag 32
 #define penumbra_core_transaction_v1_ActionView_position_reward_claim_tag 34
+#define penumbra_core_transaction_v1_ActionView_position_open_view_tag 35
 #define penumbra_core_transaction_v1_ActionView_delegate_tag 41
 #define penumbra_core_transaction_v1_ActionView_undelegate_tag 42
 #define penumbra_core_transaction_v1_ActionView_undelegate_claim_tag 43
@@ -780,6 +783,7 @@ extern "C" {
 #define penumbra_core_transaction_v1_ActionPlan_position_close_tag 31
 #define penumbra_core_transaction_v1_ActionPlan_position_withdraw_tag 32
 #define penumbra_core_transaction_v1_ActionPlan_position_reward_claim_tag 34
+#define penumbra_core_transaction_v1_ActionPlan_position_open_plan_tag 35
 #define penumbra_core_transaction_v1_ActionPlan_delegate_tag 40
 #define penumbra_core_transaction_v1_ActionPlan_undelegate_tag 41
 #define penumbra_core_transaction_v1_ActionPlan_undelegate_claim_tag 42
@@ -961,7 +965,8 @@ extern "C" {
     X(a, CALLBACK, REPEATED, MESSAGE, extended_metadata, 30)                           \
     X(a, CALLBACK, REPEATED, MESSAGE, creation_transaction_ids_by_nullifier, 40)       \
     X(a, CALLBACK, REPEATED, MESSAGE, nullification_transaction_ids_by_commitment, 50) \
-    X(a, CALLBACK, REPEATED, MESSAGE, batch_swap_output_data, 60)
+    X(a, CALLBACK, REPEATED, MESSAGE, batch_swap_output_data, 60)                      \
+    X(a, STATIC, OPTIONAL, MESSAGE, position_metadata_key, 70)
 #define penumbra_core_transaction_v1_TransactionPerspective_CALLBACK pb_default_field_callback
 #define penumbra_core_transaction_v1_TransactionPerspective_DEFAULT NULL
 #define penumbra_core_transaction_v1_TransactionPerspective_payload_keys_MSGTYPE \
@@ -982,6 +987,8 @@ extern "C" {
     penumbra_core_transaction_v1_TransactionPerspective_NullificationTransactionIdByCommitment
 #define penumbra_core_transaction_v1_TransactionPerspective_batch_swap_output_data_MSGTYPE \
     penumbra_core_component_dex_v1_BatchSwapOutputData
+#define penumbra_core_transaction_v1_TransactionPerspective_position_metadata_key_MSGTYPE \
+    penumbra_core_keys_v1_PositionMetadataKey
 
 #define penumbra_core_transaction_v1_TransactionPerspective_ExtendedMetadataById_FIELDLIST(X, a) \
     X(a, STATIC, OPTIONAL, MESSAGE, asset_id, 1)                                                 \
@@ -1070,6 +1077,7 @@ extern "C" {
     X(a, STATIC, ONEOF, MESSAGE, (action_view, position_close, action_view.position_close), 31)                     \
     X(a, STATIC, ONEOF, MESSAGE, (action_view, position_withdraw, action_view.position_withdraw), 32)               \
     X(a, STATIC, ONEOF, MESSAGE, (action_view, position_reward_claim, action_view.position_reward_claim), 34)       \
+    X(a, STATIC, ONEOF, MESSAGE, (action_view, position_open_view, action_view.position_open_view), 35)             \
     X(a, STATIC, ONEOF, MESSAGE, (action_view, delegate, action_view.delegate), 41)                                 \
     X(a, STATIC, ONEOF, MESSAGE, (action_view, undelegate, action_view.undelegate), 42)                             \
     X(a, STATIC, ONEOF, MESSAGE, (action_view, undelegate_claim, action_view.undelegate_claim), 43)                 \
@@ -1115,6 +1123,8 @@ extern "C" {
     penumbra_core_component_dex_v1_PositionWithdraw
 #define penumbra_core_transaction_v1_ActionView_action_view_position_reward_claim_MSGTYPE \
     penumbra_core_component_dex_v1_PositionRewardClaim
+#define penumbra_core_transaction_v1_ActionView_action_view_position_open_view_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionOpenView
 #define penumbra_core_transaction_v1_ActionView_action_view_delegate_MSGTYPE penumbra_core_component_stake_v1_Delegate
 #define penumbra_core_transaction_v1_ActionView_action_view_undelegate_MSGTYPE \
     penumbra_core_component_stake_v1_Undelegate
@@ -1196,6 +1206,7 @@ extern "C" {
     X(a, STATIC, ONEOF, MESSAGE, (action, position_close, action.position_close), 31)                                 \
     X(a, STATIC, ONEOF, MESSAGE, (action, position_withdraw, action.position_withdraw), 32)                           \
     X(a, STATIC, ONEOF, MESSAGE, (action, position_reward_claim, action.position_reward_claim), 34)                   \
+    X(a, STATIC, ONEOF, MESSAGE, (action, position_open_plan, action.position_open_plan), 35)                         \
     X(a, STATIC, ONEOF, MESSAGE, (action, delegate, action.delegate), 40)                                             \
     X(a, STATIC, ONEOF, MESSAGE, (action, undelegate, action.undelegate), 41)                                         \
     X(a, STATIC, ONEOF, MESSAGE, (action, undelegate_claim, action.undelegate_claim), 42)                             \
@@ -1235,6 +1246,8 @@ extern "C" {
     penumbra_core_component_dex_v1_PositionWithdrawPlan
 #define penumbra_core_transaction_v1_ActionPlan_action_position_reward_claim_MSGTYPE \
     penumbra_core_component_dex_v1_PositionRewardClaimPlan
+#define penumbra_core_transaction_v1_ActionPlan_action_position_open_plan_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionOpenPlan
 #define penumbra_core_transaction_v1_ActionPlan_action_delegate_MSGTYPE penumbra_core_component_stake_v1_Delegate
 #define penumbra_core_transaction_v1_ActionPlan_action_undelegate_MSGTYPE penumbra_core_component_stake_v1_Undelegate
 #define penumbra_core_transaction_v1_ActionPlan_action_undelegate_claim_MSGTYPE \
@@ -1449,6 +1462,7 @@ union penumbra_core_transaction_v1_Action_action_size_union {
     defined(penumbra_core_component_dex_v1_PositionClose_size) &&                         \
     defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                      \
     defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                   \
+    defined(penumbra_core_component_dex_v1_PositionOpenView_size) &&                      \
     defined(penumbra_core_component_stake_v1_Delegate_size) &&                            \
     defined(penumbra_core_component_stake_v1_Undelegate_size) &&                          \
     defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                     \
@@ -1476,6 +1490,7 @@ union penumbra_core_transaction_v1_ActionView_action_view_size_union {
     char f31[(7 + penumbra_core_component_dex_v1_PositionClose_size)];
     char f32[(7 + penumbra_core_component_dex_v1_PositionWithdraw_size)];
     char f34[(7 + penumbra_core_component_dex_v1_PositionRewardClaim_size)];
+    char f35[(7 + penumbra_core_component_dex_v1_PositionOpenView_size)];
     char f41[(7 + penumbra_core_component_stake_v1_Delegate_size)];
     char f42[(7 + penumbra_core_component_stake_v1_Undelegate_size)];
     char f43[(7 + penumbra_core_component_stake_v1_UndelegateClaim_size)];
@@ -1503,6 +1518,7 @@ union penumbra_core_transaction_v1_ActionView_action_view_size_union {
     defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                          \
     defined(penumbra_core_component_dex_v1_PositionClose_size) &&                         \
     defined(penumbra_core_component_dex_v1_PositionWithdrawPlan_size) &&                  \
+    defined(penumbra_core_component_dex_v1_PositionOpenPlan_size) &&                      \
     defined(penumbra_core_component_stake_v1_Delegate_size) &&                            \
     defined(penumbra_core_component_stake_v1_Undelegate_size) &&                          \
     defined(penumbra_core_component_stake_v1_UndelegateClaimPlan_size) &&                 \
@@ -1529,6 +1545,7 @@ union penumbra_core_transaction_v1_ActionPlan_action_size_union {
     char f30[(7 + penumbra_core_component_dex_v1_PositionOpen_size)];
     char f31[(7 + penumbra_core_component_dex_v1_PositionClose_size)];
     char f32[(7 + penumbra_core_component_dex_v1_PositionWithdrawPlan_size)];
+    char f35[(7 + penumbra_core_component_dex_v1_PositionOpenPlan_size)];
     char f40[(7 + penumbra_core_component_stake_v1_Delegate_size)];
     char f41[(7 + penumbra_core_component_stake_v1_Undelegate_size)];
     char f42[(7 + penumbra_core_component_stake_v1_UndelegateClaimPlan_size)];
@@ -1633,6 +1650,7 @@ union penumbra_core_transaction_v1_ActionPlan_action_size_union {
     defined(penumbra_core_component_dex_v1_PositionClose_size) &&                         \
     defined(penumbra_core_component_dex_v1_PositionWithdraw_size) &&                      \
     defined(penumbra_core_component_dex_v1_PositionRewardClaim_size) &&                   \
+    defined(penumbra_core_component_dex_v1_PositionOpenView_size) &&                      \
     defined(penumbra_core_component_stake_v1_Delegate_size) &&                            \
     defined(penumbra_core_component_stake_v1_Undelegate_size) &&                          \
     defined(penumbra_core_component_stake_v1_UndelegateClaim_size) &&                     \
@@ -1661,6 +1679,7 @@ union penumbra_core_transaction_v1_ActionPlan_action_size_union {
     defined(penumbra_core_component_dex_v1_PositionOpen_size) &&                          \
     defined(penumbra_core_component_dex_v1_PositionClose_size) &&                         \
     defined(penumbra_core_component_dex_v1_PositionWithdrawPlan_size) &&                  \
+    defined(penumbra_core_component_dex_v1_PositionOpenPlan_size) &&                      \
     defined(penumbra_core_component_stake_v1_Delegate_size) &&                            \
     defined(penumbra_core_component_stake_v1_Undelegate_size) &&                          \
     defined(penumbra_core_component_stake_v1_UndelegateClaimPlan_size) &&                 \

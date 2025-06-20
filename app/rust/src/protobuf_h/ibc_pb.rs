@@ -680,6 +680,7 @@ pub const penumbra_core_keys_v1_AddressView_opaque_tag: u32 = 2;
 pub const penumbra_core_keys_v1_IdentityKey_ik_tag: u32 = 1;
 pub const penumbra_core_keys_v1_GovernanceKey_gk_tag: u32 = 1;
 pub const penumbra_core_keys_v1_ConsensusKey_inner_tag: u32 = 1;
+pub const penumbra_core_keys_v1_PositionMetadataKey_inner_tag: u32 = 1;
 pub const penumbra_core_component_ibc_v1_IbcRelay_raw_action_tag: u32 = 1;
 pub const penumbra_core_component_ibc_v1_Ics20Withdrawal_amount_tag: u32 = 1;
 pub const penumbra_core_component_ibc_v1_Ics20Withdrawal_denom_tag: u32 = 2;

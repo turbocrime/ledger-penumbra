@@ -114,7 +114,7 @@ parser_error_t tryPrintDenom(const parser_context_t *ctx, const value_t *value, 
 
     uint8_t trace_len = 0;
     if (value->asset_id.inner.ptr != NULL && value->asset_id.inner.len != 0) {
-        trace_len = metadata_getDenom(&ctx->tx_metadata[0], MAX_TX_METADATA_LEN, &value->asset_id.inner, denom,
+        trace_len = metadata_getDenom(&ctx->tx_metadata[0], ctx->tx_metadata_len, &value->asset_id.inner, denom,
                                       MAX_DENOM_LEN + 1);
     }
 
@@ -226,7 +226,7 @@ parser_error_t printAssetIdFromValue(const parser_context_t *ctx, const value_t 
 
     uint8_t trace_len = 0;
     if (value->asset_id.inner.ptr != NULL && value->asset_id.inner.len != 0) {
-        trace_len = metadata_getDenom(&ctx->tx_metadata[0], MAX_TX_METADATA_LEN, &value->asset_id.inner, denom,
+        trace_len = metadata_getDenom(&ctx->tx_metadata[0], ctx->tx_metadata_len, &value->asset_id.inner, denom,
                                       MAX_DENOM_LEN + 1);
     }
 
