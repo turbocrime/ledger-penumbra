@@ -409,6 +409,16 @@ typedef struct _penumbra_core_component_dex_v1_Position {
     bool close_on_fill;
 } penumbra_core_component_dex_v1_Position;
 
+/* Metadata about a position, or bundle of positions.
+ See UIP-9 for more details. */
+typedef struct _penumbra_core_component_dex_v1_PositionMetadata {
+    /* A strategy tag for the bundle, convention:
+ 0x01 >= _ < 0x40 - Reserved */
+    uint32_t strategy;
+    /* A unique identifier for the bundle this position belongs to. */
+    uint32_t identifier;
+} penumbra_core_component_dex_v1_PositionMetadata;
+
 /* A transaction action that opens a new position.
 
  This action's contribution to the transaction's value balance is to consume
@@ -420,7 +430,37 @@ typedef struct _penumbra_core_component_dex_v1_PositionOpen {
  are unchanged over the entire lifetime of the position. */
     bool has_position;
     penumbra_core_component_dex_v1_Position position;
+    /* Either absent, or a 50 byte ciphertext encoding position metadata. */
+    pb_callback_t encrypted_metadata;
 } penumbra_core_component_dex_v1_PositionOpen;
+
+typedef struct _penumbra_core_component_dex_v1_PositionOpenPlan {
+    bool has_position;
+    penumbra_core_component_dex_v1_Position position;
+    bool has_metadata;
+    penumbra_core_component_dex_v1_PositionMetadata metadata;
+} penumbra_core_component_dex_v1_PositionOpenPlan;
+
+typedef struct _penumbra_core_component_dex_v1_PositionOpenView_Visible {
+    bool has_action;
+    penumbra_core_component_dex_v1_PositionOpen action;
+    bool has_metadata;
+    penumbra_core_component_dex_v1_PositionMetadata metadata;
+} penumbra_core_component_dex_v1_PositionOpenView_Visible;
+
+typedef struct _penumbra_core_component_dex_v1_PositionOpenView_Opaque {
+    bool has_action;
+    penumbra_core_component_dex_v1_PositionOpen action;
+} penumbra_core_component_dex_v1_PositionOpenView_Opaque;
+
+/* A view of the position open action. */
+typedef struct _penumbra_core_component_dex_v1_PositionOpenView {
+    pb_size_t which_position_open_view;
+    union {
+        penumbra_core_component_dex_v1_PositionOpenView_Visible visible;
+        penumbra_core_component_dex_v1_PositionOpenView_Opaque opaque;
+    } position_open_view;
+} penumbra_core_component_dex_v1_PositionOpenView;
 
 /* A transaction action that closes a position.
 
@@ -638,8 +678,28 @@ extern "C" {
     }
 #define penumbra_core_component_dex_v1_PositionState_init_default \
     { _penumbra_core_component_dex_v1_PositionState_PositionStateEnum_MIN, 0 }
-#define penumbra_core_component_dex_v1_PositionOpen_init_default \
-    { false, penumbra_core_component_dex_v1_Position_init_default }
+#define penumbra_core_component_dex_v1_PositionMetadata_init_default \
+    { 0, 0 }
+#define penumbra_core_component_dex_v1_PositionOpen_init_default                      \
+    {                                                                                 \
+        false, penumbra_core_component_dex_v1_Position_init_default, { {NULL}, NULL } \
+    }
+#define penumbra_core_component_dex_v1_PositionOpenPlan_init_default        \
+    {                                                                       \
+        false, penumbra_core_component_dex_v1_Position_init_default, false, \
+            penumbra_core_component_dex_v1_PositionMetadata_init_default    \
+    }
+#define penumbra_core_component_dex_v1_PositionOpenView_init_default                \
+    {                                                                               \
+        0, { penumbra_core_component_dex_v1_PositionOpenView_Visible_init_default } \
+    }
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_init_default    \
+    {                                                                           \
+        false, penumbra_core_component_dex_v1_PositionOpen_init_default, false, \
+            penumbra_core_component_dex_v1_PositionMetadata_init_default        \
+    }
+#define penumbra_core_component_dex_v1_PositionOpenView_Opaque_init_default \
+    { false, penumbra_core_component_dex_v1_PositionOpen_init_default }
 #define penumbra_core_component_dex_v1_PositionClose_init_default \
     { false, penumbra_core_component_dex_v1_PositionId_init_default }
 #define penumbra_core_component_dex_v1_PositionWithdraw_init_default          \
@@ -784,8 +844,28 @@ extern "C" {
     }
 #define penumbra_core_component_dex_v1_PositionState_init_zero \
     { _penumbra_core_component_dex_v1_PositionState_PositionStateEnum_MIN, 0 }
-#define penumbra_core_component_dex_v1_PositionOpen_init_zero \
-    { false, penumbra_core_component_dex_v1_Position_init_zero }
+#define penumbra_core_component_dex_v1_PositionMetadata_init_zero \
+    { 0, 0 }
+#define penumbra_core_component_dex_v1_PositionOpen_init_zero                      \
+    {                                                                              \
+        false, penumbra_core_component_dex_v1_Position_init_zero, { {NULL}, NULL } \
+    }
+#define penumbra_core_component_dex_v1_PositionOpenPlan_init_zero        \
+    {                                                                    \
+        false, penumbra_core_component_dex_v1_Position_init_zero, false, \
+            penumbra_core_component_dex_v1_PositionMetadata_init_zero    \
+    }
+#define penumbra_core_component_dex_v1_PositionOpenView_init_zero                \
+    {                                                                            \
+        0, { penumbra_core_component_dex_v1_PositionOpenView_Visible_init_zero } \
+    }
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_init_zero    \
+    {                                                                        \
+        false, penumbra_core_component_dex_v1_PositionOpen_init_zero, false, \
+            penumbra_core_component_dex_v1_PositionMetadata_init_zero        \
+    }
+#define penumbra_core_component_dex_v1_PositionOpenView_Opaque_init_zero \
+    { false, penumbra_core_component_dex_v1_PositionOpen_init_zero }
 #define penumbra_core_component_dex_v1_PositionClose_init_zero \
     { false, penumbra_core_component_dex_v1_PositionId_init_zero }
 #define penumbra_core_component_dex_v1_PositionWithdraw_init_zero          \
@@ -898,7 +978,17 @@ extern "C" {
 #define penumbra_core_component_dex_v1_Position_state_tag 3
 #define penumbra_core_component_dex_v1_Position_reserves_tag 4
 #define penumbra_core_component_dex_v1_Position_close_on_fill_tag 5
+#define penumbra_core_component_dex_v1_PositionMetadata_strategy_tag 1
+#define penumbra_core_component_dex_v1_PositionMetadata_identifier_tag 2
 #define penumbra_core_component_dex_v1_PositionOpen_position_tag 1
+#define penumbra_core_component_dex_v1_PositionOpen_encrypted_metadata_tag 2
+#define penumbra_core_component_dex_v1_PositionOpenPlan_position_tag 1
+#define penumbra_core_component_dex_v1_PositionOpenPlan_metadata_tag 2
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_action_tag 1
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_metadata_tag 2
+#define penumbra_core_component_dex_v1_PositionOpenView_Opaque_action_tag 1
+#define penumbra_core_component_dex_v1_PositionOpenView_visible_tag 1
+#define penumbra_core_component_dex_v1_PositionOpenView_opaque_tag 2
 #define penumbra_core_component_dex_v1_PositionClose_position_id_tag 1
 #define penumbra_core_component_dex_v1_PositionWithdraw_position_id_tag 1
 #define penumbra_core_component_dex_v1_PositionWithdraw_reserves_commitment_tag 2
@@ -1176,10 +1266,53 @@ extern "C" {
 #define penumbra_core_component_dex_v1_PositionState_CALLBACK NULL
 #define penumbra_core_component_dex_v1_PositionState_DEFAULT NULL
 
-#define penumbra_core_component_dex_v1_PositionOpen_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, position, 1)
-#define penumbra_core_component_dex_v1_PositionOpen_CALLBACK NULL
+#define penumbra_core_component_dex_v1_PositionMetadata_FIELDLIST(X, a) \
+    X(a, STATIC, SINGULAR, FIXED32, strategy, 1)                        \
+    X(a, STATIC, SINGULAR, FIXED32, identifier, 2)
+#define penumbra_core_component_dex_v1_PositionMetadata_CALLBACK NULL
+#define penumbra_core_component_dex_v1_PositionMetadata_DEFAULT NULL
+
+#define penumbra_core_component_dex_v1_PositionOpen_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, position, 1)                    \
+    X(a, CALLBACK, SINGULAR, BYTES, encrypted_metadata, 2)
+#define penumbra_core_component_dex_v1_PositionOpen_CALLBACK pb_default_field_callback
 #define penumbra_core_component_dex_v1_PositionOpen_DEFAULT NULL
 #define penumbra_core_component_dex_v1_PositionOpen_position_MSGTYPE penumbra_core_component_dex_v1_Position
+
+#define penumbra_core_component_dex_v1_PositionOpenPlan_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, position, 1)                        \
+    X(a, STATIC, OPTIONAL, MESSAGE, metadata, 2)
+#define penumbra_core_component_dex_v1_PositionOpenPlan_CALLBACK NULL
+#define penumbra_core_component_dex_v1_PositionOpenPlan_DEFAULT NULL
+#define penumbra_core_component_dex_v1_PositionOpenPlan_position_MSGTYPE penumbra_core_component_dex_v1_Position
+#define penumbra_core_component_dex_v1_PositionOpenPlan_metadata_MSGTYPE penumbra_core_component_dex_v1_PositionMetadata
+
+#define penumbra_core_component_dex_v1_PositionOpenView_FIELDLIST(X, a)                        \
+    X(a, STATIC, ONEOF, MESSAGE, (position_open_view, visible, position_open_view.visible), 1) \
+    X(a, STATIC, ONEOF, MESSAGE, (position_open_view, opaque, position_open_view.opaque), 2)
+#define penumbra_core_component_dex_v1_PositionOpenView_CALLBACK NULL
+#define penumbra_core_component_dex_v1_PositionOpenView_DEFAULT NULL
+#define penumbra_core_component_dex_v1_PositionOpenView_position_open_view_visible_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionOpenView_Visible
+#define penumbra_core_component_dex_v1_PositionOpenView_position_open_view_opaque_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionOpenView_Opaque
+
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, action, 1)                                  \
+    X(a, STATIC, OPTIONAL, MESSAGE, metadata, 2)
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_CALLBACK NULL
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_DEFAULT NULL
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_action_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionOpen
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_metadata_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionMetadata
+
+#define penumbra_core_component_dex_v1_PositionOpenView_Opaque_FIELDLIST(X, a) \
+    X(a, STATIC, OPTIONAL, MESSAGE, action, 1)
+#define penumbra_core_component_dex_v1_PositionOpenView_Opaque_CALLBACK NULL
+#define penumbra_core_component_dex_v1_PositionOpenView_Opaque_DEFAULT NULL
+#define penumbra_core_component_dex_v1_PositionOpenView_Opaque_action_MSGTYPE \
+    penumbra_core_component_dex_v1_PositionOpen
 
 #define penumbra_core_component_dex_v1_PositionClose_FIELDLIST(X, a) X(a, STATIC, OPTIONAL, MESSAGE, position_id, 1)
 #define penumbra_core_component_dex_v1_PositionClose_CALLBACK NULL
@@ -1259,7 +1392,12 @@ extern const pb_msgdesc_t penumbra_core_component_dex_v1_Reserves_msg;
 extern const pb_msgdesc_t penumbra_core_component_dex_v1_Position_msg;
 extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionId_msg;
 extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionState_msg;
+extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionMetadata_msg;
 extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionOpen_msg;
+extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionOpenPlan_msg;
+extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionOpenView_msg;
+extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionOpenView_Visible_msg;
+extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionOpenView_Opaque_msg;
 extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionClose_msg;
 extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionWithdraw_msg;
 extern const pb_msgdesc_t penumbra_core_component_dex_v1_PositionRewardClaim_msg;
@@ -1296,7 +1434,14 @@ extern const pb_msgdesc_t penumbra_core_component_dex_v1_DexParameters_msg;
 #define penumbra_core_component_dex_v1_Position_fields &penumbra_core_component_dex_v1_Position_msg
 #define penumbra_core_component_dex_v1_PositionId_fields &penumbra_core_component_dex_v1_PositionId_msg
 #define penumbra_core_component_dex_v1_PositionState_fields &penumbra_core_component_dex_v1_PositionState_msg
+#define penumbra_core_component_dex_v1_PositionMetadata_fields &penumbra_core_component_dex_v1_PositionMetadata_msg
 #define penumbra_core_component_dex_v1_PositionOpen_fields &penumbra_core_component_dex_v1_PositionOpen_msg
+#define penumbra_core_component_dex_v1_PositionOpenPlan_fields &penumbra_core_component_dex_v1_PositionOpenPlan_msg
+#define penumbra_core_component_dex_v1_PositionOpenView_fields &penumbra_core_component_dex_v1_PositionOpenView_msg
+#define penumbra_core_component_dex_v1_PositionOpenView_Visible_fields \
+    &penumbra_core_component_dex_v1_PositionOpenView_Visible_msg
+#define penumbra_core_component_dex_v1_PositionOpenView_Opaque_fields \
+    &penumbra_core_component_dex_v1_PositionOpenView_Opaque_msg
 #define penumbra_core_component_dex_v1_PositionClose_fields &penumbra_core_component_dex_v1_PositionClose_msg
 #define penumbra_core_component_dex_v1_PositionWithdraw_fields &penumbra_core_component_dex_v1_PositionWithdraw_msg
 #define penumbra_core_component_dex_v1_PositionRewardClaim_fields \
@@ -1326,6 +1471,10 @@ extern const pb_msgdesc_t penumbra_core_component_dex_v1_DexParameters_msg;
 /* penumbra_core_component_dex_v1_Position_size depends on runtime parameters */
 /* penumbra_core_component_dex_v1_PositionId_size depends on runtime parameters */
 /* penumbra_core_component_dex_v1_PositionOpen_size depends on runtime parameters */
+/* penumbra_core_component_dex_v1_PositionOpenPlan_size depends on runtime parameters */
+/* penumbra_core_component_dex_v1_PositionOpenView_size depends on runtime parameters */
+/* penumbra_core_component_dex_v1_PositionOpenView_Visible_size depends on runtime parameters */
+/* penumbra_core_component_dex_v1_PositionOpenView_Opaque_size depends on runtime parameters */
 /* penumbra_core_component_dex_v1_PositionClose_size depends on runtime parameters */
 /* penumbra_core_component_dex_v1_PositionWithdraw_size depends on runtime parameters */
 /* penumbra_core_component_dex_v1_PositionRewardClaim_size depends on runtime parameters */
@@ -1350,6 +1499,7 @@ extern const pb_msgdesc_t penumbra_core_component_dex_v1_DexParameters_msg;
     (12 + penumbra_core_asset_v1_AssetId_size + penumbra_core_asset_v1_AssetId_size)
 #endif
 #define penumbra_core_component_dex_v1_BareTradingFunction_size 54
+#define penumbra_core_component_dex_v1_PositionMetadata_size 10
 #define penumbra_core_component_dex_v1_PositionRewardClaimPlan_size 50
 #define penumbra_core_component_dex_v1_PositionState_size 13
 #define penumbra_core_component_dex_v1_Reserves_size 48

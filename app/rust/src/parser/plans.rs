@@ -376,7 +376,7 @@ pub unsafe extern "C" fn rs_generic_action_hash(
                 };
                 effect_hash = EffectHash::from_proto_effecting_data(personalized, data_to_hash);
             }
-            ActionPlan::PositionOpen => {
+            ActionPlan::PositionOpenPlan => {
                 let Ok(personalized) = std::str::from_utf8(POSITION_OPEN_PERSONALIZED) else {
                     return ParserError::InvalidUtf8 as u32;
                 };

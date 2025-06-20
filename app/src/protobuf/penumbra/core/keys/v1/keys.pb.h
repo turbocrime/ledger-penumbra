@@ -89,6 +89,10 @@ typedef struct _penumbra_core_keys_v1_ConsensusKey {
     pb_callback_t inner;
 } penumbra_core_keys_v1_ConsensusKey;
 
+typedef struct _penumbra_core_keys_v1_PositionMetadataKey {
+    pb_callback_t inner;
+} penumbra_core_keys_v1_PositionMetadataKey;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -145,6 +149,10 @@ extern "C" {
     {                                                   \
         { {NULL}, NULL }                                \
     }
+#define penumbra_core_keys_v1_PositionMetadataKey_init_default \
+    {                                                          \
+        { {NULL}, NULL }                                       \
+    }
 #define penumbra_core_keys_v1_Address_init_zero \
     {                                           \
         {{NULL}, NULL}, { {NULL}, NULL }        \
@@ -196,6 +204,10 @@ extern "C" {
     {                                                \
         { {NULL}, NULL }                             \
     }
+#define penumbra_core_keys_v1_PositionMetadataKey_init_zero \
+    {                                                       \
+        { {NULL}, NULL }                                    \
+    }
 
 /* Field tags (for use in manual encoding/decoding) */
 #define penumbra_core_keys_v1_Address_inner_tag 1
@@ -216,6 +228,7 @@ extern "C" {
 #define penumbra_core_keys_v1_IdentityKey_ik_tag 1
 #define penumbra_core_keys_v1_GovernanceKey_gk_tag 1
 #define penumbra_core_keys_v1_ConsensusKey_inner_tag 1
+#define penumbra_core_keys_v1_PositionMetadataKey_inner_tag 1
 
 /* Struct field encoding specification for nanopb */
 #define penumbra_core_keys_v1_Address_FIELDLIST(X, a) \
@@ -285,6 +298,10 @@ extern "C" {
 #define penumbra_core_keys_v1_ConsensusKey_CALLBACK pb_default_field_callback
 #define penumbra_core_keys_v1_ConsensusKey_DEFAULT NULL
 
+#define penumbra_core_keys_v1_PositionMetadataKey_FIELDLIST(X, a) X(a, CALLBACK, SINGULAR, BYTES, inner, 1)
+#define penumbra_core_keys_v1_PositionMetadataKey_CALLBACK pb_default_field_callback
+#define penumbra_core_keys_v1_PositionMetadataKey_DEFAULT NULL
+
 extern const pb_msgdesc_t penumbra_core_keys_v1_Address_msg;
 extern const pb_msgdesc_t penumbra_core_keys_v1_AddressView_msg;
 extern const pb_msgdesc_t penumbra_core_keys_v1_AddressView_Decoded_msg;
@@ -298,6 +315,7 @@ extern const pb_msgdesc_t penumbra_core_keys_v1_AddressIndex_msg;
 extern const pb_msgdesc_t penumbra_core_keys_v1_IdentityKey_msg;
 extern const pb_msgdesc_t penumbra_core_keys_v1_GovernanceKey_msg;
 extern const pb_msgdesc_t penumbra_core_keys_v1_ConsensusKey_msg;
+extern const pb_msgdesc_t penumbra_core_keys_v1_PositionMetadataKey_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define penumbra_core_keys_v1_Address_fields &penumbra_core_keys_v1_Address_msg
@@ -313,6 +331,7 @@ extern const pb_msgdesc_t penumbra_core_keys_v1_ConsensusKey_msg;
 #define penumbra_core_keys_v1_IdentityKey_fields &penumbra_core_keys_v1_IdentityKey_msg
 #define penumbra_core_keys_v1_GovernanceKey_fields &penumbra_core_keys_v1_GovernanceKey_msg
 #define penumbra_core_keys_v1_ConsensusKey_fields &penumbra_core_keys_v1_ConsensusKey_msg
+#define penumbra_core_keys_v1_PositionMetadataKey_fields &penumbra_core_keys_v1_PositionMetadataKey_msg
 
 /* Maximum encoded size of messages (where known) */
 /* penumbra_core_keys_v1_Address_size depends on runtime parameters */
@@ -328,6 +347,7 @@ extern const pb_msgdesc_t penumbra_core_keys_v1_ConsensusKey_msg;
 /* penumbra_core_keys_v1_IdentityKey_size depends on runtime parameters */
 /* penumbra_core_keys_v1_GovernanceKey_size depends on runtime parameters */
 /* penumbra_core_keys_v1_ConsensusKey_size depends on runtime parameters */
+/* penumbra_core_keys_v1_PositionMetadataKey_size depends on runtime parameters */
 
 #ifdef __cplusplus
 } /* extern "C" */

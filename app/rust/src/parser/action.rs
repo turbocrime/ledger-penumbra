@@ -33,6 +33,7 @@ pub enum ActionPlan {
     PositionOpen = 30,
     PositionClose = 31,
     PositionWithdraw = 32,
+    PositionOpenPlan = 35,
     Delegate = 40,
     Undelegate = 41,
     UndelegateClaim = 42,

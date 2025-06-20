@@ -682,6 +682,7 @@ pub const penumbra_core_keys_v1_AddressView_opaque_tag: u32 = 2;
 pub const penumbra_core_keys_v1_IdentityKey_ik_tag: u32 = 1;
 pub const penumbra_core_keys_v1_GovernanceKey_gk_tag: u32 = 1;
 pub const penumbra_core_keys_v1_ConsensusKey_inner_tag: u32 = 1;
+pub const penumbra_core_keys_v1_PositionMetadataKey_inner_tag: u32 = 1;
 pub const penumbra_core_component_stake_v1_Validator_identity_key_tag: u32 = 1;
 pub const penumbra_core_component_stake_v1_Validator_consensus_key_tag: u32 = 2;
 pub const penumbra_core_component_stake_v1_Validator_name_tag: u32 = 3;

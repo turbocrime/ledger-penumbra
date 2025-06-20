@@ -62,7 +62,7 @@ parser_error_t compute_action_hash(action_t *action, bytes_t *memo_key, hash_t *
         case penumbra_core_transaction_v1_ActionPlan_ics20_withdrawal_tag:
         case penumbra_core_transaction_v1_ActionPlan_delegate_tag:
         case penumbra_core_transaction_v1_ActionPlan_undelegate_tag:
-        case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
+        case penumbra_core_transaction_v1_ActionPlan_position_open_plan_tag:
         case penumbra_core_transaction_v1_ActionPlan_position_close_tag:
         case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_schedule_tag:
         case penumbra_core_transaction_v1_ActionPlan_action_dutch_auction_end_tag:

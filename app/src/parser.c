@@ -219,7 +219,7 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
                                                    action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx,
                                                    pageCount))
                 break;
-            case penumbra_core_transaction_v1_ActionPlan_position_open_tag:
+            case penumbra_core_transaction_v1_ActionPlan_position_open_plan_tag:
                 CHECK_ERROR(position_open_getItem(ctx, &ctx->tx_obj->actions_plan[action_idx].action.position_open,
                                                   action_idx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
                 break;
