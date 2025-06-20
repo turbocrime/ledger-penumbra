@@ -230,7 +230,6 @@ jobs:
         test_zemu,
         rust_tests,
       ]
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     container:
       image: zondax/ledger-app-builder:latest
@@ -275,6 +274,7 @@ jobs:
         id: nanosp
         run: echo "tag_name=$(./app/pkg/installer_nanos_plus.sh version)" >> $GITHUB_OUTPUT
       - name: Update Release
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
         id: update_release_nanosp
         uses: softprops/action-gh-release@v1
         env:
@@ -295,7 +295,6 @@ jobs:
         test_zemu,
         rust_tests,
       ]
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     container:
       image: zondax/ledger-app-builder:latest
@@ -339,6 +338,7 @@ jobs:
         id: stax
         run: echo "tag_name=$(./app/pkg/installer_stax.sh version)" >> $GITHUB_OUTPUT
       - name: Update Release
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
         id: update_release_stax
         uses: softprops/action-gh-release@v1
         env:
@@ -360,7 +360,6 @@ jobs:
         test_zemu,
         rust_tests,
       ]
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     container:
       image: zondax/ledger-app-builder:latest
@@ -404,6 +403,7 @@ jobs:
         id: flex
         run: echo "tag_name=$(./app/pkg/installer_flex.sh version)" >> $GITHUB_OUTPUT
       - name: Update Release
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
         id: update_release_flex
         uses: softprops/action-gh-release@v1
         env:

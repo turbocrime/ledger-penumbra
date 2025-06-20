@@ -22,12 +22,12 @@
 #include "parser_txdef.h"
 #include "rslib.h"
 
-parser_error_t metadata_parse(const uint8_t *data, size_t dataLen, tx_metadata_t *metadata, uint8_t metadataLen) {
-    if (metadata == NULL) {
+parser_error_t metadata_parse(parser_context_t *ctx, const uint8_t *data, size_t dataLen) {
+    if (ctx == NULL || data == NULL) {
         return parser_unexpected_error;
     }
 
-    MEMZERO(metadata, sizeof(tx_metadata_t) * metadataLen);
+    MEMZERO(ctx->tx_metadata, sizeof(tx_metadata_t) * MAX_TX_METADATA_LEN);
 
     // Check that dataLen is at least 1 to read the number of metadata strings
     if (dataLen < 1) {
@@ -38,14 +38,16 @@ parser_error_t metadata_parse(const uint8_t *data, size_t dataLen, tx_metadata_t
     uint8_t num_strings = data[0];
 
     // Verify that the number of strings matches metadataLen
-    if (num_strings >= metadataLen) {
+    if (num_strings >= MAX_TX_METADATA_LEN) {
         return parser_unexpected_number_items;
     }
+
+    ctx->tx_metadata_len = num_strings;
 
     size_t data_offset = 1;  // Start after the num_strings byte
 
     // Iterate over each metadata string
-    for (uint8_t i = 0; i < num_strings; i++) {
+    for (uint8_t i = 0; i < ctx->tx_metadata_len; i++) {
         // Check that there is at least one byte left for the length
         if (data_offset >= dataLen) {
             return parser_unexpected_buffer_end;
@@ -68,8 +70,8 @@ parser_error_t metadata_parse(const uint8_t *data, size_t dataLen, tx_metadata_t
         }
 
         // Copy the string data into the metadata array
-        MEMCPY(metadata[i].denom, &data[data_offset], len);
-        metadata[i].len = len;
+        MEMCPY(ctx->tx_metadata[i].denom, &data[data_offset], len);
+        ctx->tx_metadata[i].len = len;
 
         data_offset += len;
     }

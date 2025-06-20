@@ -64,7 +64,7 @@ void extractAddressIndex(uint32_t rx, uint32_t offset, address_index_t *address_
     MEMCPY(address_index, &G_io_apdu_buffer[offset], sizeof(address_index_t));
 }
 
-__Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx, bool handle_path) {
+__Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
     const uint8_t payloadType = G_io_apdu_buffer[OFFSET_PAYLOAD_TYPE];
     if (rx < OFFSET_DATA) {
         THROW(APDU_CODE_WRONG_LENGTH);
@@ -74,9 +74,7 @@ __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx, boo
         case P1_INIT:
             tx_initialize();
             tx_reset();
-            if (handle_path) {
-                extractHDPath(rx, OFFSET_DATA);
-            }
+            extractHDPath(rx, OFFSET_DATA);
             tx_initialized = true;
             return false;
         case P1_ADD:
@@ -154,7 +152,7 @@ __Z_INLINE void handleGetFVK(volatile uint32_t *tx, uint32_t rx) {
 __Z_INLINE void handleTxMetadata(volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleTxMetadata\n");
 
-    if (!process_chunk(tx, rx, false)) {
+    if (!process_chunk(tx, rx)) {
         THROW(APDU_CODE_OK);
     }
 
@@ -173,7 +171,7 @@ __Z_INLINE void handleTxMetadata(volatile uint32_t *tx, uint32_t rx) {
 __Z_INLINE void handleSign(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleSign\n");
 
-    if (!process_chunk(tx, rx, true)) {
+    if (!process_chunk(tx, rx)) {
         THROW(APDU_CODE_OK);
     }
 
@@ -237,6 +235,7 @@ __Z_INLINE void handleGetSpendAuthSignatures(volatile uint32_t *tx, uint32_t rx)
     THROW(APDU_CODE_OK);
 }
 
+#if defined(ENABLE_DELEGATOR_VOTE_SIGNATURES)
 __Z_INLINE void handleGetDelegatorVoteSignatures(volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleGetDelegatorVoteSignatures\n");
     if (rx < OFFSET_DATA) {
@@ -254,6 +253,7 @@ __Z_INLINE void handleGetDelegatorVoteSignatures(volatile uint32_t *tx, uint32_t
 
     THROW(APDU_CODE_OK);
 }
+#endif
 
 #if defined(APP_TESTING)
 void handleTest(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) { THROW(APDU_CODE_OK); }
@@ -309,10 +309,12 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
                     break;
                 }
 
+#if defined(ENABLE_DELEGATOR_VOTE_SIGNATURES)
                 case INS_GET_DELEGATOR_VOTE_SIGNATURES: {
                     handleGetDelegatorVoteSignatures(tx, rx);
                     break;
                 }
+#endif
 
 #if defined(APP_TESTING)
                 case INS_TEST: {

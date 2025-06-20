@@ -256,7 +256,6 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
     return parser_ok;
 }
 
-parser_error_t parser_parseTxMetadata(const uint8_t *data, size_t dataLen, tx_metadata_t *metadata,
-                                      uint8_t metadataLen) {
-    return metadata_parse(data, dataLen, metadata, metadataLen);
+parser_error_t parser_parseTxMetadata(parser_context_t *ctx, const uint8_t *data, size_t dataLen) {
+    return metadata_parse(ctx, data, dataLen);
 }

@@ -15,11 +15,11 @@
  ********************************************************************************/
 
 #include <hexutils.h>
-#include <json/json.h>
 #include <parser_txdef.h>
 
 #include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
 
 #include "app_mode.h"
 #include "gmock/gmock.h"
@@ -27,6 +27,7 @@
 #include "utils/common.h"
 
 using ::testing::TestWithParam;
+using json = nlohmann::json;
 
 typedef struct {
     uint64_t index;
@@ -53,9 +54,6 @@ class JsonTestsA : public ::testing::TestWithParam<testcase_t> {
 std::vector<testcase_t> GetJsonTestCases(std::string jsonFile) {
     auto answer = std::vector<testcase_t>();
 
-    Json::CharReaderBuilder builder;
-    Json::Value obj;
-
     std::string fullPathJsonFile = std::string(TESTVECTORS_DIR) + jsonFile;
 
     std::ifstream inFile(fullPathJsonFile);
@@ -63,24 +61,25 @@ std::vector<testcase_t> GetJsonTestCases(std::string jsonFile) {
         return answer;
     }
 
-    // Retrieve all test cases
-    JSONCPP_STRING errs;
-    Json::parseFromStream(builder, inFile, &obj, &errs);
+    // Parse JSON from stream
+    json obj;
+    inFile >> obj;
     std::cout << "Number of testcases: " << obj.size() << std::endl;
 
     for (int i = 0; i < obj.size(); i++) {
         auto outputs = std::vector<std::string>();
         for (auto s : obj[i]["output"]) {
-            outputs.push_back(s.asString());
+            outputs.push_back(s.is_null() ? "" : s.get<std::string>());
         }
 
         auto outputs_expert = std::vector<std::string>();
         for (auto s : obj[i]["output_expert"]) {
-            outputs_expert.push_back(s.asString());
+            outputs_expert.push_back(s.is_null() ? "" : s.get<std::string>());
         }
 
-        answer.push_back(testcase_t{obj[i]["index"].asUInt64(), obj[i]["name"].asString(), obj[i]["blob"].asString(),
-                                    outputs, outputs_expert});
+        answer.push_back(testcase_t{
+            obj[i]["index"].get<uint64_t>(), obj[i]["name"].is_null() ? "" : obj[i]["name"].get<std::string>(),
+            obj[i]["blob"].is_null() ? "" : obj[i]["blob"].get<std::string>(), outputs, outputs_expert});
     }
 
     return answer;
