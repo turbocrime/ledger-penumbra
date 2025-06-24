@@ -259,7 +259,6 @@ __Z_INLINE void handleGetDelegatorVoteSignatures(volatile uint32_t *tx, uint32_t
 void handleTest(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) { THROW(APDU_CODE_OK); }
 #endif
 
-#if defined(TARGET_NANOX) || defined(TARGET_NANOS2) || defined(TARGET_STAX) || defined(TARGET_FLEX)
 void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleApdu\n");
     volatile uint16_t sw = 0;
@@ -347,52 +346,3 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     }
     END_TRY;
 }
-#elif defined(TARGET_NANOS)
-void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
-    zemu_log("handleApdu\n");
-    volatile uint16_t sw = 0;
-
-    BEGIN_TRY {
-        TRY {
-            if (G_io_apdu_buffer[OFFSET_CLA] != CLA) {
-                zemu_log("CLA not supported\n");
-                THROW(APDU_CODE_CLA_NOT_SUPPORTED);
-            }
-
-            if (rx < APDU_MIN_LENGTH) {
-                THROW(APDU_CODE_WRONG_LENGTH);
-            }
-            if (G_io_apdu_buffer[OFFSET_INS] == INS_GET_VERSION) {
-                handle_getversion(flags, tx);
-            }
-#if defined(APP_TESTING)
-            else if (G_io_apdu_buffer[OFFSET_INS] == INS_TEST) {
-                handleTest(flags, tx, rx);
-                THROW(APDU_CODE_OK);
-            }
-#endif
-            else {
-                zemu_log("ins_not_supported**\n");
-                THROW(APDU_CODE_INS_NOT_SUPPORTED);
-            }
-        }
-        CATCH(EXCEPTION_IO_RESET) { THROW(EXCEPTION_IO_RESET); }
-        CATCH_OTHER(e) {
-            switch (e & 0xF000) {
-                case 0x6000:
-                case APDU_CODE_OK:
-                    sw = e;
-                    break;
-                default:
-                    sw = 0x6800 | (e & 0x7FF);
-                    break;
-            }
-            G_io_apdu_buffer[*tx] = sw >> 8;
-            G_io_apdu_buffer[*tx + 1] = sw & 0xFF;
-            *tx += 2;
-        }
-        FINALLY {}
-    }
-    END_TRY;
-}
-#endif

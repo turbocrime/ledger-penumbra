@@ -37,4 +37,4 @@ jobs:
         run: |
           make -j BOLOS_SDK=${{ matrix.sdk }}
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
