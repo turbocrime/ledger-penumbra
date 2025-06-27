@@ -26,10 +26,6 @@
 
 static bool checkreturn buf_read(pb_istream_t *stream, pb_byte_t *buf, size_t count);
 
-static bool checkreturn pb_decode_varint32_eof(pb_istream_t *stream, uint32_t *dest, bool *eof);
-
-static bool checkreturn read_raw_value(pb_istream_t *stream, pb_wire_type_t wire_type, pb_byte_t *buf, size_t *size);
-
 static bool checkreturn decode_basic_field(pb_istream_t *stream, pb_wire_type_t wire_type, pb_field_iter_t *field);
 
 static bool checkreturn decode_static_field(pb_istream_t *stream, pb_wire_type_t wire_type, pb_field_iter_t *field);
@@ -176,17 +172,11 @@ pb_istream_t pb_istream_from_buffer(const pb_byte_t *buf, size_t msglen) {
  * Helper functions *
  ********************/
 
-static bool checkreturn pb_decode_varint32_eof(pb_istream_t *stream, uint32_t *dest, bool *eof) {
+bool checkreturn pb_decode_varint32(pb_istream_t *stream, uint32_t *dest) {
     pb_byte_t byte;
     uint32_t result;
 
     if (!pb_readbyte(stream, &byte)) {
-        if (stream->bytes_left == 0) {
-            if (eof) {
-                *eof = true;
-            }
-        }
-
         return false;
     }
 
@@ -209,24 +199,20 @@ static bool checkreturn pb_decode_varint32_eof(pb_istream_t *stream, uint32_t *d
                 if (bitpos >= 64 || !valid_extension) {
                     PB_RETURN_ERROR(stream, "varint overflow");
                 }
+            } else if (bitpos == 28) {
+                if ((byte & 0x70) != 0 && (byte & 0x78) != 0x78) {
+                    PB_RETURN_ERROR(stream, "varint overflow");
+                }
+                result |= (uint32_t)(byte & 0x0F) << bitpos;
             } else {
                 result |= (uint32_t)(byte & 0x7F) << bitpos;
             }
             bitpos = (uint_fast8_t)(bitpos + 7);
         } while (byte & 0x80);
-
-        if (bitpos == 35 && (byte & 0x70) != 0) {
-            /* The last byte was at bitpos=28, so only bottom 4 bits fit. */
-            PB_RETURN_ERROR(stream, "varint overflow");
-        }
     }
 
     *dest = result;
     return true;
-}
-
-bool checkreturn pb_decode_varint32(pb_istream_t *stream, uint32_t *dest) {
-    return pb_decode_varint32_eof(stream, dest, NULL);
 }
 
 #ifndef PB_WITHOUT_64BIT
@@ -237,9 +223,9 @@ bool checkreturn pb_decode_varint(pb_istream_t *stream, uint64_t *dest) {
     uint64_t result = 0;
 
     do {
-        if (bitpos >= 64) PB_RETURN_ERROR(stream, "varint overflow");
-
         if (!pb_readbyte(stream, &byte)) return false;
+
+        if (bitpos >= 63 && (byte & 0xFE) != 0) PB_RETURN_ERROR(stream, "varint overflow");
 
         result |= (uint64_t)(byte & 0x7F) << bitpos;
         bitpos = (uint_fast8_t)(bitpos + 7);
@@ -276,7 +262,27 @@ bool checkreturn pb_decode_tag(pb_istream_t *stream, pb_wire_type_t *wire_type, 
     *wire_type = (pb_wire_type_t)0;
     *tag = 0;
 
-    if (!pb_decode_varint32_eof(stream, &temp, eof)) {
+    if (stream->bytes_left == 0) {
+        *eof = true;
+        return false;
+    }
+
+    if (!pb_decode_varint32(stream, &temp)) {
+#ifndef PB_BUFFER_ONLY
+        /* Workaround for issue #1017
+         *
+         * Callback streams don't set bytes_left to 0 on eof until after being called by pb_decode_varint32,
+         * which results in "io error" being raised. This contrasts the behavior of buffer streams who raise
+         * no error on eof as bytes_left is already 0 on entry. This causes legitimate errors (e.g. missing
+         * required fields) to be incorrectly reported by callback streams.
+         */
+        if (stream->callback != buf_read && stream->bytes_left == 0) {
+#ifndef PB_NO_ERRMSG
+            if (strcmp(stream->errmsg, "io error") == 0) stream->errmsg = NULL;
+#endif
+            *eof = true;
+        }
+#endif
         return false;
     }
 
@@ -295,41 +301,6 @@ bool checkreturn pb_skip_field(pb_istream_t *stream, pb_wire_type_t wire_type) {
             return pb_skip_string(stream);
         case PB_WT_32BIT:
             return pb_read(stream, NULL, 4);
-        default:
-            PB_RETURN_ERROR(stream, "invalid wire_type");
-    }
-}
-
-/* Read a raw value to buffer, for the purpose of passing it to callback as
- * a substream. Size is maximum size on call, and actual size on return.
- */
-static bool checkreturn read_raw_value(pb_istream_t *stream, pb_wire_type_t wire_type, pb_byte_t *buf, size_t *size) {
-    size_t max_size = *size;
-    switch (wire_type) {
-        case PB_WT_VARINT:
-            *size = 0;
-            do {
-                (*size)++;
-                if (*size > max_size) PB_RETURN_ERROR(stream, "varint overflow");
-
-                if (!pb_read(stream, buf, 1)) return false;
-            } while (*buf++ & 0x80);
-            return true;
-
-        case PB_WT_64BIT:
-            *size = 8;
-            return pb_read(stream, buf, 8);
-
-        case PB_WT_32BIT:
-            *size = 4;
-            return pb_read(stream, buf, 4);
-
-        case PB_WT_STRING:
-            /* Calling read_raw_value with a PB_WT_STRING is an error.
-             * Explicitly handle this case and fallthrough to default to avoid
-             * compiler warnings.
-             */
-
         default:
             PB_RETURN_ERROR(stream, "invalid wire_type");
     }
@@ -693,19 +664,12 @@ static bool checkreturn decode_callback_field(pb_istream_t *stream, pb_wire_type
 
         return true;
     } else {
-        /* Copy the single scalar value to stack.
-         * This is required so that we can limit the stream length,
-         * which in turn allows to use same callback for packed and
-         * not-packed fields. */
-        pb_istream_t substream;
-        pb_byte_t buffer[10];
-        size_t size = sizeof(buffer);
-
-        ZEMU_TRACE();
-        if (!read_raw_value(stream, wire_type, buffer, &size)) return false;
-        substream = pb_istream_from_buffer(buffer, size);
-
-        return field->descriptor->field_callback(&substream, NULL, field);
+        /* This application only supports callback fields for bytes/string types
+         * (wire_type == PB_WT_STRING). Scalar callback fields (varints, fixed32, etc.)
+         * are not supported to avoid stack-use-after-return vulnerabilities from
+         * temporary buffers being captured by user callbacks.
+         */
+        PB_RETURN_ERROR(stream, "unsupported callback field type");
     }
 }
 

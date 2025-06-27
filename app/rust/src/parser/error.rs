@@ -110,6 +110,8 @@ pub enum ParserError {
     UnexpectedValue,
     InvalidUtf8,
     EncryptionError,
+    ActionDecodeError,
+    CluePlanDecodeError,
 }
 
 impl From<ErrorKind> for ParserError {

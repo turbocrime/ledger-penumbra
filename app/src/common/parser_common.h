@@ -131,6 +131,8 @@ typedef enum {
     parser_unexpected_value,
     parser_invalid_utf8,
     parser_encryption_error,
+    parser_action_decode_error,
+    parser_clue_plan_decode_error,
 } parser_error_t;
 
 typedef struct {

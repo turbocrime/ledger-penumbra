@@ -84,6 +84,7 @@ bool decode_action(pb_istream_t *stream, __Z_UNUSED const pb_field_t *field, voi
     bytes_t action_data_4 = {.ptr = stream->state + ACTION_OFFSET_4, .len = stream->bytes_left - ACTION_OFFSET_4};
 
     if (!pb_decode(stream, penumbra_core_transaction_v1_ActionPlan_fields, &action)) {
+        decode_error = parser_action_decode_error;
         return false;
     }
     decode_arg[actions_qty].action_type = action.which_action;
@@ -184,6 +185,7 @@ bool decode_detection_data(pb_istream_t *stream, __Z_UNUSED const pb_field_t *fi
                                 &clue_plan_arg[detection_data_qty].address.alt_bech32m);
 
     if (!pb_decode(stream, penumbra_core_transaction_v1_CluePlan_fields, &cluePlan)) {
+        decode_error = parser_clue_plan_decode_error;
         return false;
     }
 
@@ -438,6 +440,10 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Invalid UTF-8";
         case parser_encryption_error:
             return "Encryption error";
+        case parser_action_decode_error:
+            return "Action decode error";
+        case parser_clue_plan_decode_error:
+            return "Clue plan decode error";
 
         default:
             return "Unrecognized error code";
