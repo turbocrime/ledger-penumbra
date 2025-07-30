@@ -22,7 +22,7 @@ export const models: IDeviceModel[] = [
 export const defaultOptions = {
   ...DEFAULT_START_OPTIONS,
   logging: true,
-  custom: `-s "${APP_SEED}"`,
+  custom: `-s "${APP_SEED}" --log-level werkzeug:ERROR`,
   X11: false,
 }
 

@@ -17,6 +17,7 @@
     "clean": "ts-node tests/pullImageKillOld.ts",
     "format": "FORCE_COLOR=1 prettier --write . && sort-package-json",
     "format:check": "FORCE_COLOR=1 prettier --check .",
+    "generate:pr4948": "node --experimental-wasm-modules generate_pr4948_testcases.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "yarn clean && jest --maxConcurrency 3",
@@ -32,7 +33,10 @@
     "@zondax/zemu": "^0.55.3"
   },
   "devDependencies": {
+    "@bufbuild/protobuf": "1.x",
     "@ledgerhq/hw-transport-node-hid": "^6.29.7",
+    "@penumbra-zone/protobuf": "^11.0.0",
+    "@penumbra-zone/wasm": "^53.0.0",
     "@types/jest": "^30.0.0",
     "@types/ledgerhq__hw-transport": "^4.21.8",
     "@types/node": "^22.10.2",
